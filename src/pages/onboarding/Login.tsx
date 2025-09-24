@@ -1,4 +1,4 @@
-import { useRouter } from '@tanstack/react-router';
+import { Link, useRouter } from '@tanstack/react-router';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function Login() {
@@ -22,9 +22,12 @@ export default function Login() {
         <>
           <p>You are logged in!</p>
           <button onClick={handleSignOut} className='rounded bg-red-500 text-white p-2'>Sign out</button>
+          <Link to="/dashboard" className='mr-4 underline'>Dashboard</Link>
         </>
-      ) : (
-        <button onClick={handleSignIn} className='rounded bg-blue-500 text-white p-2'>Sign in</button>
+      ) : (<>
+          <Link to="/dashboard" className='mr-4 underline'>Dashboard</Link>
+          <button onClick={handleSignIn} className='rounded bg-blue-500 text-white p-2'>Sign in</button>
+        </>
       )}
     </>
   );
