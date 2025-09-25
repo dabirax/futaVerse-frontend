@@ -1,13 +1,14 @@
 
 import { SunIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import { Button } from "../../components/ui/button";
 import { NavMenu } from "../../components/navbar-02/nav-menu";
 import { Sidebar } from "./components/sidebar";
 
 const Header = () => {
   return (
-    <div><nav className="h-16 bg-background border-b">
+    <motion.div initial= {{y: -250}} animate={{y: 0}} transition={{duration: 0.5}}><nav className="h-16 bg-background border-b">
         <div className="h-full flex items-center justify-between max-w-(--breakpoint-xl) mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-8">
             <div className="text-[#9017c2] text-xl font-serif font-bold">FutaVerse</div>
@@ -17,7 +18,8 @@ const Header = () => {
           </div>
 
           <div className="flex items-center gap-3">
-           <Link to="/login"><Button>Login</Button></Link>
+           <Link to="/login">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="w-full"><Button className='bg-[#5E0B80]'>Login</Button></motion.div></Link>
             
             <Button size="icon" variant="outline">
               <SunIcon />
@@ -29,7 +31,7 @@ const Header = () => {
             </div>
           </div>
         </div>
-            </nav></div>
+            </nav></motion.div>
   )
 }
 

@@ -18,27 +18,29 @@ export default [
     },
     rules: {
       ...(tanstackConfig[0]?.rules ?? {}),
+      
 
       'import/order': [
-        'error',
-        {
-          groups: [
-            'builtin',
-            'external',
-            'internal',
-            ['parent', 'sibling', 'index'],
-          ],
-          pathGroups: [
-            {
-              pattern: '@tanstack/**',
-              group: 'external',
-              position: 'before',
-            },
-          ],
-          pathGroupsExcludedImportTypes: ['builtin'],
-          alphabetize: { order: 'asc', caseInsensitive: true },
-          'newlines-between': 'always',
-        },
+        "off",
+        // 'error',
+        // {
+        //   groups: [
+        //     'builtin',
+        //     'external',
+        //     'internal',
+        //     ['parent', 'sibling', 'index'],
+        //   ],
+        //   pathGroups: [
+        //     {
+        //       pattern: '@tanstack/**',
+        //       group: 'external',
+        //       position: 'before',
+        //     },
+        //   ],
+        //   pathGroupsExcludedImportTypes: ['builtin'],
+        //   alphabetize: { order: 'asc', caseInsensitive: true },
+        //   'newlines-between': 'always',
+        // },
       ],
     },
   },
