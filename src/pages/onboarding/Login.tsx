@@ -2,13 +2,14 @@
 
 "use client";
 
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter, } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import loginImage from "../../assets/login.png";
+import { BackButton } from './components/BackButton';
+import Logo from "./components/Logo";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -21,38 +22,41 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 
-const formSchema = z.object({
+const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 
 const LoginPage = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof loginSchema>>({
     defaultValues: {
       email: "",
       password: "",
     },
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = (data: z.infer<typeof loginSchema>) => {
     console.log(data);
   };
+
+  const router = useRouter();
 
   return (
     <div className="h-screen flex items-center justify-center">
       <div className="w-full h-full grid lg:grid-cols-2">
-        <div className="bg-[#9017C2] hidden lg:flex items-center justify-center p-10 border" >
+        <div className="bg-[#9017C2] hidden lg:flex items-center justify-center pt-10 px-10 border" >
           <motion.img src={loginImage} alt="Login" className="  object-cover" initial= {{x: -250}} animate={{x: 0}} transition={{duration: 0.5}}/>
         </div>
-        <div className="max-w-xs m-auto w-full flex flex-col items-center">
-         
-          <div className="mt-4 relative flex items-start w-full text-[#9017c2] text-2xl font-serif font-bold ">
-            <div className="absolute mt-1"><Link to="/">
-              <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.85 }} className="w-full"><ArrowLeft className="bg-[#9017c2] text-white rounded-full p-0.5" /></motion.div></Link></div>
-            <div className="w-full flex items-center justify-center"> FutaVerse</div>
-           </div>
-          <p className="text-xl font-semibold tracking-tight">
+        <div className="max-w-md m-auto w-full flex flex-col items-center">
+          <div className="mt-4 flex items-center justify-between w-full text-[#9017c2] text-2xl">
+            <div className=" mt-1">
+             <BackButton />
+            </div>
+            <Logo />
+          </div>
+          <div className="p-5">
+          <p className="text-xl font-semibold tracking-tight text-center">
             Sign in 
           </p>
 
@@ -71,7 +75,7 @@ const LoginPage = () => {
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="Email"
+                        placeholder="example@example.com"
                         className="w-full"
                         {...field}
                       />
@@ -89,7 +93,7 @@ const LoginPage = () => {
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Password"
+                        placeholder="Password123#"
                         className="w-full"
                         {...field}
                       />
@@ -119,7 +123,8 @@ const LoginPage = () => {
               </Link>
             </p>
             </form>
-          </Form>
+            </Form>
+            </div>
 
           <div className="my-7 w-full flex items-center justify-center overflow-hidden">
             <Separator />
