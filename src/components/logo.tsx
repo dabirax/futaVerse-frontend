@@ -1,14 +1,12 @@
-"use client";
+import { motion } from "framer-motion"
+import { Link } from "@tanstack/react-router"
 
-import { cn } from "@/lib/utils";
-
-export const Logo = ({ className, ...props }: React.ComponentProps<"img">) => {
+const Logo = () => {
   return (
-    <img
-      src="/images/android-chrome-192x192.png"
-      alt="logo"
-      className={cn("h-7 w-7", className)}
-      {...props}
-    />
-  );
-};
+      <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.85 }} className="italic font-bold text-[#9017c2] text-2xl">
+          <Link to="/">FV</Link>
+      </motion.div>
+  )
+}
+
+export default Logo

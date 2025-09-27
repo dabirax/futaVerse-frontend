@@ -1,12 +1,12 @@
-"use client";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Country, State } from "country-state-city";
 import loginImage from "../../assets/login.png";
-import  Logo  from './components/Logo';
+import  Logo  from '../../components/Logo';
 import { BackButton } from './components/BackButton';
+import type { z } from "zod";
+import type { alumnusSchema } from "./components/alumnusSchema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,27 +19,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const formSchema = z.object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    middleName: z.string().optional(),
-    gender: z.enum(["Male", "Female", "Other", undefined!], "Gender is required"),
-    address: z.string().optional(),
-    country: z.string().min(1, "Country is required"),
-    state: z.string().min(1, "State is required"),
-    phone: z.string().min(10, "Phone number must be at least 10 digits"),
-    email: z.string().email(),
-    password: z.string().min(8, "Password must be at least 8 characters long"),
-    confirmPassword: z
-      .string()
-      .min(8, "Confirm Password must be at least 8 characters long"),
-    profilePic: z.any().optional(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords must match",
-    path: ["confirmPassword"],
-  });
-
 const countryOptions = Country.getAllCountries().map((country) => ({
   label: `${country.name}`,
   value: country.isoCode,
@@ -51,7 +30,8 @@ const stateOptions = (countryCode: string): Array<string> => {
 };
 
 const SignUp = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof alumnusSchema>>({
+    resolver: zodResolver(alumnusSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -66,10 +46,9 @@ const SignUp = () => {
       confirmPassword: "",
       profilePic: null,
     },
-    resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = (data: z.infer<typeof alumnusSchema>) => {
     console.log(data);
   };
 
@@ -93,8 +72,8 @@ const SignUp = () => {
             transition={{ duration: 0.5 }}
           /></div>
         </div>
-        <div className="max-w-md m-auto w-full flex flex-col items-center">
-          <div className="mt-4 flex items-center justify-between w-full text-[#9017c2] text-2xl">
+        <div className="max-w-md m-auto w-full flex flex-col items-center py-4">
+          <div className="flex items-center justify-between w-full text-[#9017c2] text-2xl px-2">
             <div className=" mt-1">
              <BackButton />
             </div>
@@ -105,7 +84,7 @@ const SignUp = () => {
 
           <Form {...form}>
             <form
-              className="w-full space-y-6 mt-8"
+              className="w-full space-y-5 mt-5"
               onSubmit={form.handleSubmit(onSubmit)}
             >
               <div className="grid grid-cols-2 gap-4">
@@ -340,7 +319,7 @@ const SignUp = () => {
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Password123#"
+                        placeholder="********"
                         className="w-full"
                         {...field}
                       />
@@ -358,7 +337,7 @@ const SignUp = () => {
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Password123#"
+                        placeholder="********"
                         className="w-full"
                         {...field}
                       />
@@ -367,9 +346,10 @@ const SignUp = () => {
                   </FormItem>
                 )}
               /></div>
-              <Button type="submit" className="w-full">
-                Sign Up
-              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} style={{ transformOrigin: "right center" }} >
+                  <Button type="submit" className=" bg-[#5E0B80] flex ml-auto ">
+                Next
+              </Button></motion.div>
             </form>
           </Form></div>
         </div>

@@ -1,7 +1,3 @@
-
-
-"use client";
-
 import { Link, useRouter, } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -9,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import loginImage from "../../assets/login.png";
 import { BackButton } from './components/BackButton';
-import Logo from "./components/Logo";
+import Logo from "../../components/logo";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -49,7 +45,7 @@ const LoginPage = () => {
           <motion.img src={loginImage} alt="Login" className="  object-cover" initial= {{x: -250}} animate={{x: 0}} transition={{duration: 0.5}}/>
         </div>
         <div className="max-w-md m-auto w-full flex flex-col items-center">
-          <div className="mt-4 flex items-center justify-between w-full text-[#9017c2] text-2xl">
+          <div className="mt-4 flex items-center justify-between w-full text-2xl">
             <div className=" mt-1">
              <BackButton />
             </div>

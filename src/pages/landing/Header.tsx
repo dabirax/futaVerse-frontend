@@ -2,6 +2,7 @@
 import { SunIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import  Logo  from "../../components/Logo";
 import { Button } from "../../components/ui/button";
 import { NavMenu } from "../../components/navbar-02/nav-menu";
 import { Sidebar } from "./components/sidebar";
@@ -11,8 +12,7 @@ const Header = () => {
     <motion.div initial= {{y: -250}} animate={{y: 0}} transition={{duration: 0.5}}><nav className="h-16 bg-background border-b">
         <div className="h-full flex items-center justify-between max-w-(--breakpoint-xl) mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-8">
-            <div className="text-[#9017c2] text-xl font-serif font-bold">FutaVerse</div>
-
+            <Logo />
             {/* Desktop Menu */}
             <NavMenu className="hidden md:block" />
           </div>
