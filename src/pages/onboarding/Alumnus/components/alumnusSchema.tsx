@@ -21,12 +21,44 @@ export const alumnusSchema = z.object({
   faculty: z.string().min(1, "Faculty is required"),
   gradYear: z.number().min(1900, "Graduation year must be valid"),
   certificate: z.any().optional(),
-  currentJobs: z.array(z.string()).optional(),
-  currentCompanies: z.array(z.string()).optional(),
-  previousCompanies: z.array(z.string()).optional(),
+  currentJobs: z.preprocess(
+  (val) => (typeof val === "string" ? [val] : val),
+  z.array(z.string()).optional()
+),
+currentCompanies: z.preprocess(
+  (val) => (typeof val === "string" ? [val] : val),
+  z.array(z.string()).optional()
+),
+previousCompanies: z.preprocess(
+  (val) => (typeof val === "string" ? [val] : val),
+  z.array(z.string()).optional()
+),
   yearsOfExperience: z.number().min(0, "Years of experience must be valid"),
   personalDescription: z.string().optional(),
-  socialLinks: z.array(z.string().url()).optional(),
+  linkedin_url: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() === "" ? undefined : val),
+    z.string().url().optional()
+  ),
+  x_url: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() === "" ? undefined : val),
+    z.string().url().optional()
+  ),
+  instagram_url: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() === "" ? undefined : val),
+    z.string().url().optional()
+  ),
+  facebook_url: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() === "" ? undefined : val),
+    z.string().url().optional()
+  ),
+  github_url: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() === "" ? undefined : val),
+    z.string().url().optional()
+  ),
+  website_url: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() === "" ? undefined : val),
+    z.string().url().optional()
+  ),
 })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords must match",

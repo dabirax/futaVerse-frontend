@@ -4,8 +4,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import loginImage from "../../assets/login.png";
-import { BackButton } from './components/BackButton';
 import Logo from "../../components/logo";
+import { BackButton } from '../components/BackButton';
 import { Button } from "@/components/ui/button";
 import {
   Form,
