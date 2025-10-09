@@ -10,6 +10,7 @@ import {
   publicRoute,
   signUpRoute,
   studentBasicRoute,
+  successRoute,
 } from "./public";
 import {
   appRoute,
@@ -25,6 +26,7 @@ export const routeTree = rootRoute.addChildren([
     lecturerBasicRoute,
     loginRoute,
     signUpRoute,
+    successRoute,
     forgotPasswordRoute,
     alumnusBasicRoute,
     alumnusProfessionalRoute,

@@ -2,11 +2,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
+import { useEffect } from "react";
 import loginImage from "../../../assets/login.png";
 import Logo from "../../../components/Logo";
 import { BackButton } from "../../components/BackButton";
-import { alumnusSchema } from "./components/alumnusSchema";
 import { useAlumnusStoreData, useHasHydrated } from "./useAlumnusStoreData";
+import { alumnusProfessionalSchema } from "./components/alumnusSchema";
+import type { AlumnusProfessionalFormData } from "./components/alumnusSchema";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,36 +20,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
+import { api } from "@/lib/api"
 
-const alumnusProfessionalSchema = alumnusSchema.pick({
-  currentJobs: true,
-  currentCompanies: true,
-  previousCompanies: true,
-  yearsOfExperience: true,
-  personalDescription: true,
-  linkedin_url: undefined,
-  x_url: true,
-  instagram_url: true,
-  facebook_url: true,
-  github_url: true,
-  website_url: true,
-});
 
-type AlumnusProfessionalFormData = z.infer<typeof alumnusProfessionalSchema>;
+
 
 const AlumnusProfessional = () => {
 
+type AlumnusProfessionalFormInput = z.input<typeof alumnusProfessionalSchema>;
+type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
 
-  
-  const form = useForm<AlumnusProfessionalFormData>({
+  // Form initialization
+  const form = useForm<AlumnusProfessionalFormInput, any,AlumnusProfessionalFormOutput>({
     resolver: zodResolver(alumnusProfessionalSchema),
     defaultValues: {
-      currentJobs: [],
-      currentCompanies: [],
-      previousCompanies: [],
-      yearsOfExperience: 0,
-      personalDescription: "",
+      current_job_title: [],
+      current_company: [],
+      previous_comps: [],
+      years_of_exp: 0,
+      description: "",
       linkedin_url: "",
       x_url: "",
       instagram_url: "",
@@ -60,39 +51,83 @@ const AlumnusProfessional = () => {
 
   const router = useRouter();
 
-  const firstName = useAlumnusStoreData((state) => state.firstName);
-  const lastName = useAlumnusStoreData((state) => state.lastName);
-const middleName = useAlumnusStoreData((state) => state.middleName);
-const gender = useAlumnusStoreData((state) => state.gender);
-const address = useAlumnusStoreData((state) => state.address);
-const country = useAlumnusStoreData((state) => state.country);
-const stateOfOrigin = useAlumnusStoreData((state) => state.state);
-const phone = useAlumnusStoreData((state) => state.phone);
-const email = useAlumnusStoreData((state) => state.email);
-const password = useAlumnusStoreData((state) => state.password);
-const confirmPassword = useAlumnusStoreData((state) => state.confirmPassword);
-const profilePic = useAlumnusStoreData((state) => state.profilePic);
-const matricNo = useAlumnusStoreData((state) => state.matricNo);
-const department = useAlumnusStoreData((state) => state.department);
-const faculty = useAlumnusStoreData((state) => state.faculty);
-const gradYear = useAlumnusStoreData((state) => state.gradYear);
-const certificate = useAlumnusStoreData((state) => state.certificate);
+  // Get Stored Data from Zustand
+  const {
+    firstname, lastname, middlename, gender, address, country, state, phone_num, email, password, confirmPassword, profilePic, matric_no, department, faculty, grad_year,certificate,
+  } = useAlumnusStoreData.getState()
 
-  const onSubmit = (data: AlumnusProfessionalFormData) => {
-    console.log({...data, firstName, lastName, middleName, gender, address, country, stateOfOrigin, phone, email, password ,confirmPassword, profilePic, matricNo, department, faculty, gradYear, certificate,}
-    );
-    // Navigate to the next step or handle submission
+// Handle Submit
+  const onSubmit = async (data: AlumnusProfessionalFormData) => {
+    console.log('Form submitted with data:', data);
+    console.log('Store values:', {firstname, lastname, middlename, gender, address, country, state, phone_num, email, password ,confirmPassword, profilePic, matric_no, department, faculty, grad_year, certificate });
+    console.log('Form errors:', form.formState.errors);
+
+    
+
+  // Payload Preparation
+  const payload = {
+    firstname,
+    lastname,
+    middlename,
+    gender,
+    email,
+    password,
+    phone_num,
+    house_no: address || "",
+    street: "",
+    city: "",
+    state,
+    country,
+    profile: {
+      matric_no,
+      department,
+      faculty,
+      grad_year,
+      previous_comps: data.previous_comps,
+      current_job_title: data.current_job_title?.[0],
+      current_company: data.current_company?.[0],
+      industry: "",
+      years_of_exp: data.years_of_exp,
+      description: data.description,
+      linkedin_url: data.linkedin_url,
+      company_linkedin_url: "",
+      github_url: data.github_url,
+      website_url: data.website_url,
+      company_website_url: "",
+      x_url: data.x_url,
+      instagram_url: data.instagram_url,
+      facebook_url: data.facebook_url,
+      profile_img: profilePic || null,
+    },
+    }
+
+  try {
+    const res = await api.post("/auth/signup/alumnus", payload)
+    console.log("✅ Signup successful:", res.data)
+    router.navigate({ to: "/signup/success" })
+  } catch (err: any) {
+    console.error("❌ Signup failed:", err.response?.data || err.message)
+  }
+
   };
 
-  
+  // Not allowing users to skip steps (or pages) during the onboarding
     const hasHydrated = useHasHydrated()
-    
+
     useEffect(() => {
-      if (!hasHydrated) return;
-      if (!firstName || !lastName || !gender || !country || !stateOfOrigin || !phone || !email || !password || !confirmPassword || !matricNo || !department || !faculty || !matricNo || !gradYear) {
-      router.navigate({ to: "/signup/alumnusSchool" })
+      console.log('useEffect triggered, hasHydrated:', hasHydrated);
+      console.log('Store values check:', {firstname, lastname, gender, country, state, phone_num, email, password, confirmPassword, matric_no, department, faculty, grad_year});
+      if (!hasHydrated) {
+        console.log('Not hydrated yet, returning');
+        return;
       }
-    }, [firstName, lastName, middleName, gender , address, country, stateOfOrigin, phone, email, password ,confirmPassword, profilePic, router, useAlumnusStoreData.persist.hasHydrated])
+      if (!firstname || !lastname || !gender || !country || !state || !phone_num || !email || !password || !confirmPassword || !matric_no || !department || !faculty || !grad_year) {
+        console.log('Missing required fields, navigating to /signup/alumnusSchool');
+        router.navigate({ to: "/signup/alumnusSchool" })
+      } else {
+        console.log('All required fields present, staying on page');
+      }
+    }, [firstname, lastname, middlename, gender , address, country, state, phone_num, email, password ,confirmPassword, profilePic, matric_no, department, faculty, grad_year, router, hasHydrated])
   
 
   return (
@@ -130,7 +165,7 @@ const certificate = useAlumnusStoreData((state) => state.certificate);
                               <div className=" grid grid-cols-2 gap-4 ">
                                   <FormField
                   control={form.control}
-                  name="currentJobs"
+                  name="current_job_title"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Current Jobs</FormLabel>
@@ -149,7 +184,7 @@ const certificate = useAlumnusStoreData((state) => state.certificate);
 
                 <FormField
                   control={form.control}
-                  name="currentCompanies"
+                  name="current_company"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Current Companies</FormLabel>
@@ -169,7 +204,7 @@ const certificate = useAlumnusStoreData((state) => state.certificate);
 
                 <FormField
                   control={form.control}
-                  name="previousCompanies"
+                  name="previous_comps"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Previous Companies</FormLabel>
@@ -187,27 +222,31 @@ const certificate = useAlumnusStoreData((state) => state.certificate);
                 />
 
                 <FormField
-                  control={form.control}
-                  name="yearsOfExperience"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Years of Experience</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder=""
-                                  className="w-20"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+  control={form.control}
+  name="years_of_exp"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Years of Experience</FormLabel>
+      <FormControl>
+        <Input
+          type="number"
+          className="w-20"
+          value={Number(field.value) || ""}
+          onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : "")}
+          onBlur={field.onBlur}
+          name={field.name}
+          ref={field.ref}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
 
                 <FormField
   control={form.control}
-  name="personalDescription"
+  name="description"
   render={({ field }) => (
     <FormItem>
       <FormLabel>Personal Description</FormLabel>

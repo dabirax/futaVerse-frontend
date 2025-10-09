@@ -1,10 +1,10 @@
-import { Link, useRouter, } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import loginImage from "../../assets/login.png";
-import Logo from "../../components/logo";
+import Logo from "../../components/Logo";
 import { BackButton } from '../components/BackButton';
 import { Button } from "@/components/ui/button";
 import {
@@ -35,9 +35,7 @@ const LoginPage = () => {
   const onSubmit = (data: z.infer<typeof loginSchema>) => {
     console.log(data);
   };
-
-  const router = useRouter();
-
+  
   return (
     <div className="h-screen flex items-center justify-center">
       <div className="w-full h-full grid lg:grid-cols-2">
@@ -47,7 +45,7 @@ const LoginPage = () => {
         <div className="max-w-md m-auto w-full flex flex-col items-center">
           <div className="mt-4 flex items-center justify-between w-full text-2xl">
             <div className=" mt-1">
-             <BackButton />
+              <BackButton />
             </div>
             <Logo />
           </div>

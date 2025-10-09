@@ -7,8 +7,8 @@ import loginImage from "../../../assets/login.png";
 import  Logo  from '../../../components/Logo';
 import { BackButton } from '../../components/BackButton';
 import { useAlumnusStoreData } from "./useAlumnusStoreData";
-import { alumnusSchema } from "./components/alumnusSchema";
-import type { z } from "zod";
+import { alumnusBasicSchema } from "./components/alumnusSchema";
+import type { AlumnusBasicFormData } from "./components/alumnusSchema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -21,22 +21,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const alumnusBasicSchema = alumnusSchema.pick({
-  firstName: true,
-  lastName: true,
-  middleName: true,
-  gender: true,
-  address: true,
-  country: true,
-  state: true,
-  phone: true,
-  email: true,
-  password: true,
-  confirmPassword: true,
-  profilePic: true,
-});
-
-type AlumnusBasicFormData = z.infer<typeof alumnusBasicSchema>;
 
 const countryOptions = Country.getAllCountries().map((country) => ({
   label: `${country.name}`,
@@ -55,14 +39,14 @@ const AlumnusBasic = () => {
   const form = useForm<AlumnusBasicFormData>({
     resolver: zodResolver(alumnusBasicSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      middleName: "",
+      firstname: "",
+      lastname: "",
+      middlename: "",
       gender: undefined,
       address: "",
       country: "",
       state: "",
-      phone: "",
+      phone_num: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -101,7 +85,7 @@ const AlumnusBasic = () => {
         <div className="max-w-md m-auto w-full flex flex-col items-center py-4">
           <div className="flex items-center justify-between w-full text-[#9017c2] text-2xl px-2">
             <div className=" mt-1">
-             <BackButton />
+              <BackButton />
             </div>
             <Logo     />
           </div>
@@ -116,7 +100,7 @@ const AlumnusBasic = () => {
               <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="firstName"
+                name="firstname"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>First Name <span className="text-red-500">*</span></FormLabel>
@@ -134,7 +118,7 @@ const AlumnusBasic = () => {
               />
               <FormField
                 control={form.control}
-                name="lastName"
+                name="lastname"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Last Name <span className="text-red-500">*</span></FormLabel>
@@ -154,7 +138,7 @@ const AlumnusBasic = () => {
               <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="middleName"
+                name="middlename"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Middle Name</FormLabel>
@@ -273,7 +257,7 @@ const AlumnusBasic = () => {
               
               <FormField
                 control={form.control}
-                name="phone"
+                name="phone_num"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Phone Number<span className="text-red-500">*</span></FormLabel>

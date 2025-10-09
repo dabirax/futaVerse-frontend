@@ -8,6 +8,7 @@ import AlumnusProfessional from "../pages/onboarding/Alumnus/AlumnusProfessional
 import AlumnusSchool from "../pages/onboarding/Alumnus/AlumnusSchool";
 import StudentBasic from "../pages/onboarding/Student/StudentBasic";
 import LecturerBasic from "../pages/onboarding/lecturer/LecturerBasic";
+import Success from '../pages/onboarding/Success'
 import { rootRoute } from "./root";
 
 // Public parent route (no auth required)
@@ -15,7 +16,7 @@ export const publicRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: "public",
   component: () => <Outlet />,
-   notFoundComponent: () => <div>Page Not Found</div>,
+  notFoundComponent: () => <div>Page Not Found</div>,
 });
 
 export const landingRoute = createRoute({
@@ -64,6 +65,12 @@ export const lecturerBasicRoute = createRoute({
   getParentRoute: () => publicRoute,
   path: "/signup/lecturerBasic",
   component: LecturerBasic
+})
+
+export const successRoute  = createRoute({
+  getParentRoute: () => publicRoute,
+  path: "/signup/success",
+  component: Success
 })
 
 export const forgotPasswordRoute = createRoute({
