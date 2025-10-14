@@ -3,13 +3,15 @@ import Landing from "../pages/landing";
 import Login from "../pages/onboarding/Login";
 import SignUp from "../pages/onboarding/SignUp";
 import ForgotPassword from "../pages/onboarding/ForgotPassword";
-import AlumnusBasic from "../pages/onboarding/Alumnus/AlumnusBasic";
-import AlumnusProfessional from "../pages/onboarding/Alumnus/AlumnusProfessional";
-import AlumnusSchool from "../pages/onboarding/Alumnus/AlumnusSchool";
-import StudentBasic from "../pages/onboarding/Student/StudentBasic";
+import AlumnusBasic from "../pages/onboarding/Alumnus/pages/AlumnusBasic";
+import AlumnusProfessional from "../pages/onboarding/Alumnus/pages/AlumnusProfessional";
+import AlumnusSchool from "../pages/onboarding/Alumnus/pages/AlumnusSchool";
+import StudentBasic from "../pages/onboarding/Student/pages/StudentBasic";
 import LecturerBasic from "../pages/onboarding/lecturer/LecturerBasic";
 import Success from '../pages/onboarding/Success'
 import { rootRoute } from "./root";
+import StudentSchool from "@/pages/onboarding/Student/pages/StudentSchool";
+import StudentProfessional from "@/pages/onboarding/Student/pages/StudentProfessional";
 
 // Public parent route (no auth required)
 export const publicRoute = createRoute({
@@ -60,6 +62,18 @@ export const studentBasicRoute = createRoute({
   path: "/signup/studentBasic",
   component: StudentBasic
 })
+export const studentSchoolRoute = createRoute({
+  getParentRoute: () => publicRoute,
+  path: "/signup/studentSchool",
+  component: StudentSchool
+})
+
+export const studentProfessionalRoute = createRoute({
+  getParentRoute: () => publicRoute,
+  path: "/signup/studentProfessional",
+  component: StudentProfessional
+})
+
 
 export const lecturerBasicRoute = createRoute({
   getParentRoute: () => publicRoute,

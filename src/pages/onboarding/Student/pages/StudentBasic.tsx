@@ -3,12 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Country, State } from "country-state-city";
 import { useRouter } from "@tanstack/react-router";
-import loginImage from "../../../assets/login.png";
-import  Logo  from '../../../components/Logo';
-import { BackButton } from '../../components/BackButton';
-import { useAlumnusStoreData } from "./useAlumnusStoreData";
-import { alumnusBasicSchema } from "./components/alumnusSchema";
-import type { AlumnusBasicFormData } from "./components/alumnusSchema";
+import loginImage from "../../../../assets/login.png";
+import  Logo  from '../../../../components/Logo';
+import { BackButton } from '../../../components/BackButton';
+import { useStudentStoreData } from "../hooks/useStudentStoreData";
+import { studentBasicSchema } from "../lib/studentSchema";
+import type { StudentBasicFormData } from "../lib/studentSchema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -32,12 +32,12 @@ const stateOptions = (countryCode: string): Array<string> => {
   return State.getStatesOfCountry(countryCode).map((state) => state.name);
 };
 
-const AlumnusBasic = () => {
+const StudentBasic = () => {
 
-  const setData = useAlumnusStoreData((state)=> state.setData)
+  const setData = useStudentStoreData((state)=> state.setData)
 
-  const form = useForm<AlumnusBasicFormData>({
-    resolver: zodResolver(alumnusBasicSchema),
+  const form = useForm<StudentBasicFormData>({
+    resolver: zodResolver(studentBasicSchema),
     defaultValues: {
       firstname: "",
       lastname: "",
@@ -56,10 +56,10 @@ const AlumnusBasic = () => {
     
     const router = useRouter()
 
-  const onSubmit = (data: AlumnusBasicFormData) => {
+  const onSubmit = (data: StudentBasicFormData) => {
     console.log(data);   
     setData(data);
-    router.navigate({ to: "/signup/alumnusSchool" })
+    router.navigate({ to: "/signup/studentSchool" })
   };
 
   const selectedCountry = form.watch("country");
@@ -369,4 +369,4 @@ const AlumnusBasic = () => {
   );
 };
 
-export default AlumnusBasic;
+export default StudentBasic;

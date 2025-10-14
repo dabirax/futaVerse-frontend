@@ -10,6 +10,8 @@ import {
   publicRoute,
   signUpRoute,
   studentBasicRoute,
+  studentProfessionalRoute,
+  studentSchoolRoute,
   successRoute,
 } from "./public";
 import {
@@ -32,6 +34,8 @@ export const routeTree = rootRoute.addChildren([
     alumnusProfessionalRoute,
     alumnusSchoolRoute,
     studentBasicRoute,
+    studentSchoolRoute,
+    studentProfessionalRoute,
   ]),
   appRoute.addChildren([dashboardRoute, feedsRoute, notificationsRoute]),
 ]);

@@ -4,11 +4,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
-import loginImage from "../../../assets/login.png";
-import Logo from '../../../components/Logo';
-import { BackButton } from '../../components/BackButton';
-import { useAlumnusStoreData, useHasHydrated } from "./useAlumnusStoreData";
-import { alumnusSchoolSchema } from "./components/alumnusSchema";
+import loginImage from "../../../../assets/login.png";
+import Logo from '../../../../components/Logo';
+import { BackButton } from '../../../components/BackButton';
+import { useHasHydrated, useStudentStoreData, } from "../hooks/useStudentStoreData";
+import { studentSchoolSchema } from "../lib/studentSchema";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,48 +20,51 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
-const AlumnusSchool = () => {
+const StudentSchool = () => {
   // Type definitions for form input and output based on the schema
-  type AlumnusSchoolInput = z.input<typeof alumnusSchoolSchema>;
-  type AlumnusSchoolOutput = z.output<typeof alumnusSchoolSchema>;
+  type StudentSchoolInput = z.input<typeof studentSchoolSchema>;
+  type StudentSchoolOutput = z.output<typeof studentSchoolSchema>;
 
   // Initialize the form with Zod resolver and default values
-  const form = useForm<AlumnusSchoolInput, any, AlumnusSchoolOutput>({
-    resolver: zodResolver(alumnusSchoolSchema),
+  const form = useForm<StudentSchoolInput, any, StudentSchoolOutput>({
+    resolver: zodResolver(studentSchoolSchema),
     defaultValues: {
       matric_no: "",
       department: "",
       faculty: "",
-      grad_year: 2025,
+      expected_grad_year: 2025,
+      level: undefined,
+      cgpa: undefined,
       certificate: null,
     },
   });
 
-  // Extract user data from the alumnus store for validation
-  const firstName = useAlumnusStoreData((state) => state.firstname);
-  const lastName = useAlumnusStoreData((state) => state.lastname);
-  const middleName = useAlumnusStoreData((state) => state.middlename);
-  const gender = useAlumnusStoreData((state) => state.gender);
-  const address = useAlumnusStoreData((state) => state.address);
-  const country = useAlumnusStoreData((state) => state.country);
-  const stateOfOrigin = useAlumnusStoreData((state) => state.state);
-  const phone = useAlumnusStoreData((state) => state.phone_num);
-  const email = useAlumnusStoreData((state) => state.email);
-  const password = useAlumnusStoreData((state) => state.password);
-  const confirmPassword = useAlumnusStoreData((state) => state.confirmPassword);
-  const profilePic = useAlumnusStoreData((state) => state.profilePic);
+  // Extract user data from the Student store for validation
+  const firstName = useStudentStoreData((state) => state.firstname);
+  const lastName = useStudentStoreData((state) => state.lastname);
+  const middleName = useStudentStoreData((state) => state.middlename);
+  const gender = useStudentStoreData((state) => state.gender);
+  const address = useStudentStoreData((state) => state.address);
+  const country = useStudentStoreData((state) => state.country);
+  const stateOfOrigin = useStudentStoreData((state) => state.state);
+  const phone = useStudentStoreData((state) => state.phone_num);
+  const email = useStudentStoreData((state) => state.email);
+  const password = useStudentStoreData((state) => state.password);
+  const confirmPassword = useStudentStoreData((state) => state.confirmPassword);
+  const profilePic = useStudentStoreData((state) => state.profilePic);
 
   // Store setter function and router hook
-  const setData = useAlumnusStoreData((state) => state.setData);
+  const setData = useStudentStoreData((state) => state.setData);
   const router = useRouter();
 
   // Handle form submission: log data, update store, navigate to next step
-  const onSubmit = (data: AlumnusSchoolOutput) => {
+  const onSubmit = (data: StudentSchoolOutput) => {
     console.log(data);
     setData(data);
-    router.navigate({ to: "/signup/alumnusProfessional" });
+    router.navigate({ to: "/signup/StudentProfessional" });
   };
 
   // Check if the store has hydrated
@@ -71,9 +74,9 @@ const AlumnusSchool = () => {
   useEffect(() => {
     if (!hasHydrated) return;
     if (!firstName || !lastName || !gender || !country || !stateOfOrigin || !phone || !email || !password || !confirmPassword) {
-      router.navigate({ to: "/signup/alumnusBasic" });
+      router.navigate({ to: "/signup/StudentBasic" });
     }
-  }, [firstName, lastName, middleName, gender, address, country, stateOfOrigin, phone, email, password, confirmPassword, profilePic, router, useAlumnusStoreData.persist.hasHydrated]);
+  }, [firstName, lastName, middleName, gender, address, country, stateOfOrigin, phone, email, password, confirmPassword, profilePic, router, useStudentStoreData.persist.hasHydrated]);
 
   return (
     <div className="h-screen flex items-center justify-center">
@@ -169,15 +172,15 @@ const AlumnusSchool = () => {
                 {/* Graduation Year field */}
                 <FormField
                   control={form.control}
-                  name="grad_year"
+                  name="expected_grad_year"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Graduation Year <span className="text-red-500">*</span></FormLabel>
+                      <FormLabel>Expected Graduation Year <span className="text-red-500">*</span></FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder="Enter your graduation year"
-                          className="w-full"
+                          placeholder="Enter your expected graduation year"
+                          className="w-fit"
                           value={Number(field.value) || ""}
                           onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : "")}
                         />
@@ -186,6 +189,63 @@ const AlumnusSchool = () => {
                     </FormItem>
                   )}
                 />
+
+                <div className="flex space-x-4">  <FormField
+  control={form.control}
+  name="level"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Level <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select Level" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="100">100 Level</SelectItem>
+            <SelectItem value="200">200 Level</SelectItem>
+            <SelectItem value="300">300 Level</SelectItem>
+            <SelectItem value="400">400 Level</SelectItem>
+            <SelectItem value="500">500 Level</SelectItem>
+            <SelectItem value="600">600 Level</SelectItem>
+          </SelectContent>
+        </Select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+<FormField
+  control={form.control}
+  name="cgpa"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        CGPA Class <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Select onValueChange={field.onChange} defaultValue={field.value} >
+          <SelectTrigger>
+            <SelectValue placeholder="Select CGPA" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="First Class">First Class</SelectItem>
+            <SelectItem value="Second Class Upper">Second Class Upper</SelectItem>
+            <SelectItem value="Second Class Lower">Second Class Lower</SelectItem>
+            <SelectItem value="Third Class">Third Class</SelectItem>
+            <SelectItem value="Pass">Pass</SelectItem>
+          </SelectContent>
+        </Select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/></div>
+              
+
 
                 {/* Certificate upload field (optional) */}
                 <FormField
@@ -239,4 +299,4 @@ const AlumnusSchool = () => {
   );
 };
 
-export default AlumnusSchool;
+export default StudentSchool;

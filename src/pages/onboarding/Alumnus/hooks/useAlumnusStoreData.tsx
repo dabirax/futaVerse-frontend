@@ -1,6 +1,6 @@
 import {create} from "zustand";
 import {createJSONStorage, persist } from 'zustand/middleware'
-import type { AlumnusFormData } from "./components/alumnusSchema"
+import type { AlumnusFormData } from "../lib/alumnusSchema"
 
 type AlumnusState = Partial<AlumnusFormData> & {
     setData: (data: Partial<AlumnusFormData>) => void;

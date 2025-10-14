@@ -3,12 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
-import loginImage from "../../../assets/login.png";
-import Logo from "../../../components/Logo";
-import { BackButton } from "../../components/BackButton";
-import { useAlumnusStoreData, useHasHydrated } from "./useAlumnusStoreData";
-import { alumnusProfessionalSchema } from "./components/alumnusSchema";
-import type { AlumnusProfessionalFormData } from "./components/alumnusSchema";
+import loginImage from "../../../../assets/login.png";
+import Logo from "../../../../components/Logo";
+import { BackButton } from "../../../components/BackButton";
+import { useHasHydrated, useStudentStoreData } from "../hooks/useStudentStoreData";
+import { studentProfessionalSchema } from "../lib/studentSchema";
+import type { StudentProfessionalFormData } from "../lib/studentSchema";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,19 +25,16 @@ import { api } from "@/lib/api"
 
 
 
-const AlumnusProfessional = () => {
+const StudentProfessional = () => {
 
-type AlumnusProfessionalFormInput = z.input<typeof alumnusProfessionalSchema>;
-type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
+type StudentProfessionalFormInput = z.input<typeof studentProfessionalSchema>;
+type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
 
   // Form initialization
-  const form = useForm<AlumnusProfessionalFormInput, any,AlumnusProfessionalFormOutput>({
-    resolver: zodResolver(alumnusProfessionalSchema),
+  const form = useForm<StudentProfessionalFormInput, any,StudentProfessionalFormOutput>({
+    resolver: zodResolver(studentProfessionalSchema),
     defaultValues: {
-      current_job_title: [],
-      current_company: [],
-      previous_comps: [],
-      years_of_exp: 0,
+      skills: [],
       description: "",
       linkedin_url: "",
       x_url: "",
@@ -53,13 +50,13 @@ type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
 
   // Get Stored Data from Zustand
   const {
-    firstname, lastname, middlename, gender, address, country, state, phone_num, email, password, confirmPassword, profilePic, matric_no, department, faculty, grad_year,certificate,
-  } = useAlumnusStoreData.getState()
+    firstname, lastname, middlename, gender, address, country, state, phone_num, email, password, confirmPassword, profilePic, matric_no, department, faculty, expected_grad_year,certificate,
+  } = useStudentStoreData.getState()
 
 // Handle Submit
-  const onSubmit = async (data: AlumnusProfessionalFormData) => {
+  const onSubmit = async (data: StudentProfessionalFormData) => {
     console.log('Form submitted with data:', data);
-    console.log('Store values:', {firstname, lastname, middlename, gender, address, country, state, phone_num, email, password ,confirmPassword, profilePic, matric_no, department, faculty, grad_year, certificate });
+    console.log('Store values:', {firstname, lastname, middlename, gender, address, country, state, phone_num, email, password ,confirmPassword, profilePic, matric_no, department, faculty, expected_grad_year, certificate });
     console.log('Form errors:', form.formState.errors);
 
     
@@ -82,12 +79,8 @@ type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
       matric_no,
       department,
       faculty,
-      grad_year,
-      previous_comps: data.previous_comps,
-      current_job_title: data.current_job_title?.[0],
-      current_company: data.current_company?.[0],
-      industry: "",
-      years_of_exp: data.years_of_exp,
+      expected_grad_year,
+      previous_comps: data.skills,
       description: data.description,
       linkedin_url: data.linkedin_url,
       company_linkedin_url: "",
@@ -102,7 +95,7 @@ type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
     }
 
   try {
-    const res = await api.post("/auth/signup/alumnus", payload)
+    const res = await api.post("/auth/signup/Student", payload)
     console.log("✅ Signup successful:", res.data)
     router.navigate({ to: "/signup/success" })
   } catch (err: any) {
@@ -116,18 +109,18 @@ type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
 
     useEffect(() => {
       console.log('useEffect triggered, hasHydrated:', hasHydrated);
-      console.log('Store values check:', {firstname, lastname, gender, country, state, phone_num, email, password, confirmPassword, matric_no, department, faculty, grad_year});
+      console.log('Store values check:', {firstname, lastname, gender, country, state, phone_num, email, password, confirmPassword, matric_no, department, faculty, expected_grad_year});
       if (!hasHydrated) {
         console.log('Not hydrated yet, returning');
         return;
       }
-      if (!firstname || !lastname || !gender || !country || !state || !phone_num || !email || !password || !confirmPassword || !matric_no || !department || !faculty || !grad_year) {
-        console.log('Missing required fields, navigating to /signup/alumnusSchool');
-        router.navigate({ to: "/signup/alumnusSchool" })
+      if (!firstname || !lastname || !gender || !country || !state || !phone_num || !email || !password || !confirmPassword || !matric_no || !department || !faculty || !expected_grad_year) {
+        console.log('Missing required fields, navigating to /signup/StudentSchool');
+        router.navigate({ to: "/signup/StudentSchool" })
       } else {
         console.log('All required fields present, staying on page');
       }
-    }, [firstname, lastname, middlename, gender , address, country, state, phone_num, email, password ,confirmPassword, profilePic, matric_no, department, faculty, grad_year, router, hasHydrated])
+    }, [firstname, lastname, middlename, gender , address, country, state, phone_num, email, password ,confirmPassword, profilePic, matric_no, department, faculty, expected_grad_year, router, hasHydrated])
   
 
   return (
@@ -162,17 +155,17 @@ type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
                 className="w-full space-y-5 mt-5"
                 onSubmit={form.handleSubmit(onSubmit)}
                           >
-                              <div className=" grid grid-cols-2 gap-4 ">
-                                  <FormField
+
+                <FormField
                   control={form.control}
-                  name="current_job_title"
+                  name="skills"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Current Jobs</FormLabel>
+                      <FormLabel>Skills</FormLabel>
                       <FormControl>
                         <Input
                           type="text"
-                          placeholder="Enter current jobs"
+                          placeholder="Enter your skills"
                           className="w-full"
                           {...field}
                         />
@@ -182,67 +175,7 @@ type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="current_company"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Current Companies</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Enter current companies"
-                          className="w-full"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /></div>
-                
-
-                <FormField
-                  control={form.control}
-                  name="previous_comps"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Previous Companies</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Enter your previous companies"
-                          className="w-full"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-  control={form.control}
-  name="years_of_exp"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Years of Experience</FormLabel>
-      <FormControl>
-        <Input
-          type="number"
-          className="w-20"
-          value={Number(field.value) || ""}
-          onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : "")}
-          onBlur={field.onBlur}
-          name={field.name}
-          ref={field.ref}
-        />
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-
+              
 
                 <FormField
   control={form.control}
@@ -416,4 +349,4 @@ router.history.back();
   );
 };
 
-export default AlumnusProfessional;
+export default StudentProfessional;
