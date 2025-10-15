@@ -80,7 +80,7 @@ import { z } from "zod";
 
 // 🧍 Basic Info
 
-export const alumnusBasicSchema = z.object({
+export const alumnusBasicRaw = z.object({
   firstname: z.string().min(1, "First name is required"),
   lastname: z.string().min(1, "Last name is required"),
   middlename: z.string().optional(),
@@ -91,16 +91,18 @@ export const alumnusBasicSchema = z.object({
   country: z.string().min(1, "Country is required"),
   state: z.string().min(1, "State is required"),
   phone_num: z.string().min(10, "Phone number must be at least 10 digits"),
-  email: z.email("Invalid email address"),
+  email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters long"),
   confirmPassword: z
     .string()
     .min(8, "Confirm Password must be at least 8 characters long"),
   profilePic: z.any().optional(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords must match",
-  path: ["confirmPassword"],
-});
+})
+
+export const alumnusBasicSchema = alumnusBasicRaw.refine(
+  (data) => data.password === data.confirmPassword,
+  { message: "Passwords must match", path: ["confirmPassword"] }
+);
 
 export type AlumnusBasicFormData = z.infer<typeof alumnusBasicSchema>;
 
@@ -131,21 +133,21 @@ export const alumnusProfessionalSchema = z.object({
     .number()
     .min(0, "Years of experience must be valid"),
   description: z.string().optional(),
-  linkedin_url: z.union([z.literal(""), z.url("Invalid LinkedIn URL")]),
-  x_url: z.union([z.literal(""), z.url("Invalid X URL")]),
-  instagram_url: z.union([z.literal(""), z.url("Invalid Instagram URL")]),
-  facebook_url: z.union([z.literal(""), z.url("Invalid Facebook URL")]),
-  github_url: z.union([z.literal(""), z.url("Invalid GitHub URL")]),
-  website_url: z.union([z.literal(""), z.url("Invalid Website URL")]),
+  linkedin_url: z.union([z.literal(""), z.string().url("Invalid LinkedIn URL")]),
+  x_url: z.union([z.literal(""), z.string().url("Invalid X URL")]),
+  instagram_url: z.union([z.literal(""), z.string().url("Invalid Instagram URL")]),
+  facebook_url: z.union([z.literal(""), z.string().url("Invalid Facebook URL")]),
+  github_url: z.union([z.literal(""), z.string().url("Invalid GitHub URL")]),
+  website_url: z.union([z.literal(""), z.string().url("Invalid Website URL")]),
 });
 
 export type AlumnusProfessionalFormData = z.infer<typeof alumnusProfessionalSchema>;
 
 
 // All Alumnus Info
-
-export const alumnusSchema = alumnusBasicSchema
+export const alumnusSchema = alumnusBasicRaw
   .merge(alumnusSchoolSchema)
-  .merge(alumnusProfessionalSchema);
+  .merge(alumnusProfessionalSchema)
+;
 
 export type AlumnusFormData = z.infer<typeof alumnusSchema>;

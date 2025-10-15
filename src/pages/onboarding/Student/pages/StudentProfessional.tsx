@@ -94,6 +94,8 @@ type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
     },
     }
 
+    console.log(payload)
+
   try {
     const res = await api.post("/auth/signup/Student", payload)
     console.log("✅ Signup successful:", res.data)

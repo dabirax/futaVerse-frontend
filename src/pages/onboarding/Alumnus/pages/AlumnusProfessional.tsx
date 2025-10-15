@@ -100,6 +100,7 @@ type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
       profile_img: profilePic || null,
     },
     }
+    console.log(payload)
 
   try {
     const res = await api.post("/auth/signup/alumnus", payload)

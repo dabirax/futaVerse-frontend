@@ -11,23 +11,21 @@ export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-type GroupBy<T, K extends keyof T> = Record<string, Array<T>>;
+type GroupBy<TItem> = Record<string, Array<TItem>>;
 
-export function groupBy<T, K extends keyof T>(
-  array: Array<T>,
-  key: K
-): GroupBy<T, K> {
+export function groupBy<TItem, TKey extends keyof TItem>(
+  array: Array<TItem>,
+  key: TKey
+): GroupBy<TItem> {
   return array.reduce((acc, item) => {
     const keyValue = String(item[key]);
-    if (!acc[keyValue]) {
-      acc[keyValue] = [];
-    }
+    acc[keyValue] ??= [];
     acc[keyValue].push(item);
     return acc;
-  }, {} as GroupBy<T, K>);
+  }, {} as GroupBy<TItem>);
 }
+
 
 export function absoluteUrl(path: string) {
   return process.env.NODE_ENV === "development"
