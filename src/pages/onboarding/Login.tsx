@@ -69,7 +69,7 @@ const LoginPage = () => {
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="example@example.com"
+                        placeholder="exam@example.com"
                         className="w-full"
                         {...field}
                       />
