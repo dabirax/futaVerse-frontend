@@ -5,11 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
 import loginImage from "../../../../assets/login.png";
-import Logo from '../../../../components/Logo';
 import { BackButton } from '../../../components/BackButton';
 import { useAlumnusStoreData, useHasHydrated } from "../hooks/useAlumnusStoreData";
 import { alumnusSchoolSchema } from "../lib/alumnusSchema";
 import type { z } from "zod";
+import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import {
   Form,

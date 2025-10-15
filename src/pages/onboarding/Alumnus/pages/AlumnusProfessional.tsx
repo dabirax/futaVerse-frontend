@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
 import loginImage from "../../../../assets/login.png";
-import Logo from "../../../../components/Logo";
 import { BackButton } from "../../../components/BackButton";
 import { useAlumnusStoreData, useHasHydrated } from "../hooks/useAlumnusStoreData";
 import { alumnusProfessionalSchema } from "../lib/alumnusSchema";
 import type { AlumnusProfessionalFormData } from "../lib/alumnusSchema";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
+import Logo from "@/components/Logo";
 import {
   Form,
   FormControl,

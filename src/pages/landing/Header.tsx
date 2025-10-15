@@ -2,10 +2,10 @@
 import { SunIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import  Logo  from "../../components/Logo";
 import { Button } from "../../components/ui/button";
 import { NavMenu } from "../../components/navbar-02/nav-menu";
 import { Sidebar } from "../onboarding/components/sidebar";
+import Logo from "@/components/Logo";
 
 const Header = () => {
   return (

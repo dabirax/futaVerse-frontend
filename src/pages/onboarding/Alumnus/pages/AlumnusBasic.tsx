@@ -4,12 +4,12 @@ import { motion } from "framer-motion";
 import { Country, State } from "country-state-city";
 import { useRouter } from "@tanstack/react-router";
 import loginImage from "../../../../assets/login.png";
-import  Logo  from '../../../../components/Logo';
 import { BackButton } from '../../../components/BackButton';
 import { useAlumnusStoreData } from "../hooks/useAlumnusStoreData";
 import { alumnusBasicSchema } from "../lib/alumnusSchema";
 import type { AlumnusBasicFormData } from "../lib/alumnusSchema";
 import { Button } from "@/components/ui/button";
+import Logo from "@/components/Logo";
 import {
   Form,
   FormControl,
