@@ -1,4 +1,4 @@
-import { rootRoute } from "./root";
+import { rootRoute } from "./__root";
 import {
   alumnusBasicRoute,
   alumnusProfessionalRoute,

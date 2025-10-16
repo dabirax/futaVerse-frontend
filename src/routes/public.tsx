@@ -9,7 +9,7 @@ import AlumnusSchool from "../pages/onboarding/Alumnus/pages/AlumnusSchool";
 import StudentBasic from "../pages/onboarding/Student/pages/StudentBasic";
 import LecturerBasic from "../pages/onboarding/lecturer/LecturerBasic";
 import Success from '../pages/onboarding/Success'
-import { rootRoute } from "./root";
+import { rootRoute } from "./__root";
 import StudentSchool from "@/pages/onboarding/Student/pages/StudentSchool";
 import StudentProfessional from "@/pages/onboarding/Student/pages/StudentProfessional";
 

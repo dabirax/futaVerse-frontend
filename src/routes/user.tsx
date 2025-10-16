@@ -3,7 +3,7 @@ import userLayout from "../layout/userLayout";
 import Dashboard from "../pages/user/Dashboard";
 import Feeds from "../pages/user/Feeds";
 import Notification from "../pages/user/Notification";
-import { rootRoute } from "./root";
+import { rootRoute } from "./__root";
 
 // Protected parent route (all children require auth)
 export const appRoute = createRoute({
