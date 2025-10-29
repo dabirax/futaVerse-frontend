@@ -71,7 +71,7 @@ const Features = () => {
                 className="group border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
               >
                 <CardContent className="p-6">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  <div className={`w-12 h-12 rounded-xl bg-linear-to-br ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <Icon className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
