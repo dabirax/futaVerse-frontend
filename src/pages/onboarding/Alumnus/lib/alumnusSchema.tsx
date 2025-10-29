@@ -126,12 +126,34 @@ export type AlumnusSchoolFormData = z.infer<typeof alumnusSchoolSchema>;
 // 💼 Professional Info
 
 export const alumnusProfessionalSchema = z.object({
-  current_job_title: z.array(z.string()).optional(),
-  current_company: z.array(z.string()).optional(),
+  current_job_title: z.string().optional(),
+  current_company: z.string().optional(),
   previous_comps: z.array(z.string()).optional(),
   years_of_exp: z.coerce
     .number()
     .min(0, "Years of experience must be valid"),
+  industry: z.union([
+  z.literal(""),
+  z.enum([
+    "Information Technology",
+    "Software Development",
+    "Cybersecurity",
+    "Data Science & Analytics",
+    "Mechanical Engineering",
+    "Electrical Engineering",
+    "Renewable Energy",
+    "Banking & Finance",
+    "Digital Marketing",
+    "Healthcare",
+    "Education",
+    "Agriculture",
+    "Media & Entertainment",
+    "Construction & Real Estate",
+    "NGO / Nonprofit",
+    "Government & Public Sector",
+  ]),
+]).refine((val) => val !== "", { message: "Industry is required" }),
+
   description: z.string().optional(),
   linkedin_url: z.union([z.literal(""), z.string().url("Invalid LinkedIn URL")]),
   x_url: z.union([z.literal(""), z.string().url("Invalid X URL")]),

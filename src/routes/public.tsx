@@ -3,15 +3,19 @@ import Landing from "../pages/landing";
 import Login from "../pages/onboarding/Login";
 import SignUp from "../pages/onboarding/SignUp";
 import ForgotPassword from "../pages/onboarding/ForgotPassword";
-import AlumnusBasic from "../pages/onboarding/Alumnus/pages/AlumnusBasic";
-import AlumnusProfessional from "../pages/onboarding/Alumnus/pages/AlumnusProfessional";
-import AlumnusSchool from "../pages/onboarding/Alumnus/pages/AlumnusSchool";
-import StudentBasic from "../pages/onboarding/Student/pages/StudentBasic";
-import LecturerBasic from "../pages/onboarding/lecturer/LecturerBasic";
-import Success from '../pages/onboarding/Success'
+import AlumnusBasic from "../pages/onboarding/Alumnus/pages/01-AlumnusBasic";
+import AlumnusProfessional from "../pages/onboarding/Alumnus/pages/03-AlumnusProfessional";
+import AlumnusSchool from "../pages/onboarding/Alumnus/pages/02-AlumnusSchool";
+import StudentBasic from "../pages/onboarding/Student/pages/01-StudentBasic";
+import LecturerBasic from "../pages/onboarding/Lecturer/LecturerBasic";
+import SignUpSuccess from '../pages/onboarding/SignUpSuccess'
 import { rootRoute } from "./__root";
-import StudentSchool from "@/pages/onboarding/Student/pages/StudentSchool";
-import StudentProfessional from "@/pages/onboarding/Student/pages/StudentProfessional";
+import StudentSchool from "@/pages/onboarding/Student/pages/02-StudentSchool";
+import StudentProfessional from "@/pages/onboarding/Student/pages/03-StudentProfessional";
+import CheckEmail from "@/pages/onboarding/CheckEmail";
+import ResetPassword from "@/pages/onboarding/ResetPassword";
+import ResetSuccess from "@/pages/onboarding/ResetSuccess";
+import SignUpOTP from "@/pages/onboarding/SignUpOTP";
 
 // Public parent route (no auth required)
 export const publicRoute = createRoute({
@@ -33,6 +37,8 @@ export const loginRoute = createRoute({
   component: Login,
 });
 
+
+// Sign Up Section
 export const signUpRoute = createRoute({
   getParentRoute: () => publicRoute,
   path: "/signup",
@@ -81,14 +87,40 @@ export const lecturerBasicRoute = createRoute({
   component: LecturerBasic
 })
 
-export const successRoute  = createRoute({
+export const signupOTPRoute  = createRoute({
   getParentRoute: () => publicRoute,
-  path: "/signup/success",
-  component: Success
+  path: "/signup/otp",
+  component: SignUpOTP
 })
 
+export const signupSuccessRoute  = createRoute({
+  getParentRoute: () => publicRoute,
+  path: "/signup/success",
+  component: SignUpSuccess
+})
+
+// Forgot Password Section
 export const forgotPasswordRoute = createRoute({
   getParentRoute: () => publicRoute,
   path: "/forgot-password",
   component: ForgotPassword,
 });
+
+export const checkEmailRoute = createRoute({
+  getParentRoute: () => publicRoute,
+  path: "/check-email",
+  component: CheckEmail,
+});
+
+export const resetPasswordRoute = createRoute({
+  getParentRoute: () => publicRoute,
+  path: "/reset-password",
+  component: ResetPassword,
+});
+
+export const resetSuccessRoute = createRoute({
+  getParentRoute: () => publicRoute,
+  path: "/reset-success",
+  component: ResetSuccess,
+});
+

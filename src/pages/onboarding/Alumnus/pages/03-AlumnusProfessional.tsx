@@ -3,11 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
-import loginImage from "../../../../assets/login.png";
 import { BackButton } from "../../../components/BackButton";
-import { useHasHydrated, useStudentStoreData } from "../hooks/useStudentStoreData";
-import { studentProfessionalSchema } from "../lib/studentSchema";
-import type { StudentProfessionalFormData } from "../lib/studentSchema";
+import { LeftContainer } from "../../components/LeftContainer";
+import { useAlumnusStoreData, useHasHydrated } from "../hooks/useAlumnusStoreData";
+import { alumnusProfessionalSchema } from "../lib/alumnusSchema";
+import type { AlumnusProfessionalFormData } from "../lib/alumnusSchema";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import Logo from "@/components/Logo";
@@ -20,21 +20,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { api } from "@/lib/api"
 
 
 
 
-const StudentProfessional = () => {
+const AlumnusProfessional = () => {
 
-type StudentProfessionalFormInput = z.input<typeof studentProfessionalSchema>;
-type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
+type AlumnusProfessionalFormInput = z.input<typeof alumnusProfessionalSchema>;
+type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
 
   // Form initialization
-  const form = useForm<StudentProfessionalFormInput, any,StudentProfessionalFormOutput>({
-    resolver: zodResolver(studentProfessionalSchema),
+  const form = useForm<AlumnusProfessionalFormInput, any,AlumnusProfessionalFormOutput>({
+    resolver: zodResolver(alumnusProfessionalSchema),
     defaultValues: {
-      skills: [],
+      current_job_title: "",
+      current_company: "",
+      previous_comps: [],
+      years_of_exp: 0,
       description: "",
       linkedin_url: "",
       x_url: "",
@@ -42,6 +46,7 @@ type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
       facebook_url: "",
       github_url: "",
       website_url: "",
+      industry: "",
     },
   });
 
@@ -50,13 +55,11 @@ type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
 
   // Get Stored Data from Zustand
   const {
-    firstname, lastname, middlename, gender, address, country, state, phone_num, email, password, confirmPassword, profilePic, matric_no, department, faculty, expected_grad_year,certificate,
-  } = useStudentStoreData.getState()
+    firstname, lastname, middlename, gender, address, country, state, phone_num, email, password, confirmPassword, profilePic, matric_no, department, faculty, grad_year,
+  } = useAlumnusStoreData.getState()
 
 // Handle Submit
-  const onSubmit = async (data: StudentProfessionalFormData) => {
-    console.log('Form submitted with data:', data);
-    console.log('Store values:', {firstname, lastname, middlename, gender, address, country, state, phone_num, email, password ,confirmPassword, profilePic, matric_no, department, faculty, expected_grad_year, certificate });
+  const onSubmit = async (data: AlumnusProfessionalFormData) => {
     console.log('Form errors:', form.formState.errors);
 
     
@@ -70,7 +73,7 @@ type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
     email,
     password,
     phone_num,
-    house_no: address || "",
+    address,
     street: "",
     city: "",
     state,
@@ -79,8 +82,12 @@ type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
       matric_no,
       department,
       faculty,
-      expected_grad_year,
-      previous_comps: data.skills,
+      grad_year,
+      previous_comps: data.previous_comps,
+      current_job_title: data.current_job_title,
+      current_company: data.current_company,
+      years_of_exp: data.years_of_exp,
+      industry: data.industry,
       description: data.description,
       linkedin_url: data.linkedin_url,
       company_linkedin_url: "",
@@ -90,16 +97,15 @@ type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
       x_url: data.x_url,
       instagram_url: data.instagram_url,
       facebook_url: data.facebook_url,
-      profile_img: profilePic || null,
+      // profile_img: profilePic,
     },
     }
-
     console.log(payload)
 
   try {
-    const res = await api.post("/auth/signup/Student", payload)
+    const res = await api.post("/auth/signup/alumnus", payload)
     console.log("✅ Signup successful:", res.data)
-    router.navigate({ to: "/signup/success" })
+    router.navigate({ to: "/signup/otp" })
   } catch (err: any) {
     console.error("❌ Signup failed:", err.response?.data || err.message)
   }
@@ -111,35 +117,24 @@ type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
 
     useEffect(() => {
       console.log('useEffect triggered, hasHydrated:', hasHydrated);
-      console.log('Store values check:', {firstname, lastname, gender, country, state, phone_num, email, password, confirmPassword, matric_no, department, faculty, expected_grad_year});
+      console.log('Store values check:', {firstname, lastname, gender, country, state, phone_num, email, password, confirmPassword, matric_no, department, faculty, grad_year});
       if (!hasHydrated) {
         console.log('Not hydrated yet, returning');
         return;
       }
-      if (!firstname || !lastname || !gender || !country || !state || !phone_num || !email || !password || !confirmPassword || !matric_no || !department || !faculty || !expected_grad_year) {
-        console.log('Missing required fields, navigating to /signup/StudentSchool');
-        router.navigate({ to: "/signup/StudentSchool" })
+      if (!firstname || !lastname || !gender || !country || !state || !phone_num || !email || !password || !confirmPassword || !matric_no || !department || !faculty || !grad_year) {
+        console.log('Missing required fields, navigating to /signup/alumnusSchool');
+        router.navigate({ to: "/signup/alumnusSchool" })
       } else {
         console.log('All required fields present, staying on page');
       }
-    }, [firstname, lastname, middlename, gender , address, country, state, phone_num, email, password ,confirmPassword, profilePic, matric_no, department, faculty, expected_grad_year, router, hasHydrated])
+    }, [firstname, lastname, middlename, gender , address, country, state, phone_num, email, password ,confirmPassword, profilePic, matric_no, department, faculty, grad_year, router, hasHydrated])
   
 
   return (
     <div className="h-screen flex items-center justify-center">
       <div className="w-full h-full grid lg:grid-cols-2">
-        <div className="bg-[#9017C2] hidden lg:flex justify-center border">
-          <div className="fixed flex justify-center items-center h-screen pt-10 px-10">
-            <motion.img
-              src={loginImage}
-              alt="Login"
-              className="object-cover"
-              initial={{ x: -250 }}
-              animate={{ x: 0 }}
-              transition={{ duration: 0.5 }}
-            />
-          </div>
-        </div>
+       <LeftContainer/>
         <div className="max-w-md m-auto w-full flex flex-col items-center py-4">
           <div className="flex items-center justify-between w-full text-[#9017c2] text-2xl px-2">
             <div className="mt-1">
@@ -157,17 +152,17 @@ type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
                 className="w-full space-y-5 mt-5"
                 onSubmit={form.handleSubmit(onSubmit)}
                           >
-
-                <FormField
+                              <div className=" grid grid-cols-2 gap-4 ">
+                                  <FormField
                   control={form.control}
-                  name="skills"
+                  name="current_job_title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Skills</FormLabel>
+                      <FormLabel>Current Jobs</FormLabel>
                       <FormControl>
                         <Input
                           type="text"
-                          placeholder="Enter your skills"
+                          placeholder="Enter current jobs"
                           className="w-full"
                           {...field}
                         />
@@ -177,7 +172,124 @@ type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
                   )}
                 />
 
-              
+                <FormField
+                  control={form.control}
+                  name="current_company"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Current Companies</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Enter current companies"
+                          className="w-full"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                /></div>
+                
+
+                <FormField
+                  control={form.control}
+                  name="previous_comps"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Previous Companies</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Enter your previous companies"
+                          className="w-full"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="years_of_exp"
+                    render={({ field }) => (
+                      <FormItem>
+      <FormLabel>Years of Experience</FormLabel>
+      <FormControl>
+        <Input
+          type="number"
+          className="w-20"
+          value={Number(field.value) || ""}
+          onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : "")}
+          onBlur={field.onBlur}
+          name={field.name}
+          ref={field.ref}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+                />
+                
+                <FormField
+  control={form.control}
+  name="industry"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Industry Sector <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select your industry" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Information Technology">
+              Information Technology
+            </SelectItem>
+            <SelectItem value="Software Development">
+              Software Development
+            </SelectItem>
+            <SelectItem value="Cybersecurity">Cybersecurity</SelectItem>
+            <SelectItem value="Data Science & Analytics">
+              Data Science & Analytics
+            </SelectItem>
+            <SelectItem value="Mechanical Engineering">
+              Mechanical Engineering
+            </SelectItem>
+            <SelectItem value="Electrical Engineering">
+              Electrical Engineering
+            </SelectItem>
+            <SelectItem value="Renewable Energy">Renewable Energy</SelectItem>
+            <SelectItem value="Banking & Finance">Banking & Finance</SelectItem>
+            <SelectItem value="Digital Marketing">Digital Marketing</SelectItem>
+            <SelectItem value="Healthcare">Healthcare</SelectItem>
+            <SelectItem value="Education">Education</SelectItem>
+            <SelectItem value="Agriculture">Agriculture</SelectItem>
+            <SelectItem value="Media & Entertainment">
+              Media & Entertainment
+            </SelectItem>
+            <SelectItem value="Construction & Real Estate">
+              Construction & Real Estate
+            </SelectItem>
+            <SelectItem value="NGO / Nonprofit">NGO / Nonprofit</SelectItem>
+            <SelectItem value="Government & Public Sector">
+              Government & Public Sector
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+</div>
+
 
                 <FormField
   control={form.control}
@@ -351,4 +463,4 @@ router.history.back();
   );
 };
 
-export default StudentProfessional;
+export default AlumnusProfessional;

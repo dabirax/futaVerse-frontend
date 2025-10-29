@@ -3,11 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Country, State } from "country-state-city";
 import { useRouter } from "@tanstack/react-router";
-import loginImage from "../../../../assets/login.png";
+import { LeftContainer } from "../../components/LeftContainer";
 import { BackButton } from '../../../components/BackButton';
-import { useAlumnusStoreData } from "../hooks/useAlumnusStoreData";
-import { alumnusBasicSchema } from "../lib/alumnusSchema";
-import type { AlumnusBasicFormData } from "../lib/alumnusSchema";
+import { useStudentStoreData } from "../hooks/useStudentStoreData";
+import { studentBasicSchema } from "../lib/studentSchema";
+import type { StudentBasicFormData } from "../lib/studentSchema";
 import { Button } from "@/components/ui/button";
 import Logo from "@/components/Logo";
 import {
@@ -32,12 +32,12 @@ const stateOptions = (countryCode: string): Array<string> => {
   return State.getStatesOfCountry(countryCode).map((state) => state.name);
 };
 
-const AlumnusBasic = () => {
+const StudentBasic = () => {
 
-  const setData = useAlumnusStoreData((state)=> state.setData)
+  const setData = useStudentStoreData((state)=> state.setData)
 
-  const form = useForm<AlumnusBasicFormData>({
-    resolver: zodResolver(alumnusBasicSchema),
+  const form = useForm<StudentBasicFormData>({
+    resolver: zodResolver(studentBasicSchema),
     defaultValues: {
       firstname: "",
       lastname: "",
@@ -56,10 +56,9 @@ const AlumnusBasic = () => {
     
     const router = useRouter()
 
-  const onSubmit = (data: AlumnusBasicFormData) => {
-    console.log(data);   
+  const onSubmit = (data: StudentBasicFormData) => {
     setData(data);
-    router.navigate({ to: "/signup/alumnusSchool" })
+    router.navigate({ to: "/signup/studentSchool" })
   };
 
   const selectedCountry = form.watch("country");
@@ -71,17 +70,7 @@ const AlumnusBasic = () => {
   return (
     <div className="h-screen flex items-center justify-center">
       <div className="w-full h-full grid lg:grid-cols-2">
-        <div className="bg-[#9017C2] hidden lg:flex justify-center border">
-          <div className=" fixed flex justify-center items-center h-screen pt-10 px-10">
-          <motion.img
-            src={loginImage}
-            alt="Login"
-            className="object-cover "
-            initial={{ x: -250 }}
-            animate={{ x: 0 }}
-            transition={{ duration: 0.5 }}
-          /></div>
-        </div>
+       <LeftContainer  />
         <div className="max-w-md m-auto w-full flex flex-col items-center py-4">
           <div className="flex items-center justify-between w-full text-[#9017c2] text-2xl px-2">
             <div className=" mt-1">
@@ -369,4 +358,4 @@ const AlumnusBasic = () => {
   );
 };
 
-export default AlumnusBasic;
+export default StudentBasic;

@@ -3,16 +3,20 @@ import {
   alumnusBasicRoute,
   alumnusProfessionalRoute,
   alumnusSchoolRoute,
+  checkEmailRoute,
   forgotPasswordRoute,
   landingRoute,
   lecturerBasicRoute,
   loginRoute,
   publicRoute,
+  resetPasswordRoute,
+  resetSuccessRoute,
   signUpRoute,
+  signupOTPRoute,
+  signupSuccessRoute,
   studentBasicRoute,
   studentProfessionalRoute,
-  studentSchoolRoute,
-  successRoute,
+  studentSchoolRoute
 } from "./public";
 import {
   appRoute,
@@ -28,7 +32,8 @@ export const routeTree = rootRoute.addChildren([
     lecturerBasicRoute,
     loginRoute,
     signUpRoute,
-    successRoute,
+    signupSuccessRoute,
+    signupOTPRoute,
     forgotPasswordRoute,
     alumnusBasicRoute,
     alumnusProfessionalRoute,
@@ -36,6 +41,9 @@ export const routeTree = rootRoute.addChildren([
     studentBasicRoute,
     studentSchoolRoute,
     studentProfessionalRoute,
+    resetPasswordRoute,
+    resetSuccessRoute,
+    checkEmailRoute
   ]),
   appRoute.addChildren([dashboardRoute, feedsRoute, notificationsRoute]),
 ]);

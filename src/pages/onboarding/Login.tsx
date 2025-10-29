@@ -1,10 +1,10 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import loginImage from "../../assets/login.png";
 import { BackButton } from '../components/BackButton';
+import { LeftContainer } from "./components/LeftContainer";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { api } from "@/lib/api";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -32,16 +33,29 @@ const LoginPage = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: z.infer<typeof loginSchema>) => {
+  const router = useRouter();
+
+  const onSubmit = async (data: z.infer<typeof loginSchema>) => {
     console.log(data);
+
+    const payload = {
+      email: data.email,
+      password: data.password,
+    };
+
+    try {
+        const res = await api.post("/auth/login", payload)
+        console.log("✅ Signup successful:", res.data)
+        router.navigate({ to: "/signup/success" })
+      } catch (err: any) {
+        console.error("Login failed:", err.response?.data || err.message)
+      }
   };
   
   return (
     <div className="h-screen flex items-center justify-center">
       <div className="w-full h-full grid lg:grid-cols-2">
-        <div className="bg-[#9017C2] hidden lg:flex items-center justify-center pt-10 px-10 border" >
-          <motion.img src={loginImage} alt="Login" className="  object-cover" initial= {{x: -250}} animate={{x: 0}} transition={{duration: 0.5}}/>
-        </div>
+        <LeftContainer/>
         <div className="max-w-md m-auto w-full flex flex-col items-center">
           <div className="mt-4 flex items-center justify-between w-full text-2xl">
             <div className=" mt-1">

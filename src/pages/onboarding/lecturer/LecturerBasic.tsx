@@ -1,7 +1,7 @@
 
 const LecturerBasic = () => {
   return (
-    <div>LecturerBasic</div>
+    <div className="w-screen h-screen flex justify-center items-center text-5xl">Work In Progress</div>
   )
 }
 

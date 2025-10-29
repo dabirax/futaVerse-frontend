@@ -12,24 +12,36 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const forgotPasswordSchema = z.object({
-  email: z.string().email(),
-});
-
-const ForgotPassword = () => {
-  const form = useForm<z.infer<typeof forgotPasswordSchema>>({
-    defaultValues: {
-      email: "",
-    },
-    resolver: zodResolver(forgotPasswordSchema),
+const resetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters long"),
+    confirmPassword: z
+      .string()
+      .min(8, "Confirm Password must be at least 8 characters long"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"],
   });
 
-  const onSubmit = (data: z.infer<typeof forgotPasswordSchema>) => {
-    console.log(data);
+const ResetPassword = () => {
+  const form = useForm<z.infer<typeof resetPasswordSchema>>({
+    defaultValues: {
+      password: "",
+      confirmPassword: "",
+    },
+    resolver: zodResolver(resetPasswordSchema),
+  });
+
+  const onSubmit = (data: z.infer<typeof resetPasswordSchema>) => {
+    console.log("Reset password data:", data);
   };
   
   return (
@@ -46,10 +58,10 @@ const ForgotPassword = () => {
           <div className="p-5 flex flex-col  gap-y-20">
             <div>
           <p className="text-xl font-semibold tracking-tight text-center">
-            Forgot Password
+            Reset Password
             </p>
 
-            <p className="text-xs mt-2">Enter the email you used to create your account so we can send you instructions on how to reset your password.</p></div>
+            <p className="text-xs mt-2">Choose a new password for your account</p></div>
 
 
           <Form {...form}>
@@ -57,15 +69,16 @@ const ForgotPassword = () => {
               className="w-full space-y-4 mt-5"
               onSubmit={form.handleSubmit(onSubmit)}
             >
-              <FormField
+               <FormField
                 control={form.control}
-                name="email"
+                name="password"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Password </FormLabel>
                     <FormControl>
                       <Input
-                        type="email"
-                        placeholder="example@example.com"
+                        type="password"
+                        placeholder="********"
                         className="w-full"
                         {...field}
                       />
@@ -74,17 +87,35 @@ const ForgotPassword = () => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="********"
+                        className="w-full"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                                  />
              
             </form>
             </Form>
               
                 <div>
             <Link
-              to="/check-email"
+              to="/reset-success"
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="w-full">
               <Button type="submit" className="mt-4 w-full bg-[#5E0B80]">
-                Send
+                Reset Password
               </Button></motion.div></Link>
               
             <Link
@@ -106,4 +137,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;

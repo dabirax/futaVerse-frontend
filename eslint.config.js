@@ -13,35 +13,37 @@ export default [
         ecmaFeatures: { jsx: true },
       },
     },
-    plugins: {
-      import: {},
-    },
     rules: {
       ...(tanstackConfig[0]?.rules ?? {}),
-      
+
+      'sort-imports': 'off',
 
       'import/order': [
-        "off",
-        // 'error',
-        // {
-        //   groups: [
-        //     'builtin',
-        //     'external',
-        //     'internal',
-        //     ['parent', 'sibling', 'index'],
-        //   ],
-        //   pathGroups: [
-        //     {
-        //       pattern: '@tanstack/**',
-        //       group: 'external',
-        //       position: 'before',
-        //     },
-        //   ],
-        //   pathGroupsExcludedImportTypes: ['builtin'],
-        //   alphabetize: { order: 'asc', caseInsensitive: true },
-        //   'newlines-between': 'always',
-        // },
+        'error',
+        {
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            ['parent', 'sibling', 'index'],
+          ],
+          pathGroups: [
+            {
+              pattern: '@tanstack/**',
+              group: 'external',
+              position: 'before',
+            },
+          ],
+          pathGroupsExcludedImportTypes: ['builtin'],
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
+          'newlines-between': 'always',
+        },
       ],
+
+      'import/consistent-type-specifier-style': 'off',
     },
   },
 ]

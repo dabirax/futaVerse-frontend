@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
-import loginImage from "../../../../assets/login.png";
 import { BackButton } from '../../../components/BackButton';
 import { useAlumnusStoreData, useHasHydrated } from "../hooks/useAlumnusStoreData";
+import { LeftContainer } from "../../components/LeftContainer";
 import { alumnusSchoolSchema } from "../lib/alumnusSchema";
 import type { z } from "zod";
 import Logo from "@/components/Logo";
@@ -59,7 +59,6 @@ const AlumnusSchool = () => {
 
   // Handle form submission: log data, update store, navigate to next step
   const onSubmit = (data: AlumnusSchoolOutput) => {
-    console.log(data);
     setData(data);
     router.navigate({ to: "/signup/alumnusProfessional" });
   };
@@ -78,18 +77,7 @@ const AlumnusSchool = () => {
   return (
     <div className="h-screen flex items-center justify-center">
       <div className="w-full h-full grid lg:grid-cols-2">
-        <div className="bg-[#9017C2] hidden lg:flex justify-center border">
-          <div className="fixed flex justify-center items-center h-screen pt-10 px-10">
-            <motion.img
-              src={loginImage}
-              alt="Login"
-              className="object-cover"
-              initial={{ x: -250 }}
-              animate={{ x: 0 }}
-              transition={{ duration: 0.5 }}
-            />
-          </div>
-        </div>
+        <LeftContainer />
         <div className="max-w-md m-auto w-full flex flex-col items-center py-4">
           <div className="flex items-center justify-between w-full text-[#9017c2] text-2xl px-2">
             <div className="mt-1">

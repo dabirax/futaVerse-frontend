@@ -40,15 +40,15 @@ export const studentSchoolSchema = z.object({
   expected_grad_year: z.coerce
     .number()
     .min(new Date().getFullYear(), "Graduation year cannot be in the past"),
-   level: z.enum(
-    ["100", "200", "300", "400", "500", "600"],
-    { message: "Select a valid level" }
-  ),
-
-  cgpa: z.enum(
-    ["First Class", "Second Class Upper", "Second Class Lower", "Third Class", "Pass"],
-    { message: "Select your CGPA classification" }
-  ),
+  level: z.number({ required_error: "Level is required" })
+    .int({ message: "Level must be an integer (e.g., 100, 200, 300...)" })
+    .refine((val) => [100, 200, 300, 400, 500, 600].includes(val), {
+      message: "Select a valid level (100–600)",
+    }),
+  cgpa: z.number({ required_error: "CGPA is required" })
+    .refine((val) => val >= 0 && val <= 5, {
+      message: "CGPA must be between 0.00 and 5.00",
+    }),
   certificate: z.any().optional(),
 });
 

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
-import loginImage from "../../../../assets/login.png";
+import { LeftContainer } from "../../components/LeftContainer";
 import { BackButton } from '../../../components/BackButton';
 import { useHasHydrated, useStudentStoreData, } from "../hooks/useStudentStoreData";
 import { studentSchoolSchema } from "../lib/studentSchema";
@@ -62,7 +62,6 @@ const StudentSchool = () => {
 
   // Handle form submission: log data, update store, navigate to next step
   const onSubmit = (data: StudentSchoolOutput) => {
-    console.log(data);
     setData(data);
     router.navigate({ to: "/signup/StudentProfessional" });
   };
@@ -81,18 +80,7 @@ const StudentSchool = () => {
   return (
     <div className="h-screen flex items-center justify-center">
       <div className="w-full h-full grid lg:grid-cols-2">
-        <div className="bg-[#9017C2] hidden lg:flex justify-center border">
-          <div className="fixed flex justify-center items-center h-screen pt-10 px-10">
-            <motion.img
-              src={loginImage}
-              alt="Login"
-              className="object-cover"
-              initial={{ x: -250 }}
-              animate={{ x: 0 }}
-              transition={{ duration: 0.5 }}
-            />
-          </div>
-        </div>
+        <LeftContainer />
         <div className="max-w-md m-auto w-full flex flex-col items-center py-4">
           <div className="flex items-center justify-between w-full text-[#9017c2] text-2xl px-2">
             <div className="mt-1">
@@ -190,7 +178,8 @@ const StudentSchool = () => {
                   )}
                 />
 
-                <div className="flex space-x-4">  <FormField
+                <div className="flex space-x-4">
+                  <FormField
   control={form.control}
   name="level"
   render={({ field }) => (
@@ -199,7 +188,10 @@ const StudentSchool = () => {
         Level <span className="text-red-500">*</span>
       </FormLabel>
       <FormControl>
-        <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <Select
+          onValueChange={(value) => field.onChange(parseInt(value))}
+          defaultValue={field.value ? String(field.value) : undefined}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select Level" />
           </SelectTrigger>
@@ -224,21 +216,19 @@ const StudentSchool = () => {
   render={({ field }) => (
     <FormItem>
       <FormLabel>
-        CGPA Class <span className="text-red-500">*</span>
+        CGPA <span className="text-red-500">*</span>
       </FormLabel>
       <FormControl>
-        <Select onValueChange={field.onChange} defaultValue={field.value} >
-          <SelectTrigger>
-            <SelectValue placeholder="Select CGPA" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="First Class">First Class</SelectItem>
-            <SelectItem value="Second Class Upper">Second Class Upper</SelectItem>
-            <SelectItem value="Second Class Lower">Second Class Lower</SelectItem>
-            <SelectItem value="Third Class">Third Class</SelectItem>
-            <SelectItem value="Pass">Pass</SelectItem>
-          </SelectContent>
-        </Select>
+        <input
+          type="number"
+          step="0.01"
+          min="0"
+          max="5"
+          placeholder="Enter CGPA (e.g., 4.32)"
+          className="w-full rounded-md border border-gray-300 bg-transparent p-2 outline-none focus:border-blue-500"
+          {...field}
+          onChange={(e) => field.onChange(parseFloat(e.target.value))}
+        />
       </FormControl>
       <FormMessage />
     </FormItem>
