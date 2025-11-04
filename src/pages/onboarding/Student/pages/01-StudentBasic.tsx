@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Country, State } from "country-state-city";
 import { useRouter } from "@tanstack/react-router";
 import { LeftContainer } from "../../components/LeftContainer";
-import { BackButton } from '../../../components/BackButton';
+import { BackButton } from '../../../../components/BackButton';
 import { useStudentStoreData } from "../hooks/useStudentStoreData";
 import { studentBasicSchema } from "../lib/studentSchema";
 import type { StudentBasicFormData } from "../lib/studentSchema";

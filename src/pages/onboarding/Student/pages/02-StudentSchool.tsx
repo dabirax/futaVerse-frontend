@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
 import { LeftContainer } from "../../components/LeftContainer";
-import { BackButton } from '../../../components/BackButton';
+import { BackButton } from '../../../../components/BackButton';
 import { useHasHydrated, useStudentStoreData, } from "../hooks/useStudentStoreData";
 import { studentSchoolSchema } from "../lib/studentSchema";
 import type { z } from "zod";

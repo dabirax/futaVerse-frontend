@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { BackButton } from '../components/BackButton';
+import { BackButton } from '../../components/BackButton';
 import { LeftContainer } from "./components/LeftContainer";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
@@ -118,10 +118,10 @@ const LoginPage = () => {
               Forgot password?
                 </motion.div></Link>
               
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="w-full">
+              <Link to='/alumnus/internships'><motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="w-full">
               <Button type="submit" className="mt-4 w-full bg-[#5E0B80]">
                 Login
-              </Button></motion.div>
+              </Button></motion.div></Link>
 
               <p className="text-sm text-center flex items-center justify-center">
               Are you new here?

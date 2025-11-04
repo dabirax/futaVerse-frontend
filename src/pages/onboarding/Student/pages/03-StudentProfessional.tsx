@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { LeftContainer } from "../../components/LeftContainer";
-import { BackButton } from "../../../components/BackButton";
+import { BackButton } from "../../../../components/BackButton";
 import { useHasHydrated, useStudentStoreData } from "../hooks/useStudentStoreData";
 import { studentProfessionalSchema } from "../lib/studentSchema";
 import type { StudentProfessionalFormData } from "../lib/studentSchema";

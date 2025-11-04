@@ -2,15 +2,14 @@
 
 @import 'tw-animate-css';
 
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
 @custom-variant dark (&:is(.dark *));
 
 body {
-  @apply m-0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Fira Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 code {
@@ -29,7 +28,7 @@ code {
   --popover-foreground: oklch(0.18 0.02 260);
 
   /* FUTAVerse Purple - Primary Brand Color */
---primary: oklch(0.56 0.24 310);
+--primary: oklch(55.996% 0.24066 310.064);
   --primary-foreground: oklch(1 0 0);
   --primary-light: oklch(0.72 0.18 320);
   --primary-dark: oklch(0.42 0.21513 309.618);
@@ -40,7 +39,7 @@ code {
   --secondary-light: oklch(0.75 0.18 145);
 
   /* FUTA Blue - Accent Color */
-  --accent: oklch(0.68 0.25 240);
+  --accent: oklch(59.789% 0.14696 244.345);
   --accent-foreground: oklch(1 0 0);
   --accent-light: oklch(0.78 0.22 240);
 

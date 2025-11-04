@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { BackButton } from "../../../components/BackButton";
+import { BackButton } from "../../../../components/BackButton";
 import { LeftContainer } from "../../components/LeftContainer";
 import { useAlumnusStoreData, useHasHydrated } from "../hooks/useAlumnusStoreData";
 import { alumnusProfessionalSchema } from "../lib/alumnusSchema";

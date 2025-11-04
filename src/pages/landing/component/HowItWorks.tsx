@@ -34,7 +34,7 @@ const HowItWorks = () => {
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
             How It{" "}
-            <span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-accent to-primary bg-clip-text text-transparent">
               Works
             </span>
           </h2>

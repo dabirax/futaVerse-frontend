@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { BackButton } from '../components/BackButton';
+import { BackButton } from '../../components/BackButton';
 import { LeftContainer } from './components/LeftContainer';
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";

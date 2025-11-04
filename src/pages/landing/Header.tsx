@@ -33,9 +33,9 @@ const Header = () => {
            <Link to="/login">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="w-full"><Button className='bg-[#5E0B80]'>Login</Button></motion.div></Link>
             
-            <Button size="icon" variant="outline">
+            {/* <Button size="icon" variant="outline">
               <SunIcon />
-            </Button>
+            </Button> */}
 
             {/* Mobile Menu */}
             <div className="md:hidden">

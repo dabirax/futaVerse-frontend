@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { BackButton } from '../components/BackButton';
+import { BackButton } from '../../components/BackButton';
 import { LeftContainer } from "./components/LeftContainer";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
@@ -117,10 +117,10 @@ const CheckEmail = () => {
                 </p>
                 
                 <div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="w-full">
+              <Link to="/reset-password"><motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="w-full">
               <Button type="submit" className="mt-4 w-full bg-[#5E0B80]">
                 Submit OTP
-              </Button></motion.div>
+              </Button></motion.div></Link>
 
             <Link
               to="/login"

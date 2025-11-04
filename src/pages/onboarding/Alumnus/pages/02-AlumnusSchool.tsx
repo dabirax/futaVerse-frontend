@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
-import { BackButton } from '../../../components/BackButton';
+import { BackButton } from '../../../../components/BackButton';
 import { useAlumnusStoreData, useHasHydrated } from "../hooks/useAlumnusStoreData";
 import { LeftContainer } from "../../components/LeftContainer";
 import { alumnusSchoolSchema } from "../lib/alumnusSchema";

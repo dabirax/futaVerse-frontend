@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "@tanstack/react-router";
 import loginImage from "../../assets/login.png";
-import { BackButton } from '../components/BackButton';
+import { BackButton } from '../../components/BackButton';
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 

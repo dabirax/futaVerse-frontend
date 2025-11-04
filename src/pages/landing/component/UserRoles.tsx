@@ -85,7 +85,7 @@ const UserRoles = () => {
                 <TabsTrigger
                   key={role.value}
                   value={role.value}
-                  className="flex flex-col items-center gap-2 py-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  className="flex flex-col items-center gap-2 py-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground  hover:scale-110 transition-all"
                 >
                   <Icon className="w-5 h-5" />
                   <span className="text-xs lg:text-sm font-semibold">

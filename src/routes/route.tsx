@@ -19,10 +19,16 @@ import {
   studentSchoolRoute
 } from "./public";
 import {
-  appRoute,
-  dashboardRoute,
-  feedsRoute,
-  notificationsRoute,
+  alumnusCalendarRoute,
+  alumnusDashboardRoute,
+  alumnusEventsRoute, 
+  alumnusFeedRoute,
+  alumnusInternshipRoute,
+  alumnusMentorshipRoute,
+  alumnusMessagesRoute,
+  alumnusRoute,
+  alumnusSettingsRoute,
+  internshipDetailRoute
 } from "./user";
 
 // Build full route tree
@@ -45,5 +51,5 @@ export const routeTree = rootRoute.addChildren([
     resetSuccessRoute,
     checkEmailRoute
   ]),
-  appRoute.addChildren([dashboardRoute, feedsRoute, notificationsRoute]),
+  alumnusRoute.addChildren([alumnusDashboardRoute, alumnusFeedRoute, alumnusMentorshipRoute, alumnusMessagesRoute, alumnusCalendarRoute, alumnusSettingsRoute, alumnusInternshipRoute, alumnusEventsRoute, internshipDetailRoute]),
 ]);
