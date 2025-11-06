@@ -53,7 +53,7 @@ export default function StudentCard({
                   <Button size="sm" onClick={onAccept}>
                     Accept
                   </Button>
-                  <Button size="sm" variant="outline" onClick={onWithdraw}>
+                  <Button size="sm" variant="destructive" onClick={onWithdraw}>
                     Reject
                   </Button>
                 </>
@@ -66,7 +66,7 @@ export default function StudentCard({
               )}
 
               {variant === "intern" && (
-                <Button size="sm" variant="outline" onClick={onMessage}>
+                <Button size="sm" onClick={onMessage}>
                   <MessageSquare className="h-4 w-4" />
                 </Button>
               )}

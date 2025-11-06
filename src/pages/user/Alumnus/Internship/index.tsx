@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
+import {motion} from 'framer-motion'
 import InternshipCard from "../components/InternshipCard";
 import StudentCard from "../components/StudentCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -64,7 +66,7 @@ export default function AlumnusInternship() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-5 mb-5">
           <TabsTrigger value="my-internships">My Internships</TabsTrigger>
           <TabsTrigger value="offers">Offers</TabsTrigger>
           <TabsTrigger value="applications">Applications</TabsTrigger>
@@ -75,12 +77,14 @@ export default function AlumnusInternship() {
         {/* MY INTERNSHIPS TAB */}
         <TabsContent value="my-internships" className="space-y-4">
           <div className="flex justify-end">
-                      <Button
-                        //   onClick={() => navigate("/alumnus/internships/create")}
-                      >
-              <Plus className="h-4 w-4" />
-              Create New Internship
-            </Button>
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.9 }}>
+              <Link to="/alumnus/internships/create-internship">
+                <Button className="p-2! mr-4">
+                  <Plus className="h-4 w-4" />
+                  Create New Internship
+                </Button>
+              </Link>
+            </motion.div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
@@ -99,10 +103,10 @@ export default function AlumnusInternship() {
         {/* OFFERS TAB */}
         <TabsContent value="offers" className="space-y-4">
           <div className="flex justify-end">
-            <Button>
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.9 }}><Button className="p-2 mr-4">
               <Plus className="h-4 w-4" />
               Share Offer
-            </Button>
+            </Button></motion.div>
           </div>
 
           <div className="space-y-3">

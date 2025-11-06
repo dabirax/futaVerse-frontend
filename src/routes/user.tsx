@@ -27,6 +27,9 @@ import AlumnusSettings from "../pages/user/Alumnus/Settings";
 // import StudentSettings from "../pages/student/Settings";
 import { rootRoute } from "./__root";
 import InternshipDetail from "@/pages/user/Alumnus/Internship/InternshipDetail";
+import NewInternship from "@/pages/user/Alumnus/Internship/NewInternship";
+import EditInternship from "@/pages/user/Alumnus/Internship/EditInternship";
+
 
 /* -------------------------- ALUMNUS ROUTES -------------------------- */
 export const alumnusRoute = createRoute({
@@ -64,12 +67,28 @@ export const alumnusInternshipRoute = createRoute({
   component: AlumnusInternship,
 });
 
+export const createInternshipRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: "/alumnus/internships/create-internship",
+  beforeLoad: requireAuth,
+  component: NewInternship,
+});
+
 export const internshipDetailRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/internships/$id",
   beforeLoad: requireAuth,
   component: InternshipDetail,
 });
+
+export const editInternshipRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: "/alumnus/internships/$id/edit",
+  beforeLoad: requireAuth,
+  component: EditInternship,
+});
+
+
 
 export const alumnusMentorshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,

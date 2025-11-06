@@ -16,9 +16,10 @@ import {
     Users,
     X,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback,  } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import profPic from "@/assets/testImage.jpeg"
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/alumnus/dashboard" },
@@ -72,7 +73,7 @@ export default function AlumnusLayout() {
         <div className="p-2">
           <div className="flex items-center gap-3">
             <Avatar className="h-12 w-12">
-              <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=alumnus" />
+              <img src={profPic} className="object-cover"/>
               <AvatarFallback>AL</AvatarFallback>
             </Avatar>
             <div>
@@ -100,7 +101,7 @@ export default function AlumnusLayout() {
                   }}
                   inactiveProps={{
                     className:
-                      "text-muted-foreground hover:bg-muted hover:text-foreground",
+                      "text-muted-foreground hover:scale-105 hover:text-foreground",
                   }}
                   onClick={() => setSidebarOpen(false)}
                 >
