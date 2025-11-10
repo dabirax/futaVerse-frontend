@@ -1,10 +1,15 @@
 
 import {RouterProvider, createRouter } from '@tanstack/react-router';
-// import { routeTree } from './routeTree.gen';
 import { routeTree } from './routes/route';
-import { AuthProvider } from './hooks/auth-provider';
-import { useAuth } from './hooks/useAuth';
-import {}  from 'react-query'
+import { AuthProvider, useAuth } from './hooks/auth-context';
+
+export default function App() {
+  return (
+    <AuthProvider>
+        <RouterWithAuth />
+      </AuthProvider>
+  );
+}
 
 //  Component that builds router with live auth state
 function RouterWithAuth() {
@@ -18,11 +23,3 @@ function RouterWithAuth() {
   return <RouterProvider router={router} />;
 }
 
-// Wrap everything in AuthProvider
-export default function App() {
-  return (
-    <AuthProvider>
-      <RouterWithAuth />
-    </AuthProvider>
-  );
-}

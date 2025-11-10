@@ -3,8 +3,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
+import { useMutation } from "react-query";
+import axios from "axios";
 import { BackButton } from '../../components/BackButton';
 import { LeftContainer } from "./components/LeftContainer";
+import { useAuth } from "@/hooks/auth-context";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,22 +37,32 @@ const LoginPage = () => {
   });
 
   const router = useRouter();
+  const{login} = useAuth();
 
-  const onSubmit = async (data: z.infer<typeof loginSchema>) => {
-    console.log(data);
+    // Mutation to handle login
+  const loginMutation = useMutation({
+    mutationFn: async (data: z.infer<typeof loginSchema>) => {
+      const res = await api.post("/auth/login", data);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      const { access_token, role } = data.data;
 
-    const payload = {
-      email: data.email,
-      password: data.password,
-    };
+     login(access_token, role);
 
-    try {
-        const res = await api.post("/auth/login", payload)
-        console.log("✅ Signup successful:", res.data)
-        router.navigate({ to: "/signup/success" })
-      } catch (err: any) {
-        console.error("Login failed:", err.response?.data || err.message)
-      }
+      axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
+
+      if (role === "Alumni") router.navigate({ to: "/alumnus/dashboard" });
+      else router.navigate({ to: "/student/dashboard" });
+    },
+    onError: (err: any) => {
+      console.error("Login failed:", err.response?.data || err.message);
+    },
+  });
+
+
+  const onSubmit = (values: z.infer<typeof loginSchema>) => {
+    loginMutation.mutate(values);
   };
   
   return (

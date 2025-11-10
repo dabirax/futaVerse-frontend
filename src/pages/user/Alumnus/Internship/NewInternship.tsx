@@ -26,7 +26,7 @@ const formSchema = z.object({
   industry: z.string().min(1, "Industry is required"),
   duration_weeks: z.number().min(1, "Duration must be at least 1 week").max(104),
   start_date: z.date().optional(),
-end_date: z.date().optional(),
+  end_date: z.date().optional(),
   is_paid: z.boolean(),
   stipend: z.string().optional(),
   available_slots: z.number().min(1, "Must have at least 1 slot").max(50),

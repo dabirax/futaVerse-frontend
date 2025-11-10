@@ -1,4 +1,4 @@
-import { createRoute, redirect } from "@tanstack/react-router";
+import { createRoute  } from "@tanstack/react-router";
 
 // Layouts
 import AlumnusLayout from "../pages/user/Alumnus/layout/alumnusLayout";
@@ -29,6 +29,7 @@ import { rootRoute } from "./__root";
 import InternshipDetail from "@/pages/user/Alumnus/Internship/InternshipDetail";
 import NewInternship from "@/pages/user/Alumnus/Internship/NewInternship";
 import EditInternship from "@/pages/user/Alumnus/Internship/EditInternship";
+import { requireRole } from "@/lib/guard";
 
 
 /* -------------------------- ALUMNUS ROUTES -------------------------- */
@@ -36,55 +37,44 @@ export const alumnusRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: "alumnus",
   component: AlumnusLayout,
+  beforeLoad: requireRole(["Alumni"]),
 });
-
-// Utility guard
-const requireAuth = ({ context }: any) => {
-  if (!context.auth.isLoggedIn) {
-    throw redirect({ to: "/login" });
-  }
-};
+;
 
 /* Alumnus Children */
 export const alumnusDashboardRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/dashboard",
-  beforeLoad: requireAuth,
   component: AlumnusDashboard,
 });
 
 export const alumnusFeedRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/feed",
-  beforeLoad: requireAuth,
   component: AlumnusFeed,
 });
 
 export const alumnusInternshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/internships",
-  beforeLoad: requireAuth,
   component: AlumnusInternship,
 });
 
 export const createInternshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/internships/create-internship",
-  beforeLoad: requireAuth,
   component: NewInternship,
 });
 
 export const internshipDetailRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/internships/$id",
-  beforeLoad: requireAuth,
   component: InternshipDetail,
 });
 
 export const editInternshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/internships/$id/edit",
-  beforeLoad: requireAuth,
   component: EditInternship,
 });
 
@@ -93,35 +83,30 @@ export const editInternshipRoute = createRoute({
 export const alumnusMentorshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/mentorship",
-  beforeLoad: requireAuth,
   component: AlumnusMentorship,
 });
 
 export const alumnusEventsRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/events",
-  beforeLoad: requireAuth,
   component: AlumnusEvents,
 });
 
 export const alumnusMessagesRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/messages",
-  beforeLoad: requireAuth,
   component: AlumnusMessages,
 });
 
 export const alumnusCalendarRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/calendar",
-  beforeLoad: requireAuth,
   component: AlumnusCalendar,
 });
 
 export const alumnusSettingsRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/settings",
-  beforeLoad: requireAuth,
   component: AlumnusSettings,
 });
 
