@@ -18,9 +18,9 @@ export default function InternshipCard({
   title,
   description,
   logo,
-  workMode,
+  // workMode,
   location,
-  availableSlots,
+  // availableSlots,
 }: InternshipCardProps) {
   const router = useRouter();
 
@@ -43,11 +43,13 @@ export default function InternshipCard({
             <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
 
             <div className="flex flex-wrap gap-2 pt-2">
-              {workMode && <Badge variant="accent">{workMode}</Badge>}
+              {/* {workMode && <Badge variant="accent">{workMode}</Badge>} */}
+              <Badge variant="outline">Remote</Badge>
               {location && <Badge variant="outline">{location}</Badge>}
-              {availableSlots !== undefined && (
+              {/* {availableSlots !== undefined && (
                 <Badge variant="outline">{availableSlots} slots available</Badge>
-              )}
+              )} */}
+              <Badge variant="outline">Open</Badge>
             </div>
           </div>
         </div>

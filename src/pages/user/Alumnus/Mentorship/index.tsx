@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import InternshipCard from "../components/InternshipCard";
-import StudentCard from "../components/StudentCard";
+import InternshipCard from "../../../../components/user/internships/InternshipCard";
+import StudentCard from "../../../../components/user/internships/StudentCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 

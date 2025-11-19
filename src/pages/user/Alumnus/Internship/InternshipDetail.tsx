@@ -1,7 +1,7 @@
 import { useState } from "react"
 import {  useRouter, } from "@tanstack/react-router"
 import { ArrowLeft, Edit, Plus } from "lucide-react"
-import StudentCard from "../components/StudentCard"
+import StudentCard from "../../../../components/user/internships/StudentCard"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -49,8 +49,8 @@ const mockInterns = [
 export default function InternshipDetail() {
   const router = useRouter()
   
-    const { id } = internshipDetailRoute.useParams()
-    console.log(id)
+  const { id } = internshipDetailRoute.useParams()
+    const { data: hero, 
   const [activeTab, setActiveTab] = useState("details")
   const [isActive, setIsActive] = useState(mockInternship.is_active)
 

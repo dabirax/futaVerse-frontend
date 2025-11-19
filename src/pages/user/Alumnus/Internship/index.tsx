@@ -2,30 +2,13 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import {motion} from 'framer-motion'
-import InternshipCard from "../components/InternshipCard";
-import StudentCard from "../components/StudentCard";
+import InternshipCard from "../../../../components/user/internships/InternshipCard";
+import StudentCard from "../../../../components/user/internships/StudentCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 
-// Mock data
-const mockInternships = [
-  {
-    id: "1",
-    title: "Frontend Developer Intern",
-    description: "Work on React applications and modern web technologies",
-    workMode: "Remote",
-    location: "Lagos, Nigeria",
-    availableSlots: 3,
-  },
-  {
-    id: "2",
-    title: "Backend Engineer Intern",
-    description: "Build scalable APIs and work with databases",
-    workMode: "Hybrid",
-    location: "Akure, Nigeria",
-    availableSlots: 2,
-  },
-];
+import { useInternships } from "@/hooks/useInternships";
+
 
 const mockOffers = [
   {
@@ -57,6 +40,9 @@ const mockInterns = [
 ];
 
 export default function AlumnusInternship() {
+
+  const { data: internships, isLoading, isError } = useInternships();
+  console.log(internships);
   const [activeTab, setActiveTab] = useState("my-internships");
 
   return (
@@ -76,29 +62,45 @@ export default function AlumnusInternship() {
 
         {/* MY INTERNSHIPS TAB */}
         <TabsContent value="my-internships" className="space-y-4">
-          <div className="flex justify-end">
-            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.9 }}>
-              <Link to="/alumnus/internships/create-internship">
-                <Button className="p-2! mr-4">
-                  <Plus className="h-4 w-4" />
-                  Create New Internship
-                </Button>
-              </Link>
-            </motion.div>
-          </div>
+  <div className="flex justify-end">
+    <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.9 }}>
+      <Link to="/alumnus/internships/create-internship">
+        <Button className="p-2! mr-4">
+          <Plus className="h-4 w-4" />
+          Create New Internship
+        </Button>
+      </Link>
+    </motion.div>
+  </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {mockInternships.length > 0 ? (
-              mockInternships.map((internship) => (
-                <InternshipCard key={internship.id} {...internship} />
-              ))
-            ) : (
-              <div className="col-span-2 text-center py-12 text-muted-foreground">
-                No internships created yet. Click "Create New Internship" to get started.
-              </div>
-            )}
-          </div>
-        </TabsContent>
+  {/* DATA FETCH LOGIC */}
+  {isLoading && (
+    <div className="col-span-2 text-center py-12 text-muted-foreground">
+      Loading internships...
+    </div>
+  )}
+
+  {isError && (
+    <div className="col-span-2 text-center py-12 text-red-500">
+      Something went wrong fetching internships.
+    </div>
+  )}
+
+  {!isLoading && !isError && (
+    <div className="grid gap-4 md:grid-cols-2">
+      {internships?.length > 0 ? (
+        internships.map((internship: any) => (
+          <InternshipCard key={internship.id} {...internship} />
+        ))
+      ) : (
+        <div className="col-span-2 text-center py-12 text-muted-foreground">
+          No internships created yet. Click "Create New Internship" to get started.
+        </div>
+      )}
+    </div>
+  )}
+</TabsContent>
+
 
         {/* OFFERS TAB */}
         <TabsContent value="offers" className="space-y-4">

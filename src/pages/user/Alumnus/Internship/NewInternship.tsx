@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useRouter, } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {  ArrowLeft, CalendarIcon, X,} from "lucide-react";
 import { format } from "date-fns";
@@ -16,6 +17,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { useCreateInternship } from "@/hooks/useInternships";
+
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required").max(200),
@@ -30,6 +33,7 @@ const formSchema = z.object({
   is_paid: z.boolean(),
   stipend: z.string().optional(),
   available_slots: z.number().min(1, "Must have at least 1 slot").max(50),
+  remaining_slots: z.number().min(0).max(50),
   require_resume: z.boolean(),
   require_cover_letter: z.boolean(),
   skills_required: z.array(z.string()).min(1, "At least one skill is required"),
@@ -47,6 +51,8 @@ export default function CreateInternship() {
   const router = useRouter();
   const { toast } = useToast();
   const [skillInput, setSkillInput] = useState("");
+  const createInternship = useCreateInternship();
+
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -63,6 +69,7 @@ export default function CreateInternship() {
       is_paid: false,
       stipend: "",
       available_slots: 1,
+      remaining_slots: 1,
       require_resume: true,
       require_cover_letter: false,
       skills_required: [],
@@ -71,6 +78,14 @@ export default function CreateInternship() {
 
   const isPaid = form.watch("is_paid");
   const skills = form.watch("skills_required");
+
+  const getErrorMessage = (error: unknown) => {
+  if (error instanceof AxiosError) {
+    return error.response?.data?.message || "Request failed";
+  }
+  return "Unexpected error occurred.";
+};
+
 
   const addSkill = () => {
     if (skillInput.trim() && !skills.includes(skillInput.trim())) {
@@ -86,14 +101,38 @@ export default function CreateInternship() {
     );
   };
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Internship data:", data);
-    toast({
-      title: "Success",
-      description: "Internship created successfully!",
-    });
-    router.navigate({ to: "/alumnus/internships" })
+  const onSubmit = (values: FormValues) => {
+   const formatted = {
+    ...values,
+    start_date: values.start_date
+      ? format(values.start_date, "yyyy-MM-dd")
+      : null,
+    end_date: values.end_date
+      ? format(values.end_date, "yyyy-MM-dd")
+      : null,
+    stipend: values.is_paid ? values.stipend || "0" : "0",
+    remaining_slots: values.available_slots
   };
+console.log(formatted)
+  createInternship.mutate(formatted, {
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Internship created successfully!",
+      });
+      router.navigate({ to: "/alumnus/internships" });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description:
+          error?.response?.data?.message ||
+          "Failed to create internship. Fix your backend or your life.",
+        variant: "destructive",
+      });
+    },
+  });
+};
 
   return (
     <div className="space-y-6 pb-8">
@@ -106,6 +145,9 @@ export default function CreateInternship() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+
+
+
           {/* Basic Information */}
           <div className="rounded-lg border border-border bg-card p-6 space-y-6">
             <h2 className="text-xl font-semibold text-foreground">Basic Information</h2>
@@ -469,6 +511,19 @@ export default function CreateInternship() {
 
           {/* Form Actions */}
           <div className="flex gap-4 justify-end">
+  {/* Loading State */}
+    {createInternship.isLoading && (
+      <div className="rounded-lg border border-border bg-yellow-50 text-yellow-800 p-4">
+        Creating your internship… try not to refresh the page.
+      </div>
+    )}
+
+    {/* Error State */}
+    {createInternship.isError && (
+  <div className="rounded-lg border border-border bg-red-50 text-red-700 p-4">
+    {getErrorMessage(createInternship.error)}
+  </div>
+)}
             <Link to="/alumnus/internships"><Button
               type="button"
               variant="outline"
@@ -478,6 +533,8 @@ export default function CreateInternship() {
             <Button type="submit" variant="gradient">
               Create Internship
             </Button>
+
+            
           </div>
         </form>
       </Form>

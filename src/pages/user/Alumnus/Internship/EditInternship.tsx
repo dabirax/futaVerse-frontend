@@ -135,6 +135,10 @@ export default function EditInternship() {
     router.navigate({to: `/alumnus/internships/${id}`});
   };
 
+  const handleCancel = () => {  
+    router.navigate({to: `/alumnus/internships/${id}`});
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -492,13 +496,16 @@ export default function EditInternship() {
           </Card>
 
           {/* Submit Button */}
-                  <div className="flex gap-4 justify-end">
-                      <Link to={`/alumnus/internships/${id}`}>
-            <Button type="button" variant="outline" >
-              Cancel
-                      </Button>
-                      </Link>
-            <Button type="submit">Save Changes</Button>
+          <div className="flex gap-4 justify-between">
+            
+            <Button type="button" variant={"destructive"}>Delete</Button>
+
+            <div className="flex gap-4">
+                <Button type="button" variant={"outline"} onClick={handleCancel}>
+                  Cancel
+                </Button>
+              <Button type="submit">Save Changes</Button>
+            </div>
           </div>
         </form>
       </Form>

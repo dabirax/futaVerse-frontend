@@ -4,6 +4,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useMutation } from "react-query";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 import axios from "axios";
 import { BackButton } from '../../components/BackButton';
 import { LeftContainer } from "./components/LeftContainer";
@@ -32,9 +34,11 @@ const LoginPage = () => {
     defaultValues: {
       email: "",
       password: "",
-    },
+    }, 
     resolver: zodResolver(loginSchema),
   });
+
+  //  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
   const{login} = useAuth();
@@ -48,7 +52,7 @@ const LoginPage = () => {
     onSuccess: (data) => {
       const { access_token, role } = data.data;
 
-     login(access_token, role);
+    login(access_token, role);
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
 
@@ -105,24 +109,42 @@ const LoginPage = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Password123#"
-                        className="w-full"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+<FormField
+  control={form.control}
+  name="password"
+  render={({ field }) => {
+    const [showPassword, setShowPassword] = useState(false);
+
+    return (
+      <FormItem>
+        <FormLabel>Password</FormLabel>
+        <div className="relative">
+          <FormControl>
+            <Input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password123#"
+              className="w-full pr-10"
+              {...field}
+            />
+          </FormControl>
+
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+          >
+            {showPassword ? (
+              <EyeOff className="w-5 h-5" />
+            ) : (
+              <Eye className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+        <FormMessage />
+      </FormItem>
+    );
+  }}
+/>
               
             <Link
               to="/forgot-password"
@@ -130,19 +152,34 @@ const LoginPage = () => {
             ><motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.9 }}> 
               Forgot password?
                 </motion.div></Link>
-              
-              <Link to='/alumnus/internships'><motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="w-full">
-              <Button type="submit" className="mt-4 w-full bg-[#5E0B80]">
-                Login
-              </Button></motion.div></Link>
+              <motion.div
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.9 }}
+  className="w-full"
+>
+  <Button
+    type="submit"
+    className="mt-4 w-full bg-[#5E0B80]"
+    disabled={loginMutation.isLoading}
+  >
+    {loginMutation.isLoading ? (
+      <div className="flex items-center justify-center gap-2">
+        <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin" />
+        Signing in...
+      </div>
+    ) : (
+      "Login"
+    )}
+  </Button>
+</motion.div>
 
-              <p className="text-sm text-center flex items-center justify-center">
+              <div className="text-sm text-center flex items-center justify-center">
               Are you new here?
               <Link to="/signup" className="ml-1 text-[#6BACB3]">
                 <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.9 }}> Sign up
                 </motion.div>
               </Link>
-            </p>
+            </div>
             </form>
             </Form>
             </div>
