@@ -3,7 +3,7 @@ import { useRouter} from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {  ArrowLeft, CalendarIcon, Link, X,} from "lucide-react";
+import {  ArrowLeft, CalendarIcon, X,} from "lucide-react";
 import { format } from "date-fns";
 import { editInternshipRoute } from "@/routes/user";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { useInternship, useUpdateInternship } from "@/hooks/useInternships";
+
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required").max(200),
@@ -32,6 +34,7 @@ const formSchema = z.object({
   is_paid: z.boolean(),
   stipend: z.string().optional(),
   available_slots: z.number().min(1, "At least 1 slot is required"),
+  remaining_slots: z.number().min(0),
   require_resume: z.boolean(),
   require_cover_letter: z.boolean(),
   skills_required: z.array(z.string()).min(1, "At least one skill is required"),
@@ -40,31 +43,34 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 // Mock data for existing internship
-const mockInternship = {
-  id: "1",
-  title: "Frontend Developer Intern",
-  description: "Work on building modern web applications using React, TypeScript, and Tailwind CSS. Collaborate with experienced developers and contribute to real-world projects.",
-  skills_required: ["React", "TypeScript", "Tailwind CSS", "Git"],
-  work_mode: "Remote" as const,
-  engagement_type: "Full-time" as const,
-  location: "Lagos, Nigeria",
-  industry: "Technology",
-  duration_weeks: 12,
-  start_date: "2025-11-15",
-  end_date: "2026-02-07",
-  is_paid: true,
-  stipend: "50000.00",
-  available_slots: 3,
-  require_resume: true,
-  require_cover_letter: true,
-};
+// const mockInternship = {
+//   id: "1",
+//   title: "Frontend Developer Intern",
+//   description: "Work on building modern web applications using React, TypeScript, and Tailwind CSS. Collaborate with experienced developers and contribute to real-world projects.",
+//   skills_required: ["React", "TypeScript", "Tailwind CSS", "Git"],
+//   work_mode: "Remote" as const,
+//   engagement_type: "Full-time" as const,
+//   location: "Lagos, Nigeria",
+//   industry: "Technology",
+//   duration_weeks: 12,
+//   start_date: "2025-11-15",
+//   end_date: "2026-02-07",
+//   is_paid: true,
+//   stipend: "50000.00",
+//   available_slots: 3,
+//   require_resume: true,
+//   require_cover_letter: true,
+// };
 
 export default function EditInternship() {
   const { id } = editInternshipRoute.useParams();
   const router = useRouter();
   const { toast } = useToast();
   const [skillInput, setSkillInput] = useState("");
-
+  
+  const { data: currentData, isLoading, isError } = useInternship(Number(id));
+  
+  const { mutate, isLoading: isUpdating, isError: isUpdateError } = useUpdateInternship();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -80,6 +86,7 @@ export default function EditInternship() {
       is_paid: false,
       stipend: "",
       available_slots: 1,
+      remaining_slots: 1,
       require_resume: true,
       require_cover_letter: false,
       skills_required: [],
@@ -88,26 +95,27 @@ export default function EditInternship() {
 
   // Load internship data
   useEffect(() => {
-    // In a real app, fetch data by ID
-    // For now, use mock data
+    if (!currentData) return; 
+    
     form.reset({
-      title: mockInternship.title,
-      description: mockInternship.description,
-      work_mode: mockInternship.work_mode,
-      engagement_type: mockInternship.engagement_type,
-      location: mockInternship.location,
-      industry: mockInternship.industry,
-      duration_weeks: mockInternship.duration_weeks,
-      start_date: new Date(mockInternship.start_date),
-      end_date: new Date(mockInternship.end_date),
-      is_paid: mockInternship.is_paid,
-      stipend: mockInternship.stipend,
-      available_slots: mockInternship.available_slots,
-      require_resume: mockInternship.require_resume,
-      require_cover_letter: mockInternship.require_cover_letter,
-      skills_required: mockInternship.skills_required,
+      title: currentData.title,
+      description: currentData.description,
+      work_mode: currentData.work_mode,
+      engagement_type: currentData.engagement_type,
+      location: currentData.location,
+      industry: currentData.industry,
+      duration_weeks: currentData.duration_weeks,
+      start_date: new Date(currentData.start_date),
+      end_date: new Date(currentData.end_date),
+      is_paid: currentData.is_paid,
+      stipend: currentData.stipend,
+      available_slots: currentData.available_slots,
+      remaining_slots: currentData.remaining_slots,
+      require_resume: currentData.require_resume,
+      require_cover_letter: currentData.require_cover_letter,
+      skills_required: currentData.skills_required,
     });
-  }, [id, form]);
+  }, [currentData, form]);
 
   const isPaid = form.watch("is_paid");
   const skills = form.watch("skills_required");
@@ -127,13 +135,36 @@ export default function EditInternship() {
   };
 
   const onSubmit = (data: FormValues) => {
-    console.log("Updated internship data:", data);
-    toast({
-      title: "Success",
-      description: "Internship updated successfully!",
-    });
-    router.navigate({to: `/alumnus/internships/${id}`});
-  };
+
+    const formatted = {
+  ...data,
+  remaining_slots: data.available_slots,
+  start_date: data.start_date ? format(data.start_date, "yyyy-MM-dd") : null,
+  end_date: data.end_date ? format(data.end_date, "yyyy-MM-dd") : null,
+  stipend: data.stipend ? Number(data.stipend) : null
+};
+
+  mutate(
+    { id: Number(id), payload: formatted },
+    {
+      onSuccess: () => {
+        toast({
+          title: "Success",
+          description: "Internship updated successfully!",
+        });
+        router.navigate({ to: `/alumnus/internships/${id}` });
+      },
+      onError: (err: any) => {
+        toast({
+          title: "Error",
+          description: err?.response?.data?.message || "Failed to update internship.",
+          variant: "destructive",
+        });
+      },
+    }
+  );
+};
+
 
   const handleCancel = () => {  
     router.navigate({to: `/alumnus/internships/${id}`});
@@ -149,8 +180,13 @@ export default function EditInternship() {
         <h1 className="text-3xl font-bold text-foreground">Edit Internship</h1>
       </div>
 
+      {isLoading && <p className="text-center font-bold text-teal-600 text-2xl">Loading...</p>}
+      {isError && <p className="text-center font-bold text-red-600 text-2xl">Error loading internship details.</p>}
+
+      {!isLoading && !isError && (
+
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Basic Information */}
           <Card>
             <CardHeader>
@@ -500,15 +536,18 @@ export default function EditInternship() {
             
             <Button type="button" variant={"destructive"}>Delete</Button>
 
-            <div className="flex gap-4">
+              <div className="flex gap-4">
+                {isUpdateError && <p className="text-center font-bold text-red-600">Error updating internship.</p> }
                 <Button type="button" variant={"outline"} onClick={handleCancel}>
                   Cancel
                 </Button>
-              <Button type="submit">Save Changes</Button>
+              <Button type="submit" disabled={isUpdating}>
+      {isUpdating ? "Saving..." : "Save Changes"}</Button>
             </div>
           </div>
         </form>
       </Form>
+      )}
     </div>
   );
 }

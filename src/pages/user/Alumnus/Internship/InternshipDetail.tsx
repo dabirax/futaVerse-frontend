@@ -8,30 +8,32 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { internshipDetailRoute } from "@/routes/user" 
+import { internshipDetailRoute } from "@/routes/user"
+import { useInternship } from "@/hooks/useInternships" 
+import CardSkeleton2 from "@/components/CardSkeleton2"
 
 
 // Mock internship data
-const mockInternship = {
-  id: "1",
-  title: "Frontend Developer Intern",
-  description:
-    "Work on building modern web applications using React, TypeScript, and Tailwind CSS. Collaborate with experienced developers and contribute to real-world projects.",
-  skills_required: ["React", "TypeScript", "Tailwind CSS", "Git"],
-  work_mode: "Remote",
-  engagement_type: "Full-time",
-  location: "Lagos, Nigeria",
-  industry: "Technology",
-  duration_weeks: 12,
-  start_date: "2025-11-15",
-  end_date: "2026-02-07",
-  is_paid: true,
-  stipend: "50000.00",
-  available_slots: 3,
-  require_resume: true,
-  require_cover_letter: true,
-  is_active: true,
-}
+// const mockInternship = {
+//   id: "1",
+//   title: "Frontend Developer Intern",
+//   description:
+//     "Work on building modern web applications using React, TypeScript, and Tailwind CSS. Collaborate with experienced developers and contribute to real-world projects.",
+//   skills_required: ["React", "TypeScript", "Tailwind CSS", "Git"],
+//   work_mode: "Remote",
+//   engagement_type: "Full-time",
+//   location: "Lagos, Nigeria",
+//   industry: "Technology",
+//   duration_weeks: 12,
+//   start_date: "2025-11-15",
+//   end_date: "2026-02-07",
+//   is_paid: true,
+//   stipend: "50000.00",
+//   available_slots: 3,
+//   require_resume: true,
+//   require_cover_letter: true,
+//   is_active: true,
+// }
 
 const mockOffers = [
   { studentName: "Chioma Adebayo", internshipTitle: "Frontend Developer Intern" },
@@ -50,9 +52,10 @@ export default function InternshipDetail() {
   const router = useRouter()
   
   const { id } = internshipDetailRoute.useParams()
-    const { data: hero, 
+    const {data, isLoading, isError} = useInternship(Number(id));
+
   const [activeTab, setActiveTab] = useState("details")
-  const [isActive, setIsActive] = useState(mockInternship.is_active)
+  const [isActive, setIsActive] = useState(data?.is_active)
 
   return (
     <div className="space-y-6">
@@ -65,7 +68,7 @@ export default function InternshipDetail() {
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <h1 className="text-2xl font-semibold">{mockInternship.title}</h1>
+        <h1 className="text-2xl font-semibold">{data?.title}</h1>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -84,8 +87,12 @@ export default function InternshipDetail() {
               Edit Internship
             </Button>
           </div>
+          {isLoading && <CardSkeleton2 />}
+          {isError && <p className="text-center font-bold text-red-600 text-2xl">Error loading internship details.</p>}
 
-          <div className="grid gap-4 md:grid-cols-2">
+          {isLoading || isError ? null : (
+          <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
             {/* Basic Information */}
             <Card>
               <CardHeader>
@@ -94,15 +101,15 @@ export default function InternshipDetail() {
               <CardContent className="space-y-3">
                 <div>
                   <Label className="text-muted-foreground">Title</Label>
-                  <p className="font-medium">{mockInternship.title}</p>
+                  <p className="font-medium">{data?.title}</p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Description</Label>
-                  <p className="text-sm">{mockInternship.description}</p>
+                  <p className="text-sm">{data?.description}</p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Industry</Label>
-                  <p className="font-medium">{mockInternship.industry}</p>
+                  <p className="font-medium">{data?.industry}</p>
                 </div>
               </CardContent>
             </Card>
@@ -115,19 +122,19 @@ export default function InternshipDetail() {
               <CardContent className="space-y-3">
                 <div>
                   <Label className="text-muted-foreground">Work Mode</Label>
-                  <p className="font-medium">{mockInternship.work_mode}</p>
+                  <p className="font-medium">{data?.work_mode}</p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Engagement Type</Label>
-                  <p className="font-medium">{mockInternship.engagement_type}</p>
+                  <p className="font-medium">{data?.engagement_type}</p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Location</Label>
-                  <p className="font-medium">{mockInternship.location}</p>
+                  <p className="font-medium">{data?.location}</p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Duration</Label>
-                  <p className="font-medium">{mockInternship.duration_weeks} weeks</p>
+                  <p className="font-medium">{data?.duration_weeks} weeks</p>
                 </div>
               </CardContent>
             </Card>
@@ -140,11 +147,11 @@ export default function InternshipDetail() {
               <CardContent className="space-y-3">
                 <div>
                   <Label className="text-muted-foreground">Start Date</Label>
-                  <p className="font-medium">{new Date(mockInternship.start_date).toLocaleDateString()}</p>
+                  <p className="font-medium">{new Date(data?.start_date || "").toLocaleDateString()}</p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">End Date</Label>
-                  <p className="font-medium">{new Date(mockInternship.end_date).toLocaleDateString()}</p>
+                  <p className="font-medium">{new Date(data?.end_date || "").toLocaleDateString()}</p>
                 </div>
               </CardContent>
             </Card>
@@ -157,17 +164,17 @@ export default function InternshipDetail() {
               <CardContent className="space-y-3">
                 <div>
                   <Label className="text-muted-foreground">Is Paid</Label>
-                  <p className="font-medium">{mockInternship.is_paid ? "Yes" : "No"}</p>
+                  <p className="font-medium">{data?.is_paid ? "Yes" : "No"}</p>
                 </div>
-                {mockInternship.is_paid && (
+                {data?.is_paid && (
                   <div>
                     <Label className="text-muted-foreground">Stipend</Label>
-                    <p className="font-medium">₦{parseFloat(mockInternship.stipend).toLocaleString()}</p>
+                    <p className="font-medium">₦{parseFloat(data?.stipend || "0").toLocaleString()}</p>
                   </div>
                 )}
                 <div>
                   <Label className="text-muted-foreground">Available Slots</Label>
-                  <p className="font-medium">{mockInternship.available_slots}</p>
+                  <p className="font-medium">{data?.available_slots}</p>
                 </div>
               </CardContent>
             </Card>
@@ -181,7 +188,7 @@ export default function InternshipDetail() {
                 <div>
                   <Label className="text-muted-foreground">Required Skills</Label>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {mockInternship.skills_required.map((skill, index) => (
+                    {data?.skills_required.map((skill: string, index: number) => (
                       <Badge key={index} variant="accent">
                         {skill}
                       </Badge>
@@ -191,21 +198,20 @@ export default function InternshipDetail() {
                 <div className="flex gap-6">
                   <div className="flex items-center gap-2">
                     <Label className="text-muted-foreground">Resume Required:</Label>
-                    <Badge variant={mockInternship.require_resume ? "default" : "outline"}>
-                      {mockInternship.require_resume ? "Yes" : "No"}
+                    <Badge variant={data?.require_resume ? "default" : "outline"}>
+                      {data?.require_resume ? "Yes" : "No"}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2">
                     <Label className="text-muted-foreground">Cover Letter Required:</Label>
-                    <Badge variant={mockInternship.require_cover_letter ? "default" : "outline"}>
-                      {mockInternship.require_cover_letter ? "Yes" : "No"}
+                    <Badge variant={data?.require_cover_letter ? "default" : "outline"}>
+                      {data?.require_cover_letter ? "Yes" : "No"}
                     </Badge>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          </div>
-
+            </div>
           {/* Active/Inactive Toggle */}
           <Card>
             <CardContent className="p-4 flex items-center justify-between">
@@ -221,7 +227,11 @@ export default function InternshipDetail() {
               </div>
             </CardContent>
           </Card>
+        </div>
+          )}  
         </TabsContent>
+            
+
 
         {/* OFFERS TAB */}
         <TabsContent value="offers" className="space-y-4">

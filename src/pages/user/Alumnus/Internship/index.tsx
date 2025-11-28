@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 
 import { useInternships } from "@/hooks/useInternships";
+import CardSkeleton1 from "@/components/CardSkeleton1";
 
 
 const mockOffers = [
@@ -42,7 +43,6 @@ const mockInterns = [
 export default function AlumnusInternship() {
 
   const { data: internships, isLoading, isError } = useInternships();
-  console.log(internships);
   const [activeTab, setActiveTab] = useState("my-internships");
 
   return (
@@ -75,9 +75,7 @@ export default function AlumnusInternship() {
 
   {/* DATA FETCH LOGIC */}
   {isLoading && (
-    <div className="col-span-2 text-center py-12 text-muted-foreground">
-      Loading internships...
-    </div>
+    <CardSkeleton1 />
   )}
 
   {isError && (

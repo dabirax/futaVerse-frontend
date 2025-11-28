@@ -18,16 +18,30 @@ export const useCreateInternship = () => {
   });
 };
 
+export const useInternship = (id: number) => {
+  return useQuery({
+    queryKey: ["internship", id],
+    queryFn: () => InternshipService.getOne(id),
+    enabled: !!id
+  });
+};
+
+
+
 export const useUpdateInternship = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ id, payload }: any) =>
       InternshipService.update(id, payload),
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
       qc.invalidateQueries(["internships"]);
+      qc.invalidateQueries(["internship", id]);
     },
   });
 };
+
+
+
 
 export const useDeleteInternship = () => {
   const qc = useQueryClient();
