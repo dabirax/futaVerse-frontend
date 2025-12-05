@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
@@ -56,7 +56,7 @@ const LoginPage = () => {
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
 
-      if (role === "Alumni") router.navigate({ to: "/alumnus/dashboard" });
+      if (role === "Alumni") router.navigate({ to: "/alumnus/internships" });
       else router.navigate({ to: "/student/dashboard" });
     },
     onError: (err: any) => {
@@ -160,9 +160,9 @@ const LoginPage = () => {
   <Button
     type="submit"
     className="mt-4 w-full bg-[#5E0B80]"
-    disabled={loginMutation.isLoading}
+    disabled={loginMutation.isPending}
   >
-    {loginMutation.isLoading ? (
+    {loginMutation.isPending ? (
       <div className="flex items-center justify-center gap-2">
         <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin" />
         Signing in...

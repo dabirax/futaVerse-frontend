@@ -41,6 +41,8 @@ export default function AlumnusLayout() {
     navigate({ to: "/" });
   };
 
+  
+
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile Header */}
@@ -78,7 +80,7 @@ export default function AlumnusLayout() {
             </Avatar>
             <div>
               <h3 className="font-semibold text-foreground">
-                Dr. Adeyemi Johnson
+                {/* {user?.firstName} {user?.lastName} */}
               </h3>
               <p className="text-xs text-muted-foreground">Alumnus</p>
             </div>

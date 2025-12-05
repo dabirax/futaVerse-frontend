@@ -2,9 +2,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LeftContainer } from "../../components/LeftContainer";
 import { BackButton } from "../../../../components/BackButton";
+import { useSignupOTPStore } from "../../hooks/useSignupOTPStore"
 import { useHasHydrated, useStudentStoreData } from "../hooks/useStudentStoreData";
 import { studentProfessionalSchema } from "../lib/studentSchema";
 import type { StudentProfessionalFormData } from "../lib/studentSchema";
@@ -26,6 +27,9 @@ import { api } from "@/lib/api"
 
 
 const StudentProfessional = () => {
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState('');
 
 type StudentProfessionalFormInput = z.input<typeof studentProfessionalSchema>;
 type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
@@ -53,8 +57,20 @@ type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
     firstname, lastname, middlename, gender, address, country, state, phone_num, email, password, confirmPassword, profilePic, matric_no, department, faculty, expected_grad_year, level, cgpa,
   } = useStudentStoreData.getState()
 
+const setSignupEmail = useSignupOTPStore((s) => s.setEmail);
+const setUserType = useSignupOTPStore((s) => s.setUserType);
+
+
+
 // Handle Submit
   const onSubmit = async (data: StudentProfessionalFormData) => {
+    setIsError("")
+    setIsLoading(true)
+
+// when signing up
+setSignupEmail(email || "");
+setUserType("student"); // or "alumnus", "lecturer"
+
    
     console.log('Form errors:', form.formState.errors);
 
@@ -316,8 +332,7 @@ type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
                   style={{ transformOrigin: "left center" }}
                 >
                                       <Button className="bg-[#5E0B80] flex ml-auto" onClick={() => {
-router.history.back();
-                                                             }}>
+router.history.back(); }}>
                     Back
                   </Button>
                                   </motion.div>
@@ -327,11 +342,12 @@ router.history.back();
                   whileTap={{ scale: 0.9 }}
                   style={{ transformOrigin: "right center" }}
                 >
-                  <Button type="submit" className="bg-[#5E0B80] flex ml-auto">
-                    Submit
+                  <Button type="submit" className="bg-[#5E0B80] flex ml-auto" disabled={isLoading}>
+                    {isLoading ? 'Submitting...' : 'Submit'}
                   </Button>
                                   </motion.div>
-                                  </div>
+                </div>
+                <p className="text-red-500 text-sm mt-2">{isError}</p>
               </form>
             </Form>
           </div>

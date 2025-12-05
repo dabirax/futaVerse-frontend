@@ -18,7 +18,18 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { useInternship, useUpdateInternship } from "@/hooks/useInternships";
+import { useDeleteInternship, useInternship, useUpdateInternship } from "@/hooks/useInternships";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 
 const formSchema = z.object({
@@ -71,6 +82,7 @@ export default function EditInternship() {
   const { data: currentData, isLoading, isError } = useInternship(Number(id));
   
   const { mutate, isLoading: isUpdating, isError: isUpdateError } = useUpdateInternship();
+  const { mutate: deleteInternship, isLoading: isDeleting } = useDeleteInternship();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -134,6 +146,7 @@ export default function EditInternship() {
     );
   };
 
+
   const onSubmit = (data: FormValues) => {
 
     const formatted = {
@@ -165,6 +178,24 @@ export default function EditInternship() {
   );
 };
 
+  const handleDelete = () => {
+    deleteInternship(Number(id), {
+            onSuccess: () => {
+              toast({
+                title: "Deleted",
+                description: "Internship removed successfully.",
+              });
+              router.navigate({ to: "/alumnus/internships" });
+            },
+            onError: (err: any) => {
+              toast({
+                title: "Error",
+                description: err?.response?.data?.message || "Delete failed.",
+                variant: "destructive"
+              });
+            }
+          });
+  };
 
   const handleCancel = () => {  
     router.navigate({to: `/alumnus/internships/${id}`});
@@ -534,7 +565,35 @@ export default function EditInternship() {
           {/* Submit Button */}
           <div className="flex gap-4 justify-between">
             
-            <Button type="button" variant={"destructive"}>Delete</Button>
+            {/* <Button type="button" variant={"destructive"}>Delete</Button>
+             */}
+             <AlertDialog>
+  <AlertDialogTrigger asChild>
+    <Button variant="destructive">
+      Delete Internship
+    </Button>
+  </AlertDialogTrigger>
+
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Delete internship?</AlertDialogTitle>
+      <AlertDialogDescription>
+        This action cannot be undone. The internship will be permanently removed.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+      <AlertDialogAction
+        onClick={() => {handleDelete()}}
+      >
+        {isDeleting ? "Deleting..." : "Confirm"}
+      </AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+
 
               <div className="flex gap-4">
                 {isUpdateError && <p className="text-center font-bold text-red-600">Error updating internship.</p> }
