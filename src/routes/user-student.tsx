@@ -14,7 +14,7 @@ import StudentSettings from "../pages/user/Student/Settings";
 
 
 import { rootRoute } from "./__root";
-import { requireAuth, requireRole} from "@/lib/guard";
+import { requireRole} from "@/lib/guard";
 
 
 
