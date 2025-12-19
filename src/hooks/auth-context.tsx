@@ -34,6 +34,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(newToken);
     setRole(newRole);
     setIsLoggedIn(true);
+    if (newRole === "student") {
+      window.location.href = "/student/dashboard";
+    } else if (newRole === "alumnus") {
+      window.location.href = "/alumnus/dashboard";
+    }
   };
 
   const logout = () => {

@@ -46,7 +46,7 @@ const LoginPage = () => {
     // Mutation to handle login
   const loginMutation = useMutation({
     mutationFn: async (data: z.infer<typeof loginSchema>) => {
-      const res = await api.post("/auth/login", data);
+      const res = await api.post("/api/auth/login", data);
       return res.data;
     },
     onSuccess: (data) => {
@@ -56,8 +56,10 @@ const LoginPage = () => {
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
 
-      if (role === "Alumni") router.navigate({ to: "/alumnus/internships" });
-      else router.navigate({ to: "/student/dashboard" });
+      if (role === "Alumni") router.navigate({ to: "/alumnus/internships"
+        
+      });
+      if (role === "Student") router.navigate({ to: "/student/internships" });
     },
     onError: (err: any) => {
       console.error("Login failed:", err.response?.data || err.message);

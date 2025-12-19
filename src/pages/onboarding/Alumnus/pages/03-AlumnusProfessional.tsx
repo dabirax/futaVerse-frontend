@@ -2,11 +2,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BackButton } from "../../../../components/BackButton";
 import { LeftContainer } from "../../components/LeftContainer";
 import { useAlumnusStoreData, useHasHydrated } from "../hooks/useAlumnusStoreData";
 import { alumnusProfessionalSchema } from "../lib/alumnusSchema";
+import { useSignupOTPStore } from "../../hooks/useSignupOTPStore";
 import type { AlumnusProfessionalFormData } from "../lib/alumnusSchema";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -28,10 +29,13 @@ import { api } from "@/lib/api"
 
 const AlumnusProfessional = () => {
 
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState('');
+
 type AlumnusProfessionalFormInput = z.input<typeof alumnusProfessionalSchema>;
 type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
 
-  // Form initialization
+  // Form in bnnnitialization
   const form = useForm<AlumnusProfessionalFormInput, any,AlumnusProfessionalFormOutput>({
     resolver: zodResolver(alumnusProfessionalSchema),
     defaultValues: {
@@ -58,9 +62,19 @@ type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
     firstname, lastname, middlename, gender, address, country, state, phone_num, email, password, confirmPassword, profilePic, matric_no, department, faculty, grad_year,
   } = useAlumnusStoreData.getState()
 
+const setSignupEmail = useSignupOTPStore((s) => s.setEmail);
+const setUserType = useSignupOTPStore((s) => s.setUserType);
+
+
 // Handle Submit
   const onSubmit = async (data: AlumnusProfessionalFormData) => {
+      setIsError("")
+      setIsLoading(true)
     console.log('Form errors:', form.formState.errors);
+
+    
+    setSignupEmail(email || "");
+    setUserType("alumnus"); 
 
     
 
@@ -103,11 +117,11 @@ type AlumnusProfessionalFormOutput = z.output<typeof alumnusProfessionalSchema>;
     console.log(payload)
 
   try {
-    const res = await api.post("/auth/signup/alumnus", payload)
+    const res = await api.post("/api/auth/signup/alumnus", payload)
     console.log("✅ Signup successful:", res.data)
     router.navigate({ to: "/signup/otp" })
   } catch (err: any) {
-    console.error("❌ Signup failed:", err.response?.data || err.message)
+    console.error("Signup failed:", err.response?.data || err.message)
   }
 
   };
@@ -449,11 +463,12 @@ router.history.back();
                   whileTap={{ scale: 0.9 }}
                   style={{ transformOrigin: "right center" }}
                 >
-                  <Button type="submit" className="bg-[#5E0B80] flex ml-auto">
-                    Submit
+                  <Button type="submit" className="bg-[#5E0B80] flex ml-auto" disabled={isLoading}>
+                    {isLoading ? 'Submitting...' : 'Submit'}
                   </Button>
                                   </motion.div>
-                                  </div>
+                </div>
+                <p className="text-red-500 text-sm mt-2">{isError}</p>
               </form>
             </Form>
           </div>

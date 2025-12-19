@@ -1,19 +1,19 @@
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { InternshipService } from "@/services/internships";
 
 export const useInternships = () => {
   return useQuery({
     queryKey: ["internships"],
-    queryFn: InternshipService.getAll,
+    queryFn: () => InternshipService.getAll(),
   });
 };
 
 export const useCreateInternship = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: InternshipService.create,
+    mutationFn: (payload: any) => InternshipService.create(payload),
     onSuccess: () => {
-      qc.invalidateQueries(["internships"]);
+      qc.invalidateQueries({ queryKey: ["internships"] });
     },
   });
 };
@@ -22,33 +22,28 @@ export const useInternship = (id: number) => {
   return useQuery({
     queryKey: ["internship", id],
     queryFn: () => InternshipService.getOne(id),
-    enabled: !!id
+    enabled: !!id,
   });
 };
-
-
 
 export const useUpdateInternship = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, payload }: any) =>
+    mutationFn: ({ id, payload }: { id: number; payload: any }) =>
       InternshipService.update(id, payload),
-    onSuccess: (_, { id }) => {
-      qc.invalidateQueries(["internships"]);
-      qc.invalidateQueries(["internship", id]);
+    onSuccess: (_, variables) => {
+      qc.invalidateQueries({ queryKey: ["internships"] });
+      qc.invalidateQueries({ queryKey: ["internship", variables.id] });
     },
   });
 };
 
-
-
-
 export const useDeleteInternship = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: InternshipService.delete,
+    mutationFn: (id: number) => InternshipService.delete(id),
     onSuccess: () => {
-      qc.invalidateQueries(["internships"]);
+      qc.invalidateQueries({ queryKey: ["internships"] });
     },
   });
 };

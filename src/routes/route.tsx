@@ -31,7 +31,17 @@ import {
   createInternshipRoute,
   editInternshipRoute,
   internshipDetailRoute,
-} from "./user";
+} from "./user-alumnus";
+import { 
+studentCalendarRoute,
+  studentDashboardRoute,
+  studentEventsRoute,
+studentFeedRoute,
+  studentInternshipRoute,
+  studentMentorshipRoute,
+  studentMessagesRoute,
+  studentRoute,
+  studentSettingsRoute } from "./user-student";
 
 // Build full route tree
 export const routeTree = rootRoute.addChildren([
@@ -54,4 +64,5 @@ export const routeTree = rootRoute.addChildren([
     checkEmailRoute
   ]),
   alumnusRoute.addChildren([alumnusDashboardRoute, alumnusFeedRoute, alumnusMentorshipRoute, alumnusMessagesRoute, alumnusCalendarRoute, alumnusSettingsRoute, alumnusInternshipRoute, alumnusEventsRoute, internshipDetailRoute, createInternshipRoute, editInternshipRoute]),
+  studentRoute.addChildren([studentDashboardRoute, studentFeedRoute, studentInternshipRoute, studentMentorshipRoute, studentMessagesRoute, studentCalendarRoute, studentSettingsRoute, studentEventsRoute])
 ]);

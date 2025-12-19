@@ -56,7 +56,7 @@ const SignUpOTP = () => {
   {
 
   mutationFn: async (payload: VerifyOtpPayload) => {
-    const res = await api.post("/auth/signup/verify-otp", payload);
+    const res = await api.post("/api/auth/signup/verify-otp", payload);
     return res.data;
   },
     onSuccess: () => {

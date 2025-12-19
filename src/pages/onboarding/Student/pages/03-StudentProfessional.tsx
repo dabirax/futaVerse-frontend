@@ -114,7 +114,7 @@ setUserType("student"); // or "alumnus", "lecturer"
     console.log(payload)
 
   try {
-    const res = await api.post("/auth/signup/student", payload)
+    const res = await api.post("/api/auth/signup/student", payload)
     console.log(" Signup successful:", res.data)
     router.navigate({ to: "/signup/otp" })
   } catch (err: any) {
