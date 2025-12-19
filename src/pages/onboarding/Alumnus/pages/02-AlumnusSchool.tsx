@@ -9,7 +9,7 @@ import { useAlumnusStoreData, useHasHydrated } from "../hooks/useAlumnusStoreDat
 import { LeftContainer } from "../../components/LeftContainer";
 import { alumnusSchoolSchema } from "../lib/alumnusSchema";
 import type { z } from "zod";
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {
   Form,

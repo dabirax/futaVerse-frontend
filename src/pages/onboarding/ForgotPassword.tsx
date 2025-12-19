@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { BackButton } from '../../components/BackButton';
 import { LeftContainer } from './components/LeftContainer';
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {
   Form,

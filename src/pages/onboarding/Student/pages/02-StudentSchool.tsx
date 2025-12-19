@@ -10,7 +10,7 @@ import { useHasHydrated, useStudentStoreData, } from "../hooks/useStudentStoreDa
 import { studentSchoolSchema } from "../lib/studentSchema";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 import {
   Form,
   FormControl,

@@ -9,7 +9,7 @@ import { useStudentStoreData } from "../hooks/useStudentStoreData";
 import { studentBasicSchema } from "../lib/studentSchema";
 import type { StudentBasicFormData } from "../lib/studentSchema";
 import { Button } from "@/components/ui/button";
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 import {
   Form,
   FormControl,

@@ -10,7 +10,7 @@ import axios from "axios";
 import { BackButton } from '../../components/BackButton';
 import { LeftContainer } from "./components/LeftContainer";
 import { useAuth } from "@/hooks/auth-context";
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {
   Form,

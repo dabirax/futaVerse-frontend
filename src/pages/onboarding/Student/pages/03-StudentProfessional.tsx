@@ -11,7 +11,7 @@ import { studentProfessionalSchema } from "../lib/studentSchema";
 import type { StudentProfessionalFormData } from "../lib/studentSchema";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 import {
   Form,
   FormControl,

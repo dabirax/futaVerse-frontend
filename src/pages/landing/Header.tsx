@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Button } from "../../components/ui/button";
 import { Sidebar } from "../onboarding/components/sidebar";
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 
 const Header = () => {
   return (

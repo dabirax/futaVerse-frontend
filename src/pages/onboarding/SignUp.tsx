@@ -2,13 +2,10 @@ import { motion } from "framer-motion";
 import { Link } from "@tanstack/react-router";
 import loginImage from "../../assets/login.png";
 import { BackButton } from '../../components/BackButton';
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 
 const SignUp = () => {
-
-
- 
 
   return (
     <div className="h-screen flex items-center justify-center">
@@ -27,7 +24,7 @@ const SignUp = () => {
         <div className="max-w-md m-auto h-screen w-full flex flex-col items-center py-4">
           <div className="flex items-center justify-between w-full text-[#9017c2] text-2xl px-2">
             <div className=" mt-1">
-             <BackButton />
+              <BackButton />
             </div>
             <Logo     />
           </div>

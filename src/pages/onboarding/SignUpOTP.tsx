@@ -9,7 +9,7 @@ import { useSignupOTPStore } from "./hooks/useSignupOTPStore";
 import { LeftContainer } from "./components/LeftContainer";
 import type { UseMutationResult } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {Form, FormField, FormItem, FormMessage} from "@/components/ui/form";
 import {
