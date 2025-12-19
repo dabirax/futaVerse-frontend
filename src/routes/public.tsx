@@ -1,15 +1,15 @@
 import {  Outlet, createRoute } from "@tanstack/react-router";
-import Landing from "../pages/landing";
-import Login from "../pages/onboarding/Login";
-import SignUp from "../pages/onboarding/SignUp";
-import ForgotPassword from "../pages/onboarding/ForgotPassword";
-import AlumnusBasic from "../pages/onboarding/Alumnus/pages/01-AlumnusBasic";
-import AlumnusProfessional from "../pages/onboarding/Alumnus/pages/03-AlumnusProfessional";
-import AlumnusSchool from "../pages/onboarding/Alumnus/pages/02-AlumnusSchool";
-import StudentBasic from "../pages/onboarding/Student/pages/01-StudentBasic";
-import LecturerBasic from "../pages/onboarding/Lecturer/LecturerBasic";
-import SignUpSuccess from '../pages/onboarding/SignUpSuccess'
 import { rootRoute } from "./__root";
+import Landing from "@/pages/landing";
+import Login from "@/pages/onboarding/Login";
+import SignUp from "@/pages/onboarding/SignUp";
+import ForgotPassword from "@/pages/onboarding/ForgotPassword";
+import AlumnusBasic from "@/pages/onboarding/Alumnus/pages/01-AlumnusBasic";
+import AlumnusProfessional from "@/pages/onboarding/Alumnus/pages/03-AlumnusProfessional";
+import AlumnusSchool from "@/pages/onboarding/Alumnus/pages/02-AlumnusSchool";
+import StudentBasic from "@/pages/onboarding/Student/pages/01-StudentBasic";
+import LecturerBasic from "@/pages/onboarding/Lecturer/LecturerBasic";
+import SignUpSuccess from '@/pages/onboarding/SignUpSuccess'
 import StudentSchool from "@/pages/onboarding/Student/pages/02-StudentSchool";
 import StudentProfessional from "@/pages/onboarding/Student/pages/03-StudentProfessional";
 import CheckEmail from "@/pages/onboarding/CheckEmail";

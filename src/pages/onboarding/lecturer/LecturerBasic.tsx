@@ -5,4 +5,4 @@ const LecturerBasic = () => {
   )
 }
 
-export default LecturerBasic
+export default LecturerBasic;
