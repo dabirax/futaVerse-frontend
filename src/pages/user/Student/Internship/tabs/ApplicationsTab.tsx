@@ -1,36 +1,35 @@
-import StudentCard from "../../../../../components/user/internships/StudentCard";
+import InternshipCard2 from "@/components/user/internships/InternshipCard2";
 
-const mockApplications = [
+const mockStudentApplications = [
   {
-    studentName: "Blessing Okonkwo",
-    internshipTitle: "Frontend Developer Intern",
+    internshipTitle: "UI/UX Design Intern",
+    alumnusName: "Mr. Samuel Adebayo",
+    company: "DesignHub",
   },
   {
-    studentName: "Emmanuel Nwosu",
-    internshipTitle: "Frontend Developer Intern",
+    internshipTitle: "Mobile App Intern",
+    alumnusName: "Engr. Tolu Martins",
+    company: "AppForge",
   },
 ];
 
-export default function ApplicationsTab() {
+export default function StudentApplicationsTab() {
   return (
     <div className="space-y-4">
-      <div className="space-y-3">
-        {mockApplications.length > 0 ? (
-          mockApplications.map((application, index) => (
-            <StudentCard
-              key={index}
-              {...application}
-              variant="applicant"
-              onAccept={() => console.log("Accept application")}
-              onWithdraw={() => console.log("Reject application")}
-            />
-          ))
-        ) : (
-          <div className="text-center py-12 text-muted-foreground">
-            No applications received yet.
-          </div>
-        )}
-      </div>
+      {mockStudentApplications.length > 0 ? (
+        mockStudentApplications.map((application, index) => (
+          <InternshipCard2
+            key={index}
+            {...application}
+            variant="application"
+            onWithdraw={() => console.log("Withdraw application")}
+          />
+        ))
+      ) : (
+        <div className="text-center py-12 text-muted-foreground">
+          No applications submitted yet.
+        </div>
+      )}
     </div>
   );
 }

@@ -1,47 +1,36 @@
-import { Plus } from "lucide-react";
-import { motion } from 'framer-motion';
-import StudentCard from "../../../../../components/user/internships/StudentCard";
-import { Button } from "@/components/ui/button";
+import InternshipCard2 from "@/components/user/internships/InternshipCard2";
 
-const mockOffers = [
+const mockStudentOffers = [
   {
-    studentName: "Chioma Adebayo",
     internshipTitle: "Frontend Developer Intern",
+    alumnusName: "Engr. Akinwale Ojo",
+    company: "TechNova Ltd",
   },
   {
-    studentName: "Tunde Olatunji",
     internshipTitle: "Backend Engineer Intern",
+    alumnusName: "Mrs. Funke Adeyemi",
+    company: "CloudCore",
   },
 ];
 
-export default function OffersTab() {
+export default function StudentOffersTab() {
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.9 }}>
-          <Button className="p-2 mr-4">
-            <Plus className="h-4 w-4" />
-            Share Offer
-          </Button>
-        </motion.div>
-      </div>
-
-      <div className="space-y-3">
-        {mockOffers.length > 0 ? (
-          mockOffers.map((offer, index) => (
-            <StudentCard
-              key={index}
-              {...offer}
-              variant="offer"
-              onWithdraw={() => console.log("Withdraw offer")}
-            />
-          ))
-        ) : (
-          <div className="text-center py-12 text-muted-foreground">
-            No offers sent yet.
-          </div>
-        )}
-      </div>
+      {mockStudentOffers.length > 0 ? (
+        mockStudentOffers.map((offer, index) => (
+          <InternshipCard2
+            key={index}
+            {...offer}
+            variant="offer"
+            onAccept={() => console.log("Accept offer")}
+            onReject={() => console.log("Reject offer")}
+          />
+        ))
+      ) : (
+        <div className="text-center py-12 text-muted-foreground">
+          No offers received yet.
+        </div>
+      )}
     </div>
   );
 }
