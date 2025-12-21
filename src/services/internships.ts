@@ -2,27 +2,34 @@ import { api } from "@/lib/api";
 
 export const InternshipService = {
   getAll: async () => {
-    const res = await api.get("/api/internships");
-    return res.data;
+    const {data} = await api.get("/api/internships");
+    return data;
   },
 
   getOne: async (id: number) => {
-    const res = await api.get(`/api/internships/${id}`);
-    return res.data;
+    const {data} = await api.get(`/api/internships/${id}`);
+    return data;
   },
 
   create: async (payload: any) => {
-    const res = await api.post("/api/internships", payload);
-    return res.data;
+    const {data} = await api.post("/api/internships", payload);
+    return data;
   },
 
   update: async (id: number, payload: any) => {
-    const res = await api.patch(`/api/internships/${id}`, payload);
-    return res.data;
+    const {data} = await api.patch(`/api/internships/${id}`, payload);
+    return data;
   },
 
   delete: async (id: number) => {
-    const res = await api.delete(`/api/internships/${id}`);
-    return res.data;
+    const {data} = await api.delete(`/api/internships/${id}`);
+    return data;
+  },
+};
+
+export const InternshipOffersService = {
+  getOffers: async () => {
+    const { data } = await api.get(`/api/internships/offers`);
+    return data;
   },
 };
