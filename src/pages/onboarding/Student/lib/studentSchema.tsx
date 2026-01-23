@@ -7,7 +7,7 @@ export const studentBasicRaw = z.object({
   firstname: z.string().min(1, "First name is required"),
   lastname: z.string().min(1, "Last name is required"),
   middlename: z.string().optional(),
-  gender: z.enum(["Male", "Female", "Other"], {
+  gender: z.enum(["male", "female", "other"], {
     message: "Gender is required",
   }),
   address: z.string().optional(),

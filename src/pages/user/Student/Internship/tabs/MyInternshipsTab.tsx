@@ -1,11 +1,11 @@
 import InternshipCard from "../../../../../components/user/internships/InternshipCard";
 import CardSkeleton1 from "@/components/CardSkeleton1";
-import { useInternships } from "@/hooks/useInternships";
+import { useInternshipEngagements, useInternships } from "@/hooks/useInternships";
 
 export default function MyInternshipsTab() {
 
-  
-  const { data, isLoading, isError } = useInternships();
+
+  const { data, isLoading, isError } = useInternshipEngagements();
 
   const {results:internships} = data || {};
   
@@ -32,7 +32,7 @@ export default function MyInternshipsTab() {
             ))
           ) : (
             <div className="col-span-2 text-center py-12 text-muted-foreground">
-              No internships created yet. Click "Create New Internship" to get started.
+              No internships yet. 
             </div>
           )}
         </div>

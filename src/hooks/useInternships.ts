@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { InternshipService } from "@/services/internships";
+import { InternshipEngagementsService, InternshipOffersService,  InternshipService} from "@/services/internships";
+
+
+// Internships
 
 export const useInternships = () => {
   return useQuery({
@@ -45,5 +48,52 @@ export const useDeleteInternship = () => {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["internships"] });
     },
+  });
+};
+
+// Offers
+export const useInternshipOffers = () => {
+  return useQuery({
+    queryKey: ["internship-offers"],
+    queryFn: InternshipOffersService.getOffers,
+  });
+};
+
+export const useAcceptInternshipOffer = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => InternshipOffersService.acceptOffer(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["internship-offers"] });
+    },
+  });
+};
+
+export const useRejectInternshipOffer = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => InternshipOffersService.rejectOffer(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["internship-offers"] });
+    },
+  });
+};    
+
+export const useWithdrawInternshipOffer = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => InternshipOffersService.withdrawOffer(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["internship-offers"] });
+    },
+  });
+};
+
+
+// Engagements
+export const useInternshipEngagements = () => {
+  return useQuery({
+    queryKey: ["internship-engagements"],
+    queryFn: InternshipEngagementsService.getEngagements,
   });
 };

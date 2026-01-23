@@ -1,12 +1,14 @@
-import CardSkeleton2 from "@/components/CardSkeleton2";
+import CardSkeleton3 from "@/components/CardSkeleton3";
 import InternshipCard2 from "@/components/user/internships/InternshipCard2";
-import { useInternshipOffers } from "@/hooks/useInternshipOffers";
+import { useAcceptInternshipOffer, useInternshipOffers, useRejectInternshipOffer } from "@/hooks/useInternships";
 
 export default function OffersPage() {
   const { data, isLoading, isError } = useInternshipOffers();
+  const { mutate: acceptOffer } = useAcceptInternshipOffer();
+  const { mutate: rejectOffer } = useRejectInternshipOffer();
 
   if (isLoading) {
-    return <CardSkeleton2 />;
+    return <CardSkeleton3 />;
   }
 
   if (isError) {
@@ -27,14 +29,13 @@ export default function OffersPage() {
           company={offer.internship.industry}
           variant="offer"
           onAccept={() => {
-            console.log("Accept offer", offer.id);
+          acceptOffer(offer.id);
           }}
           onReject={() => {
-            console.log("Reject offer", offer.id);
+            rejectOffer(offer.id);
           }}
         />
       ))}
-    <CardSkeleton2 />
     </div>
   );
 }
