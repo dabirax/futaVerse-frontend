@@ -15,9 +15,12 @@ import AlumnusSettings from "../pages/user/Alumnus/Settings";
 
 import { rootRoute } from "./__root";
 import InternshipDetail from "@/pages/user/Alumnus/Internship/InternshipDetail";
-import NewInternship from "@/pages/user/Alumnus/Internship/NewInternship";
 import EditInternship from "@/pages/user/Alumnus/Internship/EditInternship";
 import { requireRole } from "@/lib/guard";
+import EventDetails from "@/pages/user/Alumnus/Events/EventDetails";
+import CreateEvent from "@/pages/user/Alumnus/Events/CreateEvent";
+import CreateInternship from "@/pages/user/Alumnus/Internship/CreateInternship";
+import EditEvent from "@/pages/user/Alumnus/Events/EditEvent";
 
 
 /* -------------------------- ALUMNUS ROUTES -------------------------- */
@@ -42,31 +45,33 @@ export const alumnusFeedRoute = createRoute({
   component: AlumnusFeed,
 });
 
+// Internship Routes
+
 export const alumnusInternshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/internships",
   component: AlumnusInternship,
 });
 
-export const createInternshipRoute = createRoute({
+export const alumnusCreateInternshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/internships/create-internship",
-  component: NewInternship,
+  component: CreateInternship,
 });
 
-export const internshipDetailRoute = createRoute({
+export const alumnusInternshipDetailRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/internships/$id",
   component: InternshipDetail,
 });
 
-export const editInternshipRoute = createRoute({
+export const alumnusEditInternshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/internships/$id/edit",
   component: EditInternship,
 });
 
-
+// Mentorship Route
 
 export const alumnusMentorshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
@@ -74,11 +79,33 @@ export const alumnusMentorshipRoute = createRoute({
   component: AlumnusMentorship,
 });
 
+// Events Routes
+
 export const alumnusEventsRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: "/alumnus/events",
   component: AlumnusEvents,
 });
+
+export const alumnusEventDetailRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: "/alumnus/events/$id",
+  component: EventDetails,
+});
+
+export const alumnusCreateEventRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: "/alumnus/events/create-event",
+  component: CreateEvent,
+});
+
+export const alumnusEditEventRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: "/alumnus/events/$id/edit-event",
+  component: EditEvent,
+});
+
+// Messages Route 
 
 export const alumnusMessagesRoute = createRoute({
   getParentRoute: () => alumnusRoute,

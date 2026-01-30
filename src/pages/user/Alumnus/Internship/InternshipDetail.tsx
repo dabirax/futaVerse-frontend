@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { internshipDetailRoute } from "@/routes/user-alumnus"
+import { alumnusInternshipDetailRoute } from "@/routes/user-alumnus"
 import { useInternship } from "@/hooks/useInternships" 
 import CardSkeleton2 from "@/components/CardSkeleton2"
 
@@ -29,7 +29,7 @@ const mockInterns = [
 export default function InternshipDetail() {
   const router = useRouter()
   
-  const { id } = internshipDetailRoute.useParams()
+  const { id } = alumnusInternshipDetailRoute.useParams()
     const {data, isLoading, isError} = useInternship(Number(id));
 
   const [activeTab, setActiveTab] = useState("details")

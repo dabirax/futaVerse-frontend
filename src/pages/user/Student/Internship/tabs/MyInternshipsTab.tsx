@@ -1,6 +1,6 @@
 import InternshipCard from "../../../../../components/user/internships/InternshipCard";
 import CardSkeleton1 from "@/components/CardSkeleton1";
-import { useInternshipEngagements, useInternships } from "@/hooks/useInternships";
+import { useInternshipEngagements } from "@/hooks/useInternships";
 
 export default function MyInternshipsTab() {
 

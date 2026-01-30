@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {  ArrowLeft, CalendarIcon, X,} from "lucide-react";
 import { format } from "date-fns";
-import { editInternshipRoute } from "@/routes/user-alumnus";
+import { alumnusEditInternshipRoute } from "@/routes/user-alumnus";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -74,7 +74,7 @@ type FormValues = z.infer<typeof formSchema>;
 // };
 
 export default function EditInternship() {
-  const { id } = editInternshipRoute.useParams();
+  const { id } = alumnusEditInternshipRoute.useParams();
   const router = useRouter();
   const { toast } = useToast();
   const [skillInput, setSkillInput] = useState("");

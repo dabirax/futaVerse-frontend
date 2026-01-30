@@ -175,7 +175,7 @@ console.log(formatted)
                   <FormControl>
                     <Textarea
                       placeholder="Describe the internship role, responsibilities, and what the intern will learn..."
-                      className="min-h-[120px]"
+                      className="min-h-30"
                       {...field}
                     />
                   </FormControl>

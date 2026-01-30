@@ -20,17 +20,20 @@ import {
 } from "./public";
 import {
   alumnusCalendarRoute,
+  alumnusCreateInternshipRoute,
   alumnusDashboardRoute,
   alumnusEventsRoute, 
+  alumnusEventDetailRoute,
   alumnusFeedRoute,
   alumnusInternshipRoute,
   alumnusMentorshipRoute,
   alumnusMessagesRoute,
   alumnusRoute,
   alumnusSettingsRoute,
-  createInternshipRoute,
-  editInternshipRoute,
-  internshipDetailRoute,
+  alumnusEditInternshipRoute,
+  alumnusInternshipDetailRoute,
+  alumnusCreateEventRoute,
+  alumnusEditEventRoute
 } from "./user-alumnus";
 import { 
 studentCalendarRoute,
@@ -63,6 +66,6 @@ export const routeTree = rootRoute.addChildren([
     resetSuccessRoute,
     checkEmailRoute
   ]),
-  alumnusRoute.addChildren([alumnusDashboardRoute, alumnusFeedRoute, alumnusMentorshipRoute, alumnusMessagesRoute, alumnusCalendarRoute, alumnusSettingsRoute, alumnusInternshipRoute, alumnusEventsRoute, internshipDetailRoute, createInternshipRoute, editInternshipRoute]),
+  alumnusRoute.addChildren([alumnusDashboardRoute, alumnusFeedRoute, alumnusMentorshipRoute, alumnusMessagesRoute, alumnusCalendarRoute, alumnusSettingsRoute, alumnusInternshipRoute, alumnusEventsRoute, alumnusEventDetailRoute, alumnusCreateEventRoute, alumnusCreateInternshipRoute, alumnusEditInternshipRoute, alumnusInternshipDetailRoute, alumnusEditEventRoute]),
   studentRoute.addChildren([studentDashboardRoute, studentFeedRoute, studentInternshipRoute, studentMentorshipRoute, studentMessagesRoute, studentCalendarRoute, studentSettingsRoute, studentEventsRoute])
 ]);
