@@ -21,6 +21,9 @@ import EventDetails from "@/pages/user/Alumnus/Events/EventDetails";
 import CreateEvent from "@/pages/user/Alumnus/Events/CreateEvent";
 import CreateInternship from "@/pages/user/Alumnus/Internship/CreateInternship";
 import EditEvent from "@/pages/user/Alumnus/Events/EditEvent";
+import CreateMentorship from "@/pages/user/Alumnus/Mentorship/create";
+import EditMentorship from "@/pages/user/Alumnus/Mentorship/edit";
+import MentorshipDetails from "@/pages/user/Alumnus/Mentorship/details";
 
 
 /* -------------------------- ALUMNUS ROUTES -------------------------- */
@@ -55,7 +58,7 @@ export const alumnusInternshipRoute = createRoute({
 
 export const alumnusCreateInternshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/internships/create-internship",
+  path: "/alumnus/internships/create",
   component: CreateInternship,
 });
 
@@ -79,6 +82,25 @@ export const alumnusMentorshipRoute = createRoute({
   component: AlumnusMentorship,
 });
 
+export const alumnusCreateMentorshipRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: "/alumnus/mentorship/create",
+  component: CreateMentorship,
+});
+
+export const alumnusEditMentorshipRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: "/alumnus/mentorship/$id/edit",
+  component: EditMentorship,
+});
+
+export const alumnusMentorshipDetailRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: "/alumnus/mentorship/$id",
+  component: MentorshipDetails,
+}); 
+
+
 // Events Routes
 
 export const alumnusEventsRoute = createRoute({
@@ -95,13 +117,13 @@ export const alumnusEventDetailRoute = createRoute({
 
 export const alumnusCreateEventRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/events/create-event",
+  path: "/alumnus/events/create",
   component: CreateEvent,
 });
 
 export const alumnusEditEventRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/events/$id/edit-event",
+  path: "/alumnus/events/$id/edit",
   component: EditEvent,
 });
 

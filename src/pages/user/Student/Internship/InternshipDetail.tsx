@@ -1,38 +1,49 @@
-import { useState } from "react"
-import {  useRouter, } from "@tanstack/react-router"
-import { ArrowLeft, Edit, Plus } from "lucide-react"
-import StudentCard from "../../../../components/user/internships/StudentCard"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { alumnusInternshipDetailRoute } from "@/routes/user-alumnus"
-import { useInternship } from "@/hooks/useInternships" 
-import CardSkeleton2 from "@/components/CardSkeleton2"
-
+import { useState } from 'react'
+import { useRouter } from '@tanstack/react-router'
+import { ArrowLeft, Edit, Plus } from 'lucide-react'
+import StudentCard from '../../../../components/user/internships/StudentCard'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
+import { alumnusInternshipDetailRoute } from '@/routes/user-alumnus'
+import { useInternship } from '@/hooks/useInternships'
+import CardSkeleton2 from '@/components/skeletons/CardSkeleton2'
 
 const mockOffers = [
-  { studentName: "Chioma Adebayo", internshipTitle: "Frontend Developer Intern" },
+  {
+    studentName: 'Chioma Adebayo',
+    internshipTitle: 'Frontend Developer Intern',
+  },
 ]
 
 const mockApplications = [
-  { studentName: "Blessing Okonkwo", internshipTitle: "Frontend Developer Intern" },
-  { studentName: "Emmanuel Nwosu", internshipTitle: "Frontend Developer Intern" },
+  {
+    studentName: 'Blessing Okonkwo',
+    internshipTitle: 'Frontend Developer Intern',
+  },
+  {
+    studentName: 'Emmanuel Nwosu',
+    internshipTitle: 'Frontend Developer Intern',
+  },
 ]
 
 const mockInterns = [
-  { studentName: "Fatima Ibrahim", internshipTitle: "Frontend Developer Intern" },
+  {
+    studentName: 'Fatima Ibrahim',
+    internshipTitle: 'Frontend Developer Intern',
+  },
 ]
 
 export default function InternshipDetail() {
   const router = useRouter()
-  
-  const { id } = alumnusInternshipDetailRoute.useParams()
-    const {data, isLoading, isError} = useInternship(Number(id));
 
-  const [activeTab, setActiveTab] = useState("details")
+  const { id } = alumnusInternshipDetailRoute.useParams()
+  const { data, isLoading, isError } = useInternship(Number(id))
+
+  const [activeTab, setActiveTab] = useState('details')
   const [isActive, setIsActive] = useState(data?.is_active)
 
   return (
@@ -42,7 +53,7 @@ export default function InternshipDetail() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => router.navigate({ to: "/alumnus/internships" })}
+          onClick={() => router.navigate({ to: '/alumnus/internships' })}
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
@@ -60,156 +71,198 @@ export default function InternshipDetail() {
         {/* DETAILS TAB */}
         <TabsContent value="details" className="space-y-4">
           <div className="flex justify-end">
-            <Button onClick={() => router.navigate({ to: `/alumnus/internships/${id}/edit` })}>
+            <Button
+              onClick={() =>
+                router.navigate({ to: `/alumnus/internships/${id}/edit` })
+              }
+            >
               <Edit className="h-4 w-4" />
               Edit Internship
             </Button>
           </div>
           {isLoading && <CardSkeleton2 />}
-          {isError && <p className="text-center font-bold text-red-600 text-2xl">Error loading internship details.</p>}
+          {isError && (
+            <p className="text-center font-bold text-red-600 text-2xl">
+              Error loading internship details.
+            </p>
+          )}
 
           {isLoading || isError ? null : (
-          <div className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-            {/* Basic Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Basic Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <Label className="text-muted-foreground">Title</Label>
-                  <p className="font-medium">{data?.title}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Description</Label>
-                  <p className="text-sm">{data?.description}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Industry</Label>
-                  <p className="font-medium">{data?.industry}</p>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                {/* Basic Information */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Basic Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div>
+                      <Label className="text-muted-foreground">Title</Label>
+                      <p className="font-medium">{data?.title}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">
+                        Description
+                      </Label>
+                      <p className="text-sm">{data?.description}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">Industry</Label>
+                      <p className="font-medium">{data?.industry}</p>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            {/* Work Details */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Work Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <Label className="text-muted-foreground">Work Mode</Label>
-                  <p className="font-medium">{data?.work_mode}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Engagement Type</Label>
-                  <p className="font-medium">{data?.engagement_type}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Location</Label>
-                  <p className="font-medium">{data?.location}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Duration</Label>
-                  <p className="font-medium">{data?.duration_weeks} weeks</p>
-                </div>
-              </CardContent>
-            </Card>
+                {/* Work Details */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Work Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div>
+                      <Label className="text-muted-foreground">Work Mode</Label>
+                      <p className="font-medium">{data?.work_mode}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">
+                        Engagement Type
+                      </Label>
+                      <p className="font-medium">{data?.engagement_type}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">Location</Label>
+                      <p className="font-medium">{data?.location}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">Duration</Label>
+                      <p className="font-medium">
+                        {data?.duration_weeks} weeks
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            {/* Timeline */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Timeline</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <Label className="text-muted-foreground">Start Date</Label>
-                  <p className="font-medium">{new Date(data?.start_date || "").toLocaleDateString()}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">End Date</Label>
-                  <p className="font-medium">{new Date(data?.end_date || "").toLocaleDateString()}</p>
-                </div>
-              </CardContent>
-            </Card>
+                {/* Timeline */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Timeline</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div>
+                      <Label className="text-muted-foreground">
+                        Start Date
+                      </Label>
+                      <p className="font-medium">
+                        {new Date(data?.start_date || '').toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">End Date</Label>
+                      <p className="font-medium">
+                        {new Date(data?.end_date || '').toLocaleDateString()}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            {/* Compensation & Slots */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Compensation & Availability</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <Label className="text-muted-foreground">Is Paid</Label>
-                  <p className="font-medium">{data?.is_paid ? "Yes" : "No"}</p>
-                </div>
-                {data?.is_paid && (
+                {/* Compensation & Slots */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Compensation & Availability</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div>
+                      <Label className="text-muted-foreground">Is Paid</Label>
+                      <p className="font-medium">
+                        {data?.is_paid ? 'Yes' : 'No'}
+                      </p>
+                    </div>
+                    {data?.is_paid && (
+                      <div>
+                        <Label className="text-muted-foreground">Stipend</Label>
+                        <p className="font-medium">
+                          ₦{parseFloat(data?.stipend || '0').toLocaleString()}
+                        </p>
+                      </div>
+                    )}
+                    <div>
+                      <Label className="text-muted-foreground">
+                        Available Slots
+                      </Label>
+                      <p className="font-medium">{data?.available_slots}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Skills & Requirements */}
+                <Card className="md:col-span-2">
+                  <CardHeader>
+                    <CardTitle>Skills & Requirements</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label className="text-muted-foreground">
+                        Required Skills
+                      </Label>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {data?.skills_required.map(
+                          (skill: string, index: number) => (
+                            <Badge key={index} variant="accent">
+                              {skill}
+                            </Badge>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex gap-6">
+                      <div className="flex items-center gap-2">
+                        <Label className="text-muted-foreground">
+                          Resume Required:
+                        </Label>
+                        <Badge
+                          variant={data?.require_resume ? 'default' : 'outline'}
+                        >
+                          {data?.require_resume ? 'Yes' : 'No'}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Label className="text-muted-foreground">
+                          Cover Letter Required:
+                        </Label>
+                        <Badge
+                          variant={
+                            data?.require_cover_letter ? 'default' : 'outline'
+                          }
+                        >
+                          {data?.require_cover_letter ? 'Yes' : 'No'}
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              {/* Active/Inactive Toggle */}
+              <Card>
+                <CardContent className="p-4 flex items-center justify-between">
                   <div>
-                    <Label className="text-muted-foreground">Stipend</Label>
-                    <p className="font-medium">₦{parseFloat(data?.stipend || "0").toLocaleString()}</p>
-                  </div>
-                )}
-                <div>
-                  <Label className="text-muted-foreground">Available Slots</Label>
-                  <p className="font-medium">{data?.available_slots}</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Skills & Requirements */}
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>Skills & Requirements</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label className="text-muted-foreground">Required Skills</Label>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {data?.skills_required.map((skill: string, index: number) => (
-                      <Badge key={index} variant="accent">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex gap-6">
-                  <div className="flex items-center gap-2">
-                    <Label className="text-muted-foreground">Resume Required:</Label>
-                    <Badge variant={data?.require_resume ? "default" : "outline"}>
-                      {data?.require_resume ? "Yes" : "No"}
-                    </Badge>
+                    <Label className="text-base font-semibold">
+                      Internship Status
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {isActive
+                        ? 'This internship is currently active and accepting applications'
+                        : 'This internship is currently inactive'}
+                    </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Label className="text-muted-foreground">Cover Letter Required:</Label>
-                    <Badge variant={data?.require_cover_letter ? "default" : "outline"}>
-                      {data?.require_cover_letter ? "Yes" : "No"}
-                    </Badge>
+                    <Switch checked={isActive} onCheckedChange={setIsActive} />
+                    <Label>{isActive ? 'Active' : 'Inactive'}</Label>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
             </div>
-          {/* Active/Inactive Toggle */}
-          <Card>
-            <CardContent className="p-4 flex items-center justify-between">
-              <div>
-                <Label className="text-base font-semibold">Internship Status</Label>
-                <p className="text-sm text-muted-foreground">
-                  {isActive ? "This internship is currently active and accepting applications" : "This internship is currently inactive"}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Switch checked={isActive} onCheckedChange={setIsActive} />
-                <Label>{isActive ? "Active" : "Inactive"}</Label>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-          )}  
+          )}
         </TabsContent>
-            
-
 
         {/* OFFERS TAB */}
         <TabsContent value="offers" className="space-y-4">
@@ -227,7 +280,7 @@ export default function InternshipDetail() {
                   key={index}
                   {...offer}
                   variant="offer"
-                  onWithdraw={() => console.log("Withdraw offer")}
+                  onWithdraw={() => console.log('Withdraw offer')}
                 />
               ))
             ) : (
@@ -247,8 +300,8 @@ export default function InternshipDetail() {
                   key={index}
                   {...application}
                   variant="applicant"
-                  onAccept={() => console.log("Accept application")}
-                  onWithdraw={() => console.log("Reject application")}
+                  onAccept={() => console.log('Accept application')}
+                  onWithdraw={() => console.log('Reject application')}
                 />
               ))
             ) : (
@@ -268,7 +321,7 @@ export default function InternshipDetail() {
                   key={index}
                   {...intern}
                   variant="intern"
-                  onMessage={() => console.log("Message intern")}
+                  onMessage={() => console.log('Message intern')}
                 />
               ))
             ) : (
@@ -280,5 +333,5 @@ export default function InternshipDetail() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

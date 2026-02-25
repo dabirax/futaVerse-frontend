@@ -1,61 +1,30 @@
-import { useState } from "react";
-import { Plus } from "lucide-react";
-import InternshipCard from "../../../../components/user/internships/InternshipCard";
-import StudentCard from "../../../../components/user/internships/StudentCard";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-
-// Mock data
-const mockInternships = [
-  {
-    id: "1",
-    title: "Frontend Developer Intern",
-    description: "Work on React applications and modern web technologies",
-    workMode: "Remote",
-    location: "Lagos, Nigeria",
-    availableSlots: 3,
-  },
-  {
-    id: "2",
-    title: "Backend Engineer Intern",
-    description: "Build scalable APIs and work with databases",
-    workMode: "Hybrid",
-    location: "Akure, Nigeria",
-    availableSlots: 2,
-  },
-];
-
-const mockOffers = [
-  {
-    studentName: "Chioma Adebayo",
-    internshipTitle: "Frontend Developer Intern",
-  },
-  {
-    studentName: "Tunde Olatunji",
-    internshipTitle: "Backend Engineer Intern",
-  },
-];
-
-const mockApplications = [
-  {
-    studentName: "Blessing Okonkwo",
-    internshipTitle: "Frontend Developer Intern",
-  },
-  {
-    studentName: "Emmanuel Nwosu",
-    internshipTitle: "Frontend Developer Intern",
-  },
-];
-
-const mockInterns = [
-  {
-    studentName: "Fatima Ibrahim",
-    internshipTitle: "Backend Engineer Intern",
-  },
-];
+import { useState } from 'react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import AvailableMentorshipsTab from './tabs/MyMentorshipsTab'
+import OffersTab from './tabs/OffersTab'
+import MyApplicationsTab from './tabs/ApplicationsTab'
+import { useMentorships, useMentorshipOffers, useMentorshipApplications } from '@/hooks/useMentorships'
+import { Card, CardContent } from '@/components/ui/card'
 
 export default function StudentMentorship() {
-  const [activeTab, setActiveTab] = useState("my-internships");
+  const [activeTab, setActiveTab] = useState('available-mentorships')
+  const { isLoading: loadingMentorships } = useMentorships()
+  const { isLoading: loadingOffers } = useMentorshipOffers()
+  const { isLoading: loadingMyApplications } = useMentorshipApplications()
+
+  const CardSkeleton = () => (
+    <Card>
+      <CardContent className="animate-pulse space-y-3">
+        <div className="h-4 rounded bg-muted/40 w-3/4" />
+        <div className="h-3 rounded bg-muted/30 w-full" />
+        <div className="h-3 rounded bg-muted/30 w-5/6" />
+        <div className="flex gap-2 pt-4">
+          <div className="h-8 rounded bg-muted/30 flex-1" />
+          <div className="h-8 rounded bg-muted/30 flex-1" />
+        </div>
+      </CardContent>
+    </Card>
+  )
 
   return (
     <div className="space-y-6">
@@ -64,106 +33,54 @@ export default function StudentMentorship() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="my-internships">My Mentorships</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="my-mentorships">My Mentorships</TabsTrigger>
           <TabsTrigger value="offers">Offers</TabsTrigger>
           <TabsTrigger value="applications">Applications</TabsTrigger>
-          <TabsTrigger value="interns">Mentees</TabsTrigger>
-          <TabsTrigger value="interns">Reports</TabsTrigger>
+          <TabsTrigger value="reports">Reports</TabsTrigger>
         </TabsList>
 
-        {/* MY INTERNSHIPS TAB */}
-        <TabsContent value="my-internships" className="space-y-4">
-          <div className="flex justify-end">
-                      <Button
-                        //   onClick={() => navigate("/alumnus/internships/create")}
-                      >
-              <Plus className="h-4 w-4" />
-             Add New Mentee
-            </Button>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            {mockInternships.length > 0 ? (
-              mockInternships.map((internship) => (
-                <InternshipCard key={internship.id} {...internship} />
-              ))
-            ) : (
-              <div className="col-span-2 text-center py-12 text-muted-foreground">
-                No internships created yet. Click "Create New Internship" to get started.
-              </div>
-            )}
-          </div>
+        {/* AVAILABLE MENTORSHIPS TAB */}
+        <TabsContent value="my-mentorships" className="space-y-4">
+          {loadingMentorships ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              <CardSkeleton />
+              <CardSkeleton />
+            </div>
+          ) : (
+            <AvailableMentorshipsTab />
+          )}
         </TabsContent>
 
         {/* OFFERS TAB */}
         <TabsContent value="offers" className="space-y-4">
-          <div className="flex justify-end">
-            <Button>
-              <Plus className="h-4 w-4" />
-              Share Offer
-            </Button>
-          </div>
-
-          <div className="space-y-3">
-            {mockOffers.length > 0 ? (
-              mockOffers.map((offer, index) => (
-                <StudentCard
-                  key={index}
-                  {...offer}
-                  variant="offer"
-                  onWithdraw={() => console.log("Withdraw offer")}
-                />
-              ))
-            ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                No offers sent yet.
-              </div>
-            )}
-          </div>
+          {loadingOffers ? (
+            <div className="space-y-3">
+              <CardSkeleton />
+              <CardSkeleton />
+            </div>
+          ) : (
+            <OffersTab />
+          )}
         </TabsContent>
 
-        {/* APPLICATIONS TAB */}
+        {/* MY APPLICATIONS TAB */}
         <TabsContent value="applications" className="space-y-4">
-          <div className="space-y-3">
-            {mockApplications.length > 0 ? (
-              mockApplications.map((application, index) => (
-                <StudentCard
-                  key={index}
-                  {...application}
-                  variant="applicant"
-                  onAccept={() => console.log("Accept application")}
-                  onWithdraw={() => console.log("Reject application")}
-                />
-              ))
-            ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                No applications received yet.
-              </div>
-            )}
-          </div>
+          {loadingMyApplications ? (
+            <div className="space-y-3">
+              <CardSkeleton />
+              <CardSkeleton />
+            </div>
+          ) : (
+            <MyApplicationsTab />
+          )}
         </TabsContent>
 
-        {/* INTERNS TAB */}
-        <TabsContent value="interns" className="space-y-4">
-          <div className="space-y-3">
-            {mockInterns.length > 0 ? (
-              mockInterns.map((intern, index) => (
-                <StudentCard
-                  key={index}
-                  {...intern}
-                  variant="intern"
-                  onMessage={() => console.log("Message intern")}
-                />
-              ))
-            ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                No active interns yet.
-              </div>
-            )}
-          </div>
+        {/* REPORTS TAB */}
+        <TabsContent value="reports" className="space-y-4">
+          <p className="text-center py-12 text-muted-foreground">No reports yet</p>
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

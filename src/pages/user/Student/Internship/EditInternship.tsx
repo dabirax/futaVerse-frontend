@@ -53,25 +53,6 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-// Mock data for existing internship
-// const mockInternship = {
-//   id: "1",
-//   title: "Frontend Developer Intern",
-//   description: "Work on building modern web applications using React, TypeScript, and Tailwind CSS. Collaborate with experienced developers and contribute to real-world projects.",
-//   skills_required: ["React", "TypeScript", "Tailwind CSS", "Git"],
-//   work_mode: "Remote" as const,
-//   engagement_type: "Full-time" as const,
-//   location: "Lagos, Nigeria",
-//   industry: "Technology",
-//   duration_weeks: 12,
-//   start_date: "2025-11-15",
-//   end_date: "2026-02-07",
-//   is_paid: true,
-//   stipend: "50000.00",
-//   available_slots: 3,
-//   require_resume: true,
-//   require_cover_letter: true,
-// };
 
 export default function EditInternship() {
   const { id } = alumnusEditInternshipRoute.useParams();

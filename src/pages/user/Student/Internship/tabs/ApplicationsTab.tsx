@@ -1,35 +1,40 @@
-import InternshipCard2 from "@/components/user/internships/InternshipCard2";
 
-const mockStudentApplications = [
-  {
-    internshipTitle: "UI/UX Design Intern",
-    alumnusName: "Mr. Samuel Adebayo",
-    company: "DesignHub",
-  },
-  {
-    internshipTitle: "Mobile App Intern",
-    alumnusName: "Engr. Tolu Martins",
-    company: "AppForge",
-  },
-];
+import CardSkeleton5 from "@/components/skeletons/CardSkeleton5";
+import InternshipCard2 from "@/components/user/internships/InternshipCard2";
+import { useInternshipApplications, useWithdrawInternshipApplication } from "@/hooks/useInternships";
+
 
 export default function StudentApplicationsTab() {
+    const { data, isLoading, isError } = useInternshipApplications();
+    const { mutate: withdrawApplication } = useWithdrawInternshipApplication();
+  
+  
+  if (isLoading) {
+    return <CardSkeleton5 variant="r-sm" />
+  }
+
+  if (isError) {
+    return (
+      <p className="text-sm text-destructive">Failed to load applications</p>
+    )
+  }
+
+  if (!data?.results?.length) {
+    return <p className="text-sm text-muted-foreground">No applications yet</p>
+  }
+    
   return (
     <div className="space-y-4">
-      {mockStudentApplications.length > 0 ? (
-        mockStudentApplications.map((application, index) => (
-          <InternshipCard2
-            key={index}
-            {...application}
-            variant="application"
-            onWithdraw={() => console.log("Withdraw application")}
-          />
-        ))
-      ) : (
-        <div className="text-center py-12 text-muted-foreground">
-          No applications submitted yet.
-        </div>
-      )}
+      {data.results.map((application: any, index: number) => (
+        <InternshipCard2
+          key={index}
+          {...application}
+          internshipTitle={application.internship.title}
+          alumnusName={`${application.student.firstname} ${application.student.lastname}`}
+          variant="withdraw"
+          onWithdraw={() => withdrawApplication(application.id)}
+        />
+      ))}
     </div>
-  );
+  )
 }

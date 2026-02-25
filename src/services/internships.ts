@@ -49,6 +49,27 @@ export const InternshipOffersService = {
   },
 };
 
+// Applications
+export const InternshipApplicationsService = {
+  getApplications: async () => {
+    const { data } = await api.get(`/api/internships/applications`);
+    return data;
+  },
+  acceptApplication: async (id: number) => {
+    const { data } = await api.post(`/api/internships/applications/${id}/accept`);
+    return data;
+  },
+
+  rejectApplication: async (id: number) => {
+    const { data } = await api.post(`/api/internships/applications/${id}/reject`);
+    return data;
+  },    
+  withdrawApplication: async (id: number) => {
+    const { data } = await api.post(`/api/internships/applications/${id}/withdraw`);
+    return data;
+  }
+};
+
 
 // Engagements
 export const InternshipEngagementsService = {

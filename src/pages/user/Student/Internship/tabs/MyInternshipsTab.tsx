@@ -1,22 +1,16 @@
-import InternshipCard from "../../../../../components/user/internships/InternshipCard";
-import CardSkeleton1 from "@/components/CardSkeleton1";
-import { useInternshipEngagements } from "@/hooks/useInternships";
+import InternshipCard from '../../../../../components/user/ShipCard'
+import CardSkeleton1 from '@/components/skeletons/CardSkeleton1'
+import { useInternshipEngagements } from '@/hooks/useInternships'
 
 export default function MyInternshipsTab() {
+  const { data, isLoading, isError } = useInternshipEngagements()
 
+  const { results: internships } = data || {}
 
-  const { data, isLoading, isError } = useInternshipEngagements();
-
-  const {results:internships} = data || {};
-  
   return (
     <div className="space-y-4">
-      
-
       {/* DATA FETCH LOGIC */}
-      {isLoading && (
-        <CardSkeleton1 />
-      )}
+      {isLoading && <CardSkeleton1 />}
 
       {isError && (
         <div className="col-span-2 text-center py-12 text-red-500">
@@ -32,11 +26,11 @@ export default function MyInternshipsTab() {
             ))
           ) : (
             <div className="col-span-2 text-center py-12 text-muted-foreground">
-              No internships yet. 
+              No internships yet.
             </div>
           )}
         </div>
       )}
     </div>
-  );
+  )
 }

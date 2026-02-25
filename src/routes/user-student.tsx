@@ -15,6 +15,8 @@ import StudentSettings from "../pages/user/Student/Settings";
 
 import { rootRoute } from "./__root";
 import { requireRole} from "@/lib/guard";
+import MentorshipDetails from "@/pages/user/Student/Mentorship/details";
+import InternshipDetail from "@/pages/user/Alumnus/Internship/InternshipDetail";
 
 
 
@@ -41,17 +43,37 @@ export const studentFeedRoute = createRoute({
   component: StudentFeed,
 });
 
+// Internship Routes
+
 export const studentInternshipRoute = createRoute({
   getParentRoute: () => studentRoute,
   path: "/student/internships",
   component: StudentInternship,
 });
 
+export const studentInternshipDetailsRoute = createRoute({
+  getParentRoute: () => studentRoute,
+  path: "/student/internships/$id",
+  component: InternshipDetail,
+});
+
+
+// Mentorship Routes
+
 export const studentMentorshipRoute = createRoute({
   getParentRoute: () => studentRoute,
   path: "/student/mentorship",
   component: StudentMentorship,
 });
+
+
+export const studentMentorshipDetailRoute = createRoute({
+  getParentRoute: () => studentRoute,
+  path: "/student/mentorship/$id",
+  component: MentorshipDetails,
+}); 
+
+// Events Routes
 
 export const studentEventsRoute = createRoute({
   getParentRoute: () => studentRoute,

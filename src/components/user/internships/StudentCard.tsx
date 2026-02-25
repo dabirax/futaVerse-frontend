@@ -6,9 +6,10 @@ import { Card, CardContent } from "@/components/ui/card";
 interface StudentCardProps {
   studentName: string;
   studentImage?: string;
-  internshipTitle: string;
+  Title: string;
   showActions?: boolean;
   onAccept?: () => void;
+  onReject?: () => void;
   onWithdraw?: () => void;
   onMessage?: () => void;
   variant?: "applicant" | "offer" | "intern";
@@ -17,10 +18,11 @@ interface StudentCardProps {
 export default function StudentCard({
   studentName,
   studentImage,
-  internshipTitle,
+  Title,
   showActions = true,
   onAccept,
   onWithdraw,
+  onReject,
   onMessage,
   variant = "applicant",
 }: StudentCardProps) {
@@ -42,7 +44,7 @@ export default function StudentCard({
 
             <div>
               <h4 className="font-semibold text-foreground">{studentName}</h4>
-              <p className="text-sm text-muted-foreground">{internshipTitle}</p>
+              <p className="text-sm text-muted-foreground">{Title}</p>
             </div>
           </div>
 
@@ -53,7 +55,7 @@ export default function StudentCard({
                   <Button size="sm" onClick={onAccept}>
                     Accept
                   </Button>
-                  <Button size="sm" variant="destructive" onClick={onWithdraw}>
+                  <Button size="sm" variant="destructive" onClick={onReject}>
                     Reject
                   </Button>
                 </>
