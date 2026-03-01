@@ -28,7 +28,7 @@ import {
   alumnusInternshipRoute,
   alumnusMentorshipRoute,
   alumnusMessagesRoute,
-  alumnusRoute,
+  alumnusRoute, 
   alumnusSettingsRoute,
   alumnusEditInternshipRoute,
   alumnusInternshipDetailRoute,

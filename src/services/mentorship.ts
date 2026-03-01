@@ -3,7 +3,7 @@ import { api } from "@/lib/api";
 export const MentorshipService = {
   getAll: async () => {
     const {data} = await api.get("/api/mentorships");
-    return data;
+    return data; 
   },
 
   getOne: async (id: number) => {

@@ -38,7 +38,7 @@ export default function MyApplicationsTab() {
       {applications.map((application: any) => (
         <InternshipCard2
           key={application.id}
-          alumnusName="You"
+          alumnusName={application.alumnus_info}
           title={application.mentorship}
           variant="withdraw"
           onAccept={undefined}

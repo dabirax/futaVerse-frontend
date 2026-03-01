@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 interface StudentCardProps {
   studentName: string;
   studentImage?: string;
-  Title: string;
+  Title?: string;
   showActions?: boolean;
   onAccept?: () => void;
   onReject?: () => void;

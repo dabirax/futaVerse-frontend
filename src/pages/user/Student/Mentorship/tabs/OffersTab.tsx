@@ -1,5 +1,3 @@
-import InternshipCard from '@/components/user/ShipCard'
-import MentorshipOfferCard from '../../../../../components/user/mentorships/MentorshipOfferCard'
 import {
   useMentorshipOffers,
   useAcceptMentorshipOffer,
@@ -38,8 +36,8 @@ export default function OffersTab() {
       {offers.map((offer: any) => (
         <InternshipCard2
           key={offer.id}
-          alumnusName={offer.student}
-          title={offer.mentorship}
+          alumnusName={offer.alumnus_info.firstname+ " " + offer.alumnus_info.lastname}
+          title={offer.mentorship_info.title }
           variant="acceptOrReject"
           onAccept={() => acceptOffer.mutate(offer.id)}
           onReject={() => rejectOffer.mutate(offer.id)}

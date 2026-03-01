@@ -29,7 +29,7 @@ export default function StudentApplicationsTab() {
         <InternshipCard2
           key={index}
           {...application}
-          internshipTitle={application.internship.title}
+          title={application.internship.title}
           alumnusName={`${application.student.firstname} ${application.student.lastname}`}
           variant="withdraw"
           onWithdraw={() => withdrawApplication(application.id)}

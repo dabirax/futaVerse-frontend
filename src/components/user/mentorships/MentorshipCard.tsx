@@ -32,7 +32,7 @@ export default function MentorshipCard({
   onApply,
   onEdit,
   onDelete,
-  variant = 'view',
+  variant,
 }: MentorshipCardProps) {
   return (
     <Card className="hover:shadow-lg transition-shadow" key={id}>
