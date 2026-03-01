@@ -230,20 +230,30 @@ const mockEvents: Event[] = [
 ];
 
 const formSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200, "Title too long"),
-  description: z.string().min(1, "Description is required"),
-  date: z.date({ required_error: "Date is required" }),
-  start_time: z.string().min(1, "Start time is required"),
-  duration_mins: z.coerce.number().min(15, "Duration must be at least 15 minutes"),
+  title: z.string().min(1, 'Title is required').max(200, 'Title too long'),
+  description: z.string().min(1, 'Description is required'),
+  date: z.date({ required_error: 'Date is required' }),
+  start_time: z.string().min(1, 'Start time is required'),
+  duration_mins: z.coerce
+    .number()
+    .min(15, 'Duration must be at least 15 minutes'),
   venue: z.string().optional(),
-  max_capacity: z.coerce.number().min(1, "Capacity must be at least 1"),
+  category: z.enum([
+    'workshop',
+    'seminar',
+    'networking',
+    'career_fair',
+    'webinar',
+    'conference',
+  ]),
+  max_capacity: z.coerce.number().min(1, 'Capacity must be at least 1'),
   allow_sponsorship: z.boolean(),
   allow_donations: z.boolean(),
   is_published: z.boolean(),
   is_cancelled: z.boolean(),
-  mode: z.enum(["virtual", "physical", "hybrid"]),
-  platform: z.enum(["meet", "zoom", "teams"]).optional(),
-});
+  mode: z.enum(['virtual', 'physical', 'hybrid']),
+  platform: z.enum(['meet', 'zoom', 'teams']).optional(),
+})
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -281,6 +291,7 @@ export default function EditEvent() {
       start_time: event.start_time.substring(0, 5),
       duration_mins: event.duration_mins,
       venue: event.venue,
+      category: event.category,
       max_capacity: event.max_capacity,
       allow_sponsorship: event.allow_sponsorship,
       allow_donations: event.allow_donations,
@@ -364,6 +375,37 @@ export default function EditEvent() {
                     )}
                   />
 
+                  
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <FormField
+                                        control={form.control}
+                                        name="category"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel>Category</FormLabel>
+                                            <Select
+                                              onValueChange={field.onChange}
+                                              defaultValue={field.value}
+                                            >
+                                              <FormControl>
+                                                <SelectTrigger>
+                                                  <SelectValue placeholder="Select category" />
+                                                </SelectTrigger>
+                                              </FormControl>
+                                              <SelectContent>
+                                                <SelectItem value="workshop">Workshop</SelectItem>
+                                                <SelectItem value="seminar">Seminar</SelectItem>
+                                                <SelectItem value="networking">Networking</SelectItem>
+                                                <SelectItem value="career_fair">Career Fair</SelectItem>
+                                                <SelectItem value="webinar">Webinar</SelectItem>
+                                                <SelectItem value="conference">Conference</SelectItem>
+                                              </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                          </FormItem>
+                                        )}
+                                      />
+
                   <FormField
                     control={form.control}
                     name="max_capacity"
@@ -376,7 +418,8 @@ export default function EditEvent() {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                    />
+                  </div>
                 </CardContent>
               </Card>
 
