@@ -40,7 +40,7 @@ const ticketSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   price: z.string().min(1, 'Price is required'),
   discount_perc: z.string().optional().default('0'),
-  quantity: z.coerce.number().min(1, 'Quantity must be at least 1'),
+  quantity: z.string().min(1, 'Quantity must be at least 1'),
   type: z.enum(['default', 'vip', 'early_bird']),
   sales_start: z.string().min(1, 'Sales start date is required'),
   sales_end: z.string().min(1, 'Sales end date is required'),
@@ -80,9 +80,9 @@ export default function CreateEvent() {
   const [newTicket, setNewTicket] = useState<Partial<TicketData>>({
     name: '',
     description: '',
-    price: '0',
-    discount_perc: '0',
-    quantity: 100,
+    price: '',
+    discount_perc: '',
+    quantity: '',
     type: 'default',
     sales_start: '',
     sales_end: '',
@@ -118,7 +118,7 @@ export default function CreateEvent() {
         description: '',
         price: '0',
         discount_perc: '0',
-        quantity: 100,
+        quantity: '',
         type: 'default',
         sales_start: '',
         sales_end: '',
@@ -521,7 +521,7 @@ export default function CreateEvent() {
                           description: e.target.value,
                         })
                       }
-                      className="min-h-[60px]"
+                      className="min-h-15"
                     />
                     <div className="grid sm:grid-cols-3 gap-4">
                       <Input
@@ -555,7 +555,7 @@ export default function CreateEvent() {
                         onChange={(e) =>
                           setNewTicket({
                             ...newTicket,
-                            quantity: parseInt(e.target.value) || 1,
+                            quantity: e.target.value || '',
                           })
                         }
                       />
