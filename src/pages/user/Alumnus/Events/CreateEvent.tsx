@@ -36,12 +36,16 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
 const ticketSchema = z.object({
-  name: z.string().min(1, "Ticket name is required"),
-  description: z.string().optional(),
-  price: z.string().min(1, "Price is required"),
-  quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
-  type: z.enum(["default", "vip", "early_bird"]),
-});
+  name: z.string().min(1, 'Ticket name is required'),
+  description: z.string().min(1, 'Description is required'),
+  price: z.string().min(1, 'Price is required'),
+  discount_perc: z.string().optional().default('0'),
+  quantity: z.coerce.number().min(1, 'Quantity must be at least 1'),
+  type: z.enum(['default', 'vip', 'early_bird']),
+  sales_start: z.string().min(1, 'Sales start date is required'),
+  sales_end: z.string().min(1, 'Sales end date is required'),
+  is_active: z.boolean().default(true),
+})
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
@@ -74,12 +78,16 @@ export default function CreateEvent() {
   const { toast } = useToast();
   const [tickets, setTickets] = useState<TicketData[]>([]);
   const [newTicket, setNewTicket] = useState<Partial<TicketData>>({
-    name: "",
-    description: "",
-    price: "0",
+    name: '',
+    description: '',
+    price: '0',
+    discount_perc: '0',
     quantity: 100,
-    type: "default",
-  });
+    type: 'default',
+    sales_start: '',
+    sales_end: '',
+    is_active: true,
+  })
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -106,12 +114,16 @@ export default function CreateEvent() {
     if (result.success) {
       setTickets([...tickets, result.data]);
       setNewTicket({
-        name: "",
-        description: "",
-        price: "0",
+        name: '',
+        description: '',
+        price: '0',
+        discount_perc: '0',
         quantity: 100,
-        type: "default",
-      });
+        type: 'default',
+        sales_start: '',
+        sales_end: '',
+        is_active: true,
+      })
     }
   };
 
@@ -135,7 +147,7 @@ export default function CreateEvent() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => router.navigate({ to: "/alumnus/events" })}
+          onClick={() => router.navigate({ to: '/alumnus/events' })}
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
@@ -212,10 +224,16 @@ export default function CreateEvent() {
                             <SelectContent>
                               <SelectItem value="workshop">Workshop</SelectItem>
                               <SelectItem value="seminar">Seminar</SelectItem>
-                              <SelectItem value="networking">Networking</SelectItem>
-                              <SelectItem value="career_fair">Career Fair</SelectItem>
+                              <SelectItem value="networking">
+                                Networking
+                              </SelectItem>
+                              <SelectItem value="career_fair">
+                                Career Fair
+                              </SelectItem>
                               <SelectItem value="webinar">Webinar</SelectItem>
-                              <SelectItem value="conference">Conference</SelectItem>
+                              <SelectItem value="conference">
+                                Conference
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -246,7 +264,7 @@ export default function CreateEvent() {
                   <CardTitle>Date & Time</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid sm:grid-cols-3 gap-4">
+                  <div className="grid md:grid-cols-3 gap-4">
                     <FormField
                       control={form.control}
                       name="date"
@@ -259,12 +277,12 @@ export default function CreateEvent() {
                                 <Button
                                   variant="outline"
                                   className={cn(
-                                    "pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
+                                    'pl-3 text-left font-normal',
+                                    !field.value && 'text-muted-foreground',
                                   )}
                                 >
                                   {field.value ? (
-                                    format(field.value, "PPP")
+                                    format(field.value, 'PPP')
                                   ) : (
                                     <span>Pick a date</span>
                                   )}
@@ -272,7 +290,10 @@ export default function CreateEvent() {
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
                               <Calendar
                                 mode="single"
                                 selected={field.value}
@@ -295,7 +316,7 @@ export default function CreateEvent() {
                         <FormItem>
                           <FormLabel>Start Time</FormLabel>
                           <FormControl>
-                            <Input type="time" {...field} />
+                            <Input type="time" {...field} className="w-fit" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -309,7 +330,13 @@ export default function CreateEvent() {
                         <FormItem>
                           <FormLabel>Duration (minutes)</FormLabel>
                           <FormControl>
-                            <Input type="number" min={15} step={15} {...field} />
+                            <Input
+                              type="number"
+                              min={15}
+                              step={15}
+                              {...field}
+                              className="w-fit"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -351,7 +378,7 @@ export default function CreateEvent() {
                     )}
                   />
 
-                  {(mode === "virtual" || mode === "hybrid") && (
+                  {(mode === 'virtual' || mode === 'hybrid') && (
                     <FormField
                       control={form.control}
                       name="platform"
@@ -370,7 +397,9 @@ export default function CreateEvent() {
                             <SelectContent>
                               <SelectItem value="meet">Google Meet</SelectItem>
                               <SelectItem value="zoom">Zoom</SelectItem>
-                              <SelectItem value="teams">Microsoft Teams</SelectItem>
+                              <SelectItem value="teams">
+                                Microsoft Teams
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                           <FormDescription>
@@ -382,7 +411,7 @@ export default function CreateEvent() {
                     />
                   )}
 
-                  {(mode === "physical" || mode === "hybrid") && (
+                  {(mode === 'physical' || mode === 'hybrid') && (
                     <FormField
                       control={form.control}
                       name="venue"
@@ -414,79 +443,172 @@ export default function CreateEvent() {
                       {tickets.map((ticket, index) => (
                         <div
                           key={index}
-                          className="flex items-center justify-between p-3 rounded-lg border"
+                          className="p-4 rounded-lg border space-y-1"
                         >
-                          <div>
-                            <p className="font-medium">{ticket.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              ₦{parseFloat(ticket.price).toLocaleString()} •{" "}
-                              {ticket.quantity} available
-                            </p>
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium">{ticket.name}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {ticket.description}
+                              </p>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => removeTicket(index)}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
                           </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => removeTicket(index)}
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
+                          <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                            <span>
+                              ₦{parseFloat(ticket.price).toLocaleString()}
+                            </span>
+                            {ticket.discount_perc &&
+                              ticket.discount_perc !== '0' && (
+                                <span>{ticket.discount_perc}% off</span>
+                              )}
+                            <span>{ticket.quantity} available</span>
+                            <span className="capitalize">
+                              {ticket.type.replace('_', ' ')}
+                            </span>
+                            <span>
+                              {ticket.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Sales:{' '}
+                            {new Date(ticket.sales_start).toLocaleDateString()}{' '}
+                            – {new Date(ticket.sales_end).toLocaleDateString()}
+                          </p>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  <div className="grid sm:grid-cols-2 gap-4 p-4 rounded-lg border border-dashed">
-                    <Input
-                      placeholder="Ticket name"
-                      value={newTicket.name}
-                      onChange={(e) =>
-                        setNewTicket({ ...newTicket, name: e.target.value })
-                      }
-                    />
-                    <Input
-                      placeholder="Price (0 for free)"
-                      type="number"
-                      min={0}
-                      value={newTicket.price}
-                      onChange={(e) =>
-                        setNewTicket({ ...newTicket, price: e.target.value })
-                      }
-                    />
-                    <Input
-                      placeholder="Quantity"
-                      type="number"
-                      min={1}
-                      value={newTicket.quantity}
+                  <div className="space-y-4 p-4 rounded-lg border border-dashed">
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <Input
+                        placeholder="Ticket name"
+                        value={newTicket.name}
+                        onChange={(e) =>
+                          setNewTicket({ ...newTicket, name: e.target.value })
+                        }
+                      />
+                      <Select
+                        value={newTicket.type}
+                        onValueChange={(value: TicketData['type']) =>
+                          setNewTicket({ ...newTicket, type: value })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="default">Standard</SelectItem>
+                          <SelectItem value="vip">VIP</SelectItem>
+                          <SelectItem value="early_bird">Early Bird</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Textarea
+                      placeholder="Ticket description"
+                      value={newTicket.description}
                       onChange={(e) =>
                         setNewTicket({
                           ...newTicket,
-                          quantity: parseInt(e.target.value) || 1,
+                          description: e.target.value,
                         })
                       }
+                      className="min-h-[60px]"
                     />
-                    <Select
-                      value={newTicket.type}
-                      onValueChange={(value: TicketData["type"]) =>
-                        setNewTicket({ ...newTicket, type: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="default">Standard</SelectItem>
-                        <SelectItem value="vip">VIP</SelectItem>
-                        <SelectItem value="early_bird">Early Bird</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <div className="sm:col-span-2">
+                    <div className="grid sm:grid-cols-3 gap-4">
+                      <Input
+                        placeholder="Price (0 for free)"
+                        type="number"
+                        min={0}
+                        step="0.01"
+                        value={newTicket.price}
+                        onChange={(e) =>
+                          setNewTicket({ ...newTicket, price: e.target.value })
+                        }
+                      />
+                      <Input
+                        placeholder="Discount %"
+                        type="number"
+                        min={0}
+                        max={100}
+                        value={newTicket.discount_perc}
+                        onChange={(e) =>
+                          setNewTicket({
+                            ...newTicket,
+                            discount_perc: e.target.value,
+                          })
+                        }
+                      />
+                      <Input
+                        placeholder="Quantity"
+                        type="number"
+                        min={1}
+                        value={newTicket.quantity}
+                        onChange={(e) =>
+                          setNewTicket({
+                            ...newTicket,
+                            quantity: parseInt(e.target.value) || 1,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-sm font-medium">
+                          Sales Start
+                        </label>
+                        <Input
+                          type="datetime-local"
+                          value={newTicket.sales_start}
+                          onChange={(e) =>
+                            setNewTicket({
+                              ...newTicket,
+                              sales_start: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-sm font-medium">Sales End</label>
+                        <Input
+                          type="datetime-local"
+                          value={newTicket.sales_end}
+                          onChange={(e) =>
+                            setNewTicket({
+                              ...newTicket,
+                              sales_end: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={newTicket.is_active ?? true}
+                          onCheckedChange={(checked) =>
+                            setNewTicket({ ...newTicket, is_active: checked })
+                          }
+                        />
+                        <label className="text-sm font-medium">Active</label>
+                      </div>
                       <Button
                         type="button"
                         variant="outline"
                         onClick={addTicket}
-                        disabled={!newTicket.name}
-                        className="w-full"
+                        disabled={
+                          !newTicket.name ||
+                          !newTicket.sales_start ||
+                          !newTicket.sales_end
+                        }
                       >
                         <Plus className="h-4 w-4 mr-2" />
                         Add Ticket
@@ -580,7 +702,7 @@ export default function CreateEvent() {
                     type="button"
                     variant="outline"
                     className="w-full"
-                    onClick={() => router.navigate({ to: "/alumnus/events" })}
+                    onClick={() => router.navigate({ to: '/alumnus/events' })}
                   >
                     Cancel
                   </Button>
@@ -591,5 +713,5 @@ export default function CreateEvent() {
         </form>
       </Form>
     </div>
-  );
+  )
 }

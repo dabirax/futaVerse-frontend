@@ -1,4 +1,5 @@
 import { useRouter } from "@tanstack/react-router";
+import {useState} from "react"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -40,7 +41,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, CalendarIcon, XCircle } from "lucide-react";
+import { ArrowLeft, CalendarIcon,Trash2, XCircle, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -229,6 +230,20 @@ const mockEvents: Event[] = [
   },
 ];
 
+const ticketSchema = z.object({
+  name: z.string().min(1, 'Ticket name is required'),
+  description: z.string().min(1, 'Description is required'),
+  price: z.string().min(1, 'Price is required'),
+  discount_perc: z.string().optional().default('0'),
+  quantity: z.coerce.number().min(1, 'Quantity must be at least 1'),
+  type: z.enum(['default', 'vip', 'early_bird']),
+  sales_start: z.string().min(1, 'Sales start date is required'),
+  sales_end: z.string().min(1, 'Sales end date is required'),
+  is_active: z.boolean().default(true),
+})
+
+type TicketData = z.infer<typeof ticketSchema>
+
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200, 'Title too long'),
   description: z.string().min(1, 'Description is required'),
@@ -302,8 +317,57 @@ export default function EditEvent() {
     },
   });
 
+ const [tickets, setTickets] = useState<TicketData[]>(
+   (event?.tickets || []).map((t) => ({
+     name: t.name,
+     description: t.description,
+     price: t.price,
+     discount_perc: t.discount_perc || '0',
+     quantity: t.quantity,
+     type: t.type,
+     sales_start: t.sales_start.replace('Z', '').substring(0, 16),
+     sales_end: t.sales_end.replace('Z', '').substring(0, 16),
+     is_active: t.is_active,
+   })),
+ )
+ const [newTicket, setNewTicket] = useState<Partial<TicketData>>({
+   name: '',
+   description: '',
+   price: '0',
+   discount_perc: '0',
+   quantity: 100,
+   type: 'default',
+   sales_start: '',
+   sales_end: '',
+   is_active: true,
+ })
+
+
   const mode = form.watch("mode");
   const isCancelled = form.watch("is_cancelled");
+
+const addTicket = () => {
+  const result = ticketSchema.safeParse(newTicket)
+  if (result.success) {
+    setTickets([...tickets, result.data])
+    setNewTicket({
+      name: '',
+      description: '',
+      price: '0',
+      discount_perc: '0',
+      quantity: 100,
+      type: 'default',
+      sales_start: '',
+      sales_end: '',
+      is_active: true,
+    })
+  }
+}
+
+const removeTicket = (index: number) => {
+  setTickets(tickets.filter((_, i) => i !== index))
+}
+
 
   const onSubmit = (data: FormData) => {
     console.log("Updating event:", data);
@@ -326,7 +390,9 @@ export default function EditEvent() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => router.navigate({ to: `/alumnus/events/${event.sqid}` })}
+          onClick={() =>
+            router.navigate({ to: `/alumnus/events/${event.sqid}` })
+          }
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
@@ -375,49 +441,54 @@ export default function EditEvent() {
                     )}
                   />
 
-                  
                   <div className="grid sm:grid-cols-2 gap-4">
                     <FormField
-                                        control={form.control}
-                                        name="category"
-                                        render={({ field }) => (
-                                          <FormItem>
-                                            <FormLabel>Category</FormLabel>
-                                            <Select
-                                              onValueChange={field.onChange}
-                                              defaultValue={field.value}
-                                            >
-                                              <FormControl>
-                                                <SelectTrigger>
-                                                  <SelectValue placeholder="Select category" />
-                                                </SelectTrigger>
-                                              </FormControl>
-                                              <SelectContent>
-                                                <SelectItem value="workshop">Workshop</SelectItem>
-                                                <SelectItem value="seminar">Seminar</SelectItem>
-                                                <SelectItem value="networking">Networking</SelectItem>
-                                                <SelectItem value="career_fair">Career Fair</SelectItem>
-                                                <SelectItem value="webinar">Webinar</SelectItem>
-                                                <SelectItem value="conference">Conference</SelectItem>
-                                              </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                          </FormItem>
-                                        )}
-                                      />
+                      control={form.control}
+                      name="category"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Category</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select category" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="workshop">Workshop</SelectItem>
+                              <SelectItem value="seminar">Seminar</SelectItem>
+                              <SelectItem value="networking">
+                                Networking
+                              </SelectItem>
+                              <SelectItem value="career_fair">
+                                Career Fair
+                              </SelectItem>
+                              <SelectItem value="webinar">Webinar</SelectItem>
+                              <SelectItem value="conference">
+                                Conference
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={form.control}
-                    name="max_capacity"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Max Capacity</FormLabel>
-                        <FormControl>
-                          <Input type="number" min={1} {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    <FormField
+                      control={form.control}
+                      name="max_capacity"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Max Capacity</FormLabel>
+                          <FormControl>
+                            <Input type="number" min={1} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
                 </CardContent>
@@ -429,7 +500,7 @@ export default function EditEvent() {
                   <CardTitle>Date & Time</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid sm:grid-cols-3 gap-4">
+                  <div className="grid md:grid-cols-3 gap-4">
                     <FormField
                       control={form.control}
                       name="date"
@@ -442,12 +513,12 @@ export default function EditEvent() {
                                 <Button
                                   variant="outline"
                                   className={cn(
-                                    "pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
+                                    'pl-3 text-left font-normal',
+                                    !field.value && 'text-muted-foreground',
                                   )}
                                 >
                                   {field.value ? (
-                                    format(field.value, "PPP")
+                                    format(field.value, 'PPP')
                                   ) : (
                                     <span>Pick a date</span>
                                   )}
@@ -455,7 +526,10 @@ export default function EditEvent() {
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
                               <Calendar
                                 mode="single"
                                 selected={field.value}
@@ -477,7 +551,7 @@ export default function EditEvent() {
                         <FormItem>
                           <FormLabel>Start Time</FormLabel>
                           <FormControl>
-                            <Input type="time" {...field} />
+                            <Input type="time" {...field} className="w-fit" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -491,7 +565,13 @@ export default function EditEvent() {
                         <FormItem>
                           <FormLabel>Duration (minutes)</FormLabel>
                           <FormControl>
-                            <Input type="number" min={15} step={15} {...field} />
+                            <Input
+                              type="number"
+                              min={15}
+                              step={15}
+                              {...field}
+                              className="w-fit"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -533,7 +613,7 @@ export default function EditEvent() {
                     )}
                   />
 
-                  {(mode === "virtual" || mode === "hybrid") && (
+                  {(mode === 'virtual' || mode === 'hybrid') && (
                     <FormField
                       control={form.control}
                       name="platform"
@@ -552,7 +632,9 @@ export default function EditEvent() {
                             <SelectContent>
                               <SelectItem value="meet">Google Meet</SelectItem>
                               <SelectItem value="zoom">Zoom</SelectItem>
-                              <SelectItem value="teams">Microsoft Teams</SelectItem>
+                              <SelectItem value="teams">
+                                Microsoft Teams
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -561,7 +643,7 @@ export default function EditEvent() {
                     />
                   )}
 
-                  {(mode === "physical" || mode === "hybrid") && (
+                  {(mode === 'physical' || mode === 'hybrid') && (
                     <FormField
                       control={form.control}
                       name="venue"
@@ -582,6 +664,190 @@ export default function EditEvent() {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Tickets */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Tickets</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {tickets.length > 0 && (
+                  <div className="space-y-3">
+                    {tickets.map((ticket, index) => (
+                      <div
+                        key={index}
+                        className="p-4 rounded-lg border space-y-1"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium">{ticket.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {ticket.description}
+                            </p>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeTicket(index)}
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </div>
+                        <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                          <span>
+                            ₦{parseFloat(ticket.price).toLocaleString()}
+                          </span>
+                          {ticket.discount_perc &&
+                            ticket.discount_perc !== '0' && (
+                              <span>{ticket.discount_perc}% off</span>
+                            )}
+                          <span>{ticket.quantity} available</span>
+                          <span className="capitalize">
+                            {ticket.type.replace('_', ' ')}
+                          </span>
+                          <span>
+                            {ticket.is_active ? 'Active' : 'Inactive'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Sales:{' '}
+                          {new Date(ticket.sales_start).toLocaleDateString()} –{' '}
+                          {new Date(ticket.sales_end).toLocaleDateString()}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="space-y-4 p-4 rounded-lg border border-dashed">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <Input
+                      placeholder="Ticket name"
+                      value={newTicket.name}
+                      onChange={(e) =>
+                        setNewTicket({ ...newTicket, name: e.target.value })
+                      }
+                    />
+                    <Select
+                      value={newTicket.type}
+                      onValueChange={(value: TicketData['type']) =>
+                        setNewTicket({ ...newTicket, type: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="default">Standard</SelectItem>
+                        <SelectItem value="vip">VIP</SelectItem>
+                        <SelectItem value="early_bird">Early Bird</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Textarea
+                    placeholder="Ticket description"
+                    value={newTicket.description}
+                    onChange={(e) =>
+                      setNewTicket({
+                        ...newTicket,
+                        description: e.target.value,
+                      })
+                    }
+                    className="min-h-15"
+                  />
+                  <div className="grid sm:grid-cols-3 gap-4">
+                    <Input
+                      placeholder="Price (0 for free)"
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      value={newTicket.price}
+                      onChange={(e) =>
+                        setNewTicket({ ...newTicket, price: e.target.value })
+                      }
+                    />
+                    <Input
+                      placeholder="Discount %"
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={newTicket.discount_perc}
+                      onChange={(e) =>
+                        setNewTicket({
+                          ...newTicket,
+                          discount_perc: e.target.value,
+                        })
+                      }
+                    />
+                    <Input
+                      placeholder="Quantity"
+                      type="number"
+                      min={1}
+                      value={newTicket.quantity}
+                      onChange={(e) =>
+                        setNewTicket({
+                          ...newTicket,
+                          quantity: parseInt(e.target.value) || 1,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-sm font-medium">Sales Start</label>
+                      <Input
+                        type="datetime-local"
+                        value={newTicket.sales_start}
+                        onChange={(e) =>
+                          setNewTicket({
+                            ...newTicket,
+                            sales_start: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-sm font-medium">Sales End</label>
+                      <Input
+                        type="datetime-local"
+                        value={newTicket.sales_end}
+                        onChange={(e) =>
+                          setNewTicket({
+                            ...newTicket,
+                            sales_end: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={newTicket.is_active ?? true}
+                        onCheckedChange={(checked) =>
+                          setNewTicket({ ...newTicket, is_active: checked })
+                        }
+                      />
+                      <label className="text-sm font-medium">Active</label>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={addTicket}
+                      disabled={
+                        !newTicket.name ||
+                        !newTicket.sales_start ||
+                        !newTicket.sales_end
+                      }
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Ticket
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Sidebar */}
             <div className="space-y-6">
@@ -667,7 +933,9 @@ export default function EditEvent() {
                     type="button"
                     variant="outline"
                     className="w-full"
-                    onClick={() => router.navigate({ to: `/alumnus/events/${event.sqid}` })}
+                    onClick={() =>
+                      router.navigate({ to: `/alumnus/events/${event.sqid}` })
+                    }
                   >
                     Cancel
                   </Button>
@@ -678,7 +946,9 @@ export default function EditEvent() {
               {!isCancelled && (
                 <Card className="border-destructive/50">
                   <CardHeader>
-                    <CardTitle className="text-destructive">Danger Zone</CardTitle>
+                    <CardTitle className="text-destructive">
+                      Danger Zone
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <AlertDialog>
@@ -690,7 +960,9 @@ export default function EditEvent() {
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Cancel this event?</AlertDialogTitle>
+                          <AlertDialogTitle>
+                            Cancel this event?
+                          </AlertDialogTitle>
                           <AlertDialogDescription>
                             This will notify all registered attendees and mark
                             the event as cancelled. This action cannot be
@@ -716,5 +988,5 @@ export default function EditEvent() {
         </form>
       </Form>
     </div>
-  );
+  )
 }
