@@ -1,16 +1,24 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
 @import 'tailwindcss';
 
 @import 'tw-animate-css';
 
-@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-
 @custom-variant dark (&:is(.dark *));
 
+
 body {
-  font-family: 'Fira Sans', sans-serif;
+  font-family: "DM Sans", "sans-serif";
   -webkit-font-smoothing: antialiased;
 }
+
+/* * {
+  font-family: "DM Sans", "sans-serif";
+} */
 
 code {
   font-family:
@@ -28,7 +36,7 @@ code {
   --popover-foreground: oklch(0.18 0.02 260);
 
   /* FUTAVerse Purple - Primary Brand Color */
---primary: oklch(55.996% 0.24066 310.064);
+  --primary: oklch(55.996% 0.24066 310.064);
   --primary-foreground: oklch(1 0 0);
   --primary-light: oklch(0.72 0.18 320);
   --primary-dark: oklch(0.42 0.21513 309.618);
@@ -88,7 +96,6 @@ code {
   --sidebar-ring: oklch(0.7 0.25 240);
 }
 
-
 .dark {
   --background: oklch(0.18 0.02 255);
   --foreground: oklch(0.98 0.01 255);
@@ -106,7 +113,7 @@ code {
 
   --secondary: oklch(0.55 0.22 150);
   --secondary-foreground: oklch(1 0 0);
-  --secondary-light: oklch(0.65 0.20 150);
+  --secondary-light: oklch(0.65 0.2 150);
 
   --accent: oklch(0.62 0.25 250);
   --accent-foreground: oklch(1 0 0);
@@ -122,9 +129,21 @@ code {
   --input: oklch(0.3 0.02 255);
   --ring: oklch(0.55 0.25 320);
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.55 0.25 320) 0%, oklch(0.4 0.26 320) 100%);
-  --gradient-accent: linear-gradient(135deg, oklch(0.55 0.22 150) 0%, oklch(0.62 0.25 250) 100%);
-  --gradient-soft: linear-gradient(180deg, oklch(0.22 0.02 255) 0%, oklch(0.18 0.02 255) 100%);
+  --gradient-hero: linear-gradient(
+    135deg,
+    oklch(0.55 0.25 320) 0%,
+    oklch(0.4 0.26 320) 100%
+  );
+  --gradient-accent: linear-gradient(
+    135deg,
+    oklch(0.55 0.22 150) 0%,
+    oklch(0.62 0.25 250) 100%
+  );
+  --gradient-soft: linear-gradient(
+    180deg,
+    oklch(0.22 0.02 255) 0%,
+    oklch(0.18 0.02 255) 100%
+  );
 
   --shadow-purple: 0 10px 40px -10px oklch(0.55 0.25 320 / 0.4);
   --shadow-green: 0 10px 40px -10px oklch(0.55 0.22 150 / 0.4);
@@ -140,7 +159,14 @@ code {
   --sidebar-ring: oklch(0.65 0.25 250);
 }
 
+
+
 @theme inline {
+  /* fonts */
+  --font-inter: "Inter", sans-serif;
+  --font-montserrat: "Montserrat", sans-serif;
+  --font-dmsans: "DM Sans", sans-serif;
+
   /* Base Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -207,8 +233,11 @@ code {
   --color-chart-3: var(--accent);
   --color-chart-4: var(--muted);
   --color-chart-5: var(--destructive);
-}
 
+  /* breakpoints */
+  --breakpoint-mlg: 56rem;
+  --breakpoint-lgd: 77rem;
+}
 
 @layer base {
   * {
@@ -217,7 +246,7 @@ code {
   body {
     @apply bg-background text-foreground;
   }
-   /* WebKit browsers (Chrome, Edge, Safari) */
+  /* WebKit browsers (Chrome, Edge, Safari) */
   input:-webkit-autofill,
   textarea:-webkit-autofill,
   select:-webkit-autofill,
