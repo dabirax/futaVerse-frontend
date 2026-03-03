@@ -1,69 +1,100 @@
-import { motion } from "framer-motion";
-import { Link } from "@tanstack/react-router";
-import loginImage from "../../assets/login.png";
-import { BackButton } from '../../components/BackButton';
-import Logo from "@/components/logo";
-import { Button } from "@/components/ui/button";
+import { motion } from 'framer-motion'
+import { Link } from '@tanstack/react-router'
+import { BackButton } from '../../components/BackButton'
+import Logo from '@/components/logo'
+import { LeftContainer } from './components/LeftContainer'
+import { Book, People, Teacher } from 'iconsax-reactjs'
+
+const roles = [
+  {
+    label: 'Alumnus',
+    path: '/signup/alumnusBasic',
+    icon: <People size="20" />,
+  },
+  { label: 'Student', path: '/signup/studentBasic', icon: <Book size="20" /> },
+  {
+    label: 'Lecturer',
+    path: '/signup/lecturerBasic',
+    icon: <Teacher size="20" />,
+  },
+]
 
 const SignUp = () => {
-
   return (
-    <div className="h-screen flex items-center justify-center">
-      <div className="w-full h-full grid lg:grid-cols-2">
-        <div className="bg-[#9017C2] hidden lg:flex justify-center border">
-          <div className=" fixed flex justify-center items-center h-screen pt-10 px-10">
-          <motion.img
-            src={loginImage}
-            alt="Login"
-            className="object-cover "
-            initial={{ x: -250 }}
-            animate={{ x: 0 }}
-            transition={{ duration: 0.5 }}
-          /></div>
-        </div>
-        <div className="max-w-md m-auto h-screen w-full flex flex-col items-center py-4">
-          <div className="flex items-center justify-between w-full text-[#9017c2] text-2xl px-2">
-            <div className=" mt-1">
-              <BackButton />
+    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 h-screen mlg:h-auto">
+      <div className="w-full h-full grid lg:grid-cols-2 z-10">
+        <LeftContainer />
+
+        <div className="flex flex-col items-center justify-center py-8 px-4 sm:px-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full max-w-2xl bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-8 md:p-12"
+          >
+            <div className="flex items-center justify-between w-full mb-8">
+              <div className="transition-transform hover:-translate-x-1">
+                <BackButton />
+              </div>
+              <Logo />
             </div>
-            <Logo     />
-          </div>
-          <p className="text-xl font-semibold tracking-tight text-center">Sign Up</p>
-          <p>Register As:</p>
-            <div className="flex flex-col justify-center h-full ">
+
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold tracking-tight text-primary-dark">
+                Join the Network
+              </h2>
+              <p className="text-slate-500 mt-2 text-sm">
+                Select your role to get started
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+              {roles.map((role) => (
+                <RoleCard
+                  key={role.path}
+                  label={role.label}
+                  icon={role.icon}
+                  path={role.path}
+                />
+              ))}
+            </div>
+
+            <div className="text-center text-sm text-slate-500">
+              Already have an account?{' '}
               <Link
-                          to="/signup/alumnusBasic"
-                          className="text-sm text-[#6BACB3] block text-right"
-                        >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="w-full">
-              <Button type="submit" className="mt-4 w-full bg-[#5E0B80]">
-               Alumnus
-              </Button></motion.div></Link>
-
-            <Link
-                          to="/signup/studentBasic"
-                          className="text-sm text-[#6BACB3] block text-right"
-                        >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="w-full">
-              <Button type="submit" className="mt-4 w-full bg-[#5E0B80]">
-               Student
-                </Button></motion.div></Link>
-            
-            <Link
-                          to="/signup/lecturerBasic"
-                          className="text-sm text-[#6BACB3] block text-right"
-                        >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="w-full">
-              <Button type="submit" className="mt-4 w-full bg-[#5E0B80]">
-               Lecturer
-              </Button></motion.div></Link>
-</div>
-           
-
-          </div>
+                to="/login"
+                className="text-primary font-semibold hover:underline"
+              >
+                Sign In
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </div>
-  );
-};
+    </div>
+  )
+}
 
-export default SignUp;
+interface RoleCardProps {
+  label: string
+  path: string
+  icon: React.ReactNode
+}
+
+const RoleCard = ({ icon, label, path }: RoleCardProps) => (
+  <Link to={path}>
+    <motion.div
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      className={`
+      cursor-pointer flex items-center gap-4 p-5 rounded-2xl border-2 transition-all duration-200 border-zinc-400  hover:border-primary/80 text-zinc-900 hover:text-primary-dark 
+    `}
+    >
+      <div className={`p-2 rounded-lg bg-zinc-100 dark:bg-primary-20`}>
+        {icon}
+      </div>
+      <span className="font-semibold text-lg leading-tight">{label}</span>
+    </motion.div>
+  </Link>
+)
+
+export default SignUp
