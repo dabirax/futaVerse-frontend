@@ -1,17 +1,20 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
-import { useRouter } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { LeftContainer } from "../../components/LeftContainer";
-import { BackButton } from "../../../../components/BackButton";
-import { useSignupOTPStore } from "../../hooks/useSignupOTPStore"
-import { useHasHydrated, useStudentStoreData } from "../hooks/useStudentStoreData";
-import { studentProfessionalSchema } from "../lib/studentSchema";
-import type { StudentProfessionalFormData } from "../lib/studentSchema";
-import type { z } from "zod";
-import { Button } from "@/components/ui/button";
-import Logo from "@/components/logo";
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { motion } from 'framer-motion'
+import { useRouter } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { LeftContainer } from '../../components/LeftContainer'
+import { BackButton } from '../../../../components/BackButton'
+import { useSignupOTPStore } from '../../hooks/useSignupOTPStore'
+import {
+  useHasHydrated,
+  useStudentStoreData,
+} from '../hooks/useStudentStoreData'
+import { studentProfessionalSchema } from '../lib/studentSchema'
+import type { StudentProfessionalFormData } from '../lib/studentSchema'
+import type { z } from 'zod'
+import { Button } from '@/components/ui/button'
+import Logo from '@/components/logo'
 import {
   Form,
   FormControl,
@@ -19,135 +22,195 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { api } from "@/lib/api"
-
-
-
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { api } from '@/lib/api'
 
 const StudentProfessional = () => {
-
   const [isLoading, setIsLoading] = useState(false)
-  const [isError, setIsError] = useState('');
+  const [isError, setIsError] = useState('')
 
-type StudentProfessionalFormInput = z.input<typeof studentProfessionalSchema>;
-type StudentProfessionalFormOutput = z.output<typeof studentProfessionalSchema>;
+  type StudentProfessionalFormInput = z.input<typeof studentProfessionalSchema>
+  type StudentProfessionalFormOutput = z.output<
+    typeof studentProfessionalSchema
+  >
 
   // Form initialization
-  const form = useForm<StudentProfessionalFormInput, any,StudentProfessionalFormOutput>({
+  const form = useForm<
+    StudentProfessionalFormInput,
+    any,
+    StudentProfessionalFormOutput
+  >({
     resolver: zodResolver(studentProfessionalSchema),
     defaultValues: {
       skills: [],
-      description: "",
-      linkedin_url: "",
-      x_url: "",
-      instagram_url: "",
-      facebook_url: "",
-      github_url: "",
-      website_url: "",
+      description: '',
+      linkedin_url: '',
+      x_url: '',
+      instagram_url: '',
+      facebook_url: '',
+      github_url: '',
+      website_url: '',
     },
-  });
+  })
 
-
-  const router = useRouter();
+  const router = useRouter()
 
   // Get Stored Data from Zustand
   const {
-    firstname, lastname, middlename, gender, address, country, state, phone_num, email, password, confirmPassword, profilePic, matric_no, department, faculty, expected_grad_year, level, cgpa,
-  } = useStudentStoreData.getState()
-
-const setSignupEmail = useSignupOTPStore((s) => s.setEmail);
-const setUserType = useSignupOTPStore((s) => s.setUserType);
-
-
-
-// Handle Submit
-  const onSubmit = async (data: StudentProfessionalFormData) => {
-    setIsError("")
-    setIsLoading(true)
-
-// when signing up
-setSignupEmail(email || "");
-setUserType("student"); // or "alumnus", "lecturer"
-
-   
-    console.log('Form errors:', form.formState.errors);
-
-    
-
-  // Payload Preparation
-  const payload = {
+    firstname,
+    lastname,
+    middlename,
+    gender,
+    address,
+    country,
+    state,
+    phone_num,
     email,
     password,
-    profile: {
-      firstname,
-      lastname,
-      middlename,
-      gender,
-      phone_num,
-      address,
-      street: "",
-      city: "",
-      state,
-      country,
-      matric_no,
-      department,
-      faculty,
-      expected_grad_year,
-      level,
-      cgpa,
-      previous_comps: data.skills,
-      description: data.description,
-      linkedin_url: data.linkedin_url,
-      company_linkedin_url: "",
-      github_url: data.github_url,
-      website_url: data.website_url,
-      company_website_url: "",
-      x_url: data.x_url,
-      instagram_url: data.instagram_url,
-      facebook_url: data.facebook_url,
-      // profile_img: profilePic,
-    },
+    confirmPassword,
+    profilePic,
+    matric_no,
+    department,
+    faculty,
+    expected_grad_year,
+    level,
+    cgpa,
+  } = useStudentStoreData.getState()
+
+  const setSignupEmail = useSignupOTPStore((s) => s.setEmail)
+  const setUserType = useSignupOTPStore((s) => s.setUserType)
+
+  // Handle Submit
+  const onSubmit = async (data: StudentProfessionalFormData) => {
+    setIsError('')
+    setIsLoading(true)
+
+    // when signing up
+    setSignupEmail(email || '')
+    setUserType('student') // or "alumnus", "lecturer"
+
+    console.log('Form errors:', form.formState.errors)
+
+    // Payload Preparation
+    const payload = {
+      email,
+      password,
+      profile: {
+        firstname,
+        lastname,
+        middlename,
+        gender,
+        phone_num,
+        address,
+        street: '',
+        city: '',
+        state,
+        country,
+        matric_no,
+        department,
+        faculty,
+        expected_grad_year,
+        level,
+        cgpa,
+        previous_comps: data.skills,
+        description: data.description,
+        linkedin_url: data.linkedin_url,
+        company_linkedin_url: '',
+        github_url: data.github_url,
+        website_url: data.website_url,
+        company_website_url: '',
+        x_url: data.x_url,
+        instagram_url: data.instagram_url,
+        facebook_url: data.facebook_url,
+        // profile_img: profilePic,
+      },
     }
 
     console.log(payload)
 
-  try {
-    const res = await api.post("/api/auth/signup/student", payload)
-    console.log(" Signup successful:", res.data)
-    router.navigate({ to: "/signup/otp" })
-  } catch (err: any) {
-    console.error(" Signup failed:", err.response?.data || err.message)
+    try {
+      const res = await api.post('/api/auth/signup/student', payload)
+      console.log(' Signup successful:', res.data)
+      router.navigate({ to: '/signup/otp' })
+    } catch (err: any) {
+      console.error(' Signup failed:', err.response?.data || err.message)
+    }
   }
 
-  };
-
   // Not allowing users to skip steps (or pages) during the onboarding
-    const hasHydrated = useHasHydrated()
+  const hasHydrated = useHasHydrated()
 
-    useEffect(() => {
-      console.log('useEffect triggered, hasHydrated:', hasHydrated);
-      console.log('Store values check:', {firstname, lastname, gender, country, state, phone_num, email, password, confirmPassword, matric_no, department, faculty, expected_grad_year});
-      if (!hasHydrated) {
-        console.log('Not hydrated yet, returning');
-        return;
-      }
-      if (!firstname || !lastname || !gender || !country || !state || !phone_num || !email || !password || !confirmPassword || !matric_no || !department || !faculty || !expected_grad_year) {
-        console.log('Missing required fields, navigating to /signup/StudentSchool');
-        router.navigate({ to: "/signup/StudentSchool" })
-      } else {
-        console.log('All required fields present, staying on page');
-      }
-    }, [firstname, lastname, middlename, gender , address, country, state, phone_num, email, password ,confirmPassword, profilePic, matric_no, department, faculty, expected_grad_year, router, hasHydrated])
-  
+  useEffect(() => {
+    console.log('useEffect triggered, hasHydrated:', hasHydrated)
+    console.log('Store values check:', {
+      firstname,
+      lastname,
+      gender,
+      country,
+      state,
+      phone_num,
+      email,
+      password,
+      confirmPassword,
+      matric_no,
+      department,
+      faculty,
+      expected_grad_year,
+    })
+    if (!hasHydrated) {
+      console.log('Not hydrated yet, returning')
+      return
+    }
+    if (
+      !firstname ||
+      !lastname ||
+      !gender ||
+      !country ||
+      !state ||
+      !phone_num ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !matric_no ||
+      !department ||
+      !faculty ||
+      !expected_grad_year
+    ) {
+      console.log(
+        'Missing required fields, navigating to /signup/StudentSchool',
+      )
+      router.navigate({ to: '/signup/StudentSchool' })
+    } else {
+      console.log('All required fields present, staying on page')
+    }
+  }, [
+    firstname,
+    lastname,
+    middlename,
+    gender,
+    address,
+    country,
+    state,
+    phone_num,
+    email,
+    password,
+    confirmPassword,
+    profilePic,
+    matric_no,
+    department,
+    faculty,
+    expected_grad_year,
+    router,
+    hasHydrated,
+  ])
 
   return (
     <div className="h-screen flex items-center justify-center">
       <div className="w-full h-full grid lg:grid-cols-2">
-       <LeftContainer />
+        <LeftContainer />
         <div className="max-w-md m-auto w-full flex flex-col items-center py-4">
-          <div className="flex items-center justify-between w-full text-[#9017c2] text-2xl px-2">
+          <div className="flex items-center justify-between w-full text-primary-dark text-2xl px-2">
             <div className="mt-1">
               <BackButton />
             </div>
@@ -162,8 +225,7 @@ setUserType("student"); // or "alumnus", "lecturer"
               <form
                 className="w-full space-y-5 mt-5"
                 onSubmit={form.handleSubmit(onSubmit)}
-                          >
-
+              >
                 <FormField
                   control={form.control}
                   name="skills"
@@ -183,38 +245,16 @@ setUserType("student"); // or "alumnus", "lecturer"
                   )}
                 />
 
-              
-
-                <FormField
-  control={form.control}
-  name="description"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Personal Description</FormLabel>
-      <FormControl>
-        <textarea
-          placeholder="Describe yourself"
-          className="w-full h-20 border border-gray-300 rounded-md p-2"
-          {...field}
-        />
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-
-                                <div className=" grid grid-cols-2 gap-4 ">
                 <FormField
                   control={form.control}
-                  name="linkedin_url"
+                  name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>LinkedIn </FormLabel>
+                      <FormLabel>Personal Description</FormLabel>
                       <FormControl>
-                        <Input
-                          type="url"
-                          placeholder="LinkedIn profile URL"
-                          className="w-full"
+                        <textarea
+                          placeholder="Describe yourself"
+                          className="w-full h-20 border border-gray-300 rounded-md p-2"
                           {...field}
                         />
                       </FormControl>
@@ -223,129 +263,155 @@ setUserType("student"); // or "alumnus", "lecturer"
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="x_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>X </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="url"
-                          placeholder="X profile URL"
-                          className="w-full"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                              </div>
-                              
-                                <div className=" grid grid-cols-2 gap-4 ">
-                                    
-                <FormField
-                  control={form.control}
-                  name="instagram_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Instagram URL</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="url"
-                          placeholder="Instagram profile URL"
-                          className="w-full"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className=" grid grid-cols-2 gap-4 ">
+                  <FormField
+                    control={form.control}
+                    name="linkedin_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>LinkedIn </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="url"
+                            placeholder="LinkedIn profile URL"
+                            className="w-full"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="facebook_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Facebook URL</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="url"
-                          placeholder="Facebook profile URL"
-                          className="w-full"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                                  />
-                              </div>
-                              
-                                <div className=" grid grid-cols-2 gap-4 ">
-                <FormField
-                  control={form.control}
-                  name="github_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>GitHub URL</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="url"
-                          placeholder="GitHub profile URL"
-                          className="w-full"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="x_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>X </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="url"
+                            placeholder="X profile URL"
+                            className="w-full"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-                <FormField
-                  control={form.control}
-                  name="website_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Website URL</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="url"
-                          placeholder="Your website URL"
-                          className="w-full"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                              />
-                              </div>
-                              
+                <div className=" grid grid-cols-2 gap-4 ">
+                  <FormField
+                    control={form.control}
+                    name="instagram_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Instagram URL</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="url"
+                            placeholder="Instagram profile URL"
+                            className="w-full"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-<div className="flex justify-between py-4">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.9 }}
-                  style={{ transformOrigin: "left center" }}
-                >
-                                      <Button className="bg-[#5E0B80] flex ml-auto" onClick={() => {
-router.history.back(); }}>
-                    Back
-                  </Button>
-                                  </motion.div>
-                
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.9 }}
-                  style={{ transformOrigin: "right center" }}
-                >
-                  <Button type="submit" className="bg-[#5E0B80] flex ml-auto" disabled={isLoading}>
-                    {isLoading ? 'Submitting...' : 'Submit'}
-                  </Button>
-                                  </motion.div>
+                  <FormField
+                    control={form.control}
+                    name="facebook_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Facebook URL</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="url"
+                            placeholder="Facebook profile URL"
+                            className="w-full"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className=" grid grid-cols-2 gap-4 ">
+                  <FormField
+                    control={form.control}
+                    name="github_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>GitHub URL</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="url"
+                            placeholder="GitHub profile URL"
+                            className="w-full"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="website_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Website URL</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="url"
+                            placeholder="Your website URL"
+                            className="w-full"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="flex justify-between py-4">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.9 }}
+                    style={{ transformOrigin: 'left center' }}
+                  >
+                    <Button
+                      className="bg-primary flex ml-auto"
+                      onClick={() => {
+                        router.history.back()
+                      }}
+                    >
+                      Back
+                    </Button>
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.9 }}
+                    style={{ transformOrigin: 'right center' }}
+                  >
+                    <Button
+                      type="submit"
+                      className="bg-primary flex ml-auto"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? 'Submitting...' : 'Submit'}
+                    </Button>
+                  </motion.div>
                 </div>
                 <p className="text-red-500 text-sm mt-2">{isError}</p>
               </form>
@@ -354,7 +420,7 @@ router.history.back(); }}>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default StudentProfessional;
+export default StudentProfessional

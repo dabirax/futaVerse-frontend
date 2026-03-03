@@ -21,7 +21,7 @@ const roles = [
 
 const SignUp = () => {
   return (
-    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 h-screen mlg:h-auto">
+    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 h-screen mlg:h-auto bg-[#fafafa] relative overflow-hidden">
       <div className="w-full h-full grid lg:grid-cols-2 z-10">
         <LeftContainer />
 
@@ -43,11 +43,11 @@ const SignUp = () => {
                 Join the Network
               </h2>
               <p className="text-slate-500 mt-2 text-sm">
-                Select your role to get started
+                Select your role to get started with your Futaverse profile
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
               {roles.map((role) => (
                 <RoleCard
                   key={role.path}
@@ -62,7 +62,7 @@ const SignUp = () => {
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="text-primary font-semibold hover:underline"
+                className="text-primary font-bold hover:underline"
               >
                 Sign In
               </Link>
@@ -81,18 +81,36 @@ interface RoleCardProps {
 }
 
 const RoleCard = ({ icon, label, path }: RoleCardProps) => (
-  <Link to={path}>
+  <Link to={path} className="block group">
     <motion.div
-      whileHover={{ y: -2 }}
+      whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
       className={`
-      cursor-pointer flex items-center gap-4 p-5 rounded-2xl border-2 transition-all duration-200 border-zinc-400  hover:border-primary/80 text-zinc-900 hover:text-primary-dark 
-    `}
+        relative overflow-hidden cursor-pointer flex items-center gap-4 p-6 rounded-3xl border-2 
+        transition-all duration-300
+        bg-white/50 border-slate-100 group-hover:border-primary/50 group-hover:bg-white
+      `}
     >
-      <div className={`p-2 rounded-lg bg-zinc-100 dark:bg-primary-20`}>
+      <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors" />
+
+      <div
+        className={`
+        p-3 rounded-xl transition-all duration-300
+        bg-slate-50 text-slate-600 
+        group-hover:bg-primary group-hover:text-white group-hover:scale-110 group-hover:rotate-3
+      `}
+      >
         {icon}
       </div>
-      <span className="font-semibold text-lg leading-tight">{label}</span>
+
+      <div className="flex flex-col">
+        <span className="font-bold text-lg text-slate-700 group-hover:text-primary-dark transition-colors leading-tight">
+          {label}
+        </span>
+        <span className="text-[10px] uppercase tracking-widest text-slate-400 group-hover:text-primary/60 transition-colors">
+          Signup as
+        </span>
+      </div>
     </motion.div>
   </Link>
 )
