@@ -44,10 +44,10 @@ const categoryLabels: Record<string, string> = {
   conference: 'Conference',
 }
 
+function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
+
   const router = useRouter()
   const navigate = router.navigate
-
-function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
 
   return (
     <Card
@@ -106,6 +106,9 @@ function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
 }
 
 function InternshipFeedCard({ item }: { item: FeedInternship }) {
+
+  const router = useRouter()
+  const navigate = router.navigate
 
 
   return (
@@ -186,6 +189,10 @@ function InternshipFeedCard({ item }: { item: FeedInternship }) {
 }
 
 function EventFeedCard({ item }: { item: EventListItem }) {
+  
+  const router = useRouter()
+  const navigate = router.navigate
+
 
   const formattedDate = format(new Date(item.date), 'MMM d, yyyy')
   const formattedTime = format(
@@ -284,6 +291,8 @@ function EventFeedCard({ item }: { item: EventListItem }) {
 }
 
 export default function AlumnusFeed() {
+  
+
   const [search, setSearch] = useState('')
   const [activeTab, setActiveTab] = useState<FeedItemType>('all')
 
