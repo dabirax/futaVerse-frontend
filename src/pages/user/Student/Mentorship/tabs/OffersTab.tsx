@@ -39,8 +39,8 @@ export default function OffersTab() {
           alumnusName={offer.alumnus_info.firstname+ " " + offer.alumnus_info.lastname}
           title={offer.mentorship_info.title }
           variant="acceptOrReject"
-          onAccept={() => acceptOffer.mutate(offer.id)}
-          onReject={() => rejectOffer.mutate(offer.id)}
+          onAccept={() => acceptOffer.mutate(offer.sqid)}
+          onReject={() => rejectOffer.mutate(offer.sqid)}
         />
       ))}
     </div>

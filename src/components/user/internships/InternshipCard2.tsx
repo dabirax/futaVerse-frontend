@@ -1,69 +1,109 @@
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import ConfirmActionDialog from '../ConfirmActionDialog'
 
 type InternshipCardProps = {
-  title: string;
-  alumnusName: string;
-  company?: string;
-  variant: "acceptOrReject" | "withdraw";
-  onAccept?: () => void;
-  onReject?: () => void;
-  onWithdraw?: () => void;
-};
+  title: string
+  alumnusName: string
+  company?: string
+  logo?: string
+  showActions?: boolean
+  variant?: 'acceptOrReject' | 'withdraw'
+  onAccept?: () => void
+  onReject?: () => void
+  onWithdraw?: () => void
+}
 
 export default function InternshipCard2({
   title,
   alumnusName,
   company,
-  variant,
+  logo,
+  showActions = true,
+  variant = 'acceptOrReject',
   onAccept,
   onReject,
   onWithdraw,
 }: InternshipCardProps) {
   return (
-    <div className="flex gap-4 bg-background rounded-xl border  space-y-2  p-4 shadow-sm hover:shadow-md transition-shadow">
-              <Avatar className="h-16 w-16 rounded-lg">
-                {/* <AvatarImage src={logo || ""} /> */}
-                <AvatarFallback className="rounded-lg bg-primary/10 text-primary">
-                  {/* {title.substring(0, 2).toUpperCase()} */}
-                </AvatarFallback>
-              </Avatar>
+    <Card>
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between gap-4">
+          {/* LEFT SIDE */}
+          <div className="flex items-center gap-3 flex-1">
+            <Avatar className="h-12 w-12 rounded-lg">
+              <AvatarImage src={logo} />
+              <AvatarFallback className="rounded-lg bg-primary/10 text-primary">
+                {title
+                  .split(' ')
+                  .map((word) => word[0])
+                  .join('')
+                  .substring(0, 2)
+                  .toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
 
-    <div className=" flex-1 md:flex md:justify-between  space-y-2 w-full">
-      <div>
-        <h3 className="font-semibold">{title}</h3>
-        <p className="text-sm text-muted-foreground">
-          {company ?? "—"} • Posted by {alumnusName}
-        </p>
-      </div>
+            <div>
+              <h4 className="font-semibold text-foreground">{title}</h4>
+              <p className="text-sm text-muted-foreground">
+                {company ?? '—'} • Posted by {alumnusName}
+              </p>
+            </div>
+          </div>
 
-      <div className="flex gap-2 justify-end md:items-center">
-        {variant === "acceptOrReject" && (
-          <>
-            <Button size="sm" onClick={onAccept}>
-              Accept
-            </Button>
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={onReject}
-            >
-              Reject
-            </Button>
-          </>
-        )}
+          {/* ACTIONS */}
+          {showActions && (
+            <div className="flex gap-2">
+              {variant === 'acceptOrReject' && (
+                <>
+                  <ConfirmActionDialog
+                    trigger={<Button size="sm">Accept</Button>}
+                    title={`Accept offer for "${title}"?`}
+                    description={`You are about to accept this internship offer from ${alumnusName}.`}
+                    confirmLabel="Yes, accept"
+                    successTitle="Offer accepted"
+                    successDescription={`You have accepted the "${title}" internship.`}
+                    onConfirm={() => onAccept?.()}
+                  />
 
-        {variant === "withdraw" && (
-          <Button
-            size="sm"
-            variant="destructive"
-            onClick={onWithdraw}
-          >
-            Withdraw
-          </Button>
-        )}
-      </div>
-      </div>
-    </div>
-  );
+                  <ConfirmActionDialog
+                    trigger={
+                      <Button size="sm" variant="destructive">
+                        Reject
+                      </Button>
+                    }
+                    title={`Reject offer for "${title}"?`}
+                    description={`This will reject the internship offer. This action cannot be undone.`}
+                    confirmLabel="Yes, reject"
+                    destructive
+                    successTitle="Offer rejected"
+                    successDescription={`You have rejected the "${title}" internship.`}
+                    onConfirm={() => onReject?.()}
+                  />
+                </>
+              )}
+
+              {variant === 'withdraw' && (
+                <ConfirmActionDialog
+                  trigger={
+                    <Button size="sm" variant="destructive">
+                      Withdraw
+                    </Button>
+                  }
+                  title="Withdraw application?"
+                  description={`This will withdraw your application for "${title}".`}
+                  confirmLabel="Yes, withdraw"
+                  destructive
+                  successTitle="Application withdrawn"
+                  successDescription={`You have withdrawn from "${title}".`}
+                  onConfirm={() => onWithdraw?.()}
+                />
+              )}
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  )
 }

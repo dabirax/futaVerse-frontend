@@ -33,10 +33,10 @@ export default function OffersPage() {
           company={offer.internship.industry}
           variant="acceptOrReject"
           onAccept={() => {
-            acceptOffer(offer.id)
+            acceptOffer(offer.sqid)
           }}
           onReject={() => {
-            rejectOffer(offer.id)
+            rejectOffer(offer.sqid)
           }}
         />
       ))}

@@ -32,7 +32,7 @@ export default function StudentApplicationsTab() {
           title={application.internship.title}
           alumnusName={`${application.student.firstname} ${application.student.lastname}`}
           variant="withdraw"
-          onWithdraw={() => withdrawApplication(application.id)}
+          onWithdraw={() => withdrawApplication(application.sqid)}
         />
       ))}
     </div>

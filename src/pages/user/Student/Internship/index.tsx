@@ -39,9 +39,7 @@ export default function AlumnusInternship() {
           <ApplicationsTab />
         </TabsContent>
 
-        {/* <TabsContent value="interns">
-          <InternsTab />
-        </TabsContent> */}
+       
 
         <TabsContent value="reports">
           <ReportsTab />
