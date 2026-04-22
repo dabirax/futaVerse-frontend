@@ -1,5 +1,5 @@
 
-import CardSkeleton5 from "@/components/skeletons/CardSkeleton5";
+import { CardSkeleton5 } from '@/components/CardSkeletons'
 import InternshipCard2 from "@/components/user/internships/InternshipCard2";
 import { useInternshipApplications, useWithdrawInternshipApplication } from "@/hooks/useInternships";
 

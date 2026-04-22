@@ -14,6 +14,7 @@ import AlumnusSettings from "../pages/user/Alumnus/Settings";
 
 
 import { rootRoute } from "./__root";
+import { publicRoute } from "./public";
 import InternshipDetail from "@/pages/user/Alumnus/Internship/InternshipDetail";
 import EditInternship from "@/pages/user/Alumnus/Internship/EditInternship";
 import { requireRole } from "@/lib/guard";
@@ -29,120 +30,139 @@ import MentorshipDetails from "@/pages/user/Alumnus/Mentorship/details";
 /* -------------------------- ALUMNUS ROUTES -------------------------- */
 export const alumnusRoute = createRoute({
   getParentRoute: () => rootRoute,
-  id: "alumnus",
+
+  // getParentRoute: () => publicRoute,
+  id: 'alumnus',
   component: AlumnusLayout,
-  beforeLoad: requireRole(["Alumni"]),
-});
+  beforeLoad: requireRole(['Alumni']),
+})
 ;
 
 /* Alumnus Children */
 export const alumnusDashboardRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/dashboard",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/dashboard',
   component: AlumnusDashboard,
-});
+})
 
 export const alumnusFeedRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/feed",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/feed',
   component: AlumnusFeed,
-});
+})
 
 // Internship Routes
 
 export const alumnusInternshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/internships",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/internships',
   component: AlumnusInternship,
-});
+})
 
 export const alumnusCreateInternshipRoute = createRoute({
-  getParentRoute: () => alumnusRoute,
-  path: "/alumnus/internships/create",
+  // getParentRoute: () => alumnusRoute,
+  getParentRoute: () => publicRoute,
+  path: '/alumnus/internships/create',
   component: CreateInternship,
-});
+})
 
 export const alumnusInternshipDetailRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/internships/$id",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/internships/$id',
   component: InternshipDetail,
-});
+})
 
 export const alumnusEditInternshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/internships/$id/edit",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/internships/$id/edit',
   component: EditInternship,
-});
+})
 
 // Mentorship Route
 
 export const alumnusMentorshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/mentorship",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/mentorship',
   component: AlumnusMentorship,
-});
+})
 
 export const alumnusCreateMentorshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/mentorship/create",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/mentorship/create',
   component: CreateMentorship,
-});
+})
 
 export const alumnusEditMentorshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/mentorship/$id/edit",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/mentorship/$id/edit',
   component: EditMentorship,
-});
+})
 
 export const alumnusMentorshipDetailRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/mentorship/$id",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/mentorship/$id',
   component: MentorshipDetails,
-}); 
+}) 
 
 
 // Events Routes
 
 export const alumnusEventsRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/events",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/events',
   component: AlumnusEvents,
-});
+})
 
 export const alumnusEventDetailRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/events/$id",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/events/$id',
   component: EventDetails,
-});
+})
 
 export const alumnusCreateEventRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/events/create",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/events/create',
   component: CreateEvent,
-});
+})
 
 export const alumnusEditEventRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/events/$id/edit",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/events/$id/edit',
   component: EditEvent,
-});
+})
 
 // Messages Route 
 
 export const alumnusMessagesRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/messages",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/messages',
   component: AlumnusMessages,
-});
+})
 
 export const alumnusCalendarRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/calendar",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/calendar',
   component: AlumnusCalendar,
-});
+})
 
 export const alumnusSettingsRoute = createRoute({
   getParentRoute: () => alumnusRoute,
-  path: "/alumnus/settings",
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/settings',
   component: AlumnusSettings,
-});
+})

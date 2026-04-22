@@ -6,7 +6,7 @@ import {
   useInternshipOffers,
   useWithdrawInternshipOffer,
 } from '@/hooks/useInternships'
-import CardSkeleton5 from '@/components/skeletons/CardSkeleton5'
+import { CardSkeleton5 } from '@/components/CardSkeletons'
 
 export default function OffersTab() {
   const { data, isLoading, isError } = useInternshipOffers()
@@ -40,9 +40,9 @@ export default function OffersTab() {
               key={index}
               {...offer}
               studentName={`${offer.student.firstname} ${offer.student.lastname}`}
-              Title={offer.internship.title}
+              title={offer.internship.title}
               variant="offer"
-              onWithdraw={() => withdrawOffer(offer.id)}
+              onWithdraw={() => withdrawOffer(offer.sqid)}
             />
           ))
         ) : (

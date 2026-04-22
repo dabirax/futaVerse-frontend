@@ -1,20 +1,32 @@
+import { useMentorshipEngagements } from '@/hooks/useMentorships'
 import MenteeCard from '../../../../../components/user/mentorships/MenteeCard'
+import { CardSkeleton5 } from '@/components/CardSkeletons'
+import StudentCard from '@/components/user/internships/StudentCard'
 
 export default function MenteesTab() {
-  const mentees: any[] = []
+  
+    const { data, isLoading, isError } = useMentorshipEngagements()
+
+    if (isLoading) {
+        return <CardSkeleton5 variant="r-full" />
+      }
+    
+      if (isError) {
+        return (
+          <p className="text-sm text-destructive">Failed to load interns</p>
+        )
+      }
 
   return (
     <div className="space-y-3">
-      {mentees.length > 0 ? (
-        mentees.map((mentee, index) => (
-          <MenteeCard
+      {data?.results?.length > 0 ? (
+        data.results.map((mentee: any, index: number) => (
+          <StudentCard
             key={index}
-            studentName={mentee.studentName}
-            mentorshipTitle={mentee.mentorshipTitle}
-            status={mentee.status}
-            startDate={mentee.startDate}
+            studentName="Sample Name"
+            title={mentee.mentorshipTitle}
             onMessage={() => console.log('Message mentee')}
-            onViewProgress={() => console.log('View progress')}
+            variant='message'
           />
         ))
       ) : (

@@ -30,6 +30,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { BackButton2 } from "@/components/BackButtons";
 
 
 const formSchema = z.object({
@@ -53,25 +54,6 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-// Mock data for existing internship
-// const mockInternship = {
-//   id: "1",
-//   title: "Frontend Developer Intern",
-//   description: "Work on building modern web applications using React, TypeScript, and Tailwind CSS. Collaborate with experienced developers and contribute to real-world projects.",
-//   skills_required: ["React", "TypeScript", "Tailwind CSS", "Git"],
-//   work_mode: "Remote" as const,
-//   engagement_type: "Full-time" as const,
-//   location: "Lagos, Nigeria",
-//   industry: "Technology",
-//   duration_weeks: 12,
-//   start_date: "2025-11-15",
-//   end_date: "2026-02-07",
-//   is_paid: true,
-//   stipend: "50000.00",
-//   available_slots: 3,
-//   require_resume: true,
-//   require_cover_letter: true,
-// };
 
 export default function EditInternship() {
   const { id } = alumnusEditInternshipRoute.useParams();
@@ -205,408 +187,480 @@ export default function EditInternship() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => router.navigate({to: `/alumnus/internships/${id}`})}>
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+        <BackButton2 />
         <h1 className="text-3xl font-bold text-foreground">Edit Internship</h1>
       </div>
 
-      {isLoading && <p className="text-center font-bold text-teal-600 text-2xl">Loading...</p>}
-      {isError && <p className="text-center font-bold text-red-600 text-2xl">Error loading internship details.</p>}
+      {isLoading && (
+        <p className="text-center font-bold text-teal-600 text-2xl">
+          Loading...
+        </p>
+      )}
+      {isError && (
+        <p className="text-center font-bold text-red-600 text-2xl">
+          Error loading internship details.
+        </p>
+      )}
 
       {!isLoading && !isError && (
-
-      <Form {...form}>
+        <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Basic Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. Frontend Developer Intern" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Describe the internship responsibilities and expectations..." rows={5} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="industry"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Industry</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. Technology, Finance, Healthcare" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Work Details */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Work Details</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
+            {/* Basic Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Basic Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="work_mode"
+                  name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Work Mode</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select work mode" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Remote">Remote</SelectItem>
-                          <SelectItem value="On-site">On-site</SelectItem>
-                          <SelectItem value="Hybrid">Hybrid</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="engagement_type"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Engagement Type</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select engagement type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Full-time">Full-time</SelectItem>
-                          <SelectItem value="Part-time">Part-time</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Location</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. Lagos, Nigeria" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="duration_weeks"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Duration (weeks)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min="1"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Timeline */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Timeline</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="start_date"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Start Date</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              className={cn(
-                                "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="end_date"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>End Date</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              className={cn(
-                                "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Compensation */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Compensation</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <FormField
-                control={form.control}
-                name="is_paid"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">Paid Internship</FormLabel>
-                      <div className="text-sm text-muted-foreground">
-                        Does this internship offer a stipend?
-                      </div>
-                    </div>
-                    <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              {isPaid && (
-                <FormField
-                  control={form.control}
-                  name="stipend"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Stipend Amount (₦)</FormLabel>
+                      <FormLabel>Title</FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="e.g. 50000" {...field} />
+                        <Input
+                          placeholder="e.g. Frontend Developer Intern"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-              )}
 
-              <FormField
-                control={form.control}
-                name="available_slots"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Available Slots</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min="1"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Describe the internship responsibilities and expectations..."
+                          rows={5}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          {/* Skills & Requirements */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Skills & Requirements</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <FormLabel>Required Skills</FormLabel>
-                <div className="flex gap-2 mt-2">
-                  <Input
-                    placeholder="Add a skill"
-                    value={skillInput}
-                    onChange={(e) => setSkillInput(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addSkill())}
+                <FormField
+                  control={form.control}
+                  name="industry"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Industry</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g. Technology, Finance, Healthcare"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Work Details */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Work Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="work_mode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Work Mode</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select work mode" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Remote">Remote</SelectItem>
+                            <SelectItem value="On-site">On-site</SelectItem>
+                            <SelectItem value="Hybrid">Hybrid</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                  <Button type="button" onClick={addSkill}>
-                    Add
-                  </Button>
+
+                  <FormField
+                    control={form.control}
+                    name="engagement_type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Engagement Type</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select engagement type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Full-time">Full-time</SelectItem>
+                            <SelectItem value="Part-time">Part-time</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {skills.map((skill, index) => (
-                    <Badge key={index} variant="secondary" className="gap-1">
-                      {skill}
-                      <X
-                        className="h-3 w-3 cursor-pointer"
-                        onClick={() => removeSkill(skill)}
-                      />
-                    </Badge>
-                  ))}
+
+                <FormField
+                  control={form.control}
+                  name="location"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Location</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. Lagos, Nigeria" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="duration_weeks"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Duration (weeks)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="1"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value))
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Timeline */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Timeline</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="start_date"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Start Date</FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                className={cn(
+                                  'w-full pl-3 text-left font-normal',
+                                  !field.value && 'text-muted-foreground',
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, 'PPP')
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="end_date"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>End Date</FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                className={cn(
+                                  'w-full pl-3 text-left font-normal',
+                                  !field.value && 'text-muted-foreground',
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, 'PPP')
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
-                {form.formState.errors.skills_required && (
-                  <p className="text-sm font-medium text-destructive mt-2">
-                    {form.formState.errors.skills_required.message}
-                  </p>
-                )}
-              </div>
+              </CardContent>
+            </Card>
 
-              <FormField
-                control={form.control}
-                name="require_resume"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">Require Resume</FormLabel>
-                      <div className="text-sm text-muted-foreground">
-                        Applicants must submit a resume
+            {/* Compensation */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Compensation</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="is_paid"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">
+                          Paid Internship
+                        </FormLabel>
+                        <div className="text-sm text-muted-foreground">
+                          Does this internship offer a stipend?
+                        </div>
                       </div>
-                    </div>
-                    <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="require_cover_letter"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">Require Cover Letter</FormLabel>
-                      <div className="text-sm text-muted-foreground">
-                        Applicants must submit a cover letter
+                {isPaid && (
+                  <FormField
+                    control={form.control}
+                    name="stipend"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Stipend Amount (₦)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="e.g. 50000"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
+                <FormField
+                  control={form.control}
+                  name="available_slots"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Available Slots</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="1"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value))
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Skills & Requirements */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Skills & Requirements</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <FormLabel>Required Skills</FormLabel>
+                  <div className="flex gap-2 mt-2">
+                    <Input
+                      placeholder="Add a skill"
+                      value={skillInput}
+                      onChange={(e) => setSkillInput(e.target.value)}
+                      onKeyPress={(e) =>
+                        e.key === 'Enter' && (e.preventDefault(), addSkill())
+                      }
+                    />
+                    <Button type="button" onClick={addSkill}>
+                      Add
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {skills.map((skill, index) => (
+                      <Badge key={index} variant="secondary" className="gap-1">
+                        {skill}
+                        <X
+                          className="h-3 w-3 cursor-pointer"
+                          onClick={() => removeSkill(skill)}
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                  {form.formState.errors.skills_required && (
+                    <p className="text-sm font-medium text-destructive mt-2">
+                      {form.formState.errors.skills_required.message}
+                    </p>
+                  )}
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="require_resume"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">
+                          Require Resume
+                        </FormLabel>
+                        <div className="text-sm text-muted-foreground">
+                          Applicants must submit a resume
+                        </div>
                       </div>
-                    </div>
-                    <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
 
-          {/* Submit Button */}
-          <div className="flex gap-4 justify-between">
-            
-            {/* <Button type="button" variant={"destructive"}>Delete</Button>
-             */}
-             <AlertDialog>
-  <AlertDialogTrigger asChild>
-    <Button variant="destructive">
-      Delete Internship
-    </Button>
-  </AlertDialogTrigger>
+                <FormField
+                  control={form.control}
+                  name="require_cover_letter"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">
+                          Require Cover Letter
+                        </FormLabel>
+                        <div className="text-sm text-muted-foreground">
+                          Applicants must submit a cover letter
+                        </div>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
 
-  <AlertDialogContent>
-    <AlertDialogHeader>
-      <AlertDialogTitle>Delete internship?</AlertDialogTitle>
-      <AlertDialogDescription>
-        This action cannot be undone. The internship will be permanently removed.
-      </AlertDialogDescription>
-    </AlertDialogHeader>
+            {/* Submit Button */}
+            <div className="flex gap-4 justify-between">
+              {/* <Button type="button" variant={"destructive"}>Delete</Button>
+               */}
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive">Delete Internship</Button>
+                </AlertDialogTrigger>
 
-    <AlertDialogFooter>
-      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete internship?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. The internship will be
+                      permanently removed.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
 
-      <AlertDialogAction
-        onClick={() => {handleDelete()}}
-      >
-        {isDeleting ? "Deleting..." : "Confirm"}
-      </AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
 
+                    <AlertDialogAction
+                      onClick={() => {
+                        handleDelete()
+                      }}
+                    >
+                      {isDeleting ? 'Deleting...' : 'Confirm'}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
 
               <div className="flex gap-4">
-                {isUpdateError && <p className="text-center font-bold text-red-600">Error updating internship.</p> }
-                <Button type="button" variant={"outline"} onClick={handleCancel}>
+                {isUpdateError && (
+                  <p className="text-center font-bold text-red-600">
+                    Error updating internship.
+                  </p>
+                )}
+                <Button
+                  type="button"
+                  variant={'outline'}
+                  onClick={handleCancel}
+                >
                   Cancel
                 </Button>
-              <Button type="submit" disabled={isUpdating}>
-      {isUpdating ? "Saving..." : "Save Changes"}</Button>
+                <Button type="submit" disabled={isUpdating}>
+                  {isUpdating ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </div>
             </div>
-          </div>
-        </form>
-      </Form>
+          </form>
+        </Form>
       )}
     </div>
-  );
+  )
 }

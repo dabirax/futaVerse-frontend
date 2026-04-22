@@ -2,7 +2,7 @@ import { useRouter } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { AxiosError } from 'axios'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeft, CalendarIcon } from 'lucide-react'
+import {  CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import * as z from 'zod'
 import { Button } from '@/components/ui/button'
@@ -33,6 +33,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 import { useCreateMentorship } from '@/hooks/useMentorships'
+import { BackButton2 } from '@/components/BackButtons'
 
 const formSchema = z
   .object({
@@ -119,13 +120,8 @@ export default function CreateMentorship() {
   return (
     <div className="space-y-6 pb-8">
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => router.navigate({ to: '/alumnus/mentorships' })}
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+        <BackButton2 />
+
         <h1 className="text-3xl font-bold text-foreground">
           Create New Mentorship
         </h1>

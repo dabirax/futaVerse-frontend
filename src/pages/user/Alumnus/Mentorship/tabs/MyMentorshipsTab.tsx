@@ -3,7 +3,7 @@ import { useRouter } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import MentorshipCard from '../../../../../components/user/ShipCard'
 import { useMentorships} from '@/hooks/useMentorships'
-import CardSkeleton1 from '@/components/skeletons/CardSkeleton1'
+import { CardSkeleton1 } from '@/components/CardSkeletons'
 
 export default function MyMentorshipsTab() {
   const navigate = useRouter().navigate

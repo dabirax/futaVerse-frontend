@@ -16,6 +16,8 @@ export default function AlumnusInternship() {
         <h1 className="text-3xl font-bold text-foreground">Internships</h1>
       </div>
 
+
+
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-4 mb-5">
           <TabsTrigger value="my-internships">My Internships</TabsTrigger>

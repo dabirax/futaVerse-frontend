@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Search } from "lucide-react";
-import EventCard from "@/components/user/EventCard";
+import EventCard from "@/components/user/events/EventCard";
 import { Event, EventListItem} from "@/types/event";
 
 const mockEvents: Event[] = [

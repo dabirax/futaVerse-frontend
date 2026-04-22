@@ -1,156 +1,180 @@
-import { useState } from "react";
-import { Link, useRouter, } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { AxiosError } from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {  ArrowLeft, CalendarIcon, X,} from "lucide-react";
-import { format } from "date-fns";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
-import { useCreateInternship } from "@/hooks/useInternships";
+import { useState } from 'react'
+import { Link, useRouter } from '@tanstack/react-router'
+import { useForm } from 'react-hook-form'
+import { AxiosError } from 'axios'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ArrowLeft, CalendarIcon, X } from 'lucide-react'
+import { format } from 'date-fns'
+import * as z from 'zod'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Switch } from '@/components/ui/switch'
+import { Calendar } from '@/components/ui/calendar'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
+import { useCreateInternship } from '@/hooks/useInternships'
+import { BackButton2 } from '@/components/BackButtons'
 
+const formSchema = z
+  .object({
+    title: z.string().min(1, 'Title is required').max(200),
+    description: z
+      .string()
+      .min(10, 'Description must be at least 10 characters')
+      .max(2000),
+    work_mode: z.enum(['Remote', 'Hybrid', 'On-site']),
+    engagement_type: z.enum(['Full-time', 'Part-time', 'Contract']),
+    location: z.string().min(1, 'Location is required'),
+    industry: z.string().min(1, 'Industry is required'),
+    duration_weeks: z
+      .number()
+      .min(1, 'Duration must be at least 1 week')
+      .max(104),
+    start_date: z.date().optional(),
+    end_date: z.date().optional(),
+    is_paid: z.boolean(),
+    stipend: z.string().optional(),
+    available_slots: z.number().min(1, 'Must have at least 1 slot').max(50),
+    remaining_slots: z.number().min(0).max(50),
+    require_resume: z.boolean(),
+    require_cover_letter: z.boolean(),
+    skills_required: z
+      .array(z.string())
+      .min(1, 'At least one skill is required'),
+  })
+  .refine(
+    (data) =>
+      data.start_date && data.end_date && data.end_date > data.start_date,
+    {
+      message: 'End date must be after start date',
+      path: ['end_date'],
+    },
+  )
 
-const formSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200),
-  description: z.string().min(10, "Description must be at least 10 characters").max(2000),
-  work_mode: z.enum(["Remote", "Hybrid", "On-site"]),
-  engagement_type: z.enum(["Full-time", "Part-time", "Contract"]),
-  location: z.string().min(1, "Location is required"),
-  industry: z.string().min(1, "Industry is required"),
-  duration_weeks: z.number().min(1, "Duration must be at least 1 week").max(104),
-  start_date: z.date().optional(),
-  end_date: z.date().optional(),
-  is_paid: z.boolean(),
-  stipend: z.string().optional(),
-  available_slots: z.number().min(1, "Must have at least 1 slot").max(50),
-  remaining_slots: z.number().min(0).max(50),
-  require_resume: z.boolean(),
-  require_cover_letter: z.boolean(),
-  skills_required: z.array(z.string()).min(1, "At least one skill is required"),
-}).refine(
-  (data) => data.start_date && data.end_date && data.end_date > data.start_date,
-  {
-    message: "End date must be after start date",
-    path: ["end_date"],
-  }
-);
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 export default function CreateInternship() {
-  const router = useRouter();
-  const { toast } = useToast();
-  const [skillInput, setSkillInput] = useState("");
-  const createInternship = useCreateInternship();
-
+  const router = useRouter()
+  const { toast } = useToast()
+  const [skillInput, setSkillInput] = useState('')
+  const createInternship = useCreateInternship()
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      work_mode: "Remote",
-      engagement_type: "Full-time",
-      location: "",
-      industry: "",
+      title: '',
+      description: '',
+      work_mode: 'Remote',
+      engagement_type: 'Full-time',
+      location: '',
+      industry: '',
       duration_weeks: 12,
-    start_date: undefined,
-    end_date: undefined,
+      start_date: undefined,
+      end_date: undefined,
       is_paid: false,
-      stipend: "",
+      stipend: '',
       available_slots: 1,
       remaining_slots: 1,
       require_resume: true,
       require_cover_letter: false,
       skills_required: [],
     },
-  });
+  })
 
-  const isPaid = form.watch("is_paid");
-  const skills = form.watch("skills_required");
+  const isPaid = form.watch('is_paid')
+  const skills = form.watch('skills_required')
 
   const getErrorMessage = (error: unknown) => {
-  if (error instanceof AxiosError) {
-    return error.response?.data?.message || "Request failed";
+    if (error instanceof AxiosError) {
+      return error.response?.data?.message || 'Request failed'
+    }
+    return 'Unexpected error occurred.'
   }
-  return "Unexpected error occurred.";
-};
-
 
   const addSkill = () => {
     if (skillInput.trim() && !skills.includes(skillInput.trim())) {
-      form.setValue("skills_required", [...skills, skillInput.trim()]);
-      setSkillInput("");
+      form.setValue('skills_required', [...skills, skillInput.trim()])
+      setSkillInput('')
     }
-  };
+  }
 
   const removeSkill = (skill: string) => {
     form.setValue(
-      "skills_required",
-      skills.filter((s) => s !== skill)
-    );
-  };
+      'skills_required',
+      skills.filter((s) => s !== skill),
+    )
+  }
 
   const onSubmit = (values: FormValues) => {
-   const formatted = {
-    ...values,
-    start_date: values.start_date
-      ? format(values.start_date, "yyyy-MM-dd")
-      : null,
-    end_date: values.end_date
-      ? format(values.end_date, "yyyy-MM-dd")
-      : null,
-    stipend: values.is_paid ? values.stipend || "0" : "0",
-    remaining_slots: values.available_slots
-  };
-console.log(formatted)
-  createInternship.mutate(formatted, {
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Internship created successfully!",
-      });
-      router.navigate({ to: "/alumnus/internships" });
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Error",
-        description:
-          error?.response?.data?.message ||
-          "Failed to create internship. Fix your backend or your life.",
-        variant: "destructive",
-      });
-    },
-  });
-};
+    const formatted = {
+      ...values,
+      start_date: values.start_date
+        ? format(values.start_date, 'yyyy-MM-dd')
+        : null,
+      end_date: values.end_date ? format(values.end_date, 'yyyy-MM-dd') : null,
+      stipend: values.is_paid ? values.stipend || '0' : '0',
+      remaining_slots: values.available_slots,
+    }
+    console.log(formatted)
+    createInternship.mutate(formatted, {
+      onSuccess: () => {
+        toast({
+          title: 'Success',
+          description: 'Internship created successfully!',
+        })
+        router.navigate({ to: '/alumnus/internships' })
+      },
+      onError: (error: any) => {
+        toast({
+          title: 'Error',
+          description:
+            error?.response?.data?.message ||
+            'Failed to create internship. Fix your backend or your life.',
+          variant: 'destructive',
+        })
+      },
+    })
+  }
 
   return (
     <div className="space-y-6 pb-8">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => router.navigate({ to: "/alumnus/internships" })}>
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h1 className="text-3xl font-bold text-foreground">Create New Internship</h1>
+        <BackButton2 />
+        <h1 className="text-3xl font-bold text-foreground">
+          Create New Internship
+        </h1>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-
-
-
           {/* Basic Information */}
           <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">Basic Information</h2>
+            <h2 className="text-xl font-semibold text-foreground">
+              Basic Information
+            </h2>
 
             <FormField
               control={form.control}
@@ -159,7 +183,10 @@ console.log(formatted)
                 <FormItem>
                   <FormLabel>Internship Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Frontend Developer Intern" {...field} />
+                    <Input
+                      placeholder="e.g., Frontend Developer Intern"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -192,7 +219,10 @@ console.log(formatted)
                   <FormItem>
                     <FormLabel>Industry</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Technology, Finance, Healthcare" {...field} />
+                      <Input
+                        placeholder="e.g., Technology, Finance, Healthcare"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -217,7 +247,9 @@ console.log(formatted)
 
           {/* Work Details */}
           <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">Work Details</h2>
+            <h2 className="text-xl font-semibold text-foreground">
+              Work Details
+            </h2>
 
             <div className="grid md:grid-cols-2 gap-6">
               <FormField
@@ -226,7 +258,10 @@ console.log(formatted)
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Work Mode</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select work mode" />
@@ -249,7 +284,10 @@ console.log(formatted)
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Engagement Type</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select engagement type" />
@@ -280,7 +318,9 @@ console.log(formatted)
                         min="1"
                         max="104"
                         {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value) || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -300,11 +340,15 @@ console.log(formatted)
                           <Button
                             variant="outline"
                             className={cn(
-                              "pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
+                              'pl-3 text-left font-normal',
+                              !field.value && 'text-muted-foreground',
                             )}
                           >
-                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                            {field.value ? (
+                              format(field.value, 'PPP')
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </FormControl>
@@ -337,11 +381,15 @@ console.log(formatted)
                           <Button
                             variant="outline"
                             className={cn(
-                              "pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
+                              'pl-3 text-left font-normal',
+                              !field.value && 'text-muted-foreground',
                             )}
                           >
-                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                            {field.value ? (
+                              format(field.value, 'PPP')
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </FormControl>
@@ -375,10 +423,14 @@ console.log(formatted)
                       min="1"
                       max="50"
                       {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                      onChange={(e) =>
+                        field.onChange(parseInt(e.target.value) || 0)
+                      }
                     />
                   </FormControl>
-                  <FormDescription>Number of interns you can accept</FormDescription>
+                  <FormDescription>
+                    Number of interns you can accept
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -387,7 +439,9 @@ console.log(formatted)
 
           {/* Skills Required */}
           <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">Skills Required</h2>
+            <h2 className="text-xl font-semibold text-foreground">
+              Skills Required
+            </h2>
 
             <FormField
               control={form.control}
@@ -401,9 +455,9 @@ console.log(formatted)
                       value={skillInput}
                       onChange={(e) => setSkillInput(e.target.value)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          addSkill();
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          addSkill()
                         }
                       }}
                     />
@@ -430,7 +484,9 @@ console.log(formatted)
 
           {/* Compensation */}
           <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">Compensation</h2>
+            <h2 className="text-xl font-semibold text-foreground">
+              Compensation
+            </h2>
 
             <FormField
               control={form.control}
@@ -444,7 +500,10 @@ console.log(formatted)
                     </FormDescription>
                   </div>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -460,7 +519,9 @@ console.log(formatted)
                     <FormControl>
                       <Input placeholder="e.g., 50000" {...field} />
                     </FormControl>
-                    <FormDescription>Monthly stipend in Nigerian Naira</FormDescription>
+                    <FormDescription>
+                      Monthly stipend in Nigerian Naira
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -470,7 +531,9 @@ console.log(formatted)
 
           {/* Application Requirements */}
           <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">Application Requirements</h2>
+            <h2 className="text-xl font-semibold text-foreground">
+              Application Requirements
+            </h2>
 
             <FormField
               control={form.control}
@@ -484,7 +547,10 @@ console.log(formatted)
                     </FormDescription>
                   </div>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -496,13 +562,18 @@ console.log(formatted)
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border border-border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Require Cover Letter</FormLabel>
+                    <FormLabel className="text-base">
+                      Require Cover Letter
+                    </FormLabel>
                     <FormDescription>
                       Students must submit a cover letter
                     </FormDescription>
                   </div>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -511,33 +582,30 @@ console.log(formatted)
 
           {/* Form Actions */}
           <div className="flex gap-4 justify-end">
-  {/* Loading State */}
-    {createInternship.isPending && (
-      <div className="rounded-lg border border-border bg-yellow-50 text-yellow-800 p-4">
-        Creating your internship… try not to refresh the page.
-      </div>
-    )}
+            {/* Loading State */}
+            {createInternship.isPending && (
+              <div className="rounded-lg border border-border bg-yellow-50 text-yellow-800 p-4">
+                Creating your internship… try not to refresh the page.
+              </div>
+            )}
 
-    {/* Error State */}
-    {createInternship.isError && (
-  <div className="rounded-lg border border-border bg-red-50 text-red-700 p-4">
-    {getErrorMessage(createInternship.error)}
-  </div>
-)}
-            <Link to="/alumnus/internships"><Button
-              type="button"
-              variant="outline"
-            >
-              Cancel
-            </Button></Link>
+            {/* Error State */}
+            {createInternship.isError && (
+              <div className="rounded-lg border border-border bg-red-50 text-red-700 p-4">
+                {getErrorMessage(createInternship.error)}
+              </div>
+            )}
+            <Link to="/alumnus/internships">
+              <Button type="button" variant="outline">
+                Cancel
+              </Button>
+            </Link>
             <Button type="submit" variant="gradient">
               Create Internship
             </Button>
-
-            
           </div>
         </form>
       </Form>
     </div>
-  );
+  )
 }

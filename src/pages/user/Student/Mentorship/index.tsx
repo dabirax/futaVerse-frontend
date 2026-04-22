@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import AvailableMentorshipsTab from './tabs/MyMentorshipsTab'
+import MyMentorshipsTab from './tabs/MyMentorshipsTab'
 import OffersTab from './tabs/OffersTab'
 import MyApplicationsTab from './tabs/ApplicationsTab'
-import { useMentorships, useMentorshipOffers, useMentorshipApplications } from '@/hooks/useMentorships'
+import { useMentorshipOffers, useMentorshipApplications, useMentorshipEngagements } from '@/hooks/useMentorships'
 import { Card, CardContent } from '@/components/ui/card'
 
 export default function StudentMentorship() {
-  const [activeTab, setActiveTab] = useState('available-mentorships')
-  const { isLoading: loadingMentorships } = useMentorships()
+  const [activeTab, setActiveTab] = useState('my-mentorships')
+  const { isLoading: loadingMentorships } = useMentorshipEngagements()
   const { isLoading: loadingOffers } = useMentorshipOffers()
   const { isLoading: loadingMyApplications } = useMentorshipApplications()
 
@@ -48,7 +48,7 @@ export default function StudentMentorship() {
               <CardSkeleton />
             </div>
           ) : (
-            <AvailableMentorshipsTab />
+            <MyMentorshipsTab />
           )}
         </TabsContent>
 

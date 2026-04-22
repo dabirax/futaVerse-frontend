@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import { ArrowLeft, Edit, Plus } from 'lucide-react'
+import { Edit, Plus } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,8 +8,9 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { alumnusMentorshipDetailRoute } from '@/routes/user-alumnus'
 import { useMentorship } from '@/hooks/useMentorships'
-import CardSkeleton2 from '@/components/skeletons/CardSkeleton2'
+import {CardSkeleton2} from '@/components/CardSkeletons'
 import MenteeCard from '../../../../components/user/mentorships/MenteeCard'
+import { BackButton2 } from '@/components/BackButtons'
 
 const mockOffers = [
   {
@@ -49,13 +50,8 @@ export default function MentorshipDetail() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => router.navigate({ to: '/alumnus/mentorships' })}
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+        <BackButton2 />
+
         <h1 className="text-2xl font-semibold">{data?.title}</h1>
       </div>
 

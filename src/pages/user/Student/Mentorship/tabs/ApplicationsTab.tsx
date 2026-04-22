@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 
 export default function MyApplicationsTab() {
   const { data, isLoading, isError, refetch } = useMentorshipApplications()
-  const withdraw = useWithdrawMentorshipApplication()
+    const { mutate: withdrawApplication } = useWithdrawMentorshipApplication();
   const applications = data?.results || []
 
   useEffect(() => {
@@ -35,16 +35,15 @@ export default function MyApplicationsTab() {
 
   return (
     <div className="space-y-3">
-      {applications.map((application: any) => (
+      {applications.map((application: any, index: number) => (
         <InternshipCard2
-          key={application.id}
-          alumnusName={application.alumnus_info}
-          title={application.mentorship}
-          variant="withdraw"
-          onAccept={undefined}
-          onReject={undefined}
-          onWithdraw={() => withdraw.mutate(application.id)}
-        />
+                  key={index}
+                  {...application}
+                  title={application.mentorship.title}
+                  alumnusName={`${application.alumnus_info.firstname} ${application.alumnus_info.lastname}`}
+                  variant="withdraw"
+                  onWithdraw={() => withdrawApplication(application.id)}
+                />
       ))}
     </div>
   )

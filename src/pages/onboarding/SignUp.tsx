@@ -1,9 +1,25 @@
 import { motion } from 'framer-motion'
 import { Link } from '@tanstack/react-router'
-import loginImage from '../../assets/login.png'
-import { BackButton } from '../../components/BackButton'
+import { BackButton } from '../../components/BackButtons'
 import Logo from '@/components/logo'
+import loginImage from '@/assets/login.png'
 import { Button } from '@/components/ui/button'
+import { LeftContainer } from './components/LeftContainer'
+import { Book, People, Teacher } from 'iconsax-reactjs'
+
+const roles = [
+  {
+    label: 'Alumnus',
+    path: '/signup/alumnusBasic',
+    icon: <People size="20" />,
+  },
+  { label: 'Student', path: '/signup/studentBasic', icon: <Book size="20" /> },
+  {
+    label: 'Lecturer',
+    path: '/signup/lecturerBasic',
+    icon: <Teacher size="20" />,
+  },
+]
 
 const SignUp = () => {
   return (

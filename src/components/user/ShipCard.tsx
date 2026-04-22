@@ -38,7 +38,7 @@ export default function ShipCard({
           <Avatar className="h-16 w-16 rounded-lg">
             <AvatarImage src={logo} />
             <AvatarFallback className="rounded-lg bg-primary/10 text-primary">
-              {title.substring(0, 2).toUpperCase()}
+              {/* {title.substring(0, 2).toUpperCase()} */}
             </AvatarFallback>
           </Avatar>
 

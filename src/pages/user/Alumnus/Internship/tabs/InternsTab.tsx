@@ -1,23 +1,35 @@
+import { useInternshipEngagements } from "@/hooks/useInternships";
 import StudentCard from "../../../../../components/user/internships/StudentCard";
+import { CardSkeleton5 } from "@/components/CardSkeletons";
 
-const mockInterns = [
-  {
-    studentName: "Fatima Ibrahim",
-    internshipTitle: "Backend Engineer Intern",
-  },
-];
+
+
 
 export default function InternsTab() {
+
+  const { data, isLoading, isError } = useInternshipEngagements()
+ console.log(data)
+  if (isLoading) {
+      return <CardSkeleton5 variant="r-full" />
+    }
+  
+    if (isError) {
+      return (
+        <p className="text-sm text-destructive">Failed to load interns</p>
+      )
+    }
   return (
     <div className="space-y-4">
       <div className="space-y-3">
-        {mockInterns.length > 0 ? (
-          mockInterns.map((intern, index) => (
+        {data?.results?.length > 0 ? (
+          data.results.map((intern: any, index: number) => (
             <StudentCard
               key={index}
               {...intern}
-              variant="intern"
-              onMessage={() => console.log("Message intern")}
+              studentName={`${intern.student.firstname} ${intern.student.lastname}`}
+              title={intern.internship}
+              variant="message"
+              onMessage={() => console.log('Message intern')}
             />
           ))
         ) : (
@@ -27,5 +39,5 @@ export default function InternsTab() {
         )}
       </div>
     </div>
-  );
+  )
 }

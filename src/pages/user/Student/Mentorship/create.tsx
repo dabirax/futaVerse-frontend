@@ -7,6 +7,7 @@ import { ArrowLeft } from 'lucide-react'
 import { studentMentorshipDetailRoute } from '@/routes/user-student'
 import { useCreateMentorshipApplication } from '@/hooks/useMentorships'
 import { useToast } from '@/hooks/use-toast'
+import { BackButton2 } from '@/components/BackButtons'
 
 export default function MentorshipApply() {
   const router = useRouter()
@@ -48,14 +49,8 @@ export default function MentorshipApply() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => router.navigate({ to: '/student/mentorships' })}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
-        </Button>
+        <BackButton2 />
+
         <h1 className="text-3xl font-bold text-foreground">
           Apply for Mentorship
         </h1>

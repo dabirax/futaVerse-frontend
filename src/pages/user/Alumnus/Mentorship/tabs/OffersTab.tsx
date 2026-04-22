@@ -2,7 +2,7 @@ import { Plus } from 'lucide-react'
 import { useRouter} from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useMentorshipOffers, useWithdrawMentorshipOffer } from '@/hooks/useMentorships'
-import CardSkeleton5 from '@/components/skeletons/CardSkeleton5'
+import {CardSkeleton5} from '@/components/CardSkeletons'
 import StudentCard from '@/components/user/internships/StudentCard'
 
 export default function OffersSentTab() {
@@ -37,9 +37,9 @@ export default function OffersSentTab() {
           <StudentCard
             key={offer.id}
             variant="offer"
-            studentName={`Student ${offer.student}`}
-            Title={offer.mentorship}
-            onWithdraw={() => withdrawOffer(offer.id)}
+            studentName={`${offer.student_info.firstname} ${offer.student_info.lastname}`}
+            title={offer.mentorship}
+            onWithdraw={() => withdrawOffer(offer.sqid)}
           />
         ))}
       </div>

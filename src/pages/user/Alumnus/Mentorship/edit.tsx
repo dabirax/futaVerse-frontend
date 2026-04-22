@@ -3,7 +3,7 @@ import { useRouter } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { ArrowLeft, CalendarIcon} from 'lucide-react'
+import { CalendarIcon} from 'lucide-react'
 import { format } from 'date-fns'
 import { alumnusEditMentorshipRoute } from '@/routes/user-alumnus'
 import { Button } from '@/components/ui/button'
@@ -50,6 +50,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import { BackButton2 } from '@/components/BackButtons'
 
 const formSchema = z
   .object({
@@ -178,13 +179,8 @@ export default function EditMentorship() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => router.navigate({ to: `/alumnus/mentorships/${id}` })}
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+        <BackButton2 />
+
         <h1 className="text-3xl font-bold text-foreground">Edit Mentorship</h1>
       </div>
 

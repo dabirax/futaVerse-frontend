@@ -3,7 +3,7 @@ import { Plus } from 'lucide-react'
 import { motion } from 'framer-motion'
 import InternshipCard from '../../../../../components/user/ShipCard'
 import { Button } from '@/components/ui/button'
-import CardSkeleton1 from '@/components/skeletons/CardSkeleton1'
+import {CardSkeleton1} from '@/components/CardSkeletons'
 import { useInternships } from '@/hooks/useInternships'
 
 export default function MyInternshipsTab() {

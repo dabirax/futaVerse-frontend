@@ -62,7 +62,7 @@ export const useInternshipOffers = () => {
 export const useAcceptInternshipOffer = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: number) => InternshipOffersService.acceptOffer(id),
+    mutationFn: (id: string) => InternshipOffersService.acceptOffer(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["internship-offers"] });
     },
@@ -72,7 +72,7 @@ export const useAcceptInternshipOffer = () => {
 export const useRejectInternshipOffer = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: number) => InternshipOffersService.rejectOffer(id),
+    mutationFn: (id: string) => InternshipOffersService.rejectOffer(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["internship-offers"] });
     },
@@ -82,7 +82,7 @@ export const useRejectInternshipOffer = () => {
 export const useWithdrawInternshipOffer = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: number) => InternshipOffersService.withdrawOffer(id),
+    mutationFn: (id: string) => InternshipOffersService.withdrawOffer(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["internship-offers"] });
     },
@@ -99,7 +99,7 @@ export const useInternshipApplications = () => {
 export const useAcceptInternshipApplication = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: number) => InternshipApplicationsService.acceptApplication(id),
+    mutationFn: (id: string) => InternshipApplicationsService.acceptApplication(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["internship-applications"] });
     },
@@ -110,7 +110,7 @@ export const useAcceptInternshipApplication = () => {
 export const useRejectInternshipApplication = () => {
   const qc = useQueryClient();  
   return useMutation({
-    mutationFn: (id: number) => InternshipApplicationsService.rejectApplication(id),
+    mutationFn: (id: string) => InternshipApplicationsService.rejectApplication(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["internship-applications"] });
     },
@@ -120,7 +120,7 @@ export const useRejectInternshipApplication = () => {
 export const useWithdrawInternshipApplication = () => {
   const qc = useQueryClient();  
   return useMutation({
-    mutationFn: (id: number) => InternshipApplicationsService.withdrawApplication(id),
+    mutationFn: (id: string) => InternshipApplicationsService.withdrawApplication(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["internship-applications"] });
     },

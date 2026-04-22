@@ -1,4 +1,4 @@
-import CardSkeleton4 from '@/components/skeletons/CardSkeleton4'
+import { CardSkeleton4 } from '@/components/CardSkeletons'
 import InternshipCard2 from '@/components/user/internships/InternshipCard2'
 import {
   useAcceptInternshipOffer,
@@ -12,7 +12,7 @@ export default function OffersPage() {
   const { mutate: rejectOffer } = useRejectInternshipOffer()
 
   if (isLoading) {
-    return <CardSkeleton4 variant='r-sm' />
+    return <CardSkeleton4 variant="r-sm" />
   }
 
   if (isError) {
@@ -25,7 +25,6 @@ export default function OffersPage() {
 
   return (
     <div className="space-y-4">
-      
       {data.results.map((offer: any) => (
         <InternshipCard2
           key={offer.id}

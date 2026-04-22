@@ -12,20 +12,15 @@ import {
   MapPin,
   Users,
   Video,
-  Briefcase,
   GraduationCap,
-  DollarSign,
   ArrowRight,
 } from 'lucide-react'
 import { format } from 'date-fns'
-import {
-  feedMentorships,
-  feedInternships,
-  FeedMentorship,
-  FeedInternship,
-   mockEventListItems
-} from './mockFeed'
+import { FeedMentorship, FeedInternship, mockEventListItems } from './mockFeed'
 import { EventListItem } from '@/types/event'
+import InternshipFeedCard from '@/components/user/feed/InternshipFeedCard'
+import { useInternships } from '@/hooks/useInternships'
+import { useMentorships } from '@/hooks/useMentorships'
 
 type FeedItemType = 'all' | 'mentorship' | 'internship' | 'event'
 
@@ -45,14 +40,13 @@ const categoryLabels: Record<string, string> = {
 }
 
 function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
-
   const router = useRouter()
   const navigate = router.navigate
 
   return (
     <Card
       className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-primary"
-      onClick={() => navigate({to: `/alumnus/mentorship/${item.sqid}`})}
+      onClick={() => navigate({ to: `/alumnus/mentorship/${item.sqid}` })}
     >
       <CardContent className="p-5">
         <div className="flex items-start gap-4">
@@ -105,94 +99,9 @@ function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
   )
 }
 
-function InternshipFeedCard({ item }: { item: FeedInternship }) {
-
-  const router = useRouter()
-  const navigate = router.navigate
-
-
-  return (
-    <Card
-      className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-secondary"
-      onClick={() => navigate({ to: `/alumnus/internships/${item.sqid}` })}
-    >
-      <CardContent className="p-5">
-        <div className="flex items-start gap-4">
-          <Avatar className="h-12 w-12 rounded-lg shrink-0">
-            <AvatarFallback className="rounded-lg bg-secondary/10 text-secondary text-sm font-semibold">
-              <Briefcase className="h-5 w-5" />
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="flex-1 min-w-0 space-y-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge className="bg-secondary/10 text-secondary border-0 text-xs">
-                Internship
-              </Badge>
-              <Badge variant="outline" className="text-xs">
-                {item.industry}
-              </Badge>
-              <Badge variant="secondary" className="text-xs">
-                {item.work_mode}
-              </Badge>
-              <Badge variant="outline" className="text-xs">
-                {item.engagement_type}
-              </Badge>
-            </div>
-
-            <h3 className="font-semibold text-foreground line-clamp-1">
-              {item.title}
-            </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {item.description}
-            </p>
-
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {item.skills_required.slice(0, 3).map((skill) => (
-                <Badge
-                  key={skill}
-                  variant="outline"
-                  className="text-xs font-normal"
-                >
-                  {skill}
-                </Badge>
-              ))}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">
-              <span className="flex items-center gap-1">
-                <MapPin className="h-3.5 w-3.5" />
-                {item.location}
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" />
-                {item.duration_weeks} weeks
-              </span>
-              <span className="flex items-center gap-1">
-                <Users className="h-3.5 w-3.5" />
-                {item.remaining_slots} slots
-              </span>
-              {item.is_paid && (
-                <span className="flex items-center gap-1 text-secondary font-medium">
-                  <DollarSign className="h-3.5 w-3.5" />₦
-                  {parseFloat(item.stipend).toLocaleString()}/mo
-                </span>
-              )}
-            </div>
-          </div>
-
-          <ArrowRight className="h-5 w-5 text-muted-foreground shrink-0 mt-1" />
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
 function EventFeedCard({ item }: { item: EventListItem }) {
-  
   const router = useRouter()
   const navigate = router.navigate
-
 
   const formattedDate = format(new Date(item.date), 'MMM d, yyyy')
   const formattedTime = format(
@@ -291,19 +200,32 @@ function EventFeedCard({ item }: { item: EventListItem }) {
 }
 
 export default function AlumnusFeed() {
-  
-
   const [search, setSearch] = useState('')
   const [activeTab, setActiveTab] = useState<FeedItemType>('all')
 
+  const {
+    data: internships,
+    isLoading: isLoadingInternships,
+    isError: isErrorInternships,
+  } = useInternships()
+
+  const {
+    data: mentorships,
+    isLoading: isLoadingMentorships,
+    isError: isErrorMentorships,
+  } = useMentorships()
+  
+const feedInternships = internships?.results ?? []
+const feedMentorships = mentorships?.results ?? []
+
   const allItems: FeedItem[] = useMemo(() => {
     const items: FeedItem[] = [
-      ...feedMentorships.map((m) => ({
+      ...feedMentorships.map((m: FeedMentorship) => ({
         type: 'mentorship' as const,
         data: m,
         created_at: m.created_at,
       })),
-      ...feedInternships.map((i) => ({
+      ...feedInternships.map((i: FeedInternship) => ({
         type: 'internship' as const,
         data: i,
         created_at: i.created_at,
@@ -354,23 +276,25 @@ export default function AlumnusFeed() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Feed</h1>
-        <p className="text-muted-foreground mt-1">
-          Discover mentorships, internships, and events
-        </p>
-      </div>
+      <div className="md:flex justify-between items-end">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Feed</h1>
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search opportunities..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-10"
-        />
-      </div>
+          <p className="text-muted-foreground ">
+            Discover mentorships, internships, and events
+          </p>
+        </div>
 
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search opportunities..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-10 w-72"
+          />
+        </div>
+      </div>
       <Tabs
         value={activeTab}
         onValueChange={(v) => setActiveTab(v as FeedItemType)}
@@ -396,19 +320,19 @@ export default function AlumnusFeed() {
           ) : (
             <div className="space-y-3">
               {filteredItems.map((item, idx) => {
-                if (item.type === 'mentorship') {
-                  return (
-                    <MentorshipFeedCard
-                      key={`m-${idx}`}
-                      item={item.data as FeedMentorship}
-                    />
-                  )
-                }
                 if (item.type === 'internship') {
                   return (
                     <InternshipFeedCard
                       key={`i-${idx}`}
                       item={item.data as FeedInternship}
+                    />
+                  )
+                }
+                if (item.type === 'mentorship') {
+                  return (
+                    <MentorshipFeedCard
+                      key={`m-${idx}`}
+                      item={item.data as FeedMentorship}
                     />
                   )
                 }

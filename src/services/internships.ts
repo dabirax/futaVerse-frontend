@@ -34,16 +34,16 @@ export const InternshipOffersService = {
     return data;
   },
   
-  acceptOffer: async (id: number) => {
+  acceptOffer: async (id: string) => {
     const { data } = await api.post(`/api/internships/offers/${id}/accept`);
     return data;
   },
 
-  rejectOffer: async (id: number) => {
+  rejectOffer: async (id: string) => {
     const { data } = await api.post(`/api/internships/offers/${id}/reject`);
     return data;
   },
-  withdrawOffer: async (id: number) => {
+  withdrawOffer: async (id: string) => {
     const { data } = await api.post(`/api/internships/offers/${id}/withdraw`);
     return data;
   },
@@ -55,16 +55,16 @@ export const InternshipApplicationsService = {
     const { data } = await api.get(`/api/internships/applications`);
     return data;
   },
-  acceptApplication: async (id: number) => {
+  acceptApplication: async (id: string) => {
     const { data } = await api.post(`/api/internships/applications/${id}/accept`);
     return data;
   },
 
-  rejectApplication: async (id: number) => {
+  rejectApplication: async (id: string) => {
     const { data } = await api.post(`/api/internships/applications/${id}/reject`);
     return data;
   },    
-  withdrawApplication: async (id: number) => {
+  withdrawApplication: async (id: string) => {
     const { data } = await api.post(`/api/internships/applications/${id}/withdraw`);
     return data;
   }

@@ -598,7 +598,7 @@ export default function CreateEvent() {
                             setNewTicket({ ...newTicket, is_active: checked })
                           }
                         />
-                        <label className="text-sm font-medium">Active</label>
+                        <label className="text-sm font-medium">Remove default free ticket</label>
                       </div>
                       <Button
                         type="button"

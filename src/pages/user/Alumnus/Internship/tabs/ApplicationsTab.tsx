@@ -1,20 +1,24 @@
-import CardSkeleton4 from "@/components/skeletons/CardSkeleton4";
-import StudentCard from "../../../../../components/user/internships/StudentCard";
-import {useAcceptInternshipApplication,useRejectInternshipApplication,useInternshipApplications} from "@/hooks/useInternships";
-
+import { CardSkeleton4 } from '@/components/CardSkeletons'
+import StudentCard from '../../../../../components/user/internships/StudentCard'
+import {
+  useAcceptInternshipApplication,
+  useRejectInternshipApplication,
+  useInternshipApplications,
+} from '@/hooks/useInternships'
 
 export default function ApplicationsTab() {
-  const { data, isLoading, isError } = useInternshipApplications();
-  const { mutate: acceptApplication } = useAcceptInternshipApplication();
-  const { mutate: rejectApplication } = useRejectInternshipApplication();
+  const { data, isLoading, isError } = useInternshipApplications()
+  const { mutate: acceptApplication } = useAcceptInternshipApplication()
+  const { mutate: rejectApplication } = useRejectInternshipApplication()
 
-  
   if (isLoading) {
-    return <CardSkeleton4 variant="r-full"/>
+    return <CardSkeleton4 variant="r-full" />
   }
 
   if (isError) {
-    return <p className="text-sm text-destructive">Failed to load applications</p>
+    return (
+      <p className="text-sm text-destructive">Failed to load applications</p>
+    )
   }
 
   if (!data?.results?.length) {
@@ -28,14 +32,13 @@ export default function ApplicationsTab() {
           <StudentCard
             studentName={`${application.student.firstname} ${application.student.lastname}`}
             key={index}
-            Title={application.internship.title}
+            title={application.internship.title}
             variant="applicant"
-              onAccept={() => acceptApplication(application.id)}
-              onWithdraw={() => rejectApplication(application.id)}
-            />
-          ))
-        }
+            onAccept={() => acceptApplication(application.sqid)}
+            onReject={() => rejectApplication(application.sqid)}
+          />
+        ))}
       </div>
     </div>
-  );
+  )
 }

@@ -1,5 +1,5 @@
 import { useAcceptMentorshipApplication, useMentorshipApplications, useRejectMentorshipApplication } from '@/hooks/useMentorships'
-import CardSkeleton4 from '@/components/skeletons/CardSkeleton4';
+import { CardSkeleton4 } from '@/components/CardSkeletons'
 import StudentCard from '@/components/user/internships/StudentCard';
 
 export default function ApplicationsTab() {
@@ -31,10 +31,10 @@ export default function ApplicationsTab() {
         <StudentCard
           key={index}
           studentName={`Student ${application.student}`}
-          Title={application.mentorship}
+          title={application.mentorship}
           variant="applicant"
-          onAccept={() => acceptApplication(application.id)}
-          onReject={() => rejectApplication(application.id)}
+          onAccept={() => acceptApplication(application.sqid)}
+          onReject={() => rejectApplication(application.sqid)}
         />
       ))}
     </div>
