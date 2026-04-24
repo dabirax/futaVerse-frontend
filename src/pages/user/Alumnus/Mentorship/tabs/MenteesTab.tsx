@@ -23,10 +23,10 @@ export default function MenteesTab() {
         data.results.map((mentee: any, index: number) => (
           <StudentCard
             key={index}
-            studentName="Sample Name"
-            title={mentee.mentorshipTitle}
+            studentName={`${mentee.student_info.firstname} ${mentee.student_info.lastname}`}
+            title={mentee.mentorship_info.title}
             onMessage={() => console.log('Message mentee')}
-            variant='message'
+            variant="message"
           />
         ))
       ) : (

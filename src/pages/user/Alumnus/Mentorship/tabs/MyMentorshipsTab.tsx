@@ -31,7 +31,8 @@ export default function MyMentorshipsTab() {
       <div className="grid gap-4 md:grid-cols-2">
               {data?.results.map((mentorship: any, index: number) => (
                   <MentorshipCard
-                      key={index}
+                  key={index}
+                  role="alumnus"
                       id={mentorship.id}
                       {...mentorship}
                       variant="manage"

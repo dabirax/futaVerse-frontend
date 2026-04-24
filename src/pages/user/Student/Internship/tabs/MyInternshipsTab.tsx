@@ -22,7 +22,14 @@ export default function MyInternshipsTab() {
         <div className="grid gap-4 md:grid-cols-2">
           {internships !== undefined && internships.length > 0 ? (
             internships.map((internship: any) => (
-              <InternshipCard key={internship.id} {...internship} />
+              <InternshipCard
+                key={internship.id}
+              role= "student"
+                {...internship}
+                title={internship.internship_info.title}
+                alumnusName={`${internship.alumnus_info.firstname} ${internship.alumnus_info.lastname}`}
+                company={internship.internship_info.industry}
+              />
             ))
           ) : (
             <div className="col-span-2 text-center py-12 text-muted-foreground">

@@ -39,8 +39,8 @@ export default function OffersTab() {
             <StudentCard
               key={index}
               {...offer}
-              studentName={`${offer.student.firstname} ${offer.student.lastname}`}
-              title={offer.internship.title}
+              studentName={`${offer.student_info.firstname} ${offer.student_info.lastname}`}
+              title={offer.internship_info.title}
               variant="offer"
               onWithdraw={() => withdrawOffer(offer.sqid)}
             />

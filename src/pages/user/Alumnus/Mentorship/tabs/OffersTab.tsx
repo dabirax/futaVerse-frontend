@@ -38,7 +38,7 @@ export default function OffersSentTab() {
             key={offer.id}
             variant="offer"
             studentName={`${offer.student_info.firstname} ${offer.student_info.lastname}`}
-            title={offer.mentorship}
+            title={offer.mentorship_info.title}
             onWithdraw={() => withdrawOffer(offer.sqid)}
           />
         ))}

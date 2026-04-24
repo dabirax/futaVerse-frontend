@@ -12,7 +12,10 @@ interface InternshipCardProps {
   location?: string
   availableSlots?: number
   category?: string
-  ship: "internship" | "mentorship"
+  company?: string
+  alumnusName?: string
+  ship: 'internship' | 'mentorship'
+  role: 'student' | 'alumnus'
 }
 
 export default function ShipCard({
@@ -24,7 +27,10 @@ export default function ShipCard({
   location,
   // availableSlots,
   category,
+  company,
+  alumnusName,
   ship,
+  role,
 }: InternshipCardProps) {
   const router = useRouter()
 
@@ -38,20 +44,28 @@ export default function ShipCard({
           <Avatar className="h-16 w-16 rounded-lg">
             <AvatarImage src={logo} />
             <AvatarFallback className="rounded-lg bg-primary/10 text-primary">
-              {/* {title.substring(0, 2).toUpperCase()} */}
+              {title.substring(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
 
           <div className="flex-1 space-y-2">
             <h3 className="font-semibold text-lg text-foreground">{title}</h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {description}
-            </p>
+            {role === 'alumnus' ? (
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {description}
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                {company ?? '—'} • Posted by {alumnusName}
+              </p>
+            )}
 
             <div className="flex flex-wrap gap-2 pt-2">
               {/* {workMode && <Badge variant="accent">{workMode}</Badge>} */}
               <Badge variant="secondary">Remote</Badge>
-              {location && <Badge variant="secondary">{location || category}</Badge>}
+              {location && (
+                <Badge variant="secondary">{location || category}</Badge>
+              )}
               {/* {availableSlots !== undefined && (
                 <Badge variant="outline">{availableSlots} slots available</Badge>
               )} */}

@@ -23,7 +23,14 @@ export default function MyMentorshipsTab() {
         <div className="grid gap-4 md:grid-cols-2">
           {mentorships !== undefined && mentorships.length > 0 ? (
             mentorships.map((mentorship: any) => (
-              <MentorshipCard key={mentorship.id} {...mentorship} />
+              <MentorshipCard
+                key={mentorship.id}
+                {...mentorship}
+                role="student"
+                title={mentorship.mentorship_info.title}
+                alumnusName={`${mentorship.alumnus_info.firstname} ${mentorship.alumnus_info.lastname}`}
+                company={mentorship.mentorship_info.industry}
+              />
             ))
           ) : (
             <div className="col-span-2 text-center py-12 text-muted-foreground">

@@ -26,8 +26,8 @@ export default function InternsTab() {
             <StudentCard
               key={index}
               {...intern}
-              studentName={`${intern.student.firstname} ${intern.student.lastname}`}
-              title={intern.internship}
+              studentName={`${intern.student_info.firstname} ${intern.student_info.lastname}`}
+              title={intern.internship_info.title}
               variant="message"
               onMessage={() => console.log('Message intern')}
             />

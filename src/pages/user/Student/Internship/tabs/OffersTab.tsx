@@ -28,9 +28,9 @@ export default function OffersPage() {
       {data.results.map((offer: any) => (
         <InternshipCard2
           key={offer.id}
-          title={offer.internship.title}
-          alumnusName={`${offer.student.firstname} ${offer.student.lastname}`}
-          company={offer.internship.industry}
+          title={offer.internship_info.title}
+          alumnusName={`${offer.student_info.firstname} ${offer.student_info.lastname}`}
+          company={offer.internship_info.industry}
           variant="acceptOrReject"
           onAccept={() => {
             acceptOffer(offer.sqid)
