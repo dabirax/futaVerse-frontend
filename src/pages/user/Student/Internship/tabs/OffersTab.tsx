@@ -29,7 +29,7 @@ export default function OffersPage() {
         <InternshipCard2
           key={offer.id}
           title={offer.internship_info.title}
-          alumnusName={`${offer.student_info.firstname} ${offer.student_info.lastname}`}
+          alumnusName={`${offer.alumnus_info.firstname} ${offer.alumnus_info.lastname}`}
           company={offer.internship_info.industry}
           variant="acceptOrReject"
           onAccept={() => {

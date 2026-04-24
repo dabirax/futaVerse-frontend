@@ -30,7 +30,7 @@ export default function StudentApplicationsTab() {
           key={index}
           {...application}
           title={application.internship_info.title}
-          alumnusName={`${application.student_info.firstname} ${application.student_info.lastname}`}
+          alumnusName={`${application.alumnus_info.firstname} ${application.alumnus_info.lastname}`}
           variant="withdraw"
           onWithdraw={() => withdrawApplication(application.sqid)}
         />

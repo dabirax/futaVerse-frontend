@@ -83,6 +83,9 @@ importers:
       framer-motion:
         specifier: ^12.23.21
         version: 12.23.27(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      futaverse-frontend:
+        specifier: 'link:'
+        version: 'link:'
       iconsax-reactjs:
         specifier: ^0.0.8
         version: 0.0.8(react@19.2.3)
