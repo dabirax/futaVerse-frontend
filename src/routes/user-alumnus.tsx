@@ -144,6 +144,12 @@ export const alumnusEditEventRoute = createRoute({
   component: EditEvent,
 })
 
+export const alumnusEventTicket = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: '/alumnus/events/$id/ticket',
+  component: EventDetails,
+})
+
 // Messages Route 
 
 export const alumnusMessagesRoute = createRoute({

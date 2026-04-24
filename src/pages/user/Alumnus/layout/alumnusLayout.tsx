@@ -12,7 +12,8 @@ import {
     Menu,
     MessageSquare,
     Rss,
-    Settings,
+  Settings,
+    TicketCheck,
     Users,
     X,
 } from "lucide-react";
@@ -22,15 +23,16 @@ import { Separator } from "@/components/ui/separator";
 import profPic from "@/assets/testImage.jpeg"
 
 const sidebarItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/alumnus/dashboard" },
-  { icon: Rss, label: "Feed", path: "/alumnus/feed" },
-  { icon: Briefcase, label: "Internship", path: "/alumnus/internships" },
-  { icon: Users, label: "Mentorship", path: "/alumnus/mentorship" },
-  { icon: Calendar, label: "Events", path: "/alumnus/events" },
-  { icon: MessageSquare, label: "Messages", path: "/alumnus/messages" },
-  { icon: Calendar, label: "Calendar", path: "/alumnus/calendar" },
-  { icon: Settings, label: "Settings", path: "/alumnus/settings" },
-];
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/alumnus/dashboard' },
+  { icon: Rss, label: 'Feed', path: '/alumnus/feed' },
+  { icon: Briefcase, label: 'Internship', path: '/alumnus/internships' },
+  { icon: Users, label: 'Mentorship', path: '/alumnus/mentorship' },
+  { icon: Calendar, label: 'Events', path: '/alumnus/events' },
+  { icon: TicketCheck, label: 'Tickets', path: '/alumnus/tickets' },
+  { icon: MessageSquare, label: 'Messages', path: '/alumnus/messages' },
+  { icon: Calendar, label: 'Calendar', path: '/alumnus/calendar' },
+  { icon: Settings, label: 'Settings', path: '/alumnus/settings' },
+]
 
 export default function AlumnusLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
