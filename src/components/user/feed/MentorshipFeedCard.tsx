@@ -15,7 +15,7 @@ import {
   FeedMentorship,
 } from '@/types/feed'
 
-function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
+export default function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
   const router = useRouter()
   const navigate = router.navigate
 

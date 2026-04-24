@@ -205,14 +205,14 @@ export default function StudentFeed() {
 
   const {
     data: internships,
-    isLoading: isLoadingInternships,
-    isError: isErrorInternships,
+    // isLoading: isLoadingInternships,
+    // isError: isErrorInternships,
   } = useInternshipEngagements()
 
   const {
     data: mentorships,
-    isLoading: isLoadingMentorships,
-    isError: isErrorMentorships,
+    // isLoading: isLoadingMentorships,
+    // isError: isErrorMentorships,
   } = useMentorshipEngagements()
   
 const feedInternships = internships?.results ?? []

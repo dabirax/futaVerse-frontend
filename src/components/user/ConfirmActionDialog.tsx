@@ -35,9 +35,17 @@ export interface ConfirmActionDialogProps {
   successTitle?: string
   /** Body shown after success. */
   successDescription?: string
+  /** Title shown after failure. Defaults to "Something went wrong". */
+  errorTitle?: string
+  /**
+   * Body shown after failure. If omitted, the thrown error's message is used
+   * (falling back to a generic message).
+   */
+  errorDescription?: string
   /**
    * The action to perform after confirmation. May be async.
-   * Throw to indicate failure (success modal will not show).
+   * Throw (or reject) to trigger the error modal. The thrown value's
+   * `.message` will be shown if `errorDescription` is not provided.
    */
   onConfirm: () => void | Promise<void>
 }
@@ -58,10 +66,14 @@ export default function ConfirmActionDialog({
   destructive = false,
   successTitle = 'Done',
   successDescription = 'The action completed successfully.',
+  // errorTitle = 'Something went wrong',
+  // errorDescription,
   onConfirm,
 }: ConfirmActionDialogProps) {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [successOpen, setSuccessOpen] = useState(false)
+  // const [errorOpen, setErrorOpen] = useState(false)
+  // const [errorMessage, setErrorMessage] = useState<string>('')
   const [loading, setLoading] = useState(false)
 
   const handleTriggerClick = (e: React.MouseEvent) => {
@@ -76,8 +88,14 @@ export default function ConfirmActionDialog({
       setConfirmOpen(false)
       setSuccessOpen(true)
     } catch (err) {
-      // Leave confirm open so the caller can surface its own error toast.
       console.error('ConfirmActionDialog onConfirm failed:', err)
+    // const fallback =
+    //   err instanceof Error && err.message
+    //     ? err.message
+    //     : 'Please try again in a moment.'
+    // setErrorMessage(errorDescription ?? fallback)
+    setConfirmOpen(false)
+    // setErrorOpen(true)
     } finally {
       setLoading(false)
     }

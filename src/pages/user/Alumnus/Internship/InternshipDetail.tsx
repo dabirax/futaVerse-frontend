@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useRouter, useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, Edit, Plus } from 'lucide-react'
+import { useRouter } from '@tanstack/react-router'
+import { Edit, Plus } from 'lucide-react'
 import StudentCard from '../../../../components/user/internships/StudentCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
@@ -316,7 +316,7 @@ export default function InternshipDetail() {
                 <StudentCard
                   key={index}
                   {...intern}
-                  variant="intern"
+                  variant="message"
                   onMessage={() => console.log('Message intern')}
                 />
               ))

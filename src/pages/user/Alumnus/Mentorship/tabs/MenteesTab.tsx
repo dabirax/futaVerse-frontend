@@ -1,5 +1,4 @@
 import { useMentorshipEngagements } from '@/hooks/useMentorships'
-import MenteeCard from '../../../../../components/user/mentorships/MenteeCard'
 import { CardSkeleton5 } from '@/components/CardSkeletons'
 import StudentCard from '@/components/user/internships/StudentCard'
 

@@ -316,7 +316,7 @@ export default function InternshipDetail() {
                 <StudentCard
                   key={index}
                   {...intern}
-                  variant="intern"
+                  variant="message"
                   onMessage={() => console.log('Message intern')}
                 />
               ))

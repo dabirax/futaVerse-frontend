@@ -3,7 +3,7 @@ import { useRouter} from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {  ArrowLeft, CalendarIcon, X,} from "lucide-react";
+import { CalendarIcon, X,} from "lucide-react";
 import { format } from "date-fns";
 import { alumnusEditInternshipRoute } from "@/routes/user-alumnus";
 import { Button } from "@/components/ui/button";
