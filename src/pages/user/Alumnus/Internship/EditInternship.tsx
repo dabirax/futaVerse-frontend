@@ -56,12 +56,12 @@ type FormValues = z.infer<typeof formSchema>;
 
 
 export default function EditInternship() {
-  const { id } = alumnusEditInternshipRoute.useParams();
+  const { sqid } = alumnusEditInternshipRoute.useParams();
   const router = useRouter();
   const { toast } = useToast();
   const [skillInput, setSkillInput] = useState("");
   
-  const { data: currentData, isLoading, isError } = useInternship(Number(id));
+  const { data: currentData, isLoading, isError } = useInternship(sqid);
   
   const { mutate, isPending: isUpdating, isError: isUpdateError } = useUpdateInternship();
   const { mutate: deleteInternship, isPending: isDeleting } = useDeleteInternship();

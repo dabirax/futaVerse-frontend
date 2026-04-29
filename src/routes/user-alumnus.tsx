@@ -72,14 +72,14 @@ export const alumnusCreateInternshipRoute = createRoute({
 export const alumnusInternshipDetailRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   // getParentRoute: () => publicRoute,
-  path: '/alumnus/internships/$id',
+  path: '/alumnus/internships/$sqid',
   component: InternshipDetail,
 })
 
 export const alumnusEditInternshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   // getParentRoute: () => publicRoute,
-  path: '/alumnus/internships/$id/edit',
+  path: '/alumnus/internships/$sqid/edit',
   component: EditInternship,
 })
 
@@ -88,7 +88,7 @@ export const alumnusEditInternshipRoute = createRoute({
 export const alumnusMentorshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   // getParentRoute: () => publicRoute,
-  path: '/alumnus/mentorship',
+  path: '/alumnus/mentorships',
   component: AlumnusMentorship,
 })
 
@@ -102,14 +102,14 @@ export const alumnusCreateMentorshipRoute = createRoute({
 export const alumnusEditMentorshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   // getParentRoute: () => publicRoute,
-  path: '/alumnus/mentorship/$id/edit',
+  path: '/alumnus/mentorships/$sqid/edit',
   component: EditMentorship,
 })
 
 export const alumnusMentorshipDetailRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   // getParentRoute: () => publicRoute,
-  path: '/alumnus/mentorship/$id',
+  path: '/alumnus/mentorships/$sqid',
   component: MentorshipDetails,
 }) 
 

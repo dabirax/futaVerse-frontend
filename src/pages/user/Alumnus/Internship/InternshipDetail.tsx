@@ -41,8 +41,8 @@ const mockInterns = [
 export default function InternshipDetail() {
   const router = useRouter()
 
-  const { id } = alumnusInternshipDetailRoute.useParams()
-  const { data, isLoading, isError } = useInternship(Number(id))
+  const { sqid } = alumnusInternshipDetailRoute.useParams()
+  const { data, isLoading, isError } = useInternship(sqid)
 
   const [activeTab, setActiveTab] = useState('details')
   const [isActive, setIsActive] = useState(data?.is_active)
@@ -69,7 +69,7 @@ export default function InternshipDetail() {
           <div className="flex justify-end">
             <Button
               onClick={() =>
-                router.navigate({ to: `/alumnus/internships/${id}/edit` })
+                router.navigate({ to: `/alumnus/internships/${sqid}/edit` })
               }
             >
               <Edit className="h-4 w-4" />

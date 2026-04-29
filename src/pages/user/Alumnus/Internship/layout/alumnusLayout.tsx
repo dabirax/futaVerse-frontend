@@ -25,7 +25,7 @@ const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/alumnus/dashboard" },
   { icon: Rss, label: "Feed", path: "/alumnus/feed" },
   { icon: Briefcase, label: "Internship", path: "/alumnus/internships" },
-  { icon: Users, label: "Mentorship", path: "/alumnus/mentorship" },
+  { icon: Users, label: "Mentorship", path: "/alumnus/mentorships" },
   { icon: Calendar, label: "Events", path: "/alumnus/events" },
   { icon: MessageSquare, label: "Messages", path: "/alumnus/messages" },
   { icon: Calendar, label: "Calendar", path: "/alumnus/calendar" },

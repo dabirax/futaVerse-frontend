@@ -33,12 +33,8 @@ export default function MyMentorshipsTab() {
                   <MentorshipCard
                   key={index}
                   role="alumnus"
-                      id={mentorship.id}
+                      id={mentorship.sqid}
                       {...mentorship}
-                      variant="manage"
-                      onEdit={() =>
-                          navigate({ to: `/alumnus/mentorships/${mentorship.id}/edit` })
-                      }
                   ship='mentorship'
                   />
               ))}

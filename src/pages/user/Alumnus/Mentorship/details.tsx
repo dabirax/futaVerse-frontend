@@ -40,8 +40,8 @@ const mockMentees = [
 export default function MentorshipDetail() {
   const router = useRouter()
 
-  const { id } = alumnusMentorshipDetailRoute.useParams()
-  const { data, isLoading, isError } = useMentorship(Number(id))
+  const { sqid } = alumnusMentorshipDetailRoute.useParams()
+  const { data, isLoading, isError } = useMentorship(sqid)
 
   const [activeTab, setActiveTab] = useState('details')
   const [isActive, setIsActive] = useState(data?.is_active)
@@ -68,7 +68,7 @@ export default function MentorshipDetail() {
           <div className="flex justify-end">
             <Button
               onClick={() =>
-                router.navigate({ to: `/alumnus/mentorships/${id}/edit` })
+                router.navigate({ to: `/alumnus/mentorships/${sqid}/edit` })
               }
             >
               <Edit className="h-4 w-4" />

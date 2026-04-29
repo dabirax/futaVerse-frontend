@@ -81,11 +81,11 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>
 
 export default function EditMentorship() {
-  const { id } = alumnusEditMentorshipRoute.useParams()
+  const { sqid } = alumnusEditMentorshipRoute.useParams()
   const router = useRouter()
   const { toast } = useToast()
 
-  const { data: currentData, isLoading, isError } = useMentorship(Number(id))
+  const { data: currentData, isLoading, isError } = useMentorship(sqid)
   const { mutate: updateMentorship, isPending: isUpdating } =
     useUpdateMentorship()
   const { mutate: deleteMentorship, isPending: isDeleting } =

@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 
 interface InternshipCardProps {
-  id: string
+  sqid: string
   title: string
   description: string
   logo?: string
@@ -19,7 +19,7 @@ interface InternshipCardProps {
 }
 
 export default function ShipCard({
-  id,
+  sqid,
   title,
   description,
   logo,
@@ -37,7 +37,7 @@ export default function ShipCard({
   return (
     <Card
       className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
-      onClick={() => router.navigate({ to: `/alumnus/${ship}s/${id}` })}
+      onClick={() => router.navigate({ to: `/alumnus/${ship}s/${sqid}` })}
     >
       <CardContent className="p-6">
         <div className="flex gap-4">
