@@ -73,8 +73,12 @@ export const InternshipApplicationsService = {
 
 // Engagements
 export const InternshipEngagementsService = {
-  getEngagements: async () => {
-    const { data } = await api.get(`/api/internships/engagements`);
-    return data;
+  getAll: async () => {
+    const { data } = await api.get(`/api/internships/engagements`)
+    return data
   },
-};
+  getOne: async (id: number) => {
+    const { data } = await api.get(`/api/internships/engagements/${id}`)
+    return data
+  },
+}

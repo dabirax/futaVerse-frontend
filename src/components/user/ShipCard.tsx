@@ -37,7 +37,7 @@ export default function ShipCard({
   return (
     <Card
       className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
-      onClick={() => router.navigate({ to: `/alumnus/${ship}s/${sqid}` })}
+      onClick={() => router.navigate({ to: `/${role}/${ship}s/${sqid}` })}
     >
       <CardContent className="p-6">
         <div className="flex gap-4">

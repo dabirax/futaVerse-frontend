@@ -1,23 +1,17 @@
-import { useInternshipEngagements } from "@/hooks/useInternships";
-import StudentCard from "../../../../../components/user/internships/StudentCard";
-import { CardSkeleton5 } from "@/components/CardSkeletons";
-
-
-
+import { useInternshipEngagements } from '@/hooks/useInternships'
+import StudentCard from '../../../../../components/user/internships/StudentCard'
+import { CardSkeleton5 } from '@/components/CardSkeletons'
 
 export default function InternsTab() {
-
   const { data, isLoading, isError } = useInternshipEngagements()
- console.log(data)
+  console.log(data)
   if (isLoading) {
-      return <CardSkeleton5 variant="r-full" />
-    }
-  
-    if (isError) {
-      return (
-        <p className="text-sm text-destructive">Failed to load interns</p>
-      )
-    }
+    return <CardSkeleton5 variant="r-full" />
+  }
+
+  if (isError) {
+    return <p className="text-sm text-destructive">Failed to load interns</p>
+  }
   return (
     <div className="space-y-4">
       <div className="space-y-3">

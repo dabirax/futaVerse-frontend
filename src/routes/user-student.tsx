@@ -16,18 +16,18 @@ import StudentSettings from "../pages/user/Student/Settings";
 import { rootRoute } from "./__root";
 import { requireRole} from "@/lib/guard";
 import MentorshipDetails from "@/pages/user/Student/Mentorship/details";
-import InternshipDetail from "@/pages/user/Alumnus/Internship/InternshipDetail";
+import InternshipDetail from "@/pages/user/Student/Internship/InternshipDetail";
 
 
 
 /* -------------------------- STUDENT ROUTES -------------------------- */
 export const studentRoute = createRoute({
   getParentRoute: () => rootRoute,
-  id: "student",
-  component: StudentLayout, 
-    beforeLoad: requireRole(["Student"]),
-  
-});
+  id: 'student',
+  component: StudentLayout,
+  beforeLoad: requireRole(['Student']),
+  notFoundComponent: () => <div>Page Not Found</div>,
+})
 
 /* Student Children */
 export const studentDashboardRoute = createRoute({
@@ -53,7 +53,7 @@ export const studentInternshipRoute = createRoute({
 
 export const studentInternshipDetailsRoute = createRoute({
   getParentRoute: () => studentRoute,
-  path: "/student/internships/$id",
+  path: "/student/internships/$sqid",
   component: InternshipDetail,
 });
 
@@ -62,16 +62,18 @@ export const studentInternshipDetailsRoute = createRoute({
 
 export const studentMentorshipRoute = createRoute({
   getParentRoute: () => studentRoute,
-  path: "/student/mentorship",
+  path: '/student/mentorships',
   component: StudentMentorship,
-});
+  notFoundComponent: () => <div>Page Not Found</div>,
+})
 
 
 export const studentMentorshipDetailRoute = createRoute({
   getParentRoute: () => studentRoute,
-  path: "/student/mentorship/$id",
+  path: '/student/mentorships/$sqid',
   component: MentorshipDetails,
-}); 
+  notFoundComponent: () => <div>Page Not Found</div>,
+}) 
 
 // Events Routes
 

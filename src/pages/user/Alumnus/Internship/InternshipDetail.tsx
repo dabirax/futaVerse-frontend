@@ -10,7 +10,7 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { alumnusInternshipDetailRoute } from '@/routes/user-alumnus'
 import { useInternship } from '@/hooks/useInternships'
-import {CardSkeleton2} from '@/components/CardSkeletons'
+import { CardSkeleton2 } from '@/components/CardSkeletons'
 import { BackButton2 } from '@/components/BackButtons'
 
 const mockOffers = [
@@ -51,8 +51,7 @@ export default function InternshipDetail() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        
-                <BackButton2 />
+        <BackButton2 />
         <h1 className="text-2xl font-semibold">{data?.title}</h1>
       </div>
 

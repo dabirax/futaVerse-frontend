@@ -12,7 +12,7 @@ export default function OffersTab() {
   const { data, isLoading, isError } = useInternshipOffers()
   const { mutate: withdrawOffer } = useWithdrawInternshipOffer()
   if (isLoading) {
-    return <CardSkeleton5 variant="r-full"/>
+    return <CardSkeleton5 variant="r-full" />
   }
 
   if (isError) {

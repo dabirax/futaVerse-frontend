@@ -68,24 +68,24 @@ export default function EditInternship() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      work_mode: "Remote",
-      engagement_type: "Full-time",
-      location: "",
-      industry: "",
+      title: '',
+      description: '',
+      work_mode: currentData.work_mode,
+      engagement_type: currentData.engagement_type,
+      location: '',
+      industry: '',
       duration_weeks: 8,
       start_date: new Date(),
       end_date: new Date(),
       is_paid: false,
-      stipend: "",
+      stipend: '',
       available_slots: 1,
       remaining_slots: 1,
       require_resume: true,
       require_cover_letter: false,
       skills_required: [],
     },
-  });
+  })
 
   // Load internship data
   useEffect(() => {
@@ -140,14 +140,14 @@ export default function EditInternship() {
 };
 
   mutate(
-    { id: Number(id), payload: formatted },
+    { id: sqid, payload: formatted },
     {
       onSuccess: () => {
         toast({
           title: "Success",
           description: "Internship updated successfully!",
         });
-        router.navigate({ to: `/alumnus/internships/${id}` });
+        router.navigate({ to: `/alumnus/internships/${sqid}` });
       },
       onError: (err: any) => {
         toast({
@@ -161,7 +161,7 @@ export default function EditInternship() {
 };
 
   const handleDelete = () => {
-    deleteInternship(Number(id), {
+    deleteInternship(sqid, {
             onSuccess: () => {
               toast({
                 title: "Deleted",
@@ -180,7 +180,7 @@ export default function EditInternship() {
   };
 
   const handleCancel = () => {  
-    router.navigate({to: `/alumnus/internships/${id}`});
+    router.navigate({to: `/alumnus/internships/${sqid}`});
   }
 
   return (

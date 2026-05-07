@@ -3,7 +3,7 @@ import { Plus } from 'lucide-react'
 import { motion } from 'framer-motion'
 import InternshipCard from '../../../../../components/user/ShipCard'
 import { Button } from '@/components/ui/button'
-import {CardSkeleton1} from '@/components/CardSkeletons'
+import { CardSkeleton1 } from '@/components/CardSkeletons'
 import { useInternships } from '@/hooks/useInternships'
 
 export default function MyInternshipsTab() {
@@ -42,7 +42,12 @@ export default function MyInternshipsTab() {
         <div className="grid gap-4 md:grid-cols-2">
           {internships !== undefined && internships.length > 0 ? (
             internships.map((internship: any) => (
-              <InternshipCard key={internship.sqid} {...internship} ship='internship' role='alumnus'/>
+              <InternshipCard
+                key={internship.sqid}
+                {...internship}
+                ship="internship"
+                role="alumnus"
+              />
             ))
           ) : (
             <div className="col-span-2 text-center py-12 text-muted-foreground">

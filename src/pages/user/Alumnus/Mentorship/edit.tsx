@@ -131,14 +131,14 @@ export default function EditMentorship() {
     }
 
     updateMentorship(
-      { id: Number(id), payload: formatted },
+      { id: sqid, payload: formatted },
       {
         onSuccess: () => {
           toast({
             title: 'Success',
             description: 'Mentorship updated successfully!',
           })
-          router.navigate({ to: `/alumnus/mentorships/${id}` })
+          router.navigate({ to: `/alumnus/mentorships/${sqid}` })
         },
         onError: (err: any) => {
           toast({
@@ -153,7 +153,7 @@ export default function EditMentorship() {
   }
 
   const handleDelete = () => {
-    deleteMentorship(Number(id), {
+    deleteMentorship(sqid, {
       onSuccess: () => {
         toast({
           title: 'Deleted',
@@ -172,7 +172,7 @@ export default function EditMentorship() {
   }
 
   const handleCancel = () => {
-    router.navigate({ to: `/alumnus/mentorships/${id}` })
+    router.navigate({ to: `/alumnus/mentorships/${sqid}` })
   }
 
   return (

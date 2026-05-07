@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Ticket } from "lucide-react";
 import EventCard from "@/components/user/events/EventCard";
 import { Event, EventListItem} from "@/types/event";
 
@@ -224,6 +224,8 @@ export default function AlumnusEvents() {
     });
   };
 
+
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -233,10 +235,21 @@ export default function AlumnusEvents() {
             Manage your events and workshops
           </p>
         </div>
-        <Button onClick={() => router.navigate({ to: "/alumnus/events/create" })}>
-          <Plus className="h-4 w-4 mr-2" />
-          Create Event
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            onClick={() => router.navigate({to: '/alumnus/events/tickets'})}
+          >
+            <Ticket className="h-4 w-4 mr-2" />
+            Manage tickets
+          </Button>
+          <Button
+            onClick={() => router.navigate({ to: '/alumnus/events/create' })}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Create Event
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -283,8 +296,10 @@ export default function AlumnusEvents() {
           <TabsTrigger value="published">
             Published ({publishedEvents.length})
           </TabsTrigger>
-          <TabsTrigger value="drafts">Drafts ({draftEvents.length})</TabsTrigger>
-          <TabsTrigger value="cancelled">
+          <TabsTrigger value="drafts">
+            Drafts ({draftEvents.length})
+          </TabsTrigger>
+          <TabsTrigger value="completed">
             Cancelled ({cancelledEvents.length})
           </TabsTrigger>
         </TabsList>
@@ -332,5 +347,5 @@ export default function AlumnusEvents() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

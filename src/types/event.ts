@@ -81,6 +81,24 @@ export interface PurchasedTicket {
   checked_in_at: string | null
 }
 
+/** Free-ticket configuration on the event payload. */
+export interface FreeTicketConfig {
+  required: boolean
+  quantity: number
+}
+
+/** A paid ticket variation as sent to POST /api/events/. No `type` field per latest schema. */
+export interface PaidTicketInput {
+  name: string
+  description: string
+  price: string
+  discount_perc?: string
+  quantity: number
+  sales_start: string
+  sales_end: string
+  is_active: boolean
+}
+
 export interface CreateEventPayload {
   title: string
   description: string
@@ -96,15 +114,21 @@ export interface CreateEventPayload {
   is_published: boolean
   platform?: VirtualMeeting['platform']
   redirect_after_auth?: string
-  tickets?: Array<{
-    name: string
-    description: string
-    price: string
-    discount_perc?: string
-    quantity: number
-    type: Ticket['type']
-    sales_start: string
-    sales_end: string
-    is_active: boolean
-  }>
+  free_ticket?: FreeTicketConfig
+  tickets?: PaidTicketInput[]
+}
+
+/** Paystack bank entry returned from GET /api/payments/banks. */
+export interface PaystackBank {
+  code: string
+  name: string
+  slug?: string
+}
+
+/** Linked Paystack subaccount on the alumnus profile. */
+export interface LinkedBankAccount {
+  bank_code: string
+  bank_name: string
+  account_number: string
+  account_name: string
 }

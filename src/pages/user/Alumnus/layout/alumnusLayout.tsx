@@ -7,7 +7,7 @@ import {
 import {
     Briefcase,
     Calendar,
-    LayoutDashboard,
+    BarChart3,
     LogOut,
     Menu,
     MessageSquare,
@@ -23,7 +23,6 @@ import { Separator } from "@/components/ui/separator";
 import profPic from "@/assets/testImage.jpeg"
 
 const sidebarItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/alumnus/dashboard' },
   { icon: Rss, label: 'Feed', path: '/alumnus/feed' },
   { icon: Briefcase, label: 'Internship', path: '/alumnus/internships' },
   { icon: Users, label: 'Mentorship', path: '/alumnus/mentorship' },
@@ -32,6 +31,7 @@ const sidebarItems = [
   { icon: MessageSquare, label: 'Messages', path: '/alumnus/messages' },
   { icon: Calendar, label: 'Calendar', path: '/alumnus/calendar' },
   { icon: Settings, label: 'Settings', path: '/alumnus/settings' },
+  { icon: BarChart3, label: 'Analytics', path: '/alumnus/analytics' },
 ]
 
 export default function AlumnusLayout() {
@@ -84,7 +84,7 @@ export default function AlumnusLayout() {
               <h3 className="font-semibold text-foreground">
                 {/* {user?.firstName} {user?.lastName} */}
               </h3>
-              <p className="text-xs text-muted-foreground">Alumnus</p>
+              <p className="text-xs text-muted-foreground">Alumns</p>
             </div>
           </div>
         </div>

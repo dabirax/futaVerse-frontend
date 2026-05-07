@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {useRouter} from "@tanstack/react-router";
+import { useRouter} from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -30,22 +30,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ArrowLeft, CalendarIcon, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import TicketsSection, {
+  TicketScenario,
+} from "@/components/user/events/TicketsSection";
+import {
+  CreateEventPayload,
+  FreeTicketConfig,
+  LinkedBankAccount,
+  PaidTicketInput,
+} from "@/types/event";
 
-const ticketSchema = z.object({
-  name: z.string().min(1, 'Ticket name is required'),
-  description: z.string().min(1, 'Description is required'),
-  price: z.string().min(1, 'Price is required'),
-  discount_perc: z.string().optional().default('0'),
-  quantity: z.string().min(1, 'Quantity must be at least 1'),
-  type: z.enum(['default', 'vip', 'early_bird']),
-  sales_start: z.string().min(1, 'Sales start date is required'),
-  sales_end: z.string().min(1, 'Sales end date is required'),
-  is_active: z.boolean().default(true),
-})
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
@@ -71,23 +69,18 @@ const formSchema = z.object({
 });
 
 type FormData = z.infer<typeof formSchema>;
-type TicketData = z.infer<typeof ticketSchema>;
 
 export default function CreateEvent() {
     const router = useRouter();
   const { toast } = useToast();
-  const [tickets, setTickets] = useState<TicketData[]>([]);
-  const [newTicket, setNewTicket] = useState<Partial<TicketData>>({
-    name: '',
-    description: '',
-    price: '',
-    discount_perc: '',
-    quantity: '',
-    type: 'default',
-    sales_start: '',
-    sales_end: '',
-    is_active: true,
-  })
+  const [scenario, setScenario] = useState<TicketScenario>("free");
+  const [freeTicket, setFreeTicket] = useState<FreeTicketConfig>({
+    required: true,
+    quantity: 100,
+  });
+  const [paidTickets, setPaidTickets] = useState<PaidTicketInput[]>([]);
+  const [linkedBankAccount, setLinkedBankAccount] =
+    useState<LinkedBankAccount | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -109,35 +102,72 @@ export default function CreateEvent() {
 
   const mode = form.watch("mode");
 
-  const addTicket = () => {
-    const result = ticketSchema.safeParse(newTicket);
-    if (result.success) {
-      setTickets([...tickets, result.data]);
-      setNewTicket({
-        name: '',
-        description: '',
-        price: '0',
-        discount_perc: '0',
-        quantity: '',
-        type: 'default',
-        sales_start: '',
-        sales_end: '',
-        is_active: true,
-      })
-    }
-  };
-
-  const removeTicket = (index: number) => {
-    setTickets(tickets.filter((_, i) => i !== index));
-  };
-
   const onSubmit = (data: FormData) => {
-    console.log("Creating event:", { ...data, tickets });
+    // Validate scenario-specific requirements before submitting.
+    const usesPaid = scenario === "paid" || scenario === "free_and_paid";
+    if (usesPaid && paidTickets.length === 0) {
+      toast({
+        title: "Add at least one paid ticket",
+        description: "You picked a scenario that requires paid tickets.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (usesPaid && !linkedBankAccount) {
+      toast({
+        title: "Link a payout account",
+        description: "Paid ticket sales require a linked Paystack account.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (
+      (scenario === "free" || scenario === "free_and_paid") &&
+      freeTicket.quantity <= 0
+    ) {
+      toast({
+        title: "Set free ticket quantity",
+        description: "Free tickets must have at least 1 available seat.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const payload: CreateEventPayload = {
+      title: data.title,
+      description: data.description,
+      category: data.category,
+      mode: data.mode,
+      venue: data.venue || "",
+      date: format(data.date, "yyyy-MM-dd"),
+      start_time: data.start_time,
+      duration_mins: data.duration_mins,
+      max_capacity: data.max_capacity,
+      allow_sponsorship: data.allow_sponsorship,
+      allow_donations: data.allow_donations,
+      is_published: data.is_published,
+      ...(mode !== "physical" ? { platform: data.platform } : {}),
+      free_ticket:
+        scenario === "free" || scenario === "free_and_paid"
+          ? { required: true, quantity: freeTicket.quantity }
+          : { required: false, quantity: 0 },
+      ...(usesPaid
+        ? {
+            tickets: paidTickets.map((t) => ({
+              ...t,
+              sales_start: new Date(t.sales_start).toISOString(),
+              sales_end: new Date(t.sales_end).toISOString(),
+            })),
+          }
+        : {}),
+    };
+
+    console.log("POST /api/events/", payload);
     toast({
       title: "Event Created",
       description: `"${data.title}" has been created successfully.`,
     });
-    router.navigate({ to: "/alumnus/events" });
+    router.navigate({to: "/alumnus/events"});
   };
 
   return (
@@ -431,192 +461,18 @@ export default function CreateEvent() {
                   )}
                 </CardContent>
               </Card>
-
-              {/* Tickets */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Tickets</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {tickets.length > 0 && (
-                    <div className="space-y-3">
-                      {tickets.map((ticket, index) => (
-                        <div
-                          key={index}
-                          className="p-4 rounded-lg border space-y-1"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-medium">{ticket.name}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {ticket.description}
-                              </p>
-                            </div>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => removeTicket(index)}
-                            >
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                          </div>
-                          <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-                            <span>
-                              ₦{parseFloat(ticket.price).toLocaleString()}
-                            </span>
-                            {ticket.discount_perc &&
-                              ticket.discount_perc !== '0' && (
-                                <span>{ticket.discount_perc}% off</span>
-                              )}
-                            <span>{ticket.quantity} available</span>
-                            <span className="capitalize">
-                              {ticket.type.replace('_', ' ')}
-                            </span>
-                            <span>
-                              {ticket.is_active ? 'Active' : 'Inactive'}
-                            </span>
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                            Sales:{' '}
-                            {new Date(ticket.sales_start).toLocaleDateString()}{' '}
-                            – {new Date(ticket.sales_end).toLocaleDateString()}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="space-y-4 p-4 rounded-lg border border-dashed">
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <Input
-                        placeholder="Ticket name"
-                        value={newTicket.name}
-                        onChange={(e) =>
-                          setNewTicket({ ...newTicket, name: e.target.value })
-                        }
-                      />
-                      <Select
-                        value={newTicket.type}
-                        onValueChange={(value: TicketData['type']) =>
-                          setNewTicket({ ...newTicket, type: value })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="default">Standard</SelectItem>
-                          <SelectItem value="vip">VIP</SelectItem>
-                          <SelectItem value="early_bird">Early Bird</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Textarea
-                      placeholder="Ticket description"
-                      value={newTicket.description}
-                      onChange={(e) =>
-                        setNewTicket({
-                          ...newTicket,
-                          description: e.target.value,
-                        })
-                      }
-                      className="min-h-15"
-                    />
-                    <div className="grid sm:grid-cols-3 gap-4">
-                      <Input
-                        placeholder="Price (0 for free)"
-                        type="number"
-                        min={0}
-                        step="0.01"
-                        value={newTicket.price}
-                        onChange={(e) =>
-                          setNewTicket({ ...newTicket, price: e.target.value })
-                        }
-                      />
-                      <Input
-                        placeholder="Discount %"
-                        type="number"
-                        min={0}
-                        max={100}
-                        value={newTicket.discount_perc}
-                        onChange={(e) =>
-                          setNewTicket({
-                            ...newTicket,
-                            discount_perc: e.target.value,
-                          })
-                        }
-                      />
-                      <Input
-                        placeholder="Quantity"
-                        type="number"
-                        min={1}
-                        value={newTicket.quantity}
-                        onChange={(e) =>
-                          setNewTicket({
-                            ...newTicket,
-                            quantity: e.target.value || '',
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div className="space-y-1">
-                        <label className="text-sm font-medium">
-                          Sales Start
-                        </label>
-                        <Input
-                          type="datetime-local"
-                          value={newTicket.sales_start}
-                          onChange={(e) =>
-                            setNewTicket({
-                              ...newTicket,
-                              sales_start: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-sm font-medium">Sales End</label>
-                        <Input
-                          type="datetime-local"
-                          value={newTicket.sales_end}
-                          onChange={(e) =>
-                            setNewTicket({
-                              ...newTicket,
-                              sales_end: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          checked={newTicket.is_active ?? true}
-                          onCheckedChange={(checked) =>
-                            setNewTicket({ ...newTicket, is_active: checked })
-                          }
-                        />
-                        <label className="text-sm font-medium">Remove default free ticket</label>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={addTicket}
-                        disabled={
-                          !newTicket.name ||
-                          !newTicket.sales_start ||
-                          !newTicket.sales_end
-                        }
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Ticket
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  
+              {/* Tickets (3 scenarios + inline Paystack link) */}
+              <TicketsSection
+                scenario={scenario}
+                onScenarioChange={setScenario}
+                freeTicket={freeTicket}
+                onFreeTicketChange={setFreeTicket}
+                paidTickets={paidTickets}
+                onPaidTicketsChange={setPaidTickets}
+                linkedBankAccount={linkedBankAccount}
+                onLinkedBankAccountChange={setLinkedBankAccount}
+              />
             </div>
 
             {/* Sidebar */}
@@ -713,5 +569,5 @@ export default function CreateEvent() {
         </form>
       </Form>
     </div>
-  )
+  );
 }

@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { useRouter } from '@tanstack/react-router'
-import { Edit, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import StudentCard from '../../../../components/user/internships/StudentCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
@@ -8,8 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
-import { alumnusInternshipDetailRoute } from '@/routes/user-alumnus'
-import { useInternship } from '@/hooks/useInternships'
+import { studentInternshipDetailsRoute } from '@/routes/user-student'
+import { useInternshipEngagement } from '@/hooks/useInternships'
 import {CardSkeleton2 }from '@/components/CardSkeletons'
 import { BackButton2 } from '@/components/BackButtons'
 
@@ -39,10 +38,9 @@ const mockInterns = [
 ]
 
 export default function InternshipDetail() {
-  const router = useRouter()
 
-  const { id } = alumnusInternshipDetailRoute.useParams()
-  const { data, isLoading, isError } = useInternship(Number(id))
+  const { sqid } = studentInternshipDetailsRoute.useParams()
+  const { data, isLoading, isError } = useInternshipEngagement(sqid)
 
   const [activeTab, setActiveTab] = useState('details')
   const [isActive, setIsActive] = useState(data?.is_active)
@@ -67,18 +65,11 @@ export default function InternshipDetail() {
         {/* DETAILS TAB */}
         <TabsContent value="details" className="space-y-4">
           <div className="flex justify-end">
-            <Button
-              onClick={() =>
-                router.navigate({ to: `/alumnus/internships/${id}/edit` })
-              }
-            >
-              <Edit className="h-4 w-4" />
-              Edit Internship
-            </Button>
+            
           </div>
           {isLoading && <CardSkeleton2 />}
           {isError && (
-            <p className="text-center font-bold text-red-600 text-2xl">
+            <p className="text-center font-bold text-destructive text-2xl">
               Error loading internship details.
             </p>
           )}

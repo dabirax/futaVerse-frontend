@@ -5,13 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Clock, MapPin, Users } from 'lucide-react'
 import { studentMentorshipDetailRoute } from '@/routes/user-student'
-import { useMentorship } from '@/hooks/useMentorships'
+import {  useMentorshipEngagement } from '@/hooks/useMentorships'
 import { BackButton2 } from '@/components/BackButtons'
 
 export default function MentorshipDetails() {
   const router = useRouter()
-  const { id } = studentMentorshipDetailRoute.useParams()
-    const { data: mentorship, isLoading, isError } = useMentorship(Number(id))
+  const { sqid } = studentMentorshipDetailRoute.useParams()
+    const { data: mentorship, isLoading, isError } = useMentorshipEngagement(sqid)
     
 
   if (isLoading) return <div className="text-center py-12">Loading...</div>
@@ -32,17 +32,25 @@ export default function MentorshipDetails() {
       <Card>
         <CardHeader>
           <div className="space-y-4">
-            <CardTitle className="text-3xl">{mentorship.title}</CardTitle>
+            <CardTitle className="text-3xl">
+              {mentorship.mentorship_info.title}
+            </CardTitle>
             <div className="flex gap-2">
-              <Badge variant="outline">{mentorship.work_mode}</Badge>
-              <Badge variant="secondary">{mentorship.category}</Badge>
+              <Badge variant="outline">
+                {mentorship.mentorship_info.work_mode}
+              </Badge>
+              <Badge variant="secondary">
+                {mentorship.mentorship_info.category}
+              </Badge>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
             <h3 className="font-semibold mb-2">Description</h3>
-            <p className="text-muted-foreground">{mentorship.description}</p>
+            <p className="text-muted-foreground">
+              {mentorship.mentorship_info.description}
+            </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
@@ -51,7 +59,7 @@ export default function MentorshipDetails() {
               <div>
                 <p className="text-sm text-muted-foreground">Duration</p>
                 <p className="font-semibold">
-                  {mentorship.duration_weeks} weeks
+                  {mentorship.mentorship_info.duration_weeks} weeks
                 </p>
               </div>
             </div>
@@ -59,7 +67,9 @@ export default function MentorshipDetails() {
               <MapPin className="h-5 w-5 text-muted-foreground mt-1" />
               <div>
                 <p className="text-sm text-muted-foreground">Category</p>
-                <p className="font-semibold">{mentorship.category}</p>
+                <p className="font-semibold">
+                  {mentorship.mentorship_info.category}
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -67,7 +77,7 @@ export default function MentorshipDetails() {
               <div>
                 <p className="text-sm text-muted-foreground">Available Slots</p>
                 <p className="font-semibold">
-                  {mentorship.remaining_slots} remaining
+                  {mentorship.mentorship_info.remaining_slots} remaining
                 </p>
               </div>
             </div>
@@ -76,7 +86,8 @@ export default function MentorshipDetails() {
               <div>
                 <p className="text-sm text-muted-foreground">Timeline</p>
                 <p className="font-semibold">
-                  {mentorship.start_date} to {mentorship.end_date}
+                  {mentorship.mentorship_info.start_date} to{' '}
+                  {mentorship.mentorship_info.end_date}
                 </p>
               </div>
             </div>
@@ -85,12 +96,12 @@ export default function MentorshipDetails() {
           <div className="flex gap-2 pt-4">
             <Button
               onClick={() =>
-                router.navigate({ to: `/student/mentorships/${id}/apply` })
+                router.navigate({ to: `/student/mentorships/${sqid}/apply` })
               }
-              disabled={mentorship.remaining_slots === 0}
+              disabled={mentorship.mentorship_info.remaining_slots === 0}
               className="flex-1"
             >
-              {mentorship.remaining_slots === 0
+              {mentorship.mentorship_info.remaining_slots === 0
                 ? 'No slots available'
                 : 'Apply Now'}
             </Button>

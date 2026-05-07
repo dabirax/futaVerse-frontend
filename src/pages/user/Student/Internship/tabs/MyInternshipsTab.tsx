@@ -24,11 +24,12 @@ export default function MyInternshipsTab() {
             internships.map((internship: any) => (
               <InternshipCard
                 key={internship.id}
-              role= "student"
+                role="student"
                 {...internship}
                 title={internship.internship_info.title}
                 alumnusName={`${internship.alumnus_info.firstname} ${internship.alumnus_info.lastname}`}
                 company={internship.internship_info.industry}
+                ship="internship"
               />
             ))
           ) : (

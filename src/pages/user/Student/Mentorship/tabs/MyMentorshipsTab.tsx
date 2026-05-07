@@ -30,6 +30,7 @@ export default function MyMentorshipsTab() {
                 title={mentorship.mentorship_info.title}
                 alumnusName={`${mentorship.alumnus_info.firstname} ${mentorship.alumnus_info.lastname}`}
                 company={mentorship.mentorship_info.category}
+                ship='mentorship'
               />
             ))
           ) : (

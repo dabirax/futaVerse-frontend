@@ -131,6 +131,14 @@ export const useWithdrawInternshipApplication = () => {
 export const useInternshipEngagements = () => {
   return useQuery({
     queryKey: ["internship-engagements"],
-    queryFn: InternshipEngagementsService.getEngagements,
+    queryFn: InternshipEngagementsService.getAll,
   });
 };
+
+export const useInternshipEngagement = (id: number) => {
+  return useQuery({
+    queryKey: ['internship', id],
+    queryFn: () => InternshipEngagementsService.getOne(id),
+    enabled: !!id,
+  })
+}

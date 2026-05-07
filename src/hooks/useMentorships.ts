@@ -147,7 +147,15 @@ export const useWithdrawMentorshipApplication = () => {
 // Engagements
 export const useMentorshipEngagements = () => {
   return useQuery({
-    queryKey: ['mentorship-engagements'],
-    queryFn: MentorshipEngagementsService.getEngagements,
+    queryKey: ["mentorship-engagements"],
+    queryFn: MentorshipEngagementsService.getAll,
+  });
+};
+
+export const useMentorshipEngagement = (id: number) => {
+  return useQuery({
+    queryKey: ['mentorship', id],
+    queryFn: () => MentorshipEngagementsService.getOne(id),
+    enabled: !!id,
   })
 }
