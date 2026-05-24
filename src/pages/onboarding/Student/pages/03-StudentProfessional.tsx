@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { useRouter } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
+import { AlertCircle, WifiOff } from 'lucide-react'
 import { LeftContainer } from '../../components/LeftContainer'
 import { BackButton } from '../../../../components/BackButtons'
 import { useSignupOTPStore } from '../../hooks/useSignupOTPStore'
@@ -28,7 +29,11 @@ import { api } from '@/lib/api'
 
 const StudentProfessional = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const [isError, setIsError] = useState('')
+  const [serverError, setServerError] = useState<{
+    message: string
+    hint?: string
+    isNetwork?: boolean
+  } | null>(null)
 
   type StudentProfessionalFormInput = z.input<typeof studentProfessionalSchema>
   type StudentProfessionalFormOutput = z.output<
@@ -83,16 +88,12 @@ const StudentProfessional = () => {
 
   // Handle Submit
   const onSubmit = async (data: StudentProfessionalFormData) => {
-    setIsError('')
+    setServerError(null)
     setIsLoading(true)
 
-    // when signing up
     setSignupEmail(email || '')
-    setUserType('student') // or "alumnus", "lecturer"
+    setUserType('student')
 
-    console.log('Form errors:', form.formState.errors)
-
-    // Payload Preparation
     const payload = {
       email,
       password,
@@ -123,18 +124,51 @@ const StudentProfessional = () => {
         x_url: data.x_url,
         instagram_url: data.instagram_url,
         facebook_url: data.facebook_url,
-        // profile_img: profilePic,
       },
     }
 
-    console.log(payload)
-
     try {
-      const res = await api.post('/api/auth/signup/student', payload)
-      console.log(' Signup successful:', res.data)
+      await api.post('/api/auth/signup/student', payload)
       router.navigate({ to: '/signup/otp' })
     } catch (err: any) {
-      console.error(' Signup failed:', err.response?.data || err.message)
+      const status = err.response?.status
+      const data = err.response?.data
+
+      if (!err.response) {
+        setServerError({
+          message: "Can't reach the server.",
+          hint: 'Check your internet connection and try again.',
+          isNetwork: true,
+        })
+      } else if (status === 409) {
+        setServerError({
+          message: data?.detail ?? 'An account with this email already exists.',
+          hint: 'Try logging in instead, or use a different email address.',
+        })
+      } else if (status === 400) {
+        const detail =
+          data?.detail ??
+          data?.email?.[0] ??
+          data?.password?.[0] ??
+          data?.non_field_errors?.[0] ??
+          "Some of the information you entered doesn't look right."
+        setServerError({
+          message: detail,
+          hint: 'Please go back and review your details.',
+        })
+      } else if (status === 429) {
+        setServerError({
+          message: 'Too many signup attempts.',
+          hint: 'Please wait a few minutes before trying again.',
+        })
+      } else {
+        setServerError({
+          message: 'Something went wrong on our end.',
+          hint: 'Please try again in a moment.',
+        })
+      }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -142,26 +176,7 @@ const StudentProfessional = () => {
   const hasHydrated = useHasHydrated()
 
   useEffect(() => {
-    console.log('useEffect triggered, hasHydrated:', hasHydrated)
-    console.log('Store values check:', {
-      firstname,
-      lastname,
-      gender,
-      country,
-      state,
-      phone_num,
-      email,
-      password,
-      confirmPassword,
-      matric_no,
-      department,
-      faculty,
-      expected_grad_year,
-    })
-    if (!hasHydrated) {
-      console.log('Not hydrated yet, returning')
-      return
-    }
+    if (!hasHydrated) return
     if (
       !firstname ||
       !lastname ||
@@ -177,12 +192,7 @@ const StudentProfessional = () => {
       !faculty ||
       !expected_grad_year
     ) {
-      console.log(
-        'Missing required fields, navigating to /signup/StudentSchool',
-      )
       router.navigate({ to: '/signup/StudentSchool' })
-    } else {
-      console.log('All required fields present, staying on page')
     }
   }, [
     firstname,
@@ -413,7 +423,29 @@ const StudentProfessional = () => {
                     </Button>
                   </motion.div>
                 </div>
-                <p className="text-red-500 text-sm mt-2">{isError}</p>
+                {serverError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 flex gap-3"
+                  >
+                    <div className="shrink-0 mt-0.5 text-red-500">
+                      {serverError.isNetwork ? (
+                        <WifiOff size={16} />
+                      ) : (
+                        <AlertCircle size={16} />
+                      )}
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium text-red-700">
+                        {serverError.message}
+                      </p>
+                      {serverError.hint && (
+                        <p className="text-xs text-red-500">{serverError.hint}</p>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
               </form>
             </Form>
           </div>
