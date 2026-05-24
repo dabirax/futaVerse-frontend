@@ -33,13 +33,16 @@ const AlumnusSchool = () => {
   // Initialize the form with Zod resolver and default values
   const form = useForm<AlumnusSchoolInput, any, AlumnusSchoolOutput>({
     resolver: zodResolver(alumnusSchoolSchema),
-    defaultValues: {
-      matric_no: '',
-      department: '',
-      faculty: '',
-      grad_year: 2025,
-      certificate: null,
-    },
+    defaultValues: (() => {
+      const s = useAlumnusStoreData.getState()
+      return {
+        matric_no: s.matric_no || '',
+        department: s.department || '',
+        faculty: s.faculty || '',
+        grad_year: s.grad_year ?? 2025,
+        certificate: s.certificate ?? null,
+      }
+    })(),
   })
 
   // Extract user data from the alumnus store for validation

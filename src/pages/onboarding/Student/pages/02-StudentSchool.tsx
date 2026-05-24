@@ -40,15 +40,18 @@ const StudentSchool = () => {
   // Initialize the form with Zod resolver and default values
   const form = useForm<StudentSchoolInput, any, StudentSchoolOutput>({
     resolver: zodResolver(studentSchoolSchema),
-    defaultValues: {
-      matric_no: '',
-      department: '',
-      faculty: '',
-      expected_grad_year: 2025,
-      level: undefined,
-      cgpa: undefined,
-      certificate: null,
-    },
+    defaultValues: (() => {
+      const s = useStudentStoreData.getState()
+      return {
+        matric_no: s.matric_no || '',
+        department: s.department || '',
+        faculty: s.faculty || '',
+        expected_grad_year: s.expected_grad_year ?? 2025,
+        level: s.level,
+        cgpa: s.cgpa,
+        certificate: s.certificate ?? null,
+      }
+    })(),
   })
 
   // Extract user data from the Student store for validation

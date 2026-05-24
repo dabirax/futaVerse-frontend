@@ -68,6 +68,8 @@ const AlumnusProfessional = () => {
   >
 
   // Form in bnnnitialization
+  const _s = useAlumnusStoreData.getState()
+
   const form = useForm<
     AlumnusProfessionalFormInput,
     any,
@@ -75,18 +77,18 @@ const AlumnusProfessional = () => {
   >({
     resolver: zodResolver(alumnusProfessionalSchema),
     defaultValues: {
-      current_job_title: '',
-      current_company: '',
-      previous_comps: [],
-      years_of_exp: 0,
-      description: '',
-      linkedin_url: '',
-      x_url: '',
-      instagram_url: '',
-      facebook_url: '',
-      github_url: '',
-      website_url: '',
-      industry: '',
+      current_job_title: _s.current_job_title || '',
+      current_company: _s.current_company || '',
+      previous_comps: _s.previous_comps || [],
+      years_of_exp: _s.years_of_exp ?? 0,
+      description: _s.description || '',
+      linkedin_url: _s.linkedin_url || '',
+      x_url: _s.x_url || '',
+      instagram_url: _s.instagram_url || '',
+      facebook_url: _s.facebook_url || '',
+      github_url: _s.github_url || '',
+      website_url: _s.website_url || '',
+      industry: (_s.industry as any) || '',
     },
   })
 
@@ -112,6 +114,7 @@ const AlumnusProfessional = () => {
     grad_year,
   } = useAlumnusStoreData.getState()
 
+  const setData = useAlumnusStoreData((state) => state.setData)
   const setSignupEmail = useSignupOTPStore((s) => s.setEmail)
   const setUserType = useSignupOTPStore((s) => s.setUserType)
 
@@ -130,7 +133,7 @@ const AlumnusProfessional = () => {
         firstname,
         lastname,
         middlename,
-        gender,
+        gender: gender ? (gender.charAt(0).toUpperCase() + gender.slice(1)) : gender,
         phone_num,
         address,
         street: '',
@@ -157,6 +160,8 @@ const AlumnusProfessional = () => {
         facebook_url: data.facebook_url,
       },
     }
+
+    setData(data)
 
     try {
       await api.post('/api/auth/signup/alumnus', payload)
@@ -289,7 +294,7 @@ const AlumnusProfessional = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-slate-600 font-medium">
-                            Current Job Title
+                            Current Job Title <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
                             <Input placeholder="Software Engineer" {...field} />
@@ -306,7 +311,7 @@ const AlumnusProfessional = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-slate-600 font-medium">
-                            Current Company
+                            Current Company <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
                             <Input placeholder="Google" {...field} />

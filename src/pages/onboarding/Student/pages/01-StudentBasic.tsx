@@ -45,21 +45,23 @@ const StudentBasic = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
+  const _stored = useStudentStoreData.getState()
+
   const form = useForm<StudentBasicFormData>({
     resolver: zodResolver(studentBasicSchema),
     defaultValues: {
-      firstname: '',
-      lastname: '',
-      middlename: '',
-      gender: undefined,
-      address: '',
-      country: '',
-      state: '',
-      phone_num: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      profilePic: null,
+      firstname: _stored.firstname || '',
+      lastname: _stored.lastname || '',
+      middlename: _stored.middlename || '',
+      gender: _stored.gender,
+      address: _stored.address || '',
+      country: _stored.country || '',
+      state: _stored.state || '',
+      phone_num: _stored.phone_num || '',
+      email: _stored.email || '',
+      password: _stored.password || '',
+      confirmPassword: _stored.confirmPassword || '',
+      profilePic: _stored.profilePic || null,
     },
   })
 

@@ -41,6 +41,8 @@ const StudentProfessional = () => {
   >
 
   // Form initialization
+  const _s = useStudentStoreData.getState()
+
   const form = useForm<
     StudentProfessionalFormInput,
     any,
@@ -48,14 +50,14 @@ const StudentProfessional = () => {
   >({
     resolver: zodResolver(studentProfessionalSchema),
     defaultValues: {
-      skills: [],
-      description: '',
-      linkedin_url: '',
-      x_url: '',
-      instagram_url: '',
-      facebook_url: '',
-      github_url: '',
-      website_url: '',
+      skills: _s.skills || [],
+      description: _s.description || '',
+      linkedin_url: _s.linkedin_url || '',
+      x_url: _s.x_url || '',
+      instagram_url: _s.instagram_url || '',
+      facebook_url: _s.facebook_url || '',
+      github_url: _s.github_url || '',
+      website_url: _s.website_url || '',
     },
   })
 
@@ -83,6 +85,7 @@ const StudentProfessional = () => {
     cgpa,
   } = useStudentStoreData.getState()
 
+  const setData = useStudentStoreData((state) => state.setData)
   const setSignupEmail = useSignupOTPStore((s) => s.setEmail)
   const setUserType = useSignupOTPStore((s) => s.setUserType)
 
@@ -101,7 +104,7 @@ const StudentProfessional = () => {
         firstname,
         lastname,
         middlename,
-        gender,
+        gender: gender ? (gender.charAt(0).toUpperCase() + gender.slice(1)) : gender,
         phone_num,
         address,
         street: '',
@@ -126,6 +129,8 @@ const StudentProfessional = () => {
         facebook_url: data.facebook_url,
       },
     }
+
+    setData(data)
 
     try {
       await api.post('/api/auth/signup/student', payload)

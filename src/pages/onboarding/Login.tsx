@@ -58,8 +58,8 @@ const LoginPage = () => {
       const { access_token, role } = data.data
       login(access_token, role)
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
-      if (role === 'Alumni') router.navigate({ to: '/alumnus/internships' })
-      if (role === 'Student') router.navigate({ to: '/student/internships' })
+      if (role === 'Alumni') router.navigate({ to: '/alumnus/feed' })
+      if (role === 'Student') router.navigate({ to: '/student/feed' })
     },
     onError: (err: any) => {
       const status = err.response?.status
