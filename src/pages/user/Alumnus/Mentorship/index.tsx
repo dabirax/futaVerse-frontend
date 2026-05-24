@@ -11,18 +11,21 @@ export default function AlumnusMentorship() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-foreground">Mentorships</h1>
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Mentorships</h1>
+        <p className="text-muted-foreground text-sm mt-0.5">Manage your mentorship programmes and track mentees</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="my-mentorships">My Mentorships</TabsTrigger>
-          <TabsTrigger value="offers">Offers</TabsTrigger>
-          <TabsTrigger value="applications">Applications</TabsTrigger>
-          <TabsTrigger value="mentees">Mentees</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-1 -mx-1 px-1">
+          <TabsList className="inline-flex w-max">
+            <TabsTrigger value="my-mentorships">My Mentorships</TabsTrigger>
+            <TabsTrigger value="offers">Offers</TabsTrigger>
+            <TabsTrigger value="applications">Applications</TabsTrigger>
+            <TabsTrigger value="mentees">Mentees</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="my-mentorships" className="space-y-4">
           <MyMentorshipsTab />

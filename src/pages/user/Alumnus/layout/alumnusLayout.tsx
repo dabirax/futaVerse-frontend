@@ -24,14 +24,14 @@ import profPic from "@/assets/testImage.jpeg"
 
 const sidebarItems = [
   { icon: Rss, label: 'Feed', path: '/alumnus/feed' },
-  { icon: Briefcase, label: 'Internship', path: '/alumnus/internships' },
-  { icon: Users, label: 'Mentorship', path: '/alumnus/mentorship' },
+  { icon: Briefcase, label: 'Internships', path: '/alumnus/internships' },
+  { icon: Users, label: 'Mentorships', path: '/alumnus/mentorships' },
   { icon: Calendar, label: 'Events', path: '/alumnus/events' },
   { icon: TicketCheck, label: 'Tickets', path: '/alumnus/tickets' },
   { icon: MessageSquare, label: 'Messages', path: '/alumnus/messages' },
   { icon: Calendar, label: 'Calendar', path: '/alumnus/calendar' },
-  { icon: Settings, label: 'Settings', path: '/alumnus/settings' },
   { icon: BarChart3, label: 'Analytics', path: '/alumnus/analytics' },
+  { icon: Settings, label: 'Settings', path: '/alumnus/settings' },
 ]
 
 export default function AlumnusLayout() {
@@ -43,7 +43,7 @@ export default function AlumnusLayout() {
     navigate({ to: "/" });
   };
 
-  
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,18 +73,26 @@ export default function AlumnusLayout() {
         className={`fixed top-0 left-0 h-screen w-64 bg-card border-r transition-transform duration-300 z-50 flex flex-col
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
       >
+        {/* Branding */}
+        <div className="flex items-center gap-2.5 px-4 h-16 border-b shrink-0">
+          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
+            <span className="text-primary-foreground text-sm font-bold">F</span>
+          </div>
+          <span className="font-bold text-foreground tracking-wide">FUTAVERSE</span>
+        </div>
+
         {/* Profile Section */}
-        <div className="p-2">
+        <div className="p-3 border-b">
           <div className="flex items-center gap-3">
-            <Avatar className="h-12 w-12">
+            <Avatar className="h-10 w-10">
               <img src={profPic} className="object-cover"/>
               <AvatarFallback>AL</AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="font-semibold text-foreground">
+              <h3 className="font-semibold text-sm text-foreground">
                 {/* {user?.firstName} {user?.lastName} */}
               </h3>
-              <p className="text-xs text-muted-foreground">Alumns</p>
+              <p className="text-xs text-muted-foreground">Alumnus</p>
             </div>
           </div>
         </div>
@@ -92,25 +100,23 @@ export default function AlumnusLayout() {
         <Separator />
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4">
-          <ul className="space-y-1 px-3">
+        <nav className="flex-1 overflow-y-auto py-3">
+          <ul className="space-y-0.5 px-2">
             {sidebarItems.map((item) => (
               <li key={item.path}>
                 <Link
                   to={item.path}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150 text-sm"
                   activeProps={{
-                    className:
-                      "bg-primary text-primary-foreground shadow-md",
+                    className: "bg-primary text-primary-foreground font-semibold",
                   }}
                   inactiveProps={{
-                    className:
-                      "text-muted-foreground hover:scale-105 hover:text-foreground",
+                    className: "text-muted-foreground hover:bg-muted hover:text-foreground font-medium",
                   }}
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <item.icon className="h-5 w-5" />
-                  <span className="font-medium">{item.label}</span>
+                  <item.icon className="h-4.5 w-4.5 shrink-0" style={{ width: '1.125rem', height: '1.125rem' }} />
+                  <span>{item.label}</span>
                 </Link>
               </li>
             ))}
@@ -123,10 +129,11 @@ export default function AlumnusLayout() {
         <div className="p-3">
           <Button
             variant="ghost"
+            size="sm"
             className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10"
             onClick={handleSignOut}
           >
-            <LogOut className="h-5 w-5" />
+            <LogOut className="h-4 w-4" />
             <span className="font-medium">Sign Out</span>
           </Button>
         </div>

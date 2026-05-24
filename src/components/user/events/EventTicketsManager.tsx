@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Card,
   CardContent,
@@ -28,6 +28,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog,
   DialogContent,
@@ -37,14 +38,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Search, Plus, Users } from 'lucide-react'
-import { format } from 'date-fns'
+import { Plus, Users } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
-import { mockEvents, mockPurchasedTickets } from '@/data/mockEvents'
-import { Event, PaidTicketInput, PurchasedTicket, Ticket } from '@/types/event'
+import { PaidTicketInput, Ticket } from '@/types/event'
 import { paidTicketSchema } from '@/components/user/events/TicketsSection'
-
-
+import { useAddEventTicket, useEvent, useHostedEvents } from '@/hooks/useEvents'
 
 const emptyDraft: PaidTicketInput = {
   name: '',
@@ -73,74 +71,55 @@ export default function EventTicketsManager({
 }: Props) {
   const { toast } = useToast()
 
-  // Local mock state — swap for API queries when wiring up:
-  //   GET  /api/events/tickets?event=<sqid>
-  //   POST /api/events/ticket
-  const [eventsState, setEventsState] = useState<Event[]>(mockEvents)
-  const [purchases] = useState<PurchasedTicket[]>(mockPurchasedTickets)
+  const { data: hostedData, isLoading: loadingEvents } = useHostedEvents()
+  const hostedEvents = hostedData?.results ?? []
 
-  const [selectedEventSqid, setSelectedEventSqid] = useState<string>(
-    eventSqid ?? mockEvents[0]?.sqid ?? '',
-  )
+  const [selectedEventSqid, setSelectedEventSqid] = useState<string>(eventSqid ?? '')
   const activeSqid = eventSqid ?? selectedEventSqid
 
-  const [search, setSearch] = useState('')
-  const [createOpen, setCreateOpen] = useState(false)
-  const [draft, setDraft] = useState<PaidTicketInput>(emptyDraft)
-  const [draftError, setDraftError] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
+  // Once the event list loads, default to first event if none selected.
+  useEffect(() => {
+    if (!activeSqid && hostedEvents.length > 0) {
+      setSelectedEventSqid(hostedEvents[0].sqid)
+    }
+  }, [hostedEvents, activeSqid])
 
-  const selectedEvent = useMemo(
-    () => eventsState.find((e) => e.sqid === activeSqid),
-    [eventsState, activeSqid],
-  )
+  const { data: selectedEvent, isLoading: loadingEvent } = useEvent(activeSqid)
 
-  const eventTickets: Ticket[] = selectedEvent?.tickets ?? []
+  // Local overrides for quantity/active — applied on top of server data.
+  // These are not persisted (no PATCH /api/events/ticket endpoint in spec).
+  const [ticketOverrides, setTicketOverrides] = useState<Record<string, Partial<Ticket>>>({})
 
-  const eventAttendees = useMemo(
+  const eventTickets: Ticket[] = useMemo(
     () =>
-      purchases.filter((p) =>
-        eventTickets.some((t) => t.sqid === p.ticket.sqid),
-      ),
-    [purchases, eventTickets],
-  )
-
-  const filteredAttendees = eventAttendees.filter((a) =>
-    a.email.toLowerCase().includes(search.toLowerCase()),
+      (selectedEvent?.tickets ?? []).map((t) => ({
+        ...t,
+        ...(ticketOverrides[t.sqid] ?? {}),
+      })),
+    [selectedEvent, ticketOverrides],
   )
 
   const totalQty = eventTickets.reduce((s, t) => s + t.quantity, 0)
   const totalSold = eventTickets.reduce((s, t) => s + t.quantity_sold, 0)
-  const checkedIn = eventAttendees.filter((a) => a.checked_in).length
+
+  const [createOpen, setCreateOpen] = useState(false)
+  const [draft, setDraft] = useState<PaidTicketInput>(emptyDraft)
+  const [draftError, setDraftError] = useState<string | null>(null)
+
+  const addTicketMutation = useAddEventTicket()
 
   const handleQuantityChange = (ticketSqid: string, value: number) => {
-    setEventsState((prev) =>
-      prev.map((ev) =>
-        ev.sqid !== activeSqid
-          ? ev
-          : {
-              ...ev,
-              tickets: ev.tickets?.map((t) =>
-                t.sqid === ticketSqid ? { ...t, quantity: value } : t,
-              ),
-            },
-      ),
-    )
+    setTicketOverrides((prev) => ({
+      ...prev,
+      [ticketSqid]: { ...(prev[ticketSqid] ?? {}), quantity: value },
+    }))
   }
 
   const handleToggleActive = (ticketSqid: string, value: boolean) => {
-    setEventsState((prev) =>
-      prev.map((ev) =>
-        ev.sqid !== activeSqid
-          ? ev
-          : {
-              ...ev,
-              tickets: ev.tickets?.map((t) =>
-                t.sqid === ticketSqid ? { ...t, is_active: value } : t,
-              ),
-            },
-      ),
-    )
+    setTicketOverrides((prev) => ({
+      ...prev,
+      [ticketSqid]: { ...(prev[ticketSqid] ?? {}), is_active: value },
+    }))
   }
 
   const handleCreateTicket = async () => {
@@ -149,49 +128,28 @@ export default function EventTicketsManager({
       setDraftError(parsed.error.issues[0]?.message ?? 'Invalid ticket')
       return
     }
-    if (!selectedEvent) return
+    if (!activeSqid) return
 
-    setSubmitting(true)
     try {
-      // TODO: POST /api/events/ticket
-      const newTicket: Ticket = {
-        sqid: `tkt_${Date.now()}`,
-        event: selectedEvent.sqid,
-        name: parsed.data.name,
-        description: parsed.data.description,
-        price: parsed.data.price,
-        sales_price: parsed.data.price,
-        discount_perc: parsed.data.discount_perc ?? '0',
-        quantity: parsed.data.quantity,
-        quantity_sold: 0,
-        type: 'default',
-        sales_start: parsed.data.sales_start,
-        sales_end: parsed.data.sales_end,
-        is_active: parsed.data.is_active,
-        created_at: new Date().toISOString(),
-      }
-
-      setEventsState((prev) =>
-        prev.map((ev) =>
-          ev.sqid !== selectedEvent.sqid
-            ? ev
-            : { ...ev, tickets: [...(ev.tickets ?? []), newTicket] },
-        ),
-      )
-
+      await addTicketMutation.mutateAsync({ event: activeSqid, ...parsed.data })
       toast({
         title: 'Ticket created',
-        description: `${newTicket.name} added to ${selectedEvent.title}.`,
+        description: `${parsed.data.name} added to ${selectedEvent?.title ?? 'this event'}.`,
       })
       setDraft(emptyDraft)
       setDraftError(null)
       setCreateOpen(false)
-    } finally {
-      setSubmitting(false)
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Failed to create ticket. Please try again.',
+        variant: 'destructive',
+      })
     }
   }
 
   const showSelector = !eventSqid && showEventSelector
+  const isLoading = loadingEvents || (!!activeSqid && loadingEvent)
 
   return (
     <div className="space-y-6">
@@ -213,12 +171,13 @@ export default function EventTicketsManager({
               <Select
                 value={selectedEventSqid}
                 onValueChange={setSelectedEventSqid}
+                disabled={loadingEvents}
               >
                 <SelectTrigger className="w-65">
-                  <SelectValue placeholder="Select event" />
+                  <SelectValue placeholder={loadingEvents ? 'Loading…' : 'Select event'} />
                 </SelectTrigger>
                 <SelectContent>
-                  {eventsState.map((ev) => (
+                  {hostedEvents.map((ev) => (
                     <SelectItem key={ev.sqid} value={ev.sqid}>
                       {ev.title}
                     </SelectItem>
@@ -229,7 +188,7 @@ export default function EventTicketsManager({
 
             <Dialog open={createOpen} onOpenChange={setCreateOpen}>
               <DialogTrigger asChild>
-                <Button disabled={!selectedEvent}>
+                <Button disabled={!selectedEvent || isLoading}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add ticket
                 </Button>
@@ -238,8 +197,7 @@ export default function EventTicketsManager({
                 <DialogHeader>
                   <DialogTitle>New ticket variation</DialogTitle>
                   <DialogDescription>
-                    Adds a paid ticket to {selectedEvent?.title ?? 'this event'}
-                    .
+                    Adds a paid ticket to {selectedEvent?.title ?? 'this event'}.
                   </DialogDescription>
                 </DialogHeader>
 
@@ -250,9 +208,7 @@ export default function EventTicketsManager({
                       <Input
                         placeholder="e.g. VIP"
                         value={draft.name}
-                        onChange={(e) =>
-                          setDraft({ ...draft, name: e.target.value })
-                        }
+                        onChange={(e) => setDraft({ ...draft, name: e.target.value })}
                       />
                     </div>
                     <div className="space-y-1">
@@ -262,10 +218,7 @@ export default function EventTicketsManager({
                         min={1}
                         value={draft.quantity}
                         onChange={(e) =>
-                          setDraft({
-                            ...draft,
-                            quantity: parseInt(e.target.value, 10) || 1,
-                          })
+                          setDraft({ ...draft, quantity: parseInt(e.target.value, 10) || 1 })
                         }
                       />
                     </div>
@@ -275,9 +228,7 @@ export default function EventTicketsManager({
                     <Textarea
                       placeholder="What's included with this ticket?"
                       value={draft.description}
-                      onChange={(e) =>
-                        setDraft({ ...draft, description: e.target.value })
-                      }
+                      onChange={(e) => setDraft({ ...draft, description: e.target.value })}
                     />
                   </div>
                   <div className="grid sm:grid-cols-2 gap-3">
@@ -288,9 +239,7 @@ export default function EventTicketsManager({
                         min={0}
                         step="0.01"
                         value={draft.price}
-                        onChange={(e) =>
-                          setDraft({ ...draft, price: e.target.value })
-                        }
+                        onChange={(e) => setDraft({ ...draft, price: e.target.value })}
                       />
                     </div>
                     <div className="space-y-1">
@@ -300,12 +249,7 @@ export default function EventTicketsManager({
                         min={0}
                         max={100}
                         value={draft.discount_perc}
-                        onChange={(e) =>
-                          setDraft({
-                            ...draft,
-                            discount_perc: e.target.value,
-                          })
-                        }
+                        onChange={(e) => setDraft({ ...draft, discount_perc: e.target.value })}
                       />
                     </div>
                   </div>
@@ -315,9 +259,7 @@ export default function EventTicketsManager({
                       <Input
                         type="datetime-local"
                         value={draft.sales_start}
-                        onChange={(e) =>
-                          setDraft({ ...draft, sales_start: e.target.value })
-                        }
+                        onChange={(e) => setDraft({ ...draft, sales_start: e.target.value })}
                       />
                     </div>
                     <div className="space-y-1">
@@ -325,18 +267,14 @@ export default function EventTicketsManager({
                       <Input
                         type="datetime-local"
                         value={draft.sales_end}
-                        onChange={(e) =>
-                          setDraft({ ...draft, sales_end: e.target.value })
-                        }
+                        onChange={(e) => setDraft({ ...draft, sales_end: e.target.value })}
                       />
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Switch
                       checked={draft.is_active}
-                      onCheckedChange={(v) =>
-                        setDraft({ ...draft, is_active: v })
-                      }
+                      onCheckedChange={(v) => setDraft({ ...draft, is_active: v })}
                     />
                     <span className="text-sm">Active immediately</span>
                   </div>
@@ -349,12 +287,15 @@ export default function EventTicketsManager({
                   <Button
                     variant="ghost"
                     onClick={() => setCreateOpen(false)}
-                    disabled={submitting}
+                    disabled={addTicketMutation.isPending}
                   >
                     Cancel
                   </Button>
-                  <Button onClick={handleCreateTicket} disabled={submitting}>
-                    {submitting ? 'Creating...' : 'Create ticket'}
+                  <Button
+                    onClick={handleCreateTicket}
+                    disabled={addTicketMutation.isPending}
+                  >
+                    {addTicketMutation.isPending ? 'Creating…' : 'Create ticket'}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -363,10 +304,21 @@ export default function EventTicketsManager({
         </div>
       )}
 
-      {!selectedEvent ? (
+      {isLoading ? (
+        <div className="space-y-3">
+          <div className="grid gap-4 sm:grid-cols-4">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-20 rounded-lg" />
+            ))}
+          </div>
+          <Skeleton className="h-48 rounded-lg" />
+        </div>
+      ) : !selectedEvent ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
-            Select an event to manage its tickets.
+            {hostedEvents.length === 0
+              ? 'You have no hosted events yet.'
+              : 'Select an event to manage its tickets.'}
           </CardContent>
         </Card>
       ) : (
@@ -375,7 +327,7 @@ export default function EventTicketsManager({
             <StatCard label="Variations" value={eventTickets.length} />
             <StatCard label="Total quantity" value={totalQty} />
             <StatCard label="Sold" value={totalSold} />
-            <StatCard label="Checked in" value={checkedIn} />
+            <StatCard label="Remaining" value={Math.max(0, totalQty - totalSold)} />
           </div>
 
           <Tabs defaultValue="variations">
@@ -383,9 +335,7 @@ export default function EventTicketsManager({
               <TabsTrigger value="variations">
                 Variations ({eventTickets.length})
               </TabsTrigger>
-              <TabsTrigger value="attendees">
-                Attendees ({eventAttendees.length})
-              </TabsTrigger>
+              <TabsTrigger value="attendees">Attendees</TabsTrigger>
             </TabsList>
 
             <TabsContent value="variations" className="mt-4">
@@ -393,8 +343,7 @@ export default function EventTicketsManager({
                 <CardHeader>
                   <CardTitle>Ticket variations</CardTitle>
                   <CardDescription>
-                    Update available quantity inline. Quantity can't go below
-                    sold count.
+                    Update available quantity inline.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -454,9 +403,7 @@ export default function EventTicketsManager({
                             <TableCell>
                               <Switch
                                 checked={t.is_active}
-                                onCheckedChange={(v) =>
-                                  handleToggleActive(t.sqid, v)
-                                }
+                                onCheckedChange={(v) => handleToggleActive(t.sqid, v)}
                               />
                             </TableCell>
                           </TableRow>
@@ -470,80 +417,19 @@ export default function EventTicketsManager({
 
             <TabsContent value="attendees" className="mt-4">
               <Card>
-                <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <div>
-                    <CardTitle className="flex items-center gap-2">
-                      <Users className="h-5 w-5" />
-                      Attendees
-                    </CardTitle>
-                    <CardDescription>
-                      People who have registered for this event.
-                    </CardDescription>
-                  </div>
-                  <div className="relative w-full sm:w-72">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search by email"
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    Attendees
+                  </CardTitle>
+                  <CardDescription>
+                    People who have registered for this event.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {filteredAttendees.length === 0 ? (
-                    <div className="text-center py-10 text-muted-foreground">
-                      {eventAttendees.length === 0
-                        ? 'No attendees yet.'
-                        : 'No attendees match your search.'}
-                    </div>
-                  ) : (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Email</TableHead>
-                          <TableHead>Ticket</TableHead>
-                          <TableHead>Paid</TableHead>
-                          <TableHead>Checked in</TableHead>
-                          <TableHead>Reference</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {filteredAttendees.map((a) => (
-                          <TableRow key={a.ticket_uid}>
-                            <TableCell className="font-medium">
-                              {a.email}
-                            </TableCell>
-                            <TableCell>{a.ticket.name}</TableCell>
-                            <TableCell>
-                              <Badge
-                                variant={a.is_paid ? 'default' : 'secondary'}
-                              >
-                                {a.is_paid ? 'Paid' : 'Pending'}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              {a.checked_in ? (
-                                <Badge>
-                                  {a.checked_in_at
-                                    ? format(
-                                        new Date(a.checked_in_at),
-                                        'MMM d, h:mm a',
-                                      )
-                                    : 'Yes'}
-                                </Badge>
-                              ) : (
-                                <Badge variant="outline">No</Badge>
-                              )}
-                            </TableCell>
-                            <TableCell className="font-mono text-xs text-muted-foreground">
-                              {a.ticket_uid.slice(0, 8)}…
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  )}
+                  <div className="text-center py-10 text-muted-foreground">
+                    Attendee list coming soon.
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

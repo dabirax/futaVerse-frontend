@@ -1,9 +1,8 @@
 import { createRoute } from '@tanstack/react-router'
 
-import AlumnusLayout from '../pages/user/Alumnus/Internship/layout/alumnusLayout'
+import AlumnusLayout from '../pages/user/Alumnus/layout/alumnusLayout'
 
 // Alumnus pages
-import AlumnusDashboard from '../pages/user/Alumnus/Analytics'
 import AlumnusFeed from '../pages/user/Alumnus/Feed'
 import AlumnusInternship from '../pages/user/Alumnus/Internship'
 import AlumnusMentorship from '../pages/user/Alumnus/Mentorship'
@@ -11,6 +10,7 @@ import AlumnusEvents from '../pages/user/Alumnus/Events'
 import AlumnusMessages from '../pages/user/Alumnus/Messages'
 import AlumnusCalendar from '../pages/user/Alumnus/Calendar'
 import AlumnusSettings from '../pages/user/Alumnus/Settings'
+import AlumnusAnalytics from '../pages/user/Alumnus/Analytics'
 
 import { rootRoute } from './__root'
 import { publicRoute } from './public'
@@ -24,6 +24,8 @@ import EditEvent from '@/pages/user/Alumnus/Events/EditEvent'
 import CreateMentorship from '@/pages/user/Alumnus/Mentorship/create'
 import EditMentorship from '@/pages/user/Alumnus/Mentorship/edit'
 import MentorshipDetails from '@/pages/user/Alumnus/Mentorship/details'
+import AlumnusTickets from '@/pages/user/Alumnus/Tickets'
+import ManageEventTickets from '@/pages/user/Alumnus/Events/ManageEventTickets'
 
 /* -------------------------- ALUMNUS ROUTES -------------------------- */
 export const alumnusRoute = createRoute({
@@ -140,6 +142,19 @@ export const alumnusEventTicket = createRoute({
   component: EventDetails,
 })
 
+export const alumnusEventTicketManager = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: '/alumnus/events/tickets',
+  component: ManageEventTickets,
+})
+
+//Tickets Section
+export const alumnusTicketsRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: '/alumnus/tickets',
+  component: AlumnusTickets,
+})
+
 // Messages Route
 
 export const alumnusMessagesRoute = createRoute({
@@ -163,7 +178,7 @@ export const alumnusSettingsRoute = createRoute({
   component: AlumnusSettings,
 })
 
-export const alumnusAnalyticsdRoute = createRoute({
+export const alumnusAnalyticsRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   // getParentRoute: () => publicRoute,
   path: '/alumnus/analytics',

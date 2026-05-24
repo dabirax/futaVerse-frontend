@@ -1,352 +1,437 @@
 import { useState, useMemo } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
-  Search,
+  Bookmark,
+  Briefcase,
   Calendar,
+  ChevronRight,
   Clock,
+  GraduationCap,
   MapPin,
+  Search,
+  Trophy,
   Users,
   Video,
-  GraduationCap,
-  ArrowRight,
+  Zap,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { FeedMentorship, FeedInternship, mockEventListItems } from './mockFeed'
 import { EventListItem } from '@/types/event'
-import InternshipFeedCard from '@/components/user/feed/InternshipFeedCard'
 import { useInternships } from '@/hooks/useInternships'
 import { useMentorships } from '@/hooks/useMentorships'
 
-type FeedItemType = 'all' | 'mentorship' | 'internship' | 'event'
+type FeedFilter = 'all' | 'opportunities' | 'mentorship' | 'events'
 
 interface FeedItem {
-  type: 'mentorship' | 'internship' | 'event'
-  data: FeedMentorship | FeedInternship | EventListItem
+  type: 'internship' | 'mentorship' | 'event'
+  data: FeedInternship | FeedMentorship | EventListItem
   created_at: string
 }
 
-const categoryLabels: Record<string, string> = {
-  workshop: 'Workshop',
-  seminar: 'Seminar',
-  networking: 'Networking',
-  career_fair: 'Career Fair',
-  webinar: 'Webinar',
-  conference: 'Conference',
+function timeAgo(dateStr: string): string {
+  const diffMs = Date.now() - new Date(dateStr).getTime()
+  const mins = Math.floor(diffMs / 60000)
+  const hours = Math.floor(mins / 60)
+  const days = Math.floor(hours / 24)
+  if (mins < 60) return `${mins}m ago`
+  if (hours < 24) return `${hours}h ago`
+  return `${days}d ago`
 }
 
-function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
+function getGreeting(): string {
+  const h = new Date().getHours()
+  if (h >= 5 && h < 12) return 'Good morning'
+  if (h >= 12 && h < 17) return 'Good afternoon'
+  if (h >= 17 && h < 22) return 'Good evening'
+  return 'Good night'
+}
+
+// ----------- Card Components -----------
+
+function InternshipCard({ item }: { item: FeedInternship }) {
   const router = useRouter()
-  const navigate = router.navigate
 
   return (
-    <Card
-      className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-primary"
-      onClick={() => navigate({ to: `/alumnus/mentorship/${item.sqid}` })}
+    <div
+      className="bg-card rounded-xl border shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
+      onClick={() => router.navigate({ to: `/alumnus/internships/${item.sqid}` })}
     >
-      <CardContent className="p-5">
-        <div className="flex items-start gap-4">
-          <Avatar className="h-12 w-12 rounded-lg shrink-0">
-            <AvatarFallback className="rounded-lg bg-primary/10 text-primary text-sm font-semibold">
-              <GraduationCap className="h-5 w-5" />
-            </AvatarFallback>
-          </Avatar>
+      <div className="flex items-center justify-between mb-3">
+        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide bg-green-100 text-green-700">
+          New Internship
+        </span>
+        <span className="text-xs text-muted-foreground">{timeAgo(item.created_at)}</span>
+      </div>
 
-          <div className="flex-1 min-w-0 space-y-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge className="bg-primary/10 text-primary border-0 text-xs">
-                Mentorship
-              </Badge>
-              <Badge variant="outline" className="text-xs">
-                {item.category}
-              </Badge>
-              <Badge variant="secondary" className="text-xs">
-                {item.work_mode}
-              </Badge>
+      <div className="flex items-start gap-3">
+        <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center shrink-0">
+          <Briefcase className="h-5 w-5 text-primary-foreground" />
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <h3 className="font-semibold text-foreground text-sm leading-tight">{item.title}</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">{item.industry}</p>
             </div>
-
-            <h3 className="font-semibold text-foreground line-clamp-1">
-              {item.title}
-            </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {item.description}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">
-              <span className="flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" />
-                {item.duration_weeks} weeks
-              </span>
-              <span className="flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5" />
-                {format(new Date(item.start_date), 'MMM d, yyyy')}
-              </span>
-              <span className="flex items-center gap-1">
-                <Users className="h-3.5 w-3.5" />
-                {item.remaining_slots} of {item.available_slots} slots
-              </span>
-            </div>
+            <Bookmark className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
           </div>
 
-          <ArrowRight className="h-5 w-5 text-muted-foreground shrink-0 mt-1" />
+          <p className="text-xs text-muted-foreground mt-2">
+            {item.work_mode} • {item.engagement_type}
+            {item.is_paid && ` • Stipend: ₦${parseFloat(item.stipend).toLocaleString()} / month`}
+          </p>
+
+          {item.remaining_slots > 0 && (
+            <p className="text-xs text-green-600 font-medium mt-1.5">
+              {item.remaining_slots} of {item.available_slots} slots remaining
+            </p>
+          )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
 
-function EventFeedCard({ item }: { item: EventListItem }) {
+function MentorshipCard({ item }: { item: FeedMentorship }) {
   const router = useRouter()
-  const navigate = router.navigate
-
-  const formattedDate = format(new Date(item.date), 'MMM d, yyyy')
-  const formattedTime = format(
-    new Date(`2000-01-01T${item.start_time}`),
-    'h:mm a',
-  )
-
-  const modeIcon =
-    item.mode === 'virtual' ? (
-      <Video className="h-3.5 w-3.5" />
-    ) : item.mode === 'physical' ? (
-      <MapPin className="h-3.5 w-3.5" />
-    ) : (
-      <>
-        <Video className="h-3.5 w-3.5" />
-        <MapPin className="h-3.5 w-3.5" />
-      </>
-    )
 
   return (
-    <Card
-      className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-accent"
-      onClick={() => navigate({ to: `/alumnus/events/${item.sqid}` })}
+    <div
+      className="bg-card rounded-xl border shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
+      onClick={() => router.navigate({ to: `/alumnus/mentorships/${item.sqid}` })}
     >
-      <CardContent className="p-5">
-        <div className="flex items-start gap-4">
-          <Avatar className="h-12 w-12 rounded-lg shrink-0">
-            <AvatarFallback className="rounded-lg bg-accent/10 text-accent text-sm font-semibold">
-              <Calendar className="h-5 w-5" />
-            </AvatarFallback>
-          </Avatar>
+      <div className="flex items-center justify-between mb-3">
+        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide bg-purple-100 text-purple-700">
+          Mentorship
+        </span>
+        <span className="text-xs text-muted-foreground">{timeAgo(item.created_at)}</span>
+      </div>
 
-          <div className="flex-1 min-w-0 space-y-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge className="bg-accent/10 text-accent border-0 text-xs">
-                Event
-              </Badge>
-              <Badge variant="secondary" className="text-xs">
-                {categoryLabels[item.category] || item.category}
-              </Badge>
-              {!item.is_published && (
-                <Badge
-                  variant="outline"
-                  className="text-xs text-muted-foreground"
-                >
-                  Draft
-                </Badge>
-              )}
-              {item.is_cancelled && (
-                <Badge variant="destructive" className="text-xs">
-                  Cancelled
-                </Badge>
-              )}
+      <div className="flex items-start gap-3">
+        <div className="h-10 w-10 rounded-lg bg-purple-600 flex items-center justify-center shrink-0">
+          <GraduationCap className="h-5 w-5 text-white" />
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <h3 className="font-semibold text-foreground text-sm leading-tight">{item.title}</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">{item.category}</p>
             </div>
+            <Badge variant="secondary" className="text-xs shrink-0">{item.work_mode}</Badge>
+          </div>
 
-            <h3 className="font-semibold text-foreground line-clamp-1">
-              {item.title}
-            </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {item.description}
-            </p>
+          <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{item.description}</p>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">
-              <span className="flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5" />
-                {formattedDate}
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" />
-                {formattedTime}
-              </span>
-              <span className="flex items-center gap-1.5">
-                {modeIcon}
-                <span className="capitalize">{item.mode}</span>
-              </span>
-              <span className="flex items-center gap-1">
-                <Users className="h-3.5 w-3.5" />
-                {item.max_capacity} capacity
-              </span>
+          <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Clock className="h-3.5 w-3.5" />
+              {item.duration_weeks} weeks
+            </span>
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3.5 w-3.5" />
+              {format(new Date(item.start_date), 'MMM d, yyyy')}
+            </span>
+            <span className="flex items-center gap-1">
+              <Users className="h-3.5 w-3.5" />
+              {item.remaining_slots} of {item.available_slots} slots
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function EventCard({ item }: { item: EventListItem }) {
+  const router = useRouter()
+  const formattedDate = format(new Date(item.date), 'EEE, d MMM yyyy')
+  const formattedTime = format(new Date(`2000-01-01T${item.start_time}`), 'h:mm a')
+
+  return (
+    <div className="bg-card rounded-xl border shadow-sm p-4">
+      <div className="flex items-center justify-between mb-3">
+        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide bg-blue-100 text-blue-700">
+          Upcoming Event
+        </span>
+        <span className="text-xs text-muted-foreground">{timeAgo(item.created_at)}</span>
+      </div>
+
+      <div className="flex items-start gap-3">
+        <div className="h-16 w-24 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shrink-0">
+          <Calendar className="h-7 w-7 text-white opacity-80" />
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-foreground text-sm leading-tight line-clamp-2">{item.title}</h3>
+          <div className="mt-2 space-y-1">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Calendar className="h-3.5 w-3.5 shrink-0" />
+              <span>{formattedDate} • {formattedTime}</span>
             </div>
-
-            {item.starting_price && (
-              <p className="text-xs font-medium text-accent pt-1">
-                {parseFloat(item.starting_price) === 0
-                  ? 'Free'
-                  : `From ₦${parseFloat(item.starting_price).toLocaleString()}`}
-              </p>
+            {item.mode === 'virtual' || item.mode === 'hybrid' ? (
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Video className="h-3.5 w-3.5 shrink-0" />
+                <span>Virtual</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <MapPin className="h-3.5 w-3.5 shrink-0" />
+                <span>{item.venue || 'TBD'}</span>
+              </div>
             )}
           </div>
-
-          <ArrowRight className="h-5 w-5 text-muted-foreground shrink-0 mt-1" />
         </div>
-      </CardContent>
-    </Card>
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="shrink-0 text-xs h-8"
+          onClick={() => router.navigate({ to: `/alumnus/events/${item.sqid}` })}
+        >
+          View Details
+        </Button>
+      </div>
+    </div>
   )
 }
+
+// ----------- Right Sidebar -----------
+
+const mockAlumniSuggestions = [
+  { id: 1, name: 'Oluseyi A.', role: 'Software Engineer', company: 'Moniepoint', gradYear: '2018', initials: 'OA' },
+  { id: 2, name: 'Grace B.', role: 'Product Manager', company: 'Flutterwave', gradYear: '2017', initials: 'GB' },
+  { id: 3, name: 'Kehinde P.', role: 'Data Scientist', company: 'PiggyVest', gradYear: '2019', initials: 'KP' },
+]
+
+const quickActions = [
+  { label: 'Post an Update', icon: Zap },
+  { label: 'Share an Achievement', icon: Trophy },
+  { label: 'Create an Opportunity', icon: Briefcase },
+  { label: 'Sponsor an Event', icon: Calendar },
+]
+
+function RightSidebar({ mentorships }: { mentorships: FeedMentorship[] }) {
+  const availableMentors = mentorships.filter((m) => m.remaining_slots > 0).slice(0, 2)
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">
+      {/* Alumni You Might Know */}
+      <div className="bg-card rounded-xl border shadow-sm p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold text-sm text-foreground">Alumni You Might Know</h3>
+          <button className="text-xs text-primary font-medium hover:underline">See all</button>
+        </div>
+
+        <div className="space-y-3">
+          {mockAlumniSuggestions.map((alumni) => (
+            <div key={alumni.id} className="flex items-center gap-2.5">
+              <Avatar className="h-9 w-9 shrink-0">
+                <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                  {alumni.initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-foreground leading-tight truncate">{alumni.name}</p>
+                <p className="text-xs text-muted-foreground truncate">{alumni.role} at {alumni.company}</p>
+                <p className="text-xs text-muted-foreground">FUTA • {alumni.gradYear}</p>
+              </div>
+              <Button variant="outline" size="sm" className="shrink-0 h-7 text-xs px-3">
+                Connect
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Mentor Availability */}
+      {availableMentors.length > 0 && (
+        <div className="bg-card rounded-xl border shadow-sm p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold text-sm text-foreground">Mentor Availability</h3>
+            <button className="text-xs text-primary font-medium hover:underline">See all</button>
+          </div>
+
+          <div className="space-y-3">
+            {availableMentors.map((mentor) => (
+              <div key={mentor.sqid} className="flex items-center gap-2.5">
+                <Avatar className="h-9 w-9 shrink-0">
+                  <AvatarFallback className="bg-purple-100 text-purple-700 text-xs font-semibold">
+                    {mentor.title.slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-foreground leading-tight truncate">{mentor.title}</p>
+                  <p className="text-xs text-muted-foreground truncate">{mentor.category}</p>
+                  <p className={`text-xs font-medium ${mentor.remaining_slots > 1 ? 'text-green-600' : 'text-amber-600'}`}>
+                    {mentor.remaining_slots} slot{mentor.remaining_slots !== 1 ? 's' : ''} available
+                  </p>
+                </div>
+                <Button size="sm" className="shrink-0 h-7 text-xs px-3">
+                  Book Slot
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Quick Actions */}
+      <div className="bg-card rounded-xl border shadow-sm p-4">
+        <h3 className="font-semibold text-sm text-foreground mb-2">Quick Actions</h3>
+        <div className="space-y-0.5">
+          {quickActions.map((action) => (
+            <button
+              key={action.label}
+              className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-muted transition-colors text-left"
+            >
+              <action.icon className="h-4 w-4 text-muted-foreground shrink-0" />
+              <span className="flex-1 text-xs font-medium text-foreground">{action.label}</span>
+              <ChevronRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Your Stats */}
+      <div className="bg-card rounded-xl border shadow-sm p-4">
+        <h3 className="font-semibold text-sm text-foreground mb-3">Your Stats</h3>
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          <div>
+            <p className="text-xs text-muted-foreground">Profile views</p>
+            <p className="text-2xl font-bold text-foreground">248</p>
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Connections</p>
+            <p className="text-2xl font-bold text-foreground">356</p>
+          </div>
+        </div>
+        <div>
+          <p className="text-xs text-muted-foreground">Opportunities posted</p>
+          <p className="text-2xl font-bold text-foreground">12</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ----------- Filter config -----------
+
+const filters: { label: string; value: FeedFilter }[] = [
+  { label: 'All', value: 'all' },
+  { label: 'Opportunities', value: 'opportunities' },
+  { label: 'Mentorship', value: 'mentorship' },
+  { label: 'Events', value: 'events' },
+]
+
+// ----------- Main Page -----------
 
 export default function AlumnusFeed() {
   const [search, setSearch] = useState('')
-  const [activeTab, setActiveTab] = useState<FeedItemType>('all')
+  const [activeFilter, setActiveFilter] = useState<FeedFilter>('all')
 
-  const {
-    data: internships,
-    // isLoading: isLoadingInternships,
-    // isError: isErrorInternships,
-  } = useInternships()
+  const { data: internships } = useInternships()
+  const { data: mentorships } = useMentorships()
 
-  const {
-    data: mentorships,
-    // isLoading: isLoadingMentorships,
-    // isError: isErrorMentorships,
-  } = useMentorships()
-  
-const feedInternships = internships?.results ?? []
-const feedMentorships = mentorships?.results ?? []
+  const feedInternships: FeedInternship[] = internships?.results ?? []
+  const feedMentorships: FeedMentorship[] = mentorships?.results ?? []
 
   const allItems: FeedItem[] = useMemo(() => {
     const items: FeedItem[] = [
-      ...feedMentorships.map((m: FeedMentorship) => ({
-        type: 'mentorship' as const,
-        data: m,
-        created_at: m.created_at,
-      })),
-      ...feedInternships.map((i: FeedInternship) => ({
-        type: 'internship' as const,
-        data: i,
-        created_at: i.created_at,
-      })),
+      ...feedInternships.map((i) => ({ type: 'internship' as const, data: i, created_at: i.created_at })),
+      ...feedMentorships.map((m) => ({ type: 'mentorship' as const, data: m, created_at: m.created_at })),
       ...mockEventListItems
         .filter((e) => e.is_published && !e.is_cancelled)
-        .map((e) => ({
-          type: 'event' as const,
-          data: e,
-          created_at: e.created_at,
-        })),
+        .map((e) => ({ type: 'event' as const, data: e, created_at: e.created_at })),
     ]
-    return items.sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    )
-  }, [])
+    return items.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+  }, [feedInternships, feedMentorships])
 
   const filteredItems = useMemo(() => {
-    let items =
-      activeTab === 'all'
-        ? allItems
-        : allItems.filter((i) => i.type === activeTab)
+    let items = allItems
+
+    if (activeFilter === 'opportunities') items = items.filter((i) => i.type === 'internship')
+    else if (activeFilter === 'mentorship') items = items.filter((i) => i.type === 'mentorship')
+    else if (activeFilter === 'events') items = items.filter((i) => i.type === 'event')
 
     if (search.trim()) {
       const q = search.toLowerCase()
       items = items.filter((item) => {
-        const d = item.data
-        return (
-          d.title.toLowerCase().includes(q) ||
-          d.description.toLowerCase().includes(q)
-        )
+        const d = item.data as { title: string; description: string }
+        return d.title.toLowerCase().includes(q) || d.description.toLowerCase().includes(q)
       })
     }
 
     return items
-  }, [allItems, activeTab, search])
-
-  const counts = useMemo(
-    () => ({
-      all: allItems.length,
-      mentorship: allItems.filter((i) => i.type === 'mentorship').length,
-      internship: allItems.filter((i) => i.type === 'internship').length,
-      event: allItems.filter((i) => i.type === 'event').length,
-    }),
-    [allItems],
-  )
+  }, [allItems, activeFilter, search])
 
   return (
-    <div className="space-y-6">
-      <div className="md:flex justify-between items-end">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Feed</h1>
+    <div className="flex flex-col xl:flex-row gap-6 items-start">
+      {/* Main Feed */}
+      <div className="flex-1 min-w-0 space-y-4">
+        {/* Greeting */}
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">{getGreeting()} 👋</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Discover mentorships, internships, and events in your network.
+            </p>
+          </div>
 
-          <p className="text-muted-foreground ">
-            Discover mentorships, internships, and events
-          </p>
+          <div className="relative shrink-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search opportunities..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10 w-64 h-9"
+            />
+          </div>
         </div>
 
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search opportunities..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 w-72"
-          />
+        {/* Filter Pills */}
+        <div className="flex items-center gap-2">
+          {filters.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => setActiveFilter(f.value)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                activeFilter === f.value
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Feed Cards */}
+        <div className="space-y-3">
+          {filteredItems.length === 0 ? (
+            <div className="bg-card rounded-xl border shadow-sm p-12 text-center">
+              <p className="text-sm text-muted-foreground">No results found</p>
+            </div>
+          ) : (
+            filteredItems.map((item, idx) => {
+              if (item.type === 'internship') return <InternshipCard key={`i-${idx}`} item={item.data as FeedInternship} />
+              if (item.type === 'mentorship') return <MentorshipCard key={`m-${idx}`} item={item.data as FeedMentorship} />
+              if (item.type === 'event') return <EventCard key={`ev-${idx}`} item={item.data as EventListItem} />
+              return null
+            })
+          )}
         </div>
       </div>
-      <Tabs
-        value={activeTab}
-        onValueChange={(v) => setActiveTab(v as FeedItemType)}
-      >
-        <TabsList className="w-full justify-start">
-          <TabsTrigger value="all">All ({counts.all})</TabsTrigger>
-          <TabsTrigger value="mentorship">
-            Mentorships ({counts.mentorship})
-          </TabsTrigger>
-          <TabsTrigger value="internship">
-            Internships ({counts.internship})
-          </TabsTrigger>
-          <TabsTrigger value="event">Events ({counts.event})</TabsTrigger>
-        </TabsList>
 
-        <TabsContent value={activeTab} className="mt-4">
-          {filteredItems.length === 0 ? (
-            <Card>
-              <CardContent className="p-12 text-center">
-                <p className="text-muted-foreground">No results found</p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              {filteredItems.map((item, idx) => {
-                if (item.type === 'internship') {
-                  return (
-                    <InternshipFeedCard
-                      key={`i-${idx}`}
-                      item={item.data as FeedInternship}
-                    />
-                  )
-                }
-                if (item.type === 'mentorship') {
-                  return (
-                    <MentorshipFeedCard
-                      key={`m-${idx}`}
-                      item={item.data as FeedMentorship}
-                    />
-                  )
-                }
-                return (
-                  <EventFeedCard
-                    key={`e-${idx}`}
-                    item={item.data as EventListItem}
-                  />
-                )
-              })}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+      {/* Right Sidebar — stacks below feed on mobile/tablet, side-by-side on xl+ */}
+      <div className="w-full xl:w-72 xl:shrink-0 xl:sticky xl:top-6">
+        <RightSidebar mentorships={feedMentorships} />
+      </div>
     </div>
   )
 }

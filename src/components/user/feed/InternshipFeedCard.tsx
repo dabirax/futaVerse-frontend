@@ -21,7 +21,7 @@ export default function InternshipFeedCard({ item }: { item: FeedInternship }) {
   return (
     <Card
       className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-secondary"
-      onClick={() => navigate({ to: `/alumnus/internships/${item.id}` })}
+      onClick={() => navigate({ to: `/alumnus/internships/${item.sqid}` })}
     >
       <CardContent className="p-5">
         <div className="flex items-start gap-4">

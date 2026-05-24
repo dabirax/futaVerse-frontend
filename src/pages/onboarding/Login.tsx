@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { useMutation } from '@tanstack/react-query'
-import { Eye, EyeOff } from 'lucide-react'
+import { AlertCircle, Eye, EyeOff, WifiOff } from 'lucide-react'
 import { useState } from 'react'
 import axios from 'axios'
 import { BackButton } from '../../components/BackButtons'
@@ -26,8 +26,8 @@ import { api } from '@/lib/api'
 import { containerVariants, itemVariants } from '@/animationVariants'
 
 const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8, 'Password must be at least 8 characters long'),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
 })
 
 const LoginPage = () => {
@@ -39,12 +39,16 @@ const LoginPage = () => {
     resolver: zodResolver(loginSchema),
   })
 
-  //  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [serverError, setServerError] = useState<{
+    message: string
+    hint?: string
+    isNetwork?: boolean
+  } | null>(null)
 
   const router = useRouter()
   const { login } = useAuth()
 
-  // Mutation to handle login
   const loginMutation = useMutation({
     mutationFn: async (data: z.infer<typeof loginSchema>) => {
       const res = await api.post('/api/auth/login', data)
@@ -52,20 +56,51 @@ const LoginPage = () => {
     },
     onSuccess: (data) => {
       const { access_token, role } = data.data
-
       login(access_token, role)
-
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
-
       if (role === 'Alumni') router.navigate({ to: '/alumnus/internships' })
       if (role === 'Student') router.navigate({ to: '/student/internships' })
     },
     onError: (err: any) => {
-      console.error('Login failed:', err.response?.data || err.message)
+      const status = err.response?.status
+      const data = err.response?.data
+
+      if (!err.response) {
+        setServerError({
+          message: "Can't reach the server.",
+          hint: 'Check your internet connection and try again.',
+          isNetwork: true,
+        })
+      } else if (status === 401) {
+        setServerError({
+          message: data?.detail ?? 'Incorrect email or password.',
+          hint: 'Double-check your details or reset your password below.',
+        })
+      } else if (status === 429) {
+        setServerError({
+          message: 'Too many login attempts.',
+          hint: 'Please wait a few minutes before trying again.',
+        })
+      } else if (status === 400) {
+        const detail =
+          data?.detail ??
+          data?.non_field_errors?.[0] ??
+          "The information you entered doesn't look right."
+        setServerError({
+          message: detail,
+          hint: 'Please review your details and try again.',
+        })
+      } else {
+        setServerError({
+          message: 'Something went wrong on our end.',
+          hint: 'Please try again in a moment.',
+        })
+      }
     },
   })
 
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
+    setServerError(null)
     loginMutation.mutate(values)
   }
 
@@ -118,6 +153,7 @@ const LoginPage = () => {
                             type="email"
                             placeholder="example@example.com"
                             className="h-12 rounded-xl bg-white/50 border-slate-200"
+                            disabled={loginMutation.isPending}
                             {...field}
                           />
                         </FormControl>
@@ -131,39 +167,37 @@ const LoginPage = () => {
                   <FormField
                     control={form.control}
                     name="password"
-                    render={({ field }) => {
-                      const [showPassword, setShowPassword] = useState(false)
-                      return (
-                        <FormItem>
-                          <FormLabel className="text-slate-600 font-medium">
-                            Password
-                          </FormLabel>
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-slate-600 font-medium">
+                          Password
+                        </FormLabel>
 
-                          <div className="relative">
-                            <FormControl>
-                              <Input
-                                type={showPassword ? 'text' : 'password'}
-                                placeholder="********"
-                                className="h-12 rounded-xl bg-white/50 border-slate-200 pr-12"
-                                {...field}
-                              />
-                            </FormControl>
-                            <button
-                              type="button"
-                              onClick={() => setShowPassword((prev) => !prev)}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
-                            >
-                              {showPassword ? (
-                                <EyeOff size={18} />
-                              ) : (
-                                <Eye size={18} />
-                              )}
-                            </button>
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )
-                    }}
+                        <div className="relative">
+                          <FormControl>
+                            <Input
+                              type={showPassword ? 'text' : 'password'}
+                              placeholder="********"
+                              className="h-12 rounded-xl bg-white/50 border-slate-200 pr-12"
+                              disabled={loginMutation.isPending}
+                              {...field}
+                            />
+                          </FormControl>
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
+                          >
+                            {showPassword ? (
+                              <EyeOff size={18} />
+                            ) : (
+                              <Eye size={18} />
+                            )}
+                          </button>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </motion.div>
                 <motion.div
@@ -177,6 +211,30 @@ const LoginPage = () => {
                     Forgot password?
                   </Link>
                 </motion.div>
+
+                {serverError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 flex gap-3"
+                  >
+                    <div className="shrink-0 mt-0.5 text-red-500">
+                      {serverError.isNetwork ? (
+                        <WifiOff size={16} />
+                      ) : (
+                        <AlertCircle size={16} />
+                      )}
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium text-red-700">
+                        {serverError.message}
+                      </p>
+                      {serverError.hint && (
+                        <p className="text-xs text-red-500">{serverError.hint}</p>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
 
                 <motion.div variants={itemVariants}>
                   <Button
@@ -221,11 +279,13 @@ const LoginPage = () => {
 
                 <motion.div variants={itemVariants}>
                   <Button
+                    type="button"
                     variant="outline"
+                    disabled
                     className="w-full h-12 rounded-xl border-slate-200 gap-3 hover:bg-slate-50 transition-all"
                   >
                     <GoogleLogo />
-                    Google
+                    Google (coming soon)
                   </Button>
                 </motion.div>
               </motion.form>

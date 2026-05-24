@@ -12,18 +12,21 @@ export default function AlumnusInternship() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-foreground">Internships</h1>
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Internships</h1>
+        <p className="text-muted-foreground text-sm mt-0.5">Manage your internship listings and track applicants</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5 mb-5">
-          <TabsTrigger value="my-internships">My Internships</TabsTrigger>
-          <TabsTrigger value="offers">Offers</TabsTrigger>
-          <TabsTrigger value="applications">Applications</TabsTrigger>
-          <TabsTrigger value="interns">Interns</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-1 -mx-1 px-1">
+          <TabsList className="inline-flex w-max mb-4">
+            <TabsTrigger value="my-internships">My Internships</TabsTrigger>
+            <TabsTrigger value="offers">Offers</TabsTrigger>
+            <TabsTrigger value="applications">Applications</TabsTrigger>
+            <TabsTrigger value="interns">Interns</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="my-internships">
           <MyInternshipsTab />

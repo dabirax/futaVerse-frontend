@@ -21,7 +21,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (error) => {
-    if (error.response?.status === 401) {
+    const isAuthEndpoint = error.config?.url?.includes('/api/auth/')
+    if (error.response?.status === 401 && !isAuthEndpoint) {
       sessionStorage.clear();
       window.location.href = "/login";
     }
