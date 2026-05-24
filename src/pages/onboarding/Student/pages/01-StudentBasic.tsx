@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
+import { Eye, EyeOff } from 'lucide-react'
 import { Country, State } from 'country-state-city'
 import { useRouter } from '@tanstack/react-router'
 import { LeftContainer } from '../../components/LeftContainer'
@@ -40,6 +42,8 @@ const stateOptions = (countryCode: string): Array<string> => {
 
 const StudentBasic = () => {
   const setData = useStudentStoreData((state) => state.setData)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const form = useForm<StudentBasicFormData>({
     resolver: zodResolver(studentBasicSchema),
@@ -362,13 +366,23 @@ const StudentBasic = () => {
                           <FormLabel className="text-slate-600 font-medium">
                             Password <span className="text-red-500">*</span>
                           </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="********"
-                              {...field}
-                            />
-                          </FormControl>
+                          <div className="relative">
+                            <FormControl>
+                              <Input
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder="********"
+                                className="pr-12"
+                                {...field}
+                              />
+                            </FormControl>
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword((p) => !p)}
+                              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
+                            >
+                              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                          </div>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -384,13 +398,23 @@ const StudentBasic = () => {
                             Confirm Password{' '}
                             <span className="text-red-500">*</span>
                           </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="********"
-                              {...field}
-                            />
-                          </FormControl>
+                          <div className="relative">
+                            <FormControl>
+                              <Input
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                placeholder="********"
+                                className="pr-12"
+                                {...field}
+                              />
+                            </FormControl>
+                            <button
+                              type="button"
+                              onClick={() => setShowConfirmPassword((p) => !p)}
+                              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
+                            >
+                              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                          </div>
                           <FormMessage />
                         </FormItem>
                       )}
