@@ -78,7 +78,7 @@ const StudentBasic = () => {
   )?.phoneCode
 
   return (
-    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 h-screen mlg:h-auto bg-[#fafafa] relative overflow-hidden">
+    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 min-h-screen mlg:h-auto">
       <div className="w-full h-full grid lg:grid-cols-2 z-10">
         <LeftContainer />
 
@@ -123,7 +123,7 @@ const StudentBasic = () => {
                             First Name <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input placeholder="John" {...field} />
+                            <Input placeholder="Ade" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -140,7 +140,7 @@ const StudentBasic = () => {
                             Last Name <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input placeholder="Doe" {...field} />
+                            <Input placeholder="Saliu" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -160,7 +160,7 @@ const StudentBasic = () => {
                             Middle Name
                           </FormLabel>
                           <FormControl>
-                            <Input placeholder="Jane" {...field} />
+                            <Input placeholder="Chukwudi" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

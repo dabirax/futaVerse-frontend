@@ -122,7 +122,7 @@ const AlumnusBasic = () => {
                             First Name <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input placeholder="John" {...field} />
+                            <Input placeholder="Ade" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -139,7 +139,7 @@ const AlumnusBasic = () => {
                             Last Name <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input placeholder="Doe" {...field} />
+                            <Input placeholder="Saliu" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -159,7 +159,7 @@ const AlumnusBasic = () => {
                             Middle Name
                           </FormLabel>
                           <FormControl>
-                            <Input placeholder="Nora" {...field} />
+                            <Input placeholder="Chukwudi" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

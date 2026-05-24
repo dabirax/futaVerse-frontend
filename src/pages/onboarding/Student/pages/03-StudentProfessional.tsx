@@ -104,7 +104,9 @@ const StudentProfessional = () => {
         firstname,
         lastname,
         middlename,
-        gender: gender ? (gender.charAt(0).toUpperCase() + gender.slice(1)) : gender,
+        gender: gender
+          ? gender.charAt(0).toUpperCase() + gender.slice(1)
+          : gender,
         phone_num,
         address,
         street: '',
@@ -221,20 +223,25 @@ const StudentProfessional = () => {
   ])
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      <div className="w-full h-full grid lg:grid-cols-2">
+    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 min-h-screen mlg:h-auto">
+      <div className="w-full h-full grid lg:grid-cols-2 z-10">
         <LeftContainer />
-        <div className="max-w-md m-auto w-full flex flex-col items-center py-4">
-          <div className="flex items-center justify-between w-full text-primary-dark text-2xl px-2">
-            <div className="mt-1">
-              <BackButton />
+        <div className="flex flex-col items-center justify-center py-8 px-4 sm:px-6">
+          <div className="w-full max-w-2xl bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-8 md:p-12">
+            <div className="flex items-center justify-between w-full mb-8">
+              <div className="transition-transform hover:-translate-x-1">
+                <BackButton />
+              </div>
+              <Logo />
             </div>
-            <Logo />
-          </div>
-          <div className="px-5">
-            <p className="text-xl font-semibold tracking-tight text-center">
-              Professional Information
-            </p>
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold tracking-tight text-primary-dark">
+                Professional Information
+              </h2>
+              <p className="text-slate-500 mt-2 text-sm">
+                Tell us about your skills and social presence
+              </p>
+            </div>
 
             <Form {...form}>
               <form
@@ -446,7 +453,9 @@ const StudentProfessional = () => {
                         {serverError.message}
                       </p>
                       {serverError.hint && (
-                        <p className="text-xs text-red-500">{serverError.hint}</p>
+                        <p className="text-xs text-red-500">
+                          {serverError.hint}
+                        </p>
                       )}
                     </div>
                   </motion.div>

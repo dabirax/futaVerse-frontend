@@ -115,7 +115,7 @@ const StudentSchool = () => {
   ])
 
   return (
-    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 h-screen mlg:h-auto bg-[#fafafa] relative overflow-hidden">
+    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 min-h-screen mlg:h-auto">
       <div className="w-full h-full grid lg:grid-cols-2 z-10">
         <LeftContainer />
 
