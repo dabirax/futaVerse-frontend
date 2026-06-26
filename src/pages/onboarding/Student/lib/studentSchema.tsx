@@ -58,7 +58,7 @@ export type StudentSchoolFormData = z.infer<typeof studentSchoolSchema>;
 // 💼 Professional Info
 
 export const studentProfessionalSchema = z.object({
-  skills: z.array(z.string()).optional(),
+  skills: z.string().optional(),
   description: z.string().optional(),
   linkedin_url: z.union([z.literal(""), z.string().url("Invalid LinkedIn URL")]),
   x_url: z.union([z.literal(""), z.string().url("Invalid X URL")]),

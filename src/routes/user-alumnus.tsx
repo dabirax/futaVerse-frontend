@@ -34,7 +34,7 @@ export const alumnusRoute = createRoute({
   // getParentRoute: () => publicRoute,
   id: 'alumnus',
   component: AlumnusLayout,
-  beforeLoad: requireRole(['Alumni']),
+  beforeLoad: requireRole(['alumni']),
 })
 
 /* Alumnus Children */

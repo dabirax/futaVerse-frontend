@@ -50,7 +50,7 @@ const StudentProfessional = () => {
   >({
     resolver: zodResolver(studentProfessionalSchema),
     defaultValues: {
-      skills: _s.skills || [],
+      skills: Array.isArray(_s.skills) ? (_s.skills as string[]).join(', ') : (_s.skills || ''),
       description: _s.description || '',
       linkedin_url: _s.linkedin_url || '',
       x_url: _s.x_url || '',
@@ -119,7 +119,7 @@ const StudentProfessional = () => {
         expected_grad_year,
         level,
         cgpa,
-        previous_comps: data.skills,
+        previous_comps: data.skills ? data.skills.split(',').map(s => s.trim()).filter(Boolean) : [],
         description: data.description,
         linkedin_url: data.linkedin_url,
         company_linkedin_url: '',

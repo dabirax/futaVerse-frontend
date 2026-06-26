@@ -428,8 +428,8 @@ export default function AlumnusFeed() {
         </div>
       </div>
 
-      {/* Right Sidebar — stacks below feed on mobile/tablet, side-by-side on xl+ */}
-      <div className="w-full xl:w-72 xl:shrink-0 xl:sticky xl:top-6">
+      {/* Right Sidebar — xl+ only */}
+      <div className="hidden xl:block xl:w-72 xl:shrink-0 xl:sticky xl:top-6">
         <RightSidebar mentorships={feedMentorships} />
       </div>
     </div>

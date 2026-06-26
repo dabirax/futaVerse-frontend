@@ -53,7 +53,7 @@ export type AlumnusSchoolFormData = z.infer<typeof alumnusSchoolSchema>;
 export const alumnusProfessionalSchema = z.object({
   current_job_title: z.string().optional(),
   current_company: z.string().optional(),
-  previous_comps: z.array(z.string()).optional(),
+  previous_comps: z.string().optional(),
   years_of_exp: z.coerce
     .number()
     .min(0, "Years of experience must be valid"),

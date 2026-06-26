@@ -1,18 +1,17 @@
 // utils/guards.ts
 import { redirect } from "@tanstack/react-router";
 
-// Simple auth check
-export const requireAuth = ({ context }: { context: any }) => {
-  if (!context.auth?.isLoggedIn) {
-    throw redirect({ to: "/login" });
-  }
+// Read directly from sessionStorage so the guard works even before React re-renders
+export const requireAuth = () => {
+  const token = sessionStorage.getItem("access_token");
+  if (!token) throw redirect({ to: "/login" });
 };
 
-// Role-based check
 export const requireRole = (allowedRoles: Array<string>) => {
-  return ({ context }: { context: any }) => {
-    requireAuth({ context }); // first check if logged in
-    if (!allowedRoles.includes(context.auth.role)) {
+  return () => {
+    requireAuth();
+    const role = sessionStorage.getItem("role");
+    if (!role || !allowedRoles.includes(role)) {
       throw redirect({ to: "/unauthorized" });
     }
   };

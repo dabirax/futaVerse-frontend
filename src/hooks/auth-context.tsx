@@ -1,5 +1,5 @@
 // src/hooks/AuthContext.tsx
-import { createContext, useContext,useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 
 export type AuthContextType = {
@@ -13,20 +13,9 @@ export type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-
-  // Load token from sessionStorage on mount
-  useEffect(() => {
-    const storedToken = sessionStorage.getItem("access_token");
-    const storedRole = sessionStorage.getItem("role");
-    if (storedToken) {
-      setToken(storedToken);
-      setRole(storedRole);
-      setIsLoggedIn(true);
-    }
-  }, []);
+  const [token, setToken] = useState<string | null>(() => sessionStorage.getItem("access_token"));
+  const [role, setRole] = useState<string | null>(() => sessionStorage.getItem("role"));
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!sessionStorage.getItem("access_token"));
 
   const login = (newToken: string, newRole: string) => {
     sessionStorage.setItem("access_token", newToken);
@@ -34,11 +23,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(newToken);
     setRole(newRole);
     setIsLoggedIn(true);
-    if (newRole === "student") {
-      window.location.href = "/student/dashboard";
-    } else if (newRole === "alumnus") {
-      window.location.href = "/alumnus/dashboard";
-    }
   };
 
   const logout = () => {

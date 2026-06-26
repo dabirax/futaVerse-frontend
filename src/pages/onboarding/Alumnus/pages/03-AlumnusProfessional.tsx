@@ -79,7 +79,7 @@ const AlumnusProfessional = () => {
     defaultValues: {
       current_job_title: _s.current_job_title || '',
       current_company: _s.current_company || '',
-      previous_comps: _s.previous_comps || [],
+      previous_comps: Array.isArray(_s.previous_comps) ? _s.previous_comps.join(', ') : (_s.previous_comps || ''),
       years_of_exp: _s.years_of_exp ?? 0,
       description: _s.description || '',
       linkedin_url: _s.linkedin_url || '',
@@ -144,7 +144,7 @@ const AlumnusProfessional = () => {
         department,
         faculty,
         grad_year,
-        previous_comps: data.previous_comps,
+        previous_comps: data.previous_comps ? data.previous_comps.split(',').map(s => s.trim()).filter(Boolean) : [],
         current_job_title: data.current_job_title,
         current_company: data.current_company,
         years_of_exp: data.years_of_exp,

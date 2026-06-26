@@ -25,7 +25,7 @@ export const studentRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: 'student',
   component: StudentLayout,
-  beforeLoad: requireRole(['Student']),
+  beforeLoad: requireRole(['student']),
   notFoundComponent: () => <div>Page Not Found</div>,
 })
 
