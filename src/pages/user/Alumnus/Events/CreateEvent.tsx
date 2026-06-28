@@ -34,6 +34,7 @@ import { ArrowLeft, CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { useCreateEvent } from "@/hooks/useEvents";
 import TicketsSection, {
   TicketScenario,
 } from "@/components/user/events/TicketsSection";
@@ -71,8 +72,9 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export default function CreateEvent() {
-    const router = useRouter();
+  const router = useRouter();
   const { toast } = useToast();
+  const createEvent = useCreateEvent();
   const [scenario, setScenario] = useState<TicketScenario>("free");
   const [freeTicket, setFreeTicket] = useState<FreeTicketConfig>({
     required: true,
@@ -81,6 +83,22 @@ export default function CreateEvent() {
   const [paidTickets, setPaidTickets] = useState<PaidTicketInput[]>([]);
   const [linkedBankAccount, setLinkedBankAccount] =
     useState<LinkedBankAccount | null>(null);
+  const [submitType, setSubmitType] = useState<"publish" | "draft" | null>(null);
+
+  const handleCreate = (isDraft: boolean) => {
+    setSubmitType(isDraft ? "draft" : "publish");
+    form.setValue("is_published", !isDraft);
+    form.handleSubmit((data) => {
+      onSubmit({ ...data, is_published: !isDraft });
+    })();
+  };
+
+  const getErrorMessage = (error: unknown) => {
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return "Unexpected error occurred.";
+  };
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -162,12 +180,22 @@ export default function CreateEvent() {
         : {}),
     };
 
-    console.log("POST /api/events/", payload);
-    toast({
-      title: "Event Created",
-      description: `"${data.title}" has been created successfully.`,
+    createEvent.mutate(payload, {
+      onSuccess: () => {
+        toast({
+          title: "Event Created",
+          description: `"${data.title}" has been created successfully.`,
+        });
+        router.navigate({ to: "/alumnus/events" });
+      },
+      onError: (error) => {
+        toast({
+          title: "Error",
+          description: getErrorMessage(error),
+          variant: "destructive",
+        });
+      },
     });
-    router.navigate({to: "/alumnus/events"});
   };
 
   return (
@@ -525,40 +553,41 @@ export default function CreateEvent() {
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="is_published"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center justify-between">
-                        <div>
-                          <FormLabel>Publish Event</FormLabel>
-                          <FormDescription>
-                            Make event visible to everyone
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+
                 </CardContent>
               </Card>
 
               {/* Actions */}
               <Card>
                 <CardContent className="pt-6 space-y-3">
-                  <Button type="submit" className="w-full">
-                    Create Event
+                  {createEvent.isError && (
+                    <div className="text-sm rounded-lg border border-red-200 bg-red-50 p-3 text-red-800 dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-300">
+                      {getErrorMessage(createEvent.error)}
+                    </div>
+                  )}
+                  <Button 
+                    type="button" 
+                    className="w-full"
+                    disabled={createEvent.isPending}
+                    onClick={() => handleCreate(false)}
+                  >
+                    {createEvent.isPending && submitType === "publish" ? "Creating..." : "Create Event"}
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    className="w-full"
+                    disabled={createEvent.isPending}
+                    onClick={() => handleCreate(true)}
+                  >
+                    {createEvent.isPending && submitType === "draft" ? "Saving..." : "Save as Draft"}
                   </Button>
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="ghost"
                     className="w-full"
                     onClick={() => router.navigate({ to: '/alumnus/events' })}
+                    disabled={createEvent.isPending}
                   >
                     Cancel
                   </Button>

@@ -16,193 +16,13 @@ import {
   Heart,
 } from "lucide-react";
 import { format } from "date-fns";
-import { Event } from "@/types/event";
+import { useEvent } from "@/hooks/useEvents";
 
 import { alumnusEventDetailRoute } from "@/routes/user-alumnus"
 import EventTicketsManager from "@/components/user/events/EventTicketsManager";
 import { BackButton2 } from "@/components/BackButtons";
 
-const mockEvents: Event[] = [
-  {
-    sqid: "evt001",
-    title: "Tech Career Workshop 2026",
-    description: "Join us for an interactive workshop on navigating your tech career. Learn from industry experts about resume building, interview preparation, and networking strategies.",
-    category: "workshop",
-    mode: "virtual",
-    venue: "",
-    date: "2026-02-15",
-    start_time: "10:00:00",
-    duration_mins: 120,
-    max_capacity: 100,
-    allow_sponsorship: true,
-    allow_donations: false,
-    is_cancelled: false,
-    is_published: true,
-    created_at: "2026-01-20T08:00:00Z",
-    updated_at: "2026-01-20T08:00:00Z",
-    creator: 1,
-    virtual_meeting: {
-      sqid: "vm001",
-      platform: "zoom",
-      join_url: "https://zoom.us/j/123456789",
-      room_name: "Tech Career Workshop",
-    },
-    starting_price: "0.00",
-    tickets: [
-      {
-        sqid: "tkt001",
-        event: "evt001",
-        name: "Free Entry",
-        description: "General admission",
-        price: "0.00",
-        sales_price: "0.00",
-        discount_perc: "0",
-        quantity: 100,
-        quantity_sold: 45,
-        type: "default",
-        sales_start: "2026-01-20T00:00:00Z",
-        sales_end: "2026-02-14T23:59:59Z",
-        is_active: true,
-        created_at: "2026-01-20T08:00:00Z",
-      },
-    ],
-  },
-  {
-    sqid: "evt002",
-    title: "Alumni Networking Night",
-    description: "Connect with fellow FUTA alumni across industries. Share experiences, build connections, and explore collaboration opportunities.",
-    category: "networking",
-    mode: "physical",
-    venue: "FUTA Alumni Center, Main Campus",
-    date: "2026-03-10",
-    start_time: "18:00:00",
-    duration_mins: 180,
-    max_capacity: 50,
-    allow_sponsorship: true,
-    allow_donations: true,
-    is_cancelled: false,
-    is_published: true,
-    created_at: "2026-01-18T10:00:00Z",
-    updated_at: "2026-01-18T10:00:00Z",
-    creator: 1,
-    starting_price: "2500.00",
-    tickets: [
-      {
-        sqid: "tkt002",
-        event: "evt002",
-        name: "Standard Ticket",
-        description: "Includes dinner and networking session",
-        price: "2500.00",
-        sales_price: "2500.00",
-        discount_perc: "0",
-        quantity: 40,
-        quantity_sold: 28,
-        type: "default",
-        sales_start: "2026-01-18T00:00:00Z",
-        sales_end: "2026-03-09T23:59:59Z",
-        is_active: true,
-        created_at: "2026-01-18T10:00:00Z",
-      },
-      {
-        sqid: "tkt003",
-        event: "evt002",
-        name: "VIP Ticket",
-        description: "Premium seating and exclusive lounge access",
-        price: "5000.00",
-        sales_price: "5000.00",
-        discount_perc: "0",
-        quantity: 10,
-        quantity_sold: 5,
-        type: "vip",
-        sales_start: "2026-01-18T00:00:00Z",
-        sales_end: "2026-03-09T23:59:59Z",
-        is_active: true,
-        created_at: "2026-01-18T10:00:00Z",
-      },
-    ],
-  },
-  {
-    sqid: "evt003",
-    title: "AI & Machine Learning Seminar",
-    description: "Explore the latest trends in AI and Machine Learning. This hybrid event features keynote speakers from top tech companies.",
-    category: "seminar",
-    mode: "hybrid",
-    venue: "FUTA Auditorium",
-    date: "2026-04-05",
-    start_time: "09:00:00",
-    duration_mins: 360,
-    max_capacity: 200,
-    allow_sponsorship: true,
-    allow_donations: false,
-    is_cancelled: false,
-    is_published: true,
-    created_at: "2026-01-15T14:00:00Z",
-    updated_at: "2026-01-22T09:00:00Z",
-    creator: 1,
-    virtual_meeting: {
-      sqid: "vm002",
-      platform: "meet",
-      join_url: "https://meet.google.com/abc-defg-hij",
-      room_name: "AI Seminar 2026",
-    },
-    starting_price: "1000.00",
-    tickets: [
-      {
-        sqid: "tkt004",
-        event: "evt003",
-        name: "Online Access",
-        description: "Virtual attendance via Google Meet",
-        price: "1000.00",
-        sales_price: "1000.00",
-        discount_perc: "0",
-        quantity: 150,
-        quantity_sold: 67,
-        type: "default",
-        sales_start: "2026-01-15T00:00:00Z",
-        sales_end: "2026-04-04T23:59:59Z",
-        is_active: true,
-        created_at: "2026-01-15T14:00:00Z",
-      },
-      {
-        sqid: "tkt005",
-        event: "evt003",
-        name: "In-Person Ticket",
-        description: "Physical attendance with lunch included",
-        price: "3500.00",
-        sales_price: "3500.00",
-        discount_perc: "0",
-        quantity: 50,
-        quantity_sold: 30,
-        type: "default",
-        sales_start: "2026-01-15T00:00:00Z",
-        sales_end: "2026-04-04T23:59:59Z",
-        is_active: true,
-        created_at: "2026-01-15T14:00:00Z",
-      },
-    ],
-  },
-  {
-    sqid: "evt004",
-    title: "FUTA Career Fair 2026",
-    description: "Annual career fair connecting students and alumni with top employers. Over 50 companies will be present for recruitment.",
-    category: "career_fair",
-    mode: "physical",
-    venue: "FUTA Sports Complex",
-    date: "2026-05-20",
-    start_time: "08:00:00",
-    duration_mins: 480,
-    max_capacity: 500,
-    allow_sponsorship: true,
-    allow_donations: true,
-    is_cancelled: false,
-    is_published: false,
-    created_at: "2026-01-10T11:00:00Z",
-    updated_at: "2026-01-25T16:00:00Z",
-    creator: 1,
-    starting_price: "0.00",
-    tickets: [],
-  },
-];
+
 const categoryLabels: Record<string, string> = {
   workshop: "Workshop",
   seminar: "Seminar",
@@ -221,14 +41,21 @@ const platformLabels: Record<string, string> = {
 export default function EventDetail() {
   const { id } = alumnusEventDetailRoute.useParams();
   const router = useRouter();
+  const { data: event, isLoading, isError, error } = useEvent(id);
 
-  const event = mockEvents.find((e) => e.sqid === id);
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <h2 className="text-xl font-semibold text-foreground">Loading event details...</h2>
+      </div>
+    );
+  }
 
-  if (!event) {
+  if (isError || !event) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <h2 className="text-xl font-semibold text-foreground">
-          Event not found
+          {error instanceof Error ? error.message : "Event not found"}
         </h2>
         <Button
           variant="link"

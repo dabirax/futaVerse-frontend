@@ -8,7 +8,6 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   Search,
   Calendar,
-  Clock,
   MapPin,
   Users,
   Video,
@@ -16,19 +15,10 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import { format } from 'date-fns'
-import { FeedMentorship, FeedInternship, mockEventListItems } from './mockFeed'
-import { EventListItem } from '@/types/event'
-import InternshipFeedCard from '@/components/user/feed/InternshipFeedCard'
-import { useInternshipEngagements } from '@/hooks/useInternships'
-import { useMentorshipEngagements } from '@/hooks/useMentorships'
+import { useFeed } from '@/hooks/useFeed'
+import { FeedItemData } from '@/types/feed'
 
-type FeedItemType = 'all' | 'mentorship' | 'internship' | 'event'
-
-interface FeedItem {
-  type: 'mentorship' | 'internship' | 'event'
-  data: FeedMentorship | FeedInternship | EventListItem
-  created_at: string
-}
+type FeedFilter = 'all' | 'opportunities' | 'mentorship' | 'events'
 
 const categoryLabels: Record<string, string> = {
   workshop: 'Workshop',
@@ -39,14 +29,14 @@ const categoryLabels: Record<string, string> = {
   conference: 'Conference',
 }
 
-function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
+function MentorshipFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
   const router = useRouter()
   const navigate = router.navigate
 
   return (
     <Card
       className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-primary"
-      onClick={() => navigate({ to: `/student/mentorship/${item.sqid}` })}
+      onClick={() => navigate({ to: `/student/mentorship/${sqid}` })}
     >
       <CardContent className="p-5">
         <div className="flex items-start gap-4">
@@ -61,34 +51,39 @@ function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
               <Badge className="bg-primary/10 text-primary border-0 text-xs">
                 Mentorship
               </Badge>
-              <Badge variant="outline" className="text-xs">
-                {item.category}
-              </Badge>
-              <Badge variant="secondary" className="text-xs">
-                {item.work_mode}
-              </Badge>
+              {item.category && (
+                <Badge variant="outline" className="text-xs">
+                  {item.category}
+                </Badge>
+              )}
+              {item.work_mode && (
+                <Badge variant="secondary" className="text-xs">
+                  {item.work_mode}
+                </Badge>
+              )}
             </div>
 
             <h3 className="font-semibold text-foreground line-clamp-1">
               {item.title}
             </h3>
+            
             <p className="text-sm text-muted-foreground line-clamp-2">
-              {item.description}
+              {item.alumni ? `Hosted by ${item.alumni}` : 'A new mentorship opportunity'}
             </p>
 
             <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">
-              <span className="flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" />
-                {item.duration_weeks} weeks
-              </span>
-              <span className="flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5" />
-                {format(new Date(item.start_date), 'MMM d, yyyy')}
-              </span>
-              <span className="flex items-center gap-1">
-                <Users className="h-3.5 w-3.5" />
-                {item.remaining_slots} of {item.available_slots} slots
-              </span>
+              {item.start_date && (
+                <span className="flex items-center gap-1">
+                  <Calendar className="h-3.5 w-3.5" />
+                  {format(new Date(item.start_date), 'MMM d, yyyy')}
+                </span>
+              )}
+              {item.remaining_slots !== undefined && (
+                <span className="flex items-center gap-1">
+                  <Users className="h-3.5 w-3.5" />
+                  {item.remaining_slots} of {item.available_slots} slots
+                </span>
+              )}
             </div>
           </div>
 
@@ -99,32 +94,16 @@ function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
   )
 }
 
-function EventFeedCard({ item }: { item: EventListItem }) {
+function EventFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
   const router = useRouter()
   const navigate = router.navigate
 
-  const formattedDate = format(new Date(item.date), 'MMM d, yyyy')
-  const formattedTime = format(
-    new Date(`2000-01-01T${item.start_time}`),
-    'h:mm a',
-  )
-
-  const modeIcon =
-    item.mode === 'virtual' ? (
-      <Video className="h-3.5 w-3.5" />
-    ) : item.mode === 'physical' ? (
-      <MapPin className="h-3.5 w-3.5" />
-    ) : (
-      <>
-        <Video className="h-3.5 w-3.5" />
-        <MapPin className="h-3.5 w-3.5" />
-      </>
-    )
+  const formattedDate = item.date ? format(new Date(item.date), 'MMM d, yyyy') : ''
 
   return (
     <Card
       className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-accent"
-      onClick={() => navigate({ to: `/alumnus/events/${item.sqid}` })}
+      onClick={() => navigate({ to: `/student/events/${sqid}` })}
     >
       <CardContent className="p-5">
         <div className="flex items-start gap-4">
@@ -139,20 +118,9 @@ function EventFeedCard({ item }: { item: EventListItem }) {
               <Badge className="bg-accent/10 text-accent border-0 text-xs">
                 Event
               </Badge>
-              <Badge variant="secondary" className="text-xs">
-                {categoryLabels[item.category] || item.category}
-              </Badge>
-              {!item.is_published && (
-                <Badge
-                  variant="outline"
-                  className="text-xs text-muted-foreground"
-                >
-                  Draft
-                </Badge>
-              )}
-              {item.is_cancelled && (
-                <Badge variant="destructive" className="text-xs">
-                  Cancelled
+              {item.category && (
+                <Badge variant="secondary" className="text-xs">
+                  {categoryLabels[item.category] || item.category}
                 </Badge>
               )}
             </div>
@@ -160,36 +128,25 @@ function EventFeedCard({ item }: { item: EventListItem }) {
             <h3 className="font-semibold text-foreground line-clamp-1">
               {item.title}
             </h3>
+            
             <p className="text-sm text-muted-foreground line-clamp-2">
-              {item.description}
+              {item.alumni ? `Hosted by ${item.alumni}` : 'A new event.'}
             </p>
 
             <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">
-              <span className="flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5" />
-                {formattedDate}
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" />
-                {formattedTime}
-              </span>
-              <span className="flex items-center gap-1.5">
-                {modeIcon}
-                <span className="capitalize">{item.mode}</span>
-              </span>
-              <span className="flex items-center gap-1">
-                <Users className="h-3.5 w-3.5" />
-                {item.max_capacity} capacity
-              </span>
+              {formattedDate && (
+                <span className="flex items-center gap-1">
+                  <Calendar className="h-3.5 w-3.5" />
+                  {formattedDate}
+                </span>
+              )}
+              {item.mode && (
+                <span className="flex items-center gap-1.5">
+                  {item.mode === 'virtual' || item.mode === 'hybrid' ? <Video className="h-3.5 w-3.5" /> : <MapPin className="h-3.5 w-3.5" />}
+                  <span className="capitalize">{item.mode}</span>
+                </span>
+              )}
             </div>
-
-            {item.starting_price && (
-              <p className="text-xs font-medium text-accent pt-1">
-                {parseFloat(item.starting_price) === 0
-                  ? 'Free'
-                  : `From ₦${parseFloat(item.starting_price).toLocaleString()}`}
-              </p>
-            )}
           </div>
 
           <ArrowRight className="h-5 w-5 text-muted-foreground shrink-0 mt-1" />
@@ -201,77 +158,37 @@ function EventFeedCard({ item }: { item: EventListItem }) {
 
 export default function StudentFeed() {
   const [search, setSearch] = useState('')
-  const [activeTab, setActiveTab] = useState<FeedItemType>('all')
+  const [activeTab, setActiveTab] = useState<FeedFilter>('all')
 
-  const {
-    data: internships,
-    // isLoading: isLoadingInternships,
-    // isError: isErrorInternships,
-  } = useInternshipEngagements()
-
-  const {
-    data: mentorships,
-    // isLoading: isLoadingMentorships,
-    // isError: isErrorMentorships,
-  } = useMentorshipEngagements()
-  
-const feedInternships = internships?.results ?? []
-const feedMentorships = mentorships?.results ?? []
-
-  const allItems: FeedItem[] = useMemo(() => {
-    const items: FeedItem[] = [
-      ...feedMentorships.map((m: FeedMentorship) => ({
-        type: 'mentorship' as const,
-        data: m,
-        created_at: m.created_at,
-      })),
-      ...feedInternships.map((i: FeedInternship) => ({
-        type: 'internship' as const,
-        data: i,
-        created_at: i.created_at,
-      })),
-      ...mockEventListItems
-        .filter((e) => e.is_published && !e.is_cancelled)
-        .map((e) => ({
-          type: 'event' as const,
-          data: e,
-          created_at: e.created_at,
-        })),
-    ]
-    return items.sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    )
-  }, [])
+  const { data: feedData } = useFeed()
+  const feedItems = feedData?.results ?? []
 
   const filteredItems = useMemo(() => {
-    let items =
-      activeTab === 'all'
-        ? allItems
-        : allItems.filter((i) => i.type === activeTab)
+    let items = feedItems
+
+    if (activeTab === 'opportunities') items = items.filter((i) => i.event_type.includes('internship'))
+    else if (activeTab === 'mentorship') items = items.filter((i) => i.event_type.includes('mentorship'))
+    else if (activeTab === 'events') items = items.filter((i) => i.event_type.includes('event'))
 
     if (search.trim()) {
       const q = search.toLowerCase()
       items = items.filter((item) => {
         const d = item.data
-        return (
-          d.title.toLowerCase().includes(q) ||
-          d.description.toLowerCase().includes(q)
-        )
+        return d.title?.toLowerCase().includes(q)
       })
     }
 
     return items
-  }, [allItems, activeTab, search])
+  }, [feedItems, activeTab, search])
 
   const counts = useMemo(
     () => ({
-      all: allItems.length,
-      mentorship: allItems.filter((i) => i.type === 'mentorship').length,
-      internship: allItems.filter((i) => i.type === 'internship').length,
-      event: allItems.filter((i) => i.type === 'event').length,
+      all: feedItems.length,
+      mentorship: feedItems.filter((i) => i.event_type.includes('mentorship')).length,
+      internship: feedItems.filter((i) => i.event_type.includes('internship')).length,
+      event: feedItems.filter((i) => i.event_type.includes('event')).length,
     }),
-    [allItems],
+    [feedItems],
   )
 
   return (
@@ -297,14 +214,14 @@ const feedMentorships = mentorships?.results ?? []
       </div>
       <Tabs
         value={activeTab}
-        onValueChange={(v) => setActiveTab(v as FeedItemType)}
+        onValueChange={(v) => setActiveTab(v as FeedFilter)}
       >
         <TabsList className="w-full justify-start">
           <TabsTrigger value="all">All ({counts.all})</TabsTrigger>
           <TabsTrigger value="mentorship">
             Mentorships ({counts.mentorship})
           </TabsTrigger>
-          <TabsTrigger value="internship">
+          <TabsTrigger value="opportunities">
             Internships ({counts.internship})
           </TabsTrigger>
           <TabsTrigger value="event">Events ({counts.event})</TabsTrigger>
@@ -319,27 +236,30 @@ const feedMentorships = mentorships?.results ?? []
             </Card>
           ) : (
             <div className="space-y-3">
-              {filteredItems.map((item, idx) => {
-                if (item.type === 'internship') {
+              {filteredItems.map((item) => {
+                if (item.event_type.includes('internship')) {
                   return (
                     <InternshipFeedCard
-                      key={`i-${idx}`}
-                      item={item.data as FeedInternship}
+                      key={item.sqid}
+                      item={item.data}
+                      sqid={item.sqid}
                     />
                   )
                 }
-                if (item.type === 'mentorship') {
+                if (item.event_type.includes('mentorship')) {
                   return (
                     <MentorshipFeedCard
-                      key={`m-${idx}`}
-                      item={item.data as FeedMentorship}
+                      key={item.sqid}
+                      item={item.data}
+                      sqid={item.sqid}
                     />
                   )
                 }
                 return (
                   <EventFeedCard
-                    key={`e-${idx}`}
-                    item={item.data as EventListItem}
+                    key={item.sqid}
+                    item={item.data}
+                    sqid={item.sqid}
                   />
                 )
               })}

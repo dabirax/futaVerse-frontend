@@ -17,6 +17,7 @@ import { rootRoute } from "./__root";
 import { requireRole} from "@/lib/guard";
 import MentorshipDetails from "@/pages/user/Student/Mentorship/details";
 import InternshipDetail from "@/pages/user/Student/Internship/InternshipDetail";
+import EventDetails from "@/pages/user/Student/Events/EventDetails";
 
 
 
@@ -81,6 +82,12 @@ export const studentEventsRoute = createRoute({
   getParentRoute: () => studentRoute,
   path: "/student/events",
   component: StudentEvents,
+});
+
+export const studentEventDetailRoute = createRoute({
+  getParentRoute: () => studentRoute,
+  path: "/student/events/$sqid",
+  component: EventDetails,
 });
 
 export const studentMessagesRoute = createRoute({

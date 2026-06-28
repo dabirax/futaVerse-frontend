@@ -67,6 +67,18 @@ export const useAddEventTicket = () => {
   })
 }
 
+export const useRegisterEvent = () => {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: { ticket: string; email: string }) => EventsService.register(payload),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['my-tickets'] })
+      qc.invalidateQueries({ queryKey: ['my-tickets-with-events'] })
+      qc.invalidateQueries({ queryKey: ['event'] })
+    },
+  })
+}
+
 export const useMyTickets = (params?: { page?: number; size?: number }) => {
   return useQuery({
     queryKey: ['my-tickets', params],

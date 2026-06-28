@@ -138,7 +138,6 @@ export default function CreateInternship() {
       stipend: values.is_paid ? values.stipend || '0' : '0',
       remaining_slots: values.available_slots,
     }
-    console.log(formatted)
     createInternship.mutate(formatted, {
       onSuccess: () => {
         toast({

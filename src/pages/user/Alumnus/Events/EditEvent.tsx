@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +36,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { mockEvents } from "@/data/mockEvents";
+import { useEvent, useUpdateEvent, useUpdateEventMode, useAddEventTicket } from "@/hooks/useEvents";
 
 import TicketsSection, {
   TicketScenario,
@@ -84,11 +84,64 @@ export default function EditEvent() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const event = mockEvents.find((e) => e.sqid === id);
+  const { data: event, isLoading, isError, error } = useEvent(id);
 
-  const initialPaidTickets = useMemo<PaidTicketInput[]>(
-    () =>
-      (event?.tickets || [])
+  const updateEvent = useUpdateEvent();
+  const updateEventMode = useUpdateEventMode();
+  const addTicket = useAddEventTicket();
+
+  const [scenario, setScenario] = useState<TicketScenario>("free");
+  const [freeTicket, setFreeTicket] = useState<FreeTicketConfig>({
+    required: true,
+    quantity: 100,
+  });
+  const [paidTickets, setPaidTickets] = useState<PaidTicketInput[]>([]);
+  const [linkedBankAccount, setLinkedBankAccount] =
+    useState<LinkedBankAccount | null>(null);
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      date: new Date(),
+      start_time: "09:00",
+      duration_mins: 60,
+      venue: "",
+      category: "workshop",
+      max_capacity: 100,
+      allow_sponsorship: false,
+      allow_donations: false,
+      is_published: false,
+      is_cancelled: false,
+      mode: "virtual",
+      platform: "meet",
+    },
+  });
+
+  const mode = form.watch("mode");
+  const isCancelled = form.watch("is_cancelled");
+
+  useEffect(() => {
+    if (event) {
+      form.reset({
+        title: event.title,
+        description: event.description,
+        date: new Date(event.date),
+        start_time: event.start_time?.slice(0, 5) || "09:00",
+        duration_mins: event.duration_mins,
+        venue: event.venue || "",
+        category: event.category,
+        max_capacity: event.max_capacity,
+        allow_sponsorship: event.allow_sponsorship,
+        allow_donations: event.allow_donations,
+        is_published: event.is_published,
+        is_cancelled: event.is_cancelled,
+        mode: event.mode,
+        platform: event.virtual_meeting?.platform || "meet",
+      });
+
+      const initialPaid = (event.tickets || [])
         .filter((t) => parseFloat(t.price) > 0)
         .map((t) => ({
           name: t.name,
@@ -99,67 +152,36 @@ export default function EditEvent() {
           sales_start: t.sales_start.replace("Z", "").slice(0, 16),
           sales_end: t.sales_end.replace("Z", "").slice(0, 16),
           is_active: t.is_active,
-        })),
-    [event]
-  );
+        }));
+      setPaidTickets(initialPaid);
 
-  const initialFreeTicket = useMemo<FreeTicketConfig>(() => {
-    const free = event?.tickets?.find((t) => parseFloat(t.price) === 0);
+      const free = event.tickets?.find((t) => parseFloat(t.price) === 0);
+      setFreeTicket(
+        free
+          ? { required: true, quantity: free.quantity }
+          : { required: false, quantity: 100 }
+      );
 
-    return free
-      ? { required: true, quantity: free.quantity }
-      : { required: false, quantity: 100 };
-  }, [event]);
+      const hasFree = free !== undefined;
+      const hasPaid = initialPaid.length > 0;
+      setScenario(hasFree && hasPaid ? "free_and_paid" : hasPaid ? "paid" : "free");
+    }
+  }, [event, form]);
 
-  const initialScenario = useMemo<TicketScenario>(() => {
-    const hasFree = initialFreeTicket.required;
-    const hasPaid = initialPaidTickets.length > 0;
-
-    if (hasFree && hasPaid) return "free_and_paid";
-    if (hasPaid) return "paid";
-    return "free";
-  }, [initialFreeTicket, initialPaidTickets]);
-
-  const [scenario, setScenario] =
-    useState<TicketScenario>(initialScenario);
-
-  const [freeTicket, setFreeTicket] =
-    useState<FreeTicketConfig>(initialFreeTicket);
-
-  const [paidTickets, setPaidTickets] =
-    useState<PaidTicketInput[]>(initialPaidTickets);
-
-  const [linkedBankAccount, setLinkedBankAccount] =
-    useState<LinkedBankAccount | null>(null);
-
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: event?.title || "",
-      description: event?.description || "",
-      date: event ? new Date(event.date) : new Date(),
-      start_time: event?.start_time?.slice(0, 5) || "09:00",
-      duration_mins: event?.duration_mins || 60,
-      venue: event?.venue || "",
-      category: event?.category || "workshop",
-      max_capacity: event?.max_capacity || 100,
-      allow_sponsorship: event?.allow_sponsorship || false,
-      allow_donations: event?.allow_donations || false,
-      is_published: event?.is_published || false,
-      is_cancelled: event?.is_cancelled || false,
-      mode: event?.mode || "virtual",
-      platform: event?.virtual_meeting?.platform || "meet",
-    },
-  });
-
-  const mode = form.watch("mode");
-  const isCancelled = form.watch("is_cancelled");
-
-  if (!event) {
+  if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <h2 className="text-xl font-semibold">Event not found</h2>
+        <h2 className="text-xl font-semibold">Loading event details...</h2>
+      </div>
+    );
+  }
 
+  if (isError || !event) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <h2 className="text-xl font-semibold">
+          {error instanceof Error ? error.message : "Event not found"}
+        </h2>
         <Button
           variant="link"
           onClick={() => router.navigate({ to: "/alumnus/events" })}
@@ -172,7 +194,7 @@ export default function EditEvent() {
     );
   }
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     const usesPaid =
       scenario === "paid" || scenario === "free_and_paid";
 
@@ -208,43 +230,47 @@ export default function EditEvent() {
       is_cancelled: data.is_cancelled,
     };
 
-    console.log(
-      `PATCH /api/events/update/${event.sqid}`,
-      updatePayload
-    );
+    try {
+      await updateEvent.mutateAsync({ sqid: event.sqid, payload: updatePayload });
 
-    console.log(
-      `PATCH /api/events/update/${event.sqid}/mode`,
-      {
-        mode: data.mode,
-        venue: data.venue || "",
-        ...(data.mode !== "physical"
-          ? { platform: data.platform }
-          : {}),
-      }
-    );
-
-    paidTickets.forEach((ticket) => {
-      console.log("POST /api/events/ticket", {
-        event: event.sqid,
-        ...ticket,
-        sales_start: new Date(
-          ticket.sales_start
-        ).toISOString(),
-        sales_end: new Date(
-          ticket.sales_end
-        ).toISOString(),
+      await updateEventMode.mutateAsync({
+        sqid: event.sqid,
+        payload: {
+          mode: data.mode,
+          venue: data.venue || "",
+          ...(data.mode !== "physical" ? { platform: data.platform } : {}),
+        },
       });
-    });
 
-    toast({
-      title: "Event Updated",
-      description: `"${data.title}" updated successfully.`,
-    });
+      const existingTicketNames = new Set((event.tickets || []).map((t) => t.name));
+      const newTickets = paidTickets.filter((t) => !existingTicketNames.has(t.name));
 
-    router.navigate({
-      to: `/alumnus/events/${event.sqid}`,
-    });
+      await Promise.all(
+        newTickets.map((ticket) =>
+          addTicket.mutateAsync({
+            event: event.sqid,
+            ...ticket,
+            sales_start: new Date(ticket.sales_start).toISOString(),
+            sales_end: new Date(ticket.sales_end).toISOString(),
+          })
+        )
+      );
+
+      toast({
+        title: "Event Updated",
+        description: `"${data.title}" updated successfully.`,
+      });
+
+      router.navigate({
+        to: `/alumnus/events/${event.sqid}`,
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error updating event",
+        description: err?.message || "Failed to update event. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const cancelEvent = async () => {
@@ -578,14 +604,24 @@ export default function EditEvent() {
               {/* Actions */}
               <Card>
                 <CardContent className="pt-6 space-y-3">
-                  <Button type="submit" className="w-full">
-                    Save Changes
+                  {(updateEvent.isError || updateEventMode.isError || addTicket.isError) && (
+                    <div className="text-sm rounded-lg border border-red-200 bg-red-50 p-3 text-red-800 dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-300">
+                      {updateEvent.error?.message || updateEventMode.error?.message || addTicket.error?.message || "Failed to update event."}
+                    </div>
+                  )}
+                  <Button 
+                    type="submit" 
+                    className="w-full"
+                    disabled={updateEvent.isPending || updateEventMode.isPending || addTicket.isPending}
+                  >
+                    {updateEvent.isPending || updateEventMode.isPending || addTicket.isPending ? "Saving..." : "Save Changes"}
                   </Button>
                   <Button
                     type="button"
                     variant="outline"
                     className="w-full"
                     onClick={() => router.navigate({ to: `/alumnus/events/${event.sqid}` })}
+                    disabled={updateEvent.isPending || updateEventMode.isPending || addTicket.isPending}
                   >
                     Cancel
                   </Button>
