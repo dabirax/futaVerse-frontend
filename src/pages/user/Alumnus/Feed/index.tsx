@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
-  Bookmark,
   Briefcase,
   Calendar,
   ChevronRight,
@@ -17,7 +16,7 @@ import {
   Zap,
 } from 'lucide-react'
 import { format } from 'date-fns'
-import { FeedItemData, FeedResponseItem } from '@/types/feed'
+import { FeedItemData } from '@/types/feed'
 import { useFeed } from '@/hooks/useFeed'
 import { useMentorships } from '@/hooks/useMentorships'
 
@@ -212,7 +211,7 @@ const quickActions = [
 
 function RightSidebar() {
   const { data: mentorships } = useMentorships()
-  const availableMentors = (mentorships?.results ?? []).filter((m) => m.remaining_slots > 0).slice(0, 2)
+  const availableMentors = (mentorships?.results ?? []).filter((m: any) => m.remaining_slots > 0).slice(0, 2)
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">

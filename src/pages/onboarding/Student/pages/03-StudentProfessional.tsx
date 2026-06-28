@@ -105,7 +105,7 @@ const StudentProfessional = () => {
         lastname,
         middlename,
         gender: gender
-          ? gender.charAt(0).toUpperCase() + gender.slice(1)
+          ? gender.charAt(0) + gender.slice(1)
           : gender,
         phone_num,
         address,
@@ -131,6 +131,8 @@ const StudentProfessional = () => {
         facebook_url: data.facebook_url,
       },
     }
+
+    console.log(payload)
 
     setData(data)
 

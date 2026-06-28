@@ -2,9 +2,10 @@ import { useRouter } from '@tanstack/react-router'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-  MapPin,
+import {
   Briefcase,
   ArrowRight,
+  DollarSign
 } from 'lucide-react'
 import { FeedItemData } from '@/types/feed'
 
