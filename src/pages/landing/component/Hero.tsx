@@ -1,71 +1,103 @@
-import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/landing/hero-collaboration.png";
+import { Button } from '@/components/ui/button'
+import { Link } from '@tanstack/react-router'
+
+const heroCards = [
+  {
+    initials: 'TK',
+    name: 'Tunde Kelani',
+    role: 'Software Engineer · Lagos',
+    badge: 'Mentor',
+    badgeClass: 'bg-[#ede9fe] text-[#7b2fbe]',
+  },
+  {
+    initials: 'AM',
+    name: 'Amaka Musa',
+    role: 'CS Year 3 · Applied to internship',
+    badge: 'Accepted',
+    badgeClass: 'bg-[#d1fae5] text-[#065f46]',
+  },
+  {
+    initials: 'EO',
+    name: 'Emeka Obi',
+    role: 'FinTech Lead · Hosting event',
+    badge: 'Fri 4pm',
+    badgeClass: 'bg-[#fef3c7] text-[#92400e]',
+  },
+]
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-14 lg:pt-0 ">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 gradient-soft -z-10" />
-      
-      {/* Decorative Elements */}
-      <div className="absolute  right-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
-
-      <div className="container mx-auto px-4 lg:px-8 py-12 lg:py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
-          <div className="space-y-2 animate-fade-up">
-            <h1 className="text-3xl md:text-3xl lg:text-4xl font-black leading-tight">
-              Connecting FUTA Alumni and Students —{" "}
-              <span className="bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                Building Futures Together
-              </span>
+    <section className="relative overflow-hidden bg-[#f7f5ff] pt-28 pb-16">
+      <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-[#ede9fe]/80 to-transparent" />
+      <div className="container mx-auto px-4 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+          <div className="space-y-6">
+            <h1 className="text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl">
+              Where alumni <span className="text-[#7b2fbe]">shape careers</span>{' '}
+              that last.
             </h1>
-            
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
-              Mentorship. Internships. Events. Real connections that shape careers.
+            <p className="max-w-xl text-lg leading-8 text-slate-600">
+              Mentorship, internships, job openings, and events — all in one
+              place, built for the FUTA community.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button variant="hero" size="lg" className="shadow-purple">
-                Join as Student
-              </Button>
-              <Button variant="outline" size="lg">
-                Join as Alumni
-              </Button>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link to="/signup">
+                <Button variant="gradient" size="lg">
+                  Join as a student
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button variant="outline" size="lg">
+                  Join as alumni
+                </Button>
+              </Link>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-8">
+            <div className="grid grid-cols-3 gap-4 pt-6">
               <div>
-                <p className="text-3xl font-bold text-primary">500+</p>
-                <p className="text-sm text-muted-foreground">Alumni Mentors</p>
+                <p className="text-3xl font-bold text-[#7b2fbe]">500+</p>
+                <p className="text-sm text-slate-500">Alumni mentors</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-secondary">1000+</p>
-                <p className="text-sm text-muted-foreground">Students</p>
+                <p className="text-3xl font-bold text-[#16a34a]">1,000+</p>
+                <p className="text-sm text-slate-500">Students</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-accent">50+</p>
-                <p className="text-sm text-muted-foreground">Events Yearly</p>
+                <p className="text-3xl font-bold text-[#c2410c]">50+</p>
+                <p className="text-sm text-slate-500">Events yearly</p>
               </div>
             </div>
           </div>
 
-          {/* Right Image */}
-          <div className="relative animate-fade-up">
-            <div className="absolute inset-0 bg-linear-to-br from-primary/20 to-secondary/20 rounded-3xl blur-2xl" />
-            <img
-              src={heroImage}
-              alt="FUTA students and alumni collaborating"
-              className="relative rounded-3xl shadow-2xl w-full h-auto"
-            />
+          <div className="space-y-4">
+            {heroCards.map((card, index) => (
+              <div
+                key={index}
+                className="rounded-3xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-200/40"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ede9fe] text-sm font-bold text-[#7b2fbe]">
+                    {card.initials}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">{card.name}</p>
+                    <p className="text-sm text-slate-500">{card.role}</p>
+                  </div>
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${card.badgeClass}`}
+                  >
+                    {card.badge}
+                  </span>
+                </div>
+              </div>
+            ))}
+            
           </div>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Hero;
+export default Hero

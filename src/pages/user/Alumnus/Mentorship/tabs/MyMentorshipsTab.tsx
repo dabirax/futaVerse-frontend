@@ -2,17 +2,16 @@ import { Plus } from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import MentorshipCard from '../../../../../components/user/ShipCard'
-import { useMentorships} from '@/hooks/useMentorships'
+import { useMentorships } from '@/hooks/useMentorships'
 import { CardSkeleton1 } from '@/components/CardSkeletons'
 
 export default function MyMentorshipsTab() {
   const navigate = useRouter().navigate
   const { data, isLoading, isError } = useMentorships()
- 
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex justify-end lg:hidden">
         <Button onClick={() => navigate({ to: '/alumnus/mentorships/create' })}>
           <Plus className="h-4 w-4" />
           Create New Mentorship
@@ -29,15 +28,15 @@ export default function MyMentorshipsTab() {
       )}
 
       <div className="grid gap-4 md:grid-cols-2">
-              {data?.results.map((mentorship: any, index: number) => (
-                  <MentorshipCard
-                  key={index}
-                  role="alumnus"
-                      id={mentorship.sqid}
-                      {...mentorship}
-                  ship='mentorship'
-                  />
-              ))}
+        {data?.results.map((mentorship: any, index: number) => (
+          <MentorshipCard
+            key={index}
+            role="alumnus"
+            id={mentorship.sqid}
+            {...mentorship}
+            ship="mentorship"
+          />
+        ))}
       </div>
     </div>
   )

@@ -1,89 +1,101 @@
-import { BarChart3, Briefcase, Calendar, Check, Gift, MessageCircle, Shield } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Briefcase,
+  Calendar,
+  Check,
+  MessageCircle,
+  BarChart3,
+  Eye,
+} from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
 
 const Features = () => {
   const features = [
     {
       icon: Check,
-      title: "Mentor–Mentee Matching",
-      description: "Smart algorithm pairs students with the right alumni mentors based on interests and career goals.",
-      gradient: "from-primary to-primary-dark",
+      title: 'Mentorship',
+      description:
+        'Connect with alumni matched to your field and career goals.',
+      gradient: 'from-primary to-primary-dark',
     },
     {
       icon: Briefcase,
-      title: "Internship & NYSC Placement",
-      description: "Access exclusive internship opportunities and NYSC placement guidance from experienced alumni.",
-      gradient: "from-secondary to-secondary-light",
-    },
-    {
-      icon: MessageCircle,
-      title: "Real-time Chat & Scheduling",
-      description: "Seamless communication with integrated Google Meet and Calendar for easy session booking.",
-      gradient: "from-accent to-accent-light",
+      title: 'Internships and jobs',
+      description: 'Verified opportunities posted by FUTA alumni and partners.',
+      gradient: 'from-accent to-accent-light',
     },
     {
       icon: Calendar,
-      title: "Alumni Events & Networking",
-      description: "Attend workshops, career talks, and networking events hosted by successful alumni.",
-      gradient: "from-primary to-accent",
+      title: 'Events and tickets',
+      description:
+        'Career talks, workshops, and networking — free or ticketed.',
+      gradient: 'from-accent to-primary',
+    },
+    {
+      icon: MessageCircle,
+      title: 'Real-time chat',
+      description:
+        'Stay connected with mentors and peers without leaving the platform.',
+      gradient: 'from-primary to-accent',
     },
     {
       icon: BarChart3,
-      title: "Reports & Feedback Analytics",
-      description: "Track your mentorship progress with detailed reports and performance analytics.",
-      gradient: "from-secondary to-primary",
+      title: 'Reports and analytics',
+      description: 'Track mentorship progress, event attendance, and outcomes.',
+      gradient: 'from-primary-dark to-primary',
     },
     {
-      icon: Gift,
-      title: "Alumni Donations & Support",
-      description: "Alumni can contribute to student development through sponsorships and donations.",
-      gradient: "from-accent to-secondary",
+      icon: Eye,
+      title: 'Job shadowing',
+      description:
+        'Gain hands-on experience alongside professionals in your field.',
+      gradient: 'from-accent-light to-accent',
     },
-    {
-      icon: Shield,
-      title: "Admin Oversight Tools",
-      description: "Comprehensive admin dashboard for managing users, approving mentors, and monitoring activities.",
-      gradient: "from-primary-dark to-secondary",
-    },
-  ];
+  ]
 
   return (
-    <section id="features" className="py-8 lg:py-16 bg-background">
+    <section id="features" className="py-10 lg:py-20 bg-white">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
-            Core{" "}
+            Core{' '}
             <span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
               Features
             </span>
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Everything you need to build meaningful connections and advance your career.
+          <p className="text-lg text-slate-600">
+            Everything you need to build meaningful connections and advance your
+            career.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid gap-6 lg:grid-cols-3">
           {features.map((feature, index) => {
-            const Icon = feature.icon;
+            const Icon = feature.icon
             return (
               <Card
                 key={index}
-                className="group border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                className="group border border-slate-200 bg-slate-50 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
               >
                 <CardContent className="p-6">
-                  <div className={`w-12 h-12 rounded-xl bg-linear-to-br ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <Icon className="w-6 h-6 text-white" />
+                  <div
+                    className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br ${feature.gradient}`}
+                  >
+                    <Icon className="h-6 w-6 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground text-sm">{feature.description}</p>
+                  <h3 className="text-xl font-semibold text-slate-900 mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm leading-6 text-slate-600">
+                    {feature.description}
+                  </p>
                 </CardContent>
               </Card>
-            );
+            )
           })}
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Features;
+export default Features

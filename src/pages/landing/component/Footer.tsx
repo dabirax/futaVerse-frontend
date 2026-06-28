@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Linkedin, Mail, Twitter } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, Twitter } from 'lucide-react'
 
 const Footer = () => {
   return (
@@ -11,7 +11,8 @@ const Footer = () => {
               FV
             </h3>
             <p className="text-muted-foreground">
-              Connecting FUTA alumni and students through meaningful mentorship and professional development.
+              Connecting FUTA alumni and students through meaningful mentorship
+              and professional development.
             </p>
             <div className="flex gap-3">
               <a
@@ -50,23 +51,35 @@ const Footer = () => {
             <h4 className="font-bold mb-4 text-foreground">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#about"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   About
                 </a>
               </li>
               <li>
-                <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#how-it-works"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   How It Works
                 </a>
               </li>
               <li>
-                <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#features"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   Features
                 </a>
               </li>
               <li>
-                <a href="#testimonials" className="text-muted-foreground hover:text-primary transition-colors">
-                  Testimonials
+                <a
+                  href="#roles"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Roles
                 </a>
               </li>
             </ul>
@@ -77,22 +90,34 @@ const Footer = () => {
             <h4 className="font-bold mb-4 text-foreground">Resources</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   Student Guide
                 </a>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   Mentor Handbook
                 </a>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   FAQ
                 </a>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   Support
                 </a>
               </li>
@@ -105,16 +130,17 @@ const Footer = () => {
             <ul className="space-y-2">
               <li className="flex items-center gap-2 text-muted-foreground">
                 <Mail className="w-4 h-4" />
-                <a href="mailto:info@futaverse.com" className="hover:text-primary transition-colors">
+                <a
+                  href="mailto:info@futaverse.com"
+                  className="hover:text-primary transition-colors"
+                >
                   info@futaverse.com
                 </a>
               </li>
               <li className="text-muted-foreground">
                 Federal University of Technology, Akure
               </li>
-              <li className="text-muted-foreground">
-                Ondo State, Nigeria
-              </li>
+              <li className="text-muted-foreground">Ondo State, Nigeria</li>
             </ul>
           </div>
         </div>
@@ -122,23 +148,33 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground text-center md:text-left">
-            © {new Date().getFullYear()} FUTAVerse. All rights reserved. Powered by FUTA Alumni Network.
+            © {new Date().getFullYear()} FUTAVerse. All rights reserved. Powered
+            by FUTA Alumni Network.
           </p>
           <div className="flex gap-6 text-sm">
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+            <a
+              href="#"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
               Privacy Policy
             </a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+            <a
+              href="#"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
               Terms of Service
             </a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+            <a
+              href="#"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
               Contact
             </a>
           </div>
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

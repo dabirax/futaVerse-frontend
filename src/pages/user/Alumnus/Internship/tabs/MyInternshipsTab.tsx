@@ -15,7 +15,7 @@ export default function MyInternshipsTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex justify-end lg:hidden">
         <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.9 }}>
           <Button
             className="p-2! mr-4"

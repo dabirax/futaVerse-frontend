@@ -1,26 +1,26 @@
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
-  Search,
+  ArrowRight,
   Calendar,
+  ChevronRight,
+  GraduationCap,
   MapPin,
+  Search,
+  Trophy,
   Users,
   Video,
-  GraduationCap,
-  ArrowRight,
-  ChevronRight,
-  Trophy,
   Zap,
 } from 'lucide-react'
 import { format } from 'date-fns'
-import { useFeed } from '@/hooks/useFeed'
-import { FeedItemData } from '@/types/feed'
+import type { FeedItemData } from '@/types/feed'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { useFeed } from '@/hooks/useFeed'
 import InternshipFeedCard from '@/components/user/feed/InternshipFeedCard'
 
 type FeedFilter = 'all' | 'opportunities' | 'mentorship' | 'events'
@@ -33,7 +33,7 @@ function getGreeting(): string {
   return 'Good night'
 }
 
-const filters: { label: string; value: FeedFilter }[] = [
+const filters: Array<{ label: string; value: FeedFilter }> = [
   { label: 'All', value: 'all' },
   { label: 'Opportunities', value: 'opportunities' },
   { label: 'Mentorship', value: 'mentorship' },
@@ -49,14 +49,20 @@ const categoryLabels: Record<string, string> = {
   conference: 'Conference',
 }
 
-function MentorshipFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
+function MentorshipFeedCard({
+  item,
+  sqid,
+}: {
+  item: FeedItemData
+  sqid: string
+}) {
   const router = useRouter()
   const navigate = router.navigate
 
   return (
     <Card
       className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-primary"
-      onClick={() => navigate({ to: `/student/mentorship/${sqid}` })}
+      onClick={() => navigate({ to: `/student/mentorships/${sqid}` })}
     >
       <CardContent className="p-5">
         <div className="flex items-start gap-4">
@@ -86,9 +92,11 @@ function MentorshipFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }
             <h3 className="font-semibold text-foreground line-clamp-1">
               {item.title}
             </h3>
-            
+
             <p className="text-sm text-muted-foreground line-clamp-2">
-              {item.alumni ? `Hosted by ${item.alumni}` : 'A new mentorship opportunity'}
+              {item.alumni
+                ? `Hosted by ${item.alumni}`
+                : 'A new mentorship opportunity'}
             </p>
 
             <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">
@@ -118,7 +126,9 @@ function EventFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
   const router = useRouter()
   const navigate = router.navigate
 
-  const formattedDate = item.date ? format(new Date(item.date), 'MMM d, yyyy') : ''
+  const formattedDate = item.date
+    ? format(new Date(item.date), 'MMM d, yyyy')
+    : ''
 
   return (
     <Card
@@ -148,7 +158,7 @@ function EventFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
             <h3 className="font-semibold text-foreground line-clamp-1">
               {item.title}
             </h3>
-            
+
             <p className="text-sm text-muted-foreground line-clamp-2">
               {item.alumni ? `Hosted by ${item.alumni}` : 'A new event.'}
             </p>
@@ -162,7 +172,11 @@ function EventFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
               )}
               {item.mode && (
                 <span className="flex items-center gap-1.5">
-                  {item.mode === 'virtual' || item.mode === 'hybrid' ? <Video className="h-3.5 w-3.5" /> : <MapPin className="h-3.5 w-3.5" />}
+                  {item.mode === 'virtual' || item.mode === 'hybrid' ? (
+                    <Video className="h-3.5 w-3.5" />
+                  ) : (
+                    <MapPin className="h-3.5 w-3.5" />
+                  )}
                   <span className="capitalize">{item.mode}</span>
                 </span>
               )}
@@ -190,7 +204,9 @@ function RightSidebar() {
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">
       {/* Quick Actions */}
       <div className="bg-card rounded-xl border shadow-sm p-4">
-        <h3 className="font-semibold text-sm text-foreground mb-3">Quick Actions</h3>
+        <h3 className="font-semibold text-sm text-foreground mb-3">
+          Quick Actions
+        </h3>
         <div className="space-y-1">
           {quickActions.map((action, idx) => {
             const Icon = action.icon
@@ -203,7 +219,9 @@ function RightSidebar() {
                   <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <Icon className="h-4 w-4 text-primary" />
                   </div>
-                  <span className="text-sm font-medium text-foreground">{action.label}</span>
+                  <span className="text-sm font-medium text-foreground">
+                    {action.label}
+                  </span>
                 </div>
                 <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
@@ -216,12 +234,24 @@ function RightSidebar() {
       <div className="bg-card rounded-xl border shadow-sm p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-sm text-foreground">Top Mentors</h3>
-          <button className="text-xs text-primary font-medium hover:underline">See all</button>
+          <button className="text-xs text-primary font-medium hover:underline">
+            See all
+          </button>
         </div>
         <div className="space-y-3">
           {[
-            { id: 1, name: 'Dr. Jane Doe', role: 'Data Scientist', company: 'Google' },
-            { id: 2, name: 'Prof. John Smith', role: 'AI Researcher', company: 'FUTA' },
+            {
+              id: 1,
+              name: 'Dr. Jane Doe',
+              role: 'Data Scientist',
+              company: 'Google',
+            },
+            {
+              id: 2,
+              name: 'Prof. John Smith',
+              role: 'AI Researcher',
+              company: 'FUTA',
+            },
           ].map((mentor) => (
             <div key={mentor.id} className="flex items-center gap-2.5">
               <Avatar className="h-9 w-9 shrink-0">
@@ -230,11 +260,21 @@ function RightSidebar() {
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-foreground leading-tight truncate">{mentor.name}</p>
-                <p className="text-xs text-muted-foreground truncate">{mentor.role}</p>
-                <p className="text-xs text-muted-foreground truncate">{mentor.company}</p>
+                <p className="text-xs font-semibold text-foreground leading-tight truncate">
+                  {mentor.name}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {mentor.role}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {mentor.company}
+                </p>
               </div>
-              <Button variant="outline" size="sm" className="shrink-0 h-7 text-xs px-3">
+              <Button
+                variant="outline"
+                size="sm"
+                className="shrink-0 h-7 text-xs px-3"
+              >
                 View
               </Button>
             </div>
@@ -255,47 +295,49 @@ export default function StudentFeed() {
   const filteredItems = useMemo(() => {
     let items = feedItems
 
-    if (activeTab === 'opportunities') items = items.filter((i) => i.event_type.includes('internship'))
-    else if (activeTab === 'mentorship') items = items.filter((i) => i.event_type.includes('mentorship'))
-    else if (activeTab === 'events') items = items.filter((i) => i.event_type.includes('event'))
+    if (activeTab === 'opportunities')
+      items = items.filter((i) => i.event_type.includes('internship'))
+    else if (activeTab === 'mentorship')
+      items = items.filter((i) => i.event_type.includes('mentorship'))
+    else if (activeTab === 'events')
+      items = items.filter((i) => i.event_type.includes('event'))
 
     if (search.trim()) {
       const q = search.toLowerCase()
       items = items.filter((item) => {
-        const d = item.data
-        return d.title?.toLowerCase().includes(q)
+        const title = item.data.title
+        return title ? title.toLowerCase().includes(q) : false
       })
     }
 
     return items
   }, [feedItems, activeTab, search])
-
   return (
     <div className="flex flex-col xl:flex-row gap-6 items-start">
-      {/* Main Feed */}
-      <div className="flex-1 min-w-0 space-y-4">
-        {/* Greeting */}
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">{getGreeting()} 👋</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Discover mentorships, internships, and events
+      <div className="flex-1 min-w-0 space-y-6">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-foreground">
+              {getGreeting()} 👋
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Discover mentorships, internships, and events across the FUTA
+              community.
             </p>
           </div>
 
-          <div className="relative shrink-0 hidden md:block">
+          <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search opportunities..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 w-64 h-9"
+              className="pl-10 w-full h-11"
             />
           </div>
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+        <div className="flex flex-wrap items-center gap-2">
           {filters.map((f) => (
             <button
               key={f.value}
@@ -311,7 +353,6 @@ export default function StudentFeed() {
           ))}
         </div>
 
-        {/* Feed Cards */}
         <div className="space-y-3 pt-2">
           {filteredItems.length === 0 ? (
             <div className="bg-card rounded-xl border shadow-sm p-12 text-center">
@@ -349,7 +390,6 @@ export default function StudentFeed() {
         </div>
       </div>
 
-      {/* Right Sidebar — xl+ only */}
       <div className="hidden xl:block xl:w-72 xl:shrink-0 xl:sticky xl:top-6">
         <RightSidebar />
       </div>

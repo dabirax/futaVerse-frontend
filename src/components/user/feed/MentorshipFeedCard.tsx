@@ -1,19 +1,10 @@
-
 import { useRouter } from '@tanstack/react-router'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import {
-  Calendar,
-  Clock,
-  Users,
-  GraduationCap,
-  ArrowRight,
-} from 'lucide-react'
+import { Calendar, Clock, Users, GraduationCap, ArrowRight } from 'lucide-react'
 import { format } from 'date-fns'
-import {
-  FeedMentorship,
-} from '@/types/feed'
+import { FeedMentorship } from '@/types/feed'
 
 export default function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
   const router = useRouter()
@@ -22,7 +13,7 @@ export default function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
   return (
     <Card
       className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-primary"
-      onClick={() => navigate({ to: `/alumnus/mentorship/${item.sqid}` })}
+      onClick={() => navigate({ to: `/student/mentorships/${item.sqid}` })}
     >
       <CardContent className="p-5">
         <div className="flex items-start gap-4">
