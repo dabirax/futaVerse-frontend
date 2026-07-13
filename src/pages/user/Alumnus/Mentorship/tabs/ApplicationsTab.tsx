@@ -30,8 +30,8 @@ export default function ApplicationsTab() {
       {data.results.map((application: any, index: number) => (
         <StudentCard
           key={index}
-          studentName={`Student ${application.student}`}
-          title={application.mentorship}
+          studentName={`${application.student_info.firstname} ${application.student_info.lastname}`}
+          title={application.mentorship_info.title}
           variant="applicant"
           onAccept={() => acceptApplication(application.sqid)}
           onReject={() => rejectApplication(application.sqid)}

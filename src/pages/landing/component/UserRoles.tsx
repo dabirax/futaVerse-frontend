@@ -3,7 +3,7 @@ import { BookOpen, GraduationCap, ShieldCheck, Users2 } from 'lucide-react'
 const roles = [
   {
     title: 'Students',
-    tag: 'Mentees',
+    tag: 'Students',
     highlight: 'Find your path earlier',
     points: [
       'Find mentors matched to your field',
@@ -17,7 +17,7 @@ const roles = [
   },
   {
     title: 'Alumni',
-    tag: 'Mentors',
+    tag: 'Alumni',
     highlight: 'Give back with structure',
     points: [
       'Mentor students in your field',
@@ -31,7 +31,7 @@ const roles = [
   },
   {
     title: 'Lecturers',
-    tag: 'Partners',
+    tag: 'Lecturers',
     highlight: 'Bridge the classroom gap',
     points: [
       'Connect students to industry mentors',
@@ -43,7 +43,7 @@ const roles = [
   },
   {
     title: 'Admins',
-    tag: 'Operators',
+    tag: 'Admins',
     highlight: 'Oversee the ecosystem',
     points: [
       'Approve mentors and manage users',
@@ -70,14 +70,13 @@ const UserRoles = () => {
 
         <div className="grid gap-6 lg:grid-cols-2">
           {roles.map((role) => {
-            const Icon = role.icon
             return (
               <div
                 key={role.title}
                 className="relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
               >
                 <div
-                  className={`absolute top-0 right-0 h-32 w-32 rounded-bl-[80px] bg-gradient-to-br ${role.color} opacity-40`}
+                  className={`absolute top-0 right-0 h-32 w-32 rounded-bl-[80px] bg-linear-to-br ${role.color} opacity-40`}
                 />
                 <div className="relative z-10">
                   <div className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-700">

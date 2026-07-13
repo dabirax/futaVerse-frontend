@@ -185,7 +185,6 @@ export default function EditInternship() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center gap-4">
         <BackButton2 />
         <h1 className="text-3xl font-bold text-foreground">Edit Internship</h1>

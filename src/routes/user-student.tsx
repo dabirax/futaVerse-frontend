@@ -11,6 +11,8 @@ import StudentEvents from "../pages/user/Student/Events";
 import StudentMessages from "../pages/user/Student/Messages";
 import StudentCalendar from "../pages/user/Student/Calendar";
 import StudentSettings from "../pages/user/Student/Settings";
+import StudentTickets from "../pages/user/Student/Tickets";
+import StudentAnalytics from "../pages/user/Student/Analytics";
 
 
 import { rootRoute } from "./__root";
@@ -100,6 +102,18 @@ export const studentCalendarRoute = createRoute({
   getParentRoute: () => studentRoute,
   path: "/student/calendar",
   component: StudentCalendar,
+});
+
+export const studentTicketsRoute = createRoute({
+  getParentRoute: () => studentRoute,
+  path: "/student/tickets",
+  component: StudentTickets,
+});
+
+export const studentAnalyticsRoute = createRoute({
+  getParentRoute: () => studentRoute,
+  path: "/student/analytics",
+  component: StudentAnalytics,
 });
 
 export const studentSettingsRoute = createRoute({

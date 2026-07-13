@@ -133,7 +133,7 @@ const AlumnusProfessional = () => {
         firstname,
         lastname,
         middlename,
-        gender: gender ? (gender.charAt(0).toUpperCase() + gender.slice(1)) : gender,
+        gender: gender ? (gender.charAt(0) + gender.slice(1)) : gender,
         phone_num,
         address,
         street: '',

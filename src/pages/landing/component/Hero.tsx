@@ -42,12 +42,12 @@ const Hero = () => {
             </p>
 
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Link to="/signup">
+              <Link to="/signup/studentBasic">
                 <Button variant="gradient" size="lg">
                   Join as a student
                 </Button>
               </Link>
-              <Link to="/signup">
+              <Link to="/signup/alumnusBasic">
                 <Button variant="outline" size="lg">
                   Join as alumni
                 </Button>

@@ -13,7 +13,6 @@ import AlumnusSettings from '../pages/user/Alumnus/Settings'
 import AlumnusAnalytics from '../pages/user/Alumnus/Analytics'
 
 import { rootRoute } from './__root'
-import { publicRoute } from './public'
 import InternshipDetail from '@/pages/user/Alumnus/Internship/InternshipDetail'
 import EditInternship from '@/pages/user/Alumnus/Internship/EditInternship'
 import { requireRole } from '@/lib/guard'
@@ -56,8 +55,8 @@ export const alumnusInternshipRoute = createRoute({
 })
 
 export const alumnusCreateInternshipRoute = createRoute({
-  // getParentRoute: () => alumnusRoute,
-  getParentRoute: () => publicRoute,
+  getParentRoute: () => alumnusRoute,
+  // getParentRoute: () => publicRoute,
   path: '/alumnus/internships/create',
   component: CreateInternship,
 })

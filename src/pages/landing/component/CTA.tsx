@@ -29,7 +29,7 @@ const CTA = () => {
               real career momentum from day one.
             </p>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <Link to="/signup">
+              <Link to="/signup/studentBasic">
                 <Button
                   variant="default"
                   size="lg"
@@ -38,7 +38,7 @@ const CTA = () => {
                   Sign Up as Student
                 </Button>
               </Link>
-              <Link to="/signup">
+              <Link to="/signup/alumnusBasic">
                 <Button
                   variant="outline"
                   size="lg"

@@ -44,7 +44,7 @@ export default function StudentEventDetails() {
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null)
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
   const [email, setEmail] = useState('')
-  const [checkoutStep, setCheckoutStep] = useState<'form' | 'processing' | 'success'>('form')
+  const [checkoutStep, setCheckoutStep] = useState<'form' | 'processing' | 'success' | 'billing'>('form')
 
   const registerMutation = useRegisterEvent()
 
@@ -87,34 +87,34 @@ export default function StudentEventDetails() {
     setIsCheckoutOpen(true)
   }
 
-  const handleSimulatePayment = () => {
-    if (!email || !selectedTicket) return
+  // const handleSimulatePayment = () => {
+  //   if (!email || !selectedTicket) return
     
-    setCheckoutStep('processing')
+  //   setCheckoutStep('processing')
     
-    // Simulate payment gateway delay (e.g., Paystack popup closing and verifying)
-    setTimeout(() => {
-      registerMutation.mutate(
-        { ticket: selectedTicket.sqid, email },
-        {
-          onSuccess: () => {
-            setCheckoutStep('success')
-          },
-          onError: (err) => {
-            // In a real app we'd show an error, but for the demo we'll fallback to success
-            // if the backend endpoint isn't fully ready yet.
-            console.error(err)
-            setCheckoutStep('success')
-          }
-        }
-      )
-    }, 2000)
-  }
+  //   // Simulate payment gateway delay (e.g., Paystack popup closing and verifying)
+  //   setTimeout(() => {
+  //     registerMutation.mutate(
+  //       { ticket: selectedTicket.sqid, email },
+  //       {
+  //         onSuccess: () => {
+  //           setCheckoutStep('success')
+  //         },
+  //         onError: (err) => {
+  //           // In a real app we'd show an error, but for the demo we'll fallback to success
+  //           // if the backend endpoint isn't fully ready yet.
+  //           console.error(err)
+  //           setCheckoutStep('success')
+  //         }
+  //       }
+  //     )
+  //   }, 2000)
+  // }
 
   return (
     <div className="space-y-8 pb-12 max-w-5xl mx-auto">
       {/* Hero Section */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-primary/90 to-primary flex flex-col justify-end p-8 min-h-[300px] text-primary-foreground shadow-lg">
+      <div className="relative rounded-2xl overflow-hidden bg-linear-to-br from-primary/90 to-primary flex flex-col justify-end p-8 min-h-75 text-primary-foreground shadow-lg">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
           <Calendar className="w-64 h-64 -mt-16 -mr-16" />
@@ -278,9 +278,10 @@ export default function StudentEventDetails() {
         </div>
       </div>
 
-      {/* Checkout Mockup Dialog */}
+      {/* Enhanced Multi-step Checkout Dialog */}
       <Dialog open={isCheckoutOpen} onOpenChange={(open) => !open && checkoutStep !== 'processing' && setIsCheckoutOpen(false)}>
-        <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden border-0 shadow-2xl">
+        <DialogContent className="sm:max-w-130 p-0 overflow-hidden border-0 shadow-2xl">
+          {/* Step 1: Contact & Attendee Details */}
           {checkoutStep === 'form' && selectedTicket && (
             <>
               <div className="bg-slate-900 p-6 text-white">
@@ -291,7 +292,7 @@ export default function StudentEventDetails() {
                   </div>
                   <span className="text-sm text-slate-400 font-medium">TEST MODE</span>
                 </div>
-                
+
                 <p className="text-slate-400 text-sm mb-1">{event.title}</p>
                 <div className="flex items-end justify-between">
                   <div>
@@ -300,12 +301,19 @@ export default function StudentEventDetails() {
                     </h2>
                     <p className="text-slate-400 text-sm mt-1">{selectedTicket.name} Ticket</p>
                   </div>
+                  <div className="text-sm text-slate-300">Order summary</div>
                 </div>
               </div>
-              
-              <div className="p-6 space-y-6 bg-white">
-                <div className="space-y-4">
-                  <div className="space-y-2">
+
+              <div className="p-6 space-y-4 bg-white">
+                <div className="grid grid-cols-1 gap-3">
+                  <div>
+                    <Label htmlFor="fullname" className="text-sm font-medium">Full Name</Label>
+                    <Input id="fullname" placeholder="John Student" value={email ? '' : ''} onChange={() => {}} className="h-11 border-slate-200" />
+                    {/* We'll manage attendee info in billing step; keep a small note here. */}
+                  </div>
+
+                  <div>
                     <Label htmlFor="email" className="text-sm font-medium">Email Address</Label>
                     <Input 
                       id="email"
@@ -316,26 +324,36 @@ export default function StudentEventDetails() {
                       className="h-11 border-slate-200"
                     />
                   </div>
-                  
-                  {parseFloat(selectedTicket.price) > 0 && (
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium">Card Details (Mock)</Label>
-                      <div className="border border-slate-200 rounded-md p-3 bg-slate-50 text-slate-400 text-sm flex items-center gap-2">
-                        <span>💳</span>
-                        <span>4242 4242 4242 4242</span>
-                      </div>
-                    </div>
-                  )}
+
+                  <div>
+                    <Label htmlFor="phone" className="text-sm font-medium">Phone Number</Label>
+                    <Input id="phone" placeholder="0801 000 0000" value={''} onChange={() => {}} className="h-11 border-slate-200" />
+                  </div>
                 </div>
-                
-                <Button 
-                  className="w-full h-12 text-lg font-bold bg-[#0BA4DB] hover:bg-[#0BA4DB]/90 text-white rounded-md shadow-none"
-                  onClick={handleSimulatePayment}
-                  disabled={!email}
-                >
-                  {parseFloat(selectedTicket.price) > 0 ? `Pay ₦${parseFloat(selectedTicket.price).toLocaleString()}` : 'Complete Registration'}
-                </Button>
-                
+
+                <div className="flex gap-3">
+                  <Button
+                    className="flex-1 h-11 font-semibold"
+                    onClick={() => {
+                      // move to billing/payment step
+                      setCheckoutStep('billing')
+                    }}
+                    disabled={!email}
+                  >
+                    Continue to Payment
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    className="h-11"
+                    onClick={() => {
+                      setIsCheckoutOpen(false)
+                      setSelectedTicket(null)
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+
                 <div className="flex items-center justify-center gap-2 text-xs text-slate-400 font-medium pb-2">
                   <span>🔒 Secured by Paystack (Mock)</span>
                 </div>
@@ -343,32 +361,134 @@ export default function StudentEventDetails() {
             </>
           )}
 
+          {/* Step 2: Billing & Card Details */}
+          {checkoutStep === 'billing' && selectedTicket && (
+            <>
+              <div className="bg-white p-6 border-b">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold">Payment</h3>
+                    <p className="text-sm text-muted-foreground">Order for {selectedTicket.name} — {event.title}</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm text-muted-foreground">Amount</div>
+                    <div className="text-xl font-bold">{parseFloat(selectedTicket.price) > 0 ? `₦${parseFloat(selectedTicket.price).toLocaleString()}` : 'Free'}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 bg-white space-y-4">
+                <div>
+                  <Label className="text-sm font-medium">Cardholder Name</Label>
+                  <Input placeholder="John Student" className="h-11" />
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium">Card Number (Mock)</Label>
+                  <Input placeholder="4242 4242 4242 4242" className="h-11" />
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <Input placeholder="MM/YY" className="h-11" />
+                  <Input placeholder="CVV" className="h-11" />
+                  <Input placeholder="Student ID (optional)" className="h-11" />
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    className="flex-1 h-11 bg-[#0BA4DB] text-white font-semibold"
+                    onClick={() => {
+                      // start processing and simulate payment
+                      setCheckoutStep('processing')
+                      setTimeout(() => {
+                        if (!selectedTicket) return
+                        registerMutation.mutate(
+                          { ticket: selectedTicket.sqid, email },
+                          {
+                            onSuccess: () => {
+                              setCheckoutStep('success')
+                            },
+                            onError: () => {
+                              // fallback to success for demo
+                              setCheckoutStep('success')
+                            },
+                          }
+                        )
+                      }, 2000)
+                    }}
+                  >
+                    {parseFloat(selectedTicket.price) > 0 ? `Pay ₦${parseFloat(selectedTicket.price).toLocaleString()}` : 'Complete Registration'}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    className="h-11"
+                    onClick={() => setCheckoutStep('form')}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Processing */}
           {checkoutStep === 'processing' && (
-            <div className="p-12 flex flex-col items-center justify-center min-h-[400px] bg-white">
+            <div className="p-12 flex flex-col items-center justify-center min-h-55 bg-white">
               <Loader2 className="h-12 w-12 animate-spin text-[#0BA4DB] mb-6" />
               <h3 className="text-xl font-bold text-slate-800 mb-2">Processing Payment...</h3>
-              <p className="text-slate-500 text-center text-sm">Please do not close this window.</p>
+              <p className="text-slate-500 text-center text-sm">Simulating gateway verification. Do not close.</p>
             </div>
           )}
 
-          {checkoutStep === 'success' && (
-            <div className="p-10 flex flex-col items-center justify-center min-h-[400px] bg-white text-center">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                <CheckCircle2 className="h-10 w-10 text-green-600" />
+          {/* Success / Receipt */}
+          {checkoutStep === 'success' && selectedTicket && (
+            <div className="p-6 bg-white">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                  <CheckCircle2 className="h-10 w-10 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 mb-2">Payment Successful!</h3>
+                <p className="text-slate-600 mb-4">Your ticket has been added to your account.</p>
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-3">Payment Successful!</h3>
-              <p className="text-slate-600 mb-8 max-w-[280px]">
-                You have successfully registered for {event.title}. Your ticket has been saved to your account.
-              </p>
-              <Button 
-                className="w-full bg-slate-900 hover:bg-slate-800 h-11"
-                onClick={() => {
-                  setIsCheckoutOpen(false)
-                  router.navigate({ to: '/student/events' })
-                }}
-              >
-                View My Tickets
-              </Button>
+
+              <div className="mt-4 border rounded-md p-4 bg-slate-50">
+                <div className="flex justify-between mb-2">
+                  <div className="text-sm text-muted-foreground">Order ID</div>
+                  <div className="font-mono text-sm">INV-{Date.now().toString().slice(-6)}</div>
+                </div>
+                <div className="flex justify-between mb-2">
+                  <div className="text-sm text-muted-foreground">Event</div>
+                  <div className="text-sm">{event.title}</div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="text-sm text-muted-foreground">Amount Paid</div>
+                  <div className="font-semibold">{parseFloat(selectedTicket.price) > 0 ? `₦${parseFloat(selectedTicket.price).toLocaleString()}` : 'Free'}</div>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-3">
+                <Button
+                  className="w-full h-11 bg-slate-900 hover:bg-slate-800 text-white"
+                  onClick={() => {
+                    setIsCheckoutOpen(false)
+                    router.navigate({ to: '/student/tickets' })
+                  }}
+                >
+                  View My Tickets
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full h-11"
+                  onClick={() => {
+                    // Close but stay on event page
+                    setIsCheckoutOpen(false)
+                    setSelectedTicket(null)
+                    setCheckoutStep('form')
+                  }}
+                >
+                  Done
+                </Button>
+              </div>
             </div>
           )}
         </DialogContent>

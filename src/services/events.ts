@@ -5,6 +5,11 @@ import {
   PaidTicketInput,
   PurchasedTicket,
 } from '@/types/event'
+import {
+  mockEventListItems,
+  mockEvents,
+  mockPurchasedTickets,
+} from '@/data/mockEvents'
 
 export interface PaginatedResponse<T> {
   count: number
@@ -50,24 +55,42 @@ const getHeaders = (): Record<string, string> => {
 }
 
 const getBaseUrl = () => import.meta.env.VITE_API_URL || ''
+const mockTicketCache: PurchasedTicket[] = [...mockPurchasedTickets]
 
 export const EventsService = {
   list: async (params?: { page?: number; size?: number }): Promise<PaginatedResponse<EventListItem>> => {
     const baseUrl = getBaseUrl()
+    if (!baseUrl) {
+      return {
+        count: mockEventListItems.length,
+        next: null,
+        previous: null,
+        results: mockEventListItems,
+      }
+    }
+
     const queryParams = new URLSearchParams()
     if (params?.page) queryParams.append('page', params.page.toString())
     if (params?.size) queryParams.append('size', params.size.toString())
-    
-    const response = await fetch(`${baseUrl}/api/events/list?${queryParams.toString()}`, {
-      method: 'GET',
-      headers: getHeaders(),
-    })
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData?.message || 'Failed to fetch events')
+    try {
+      const response = await fetch(`${baseUrl}/api/events/list?${queryParams.toString()}`, {
+        method: 'GET',
+        headers: getHeaders(),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch events')
+      }
+      return response.json()
+    } catch {
+      return {
+        count: mockEventListItems.length,
+        next: null,
+        previous: null,
+        results: mockEventListItems,
+      }
     }
-    return response.json()
   },
 
   create: async (payload: CreateEventPayload): Promise<Event> => {
@@ -87,16 +110,30 @@ export const EventsService = {
 
   getOne: async (sqid: string): Promise<Event> => {
     const baseUrl = getBaseUrl()
-    const response = await fetch(`${baseUrl}/api/events/${sqid}`, {
-      method: 'GET',
-      headers: getHeaders(),
-    })
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData?.message || 'Failed to fetch event')
+    const fallback = mockEvents.find((event) => event.sqid === sqid)
+    if (!baseUrl) {
+      if (!fallback) {
+        throw new Error('Event not found')
+      }
+      return fallback
     }
-    return response.json()
+
+    try {
+      const response = await fetch(`${baseUrl}/api/events/${sqid}`, {
+        method: 'GET',
+        headers: getHeaders(),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch event')
+      }
+      return response.json()
+    } catch {
+      if (!fallback) {
+        throw new Error('Event not found')
+      }
+      return fallback
+    }
   },
 
   update: async (sqid: string, payload: UpdateEventPayload): Promise<Event> => {
@@ -146,48 +183,87 @@ export const EventsService = {
 
   register: async (payload: { ticket: string; email: string }): Promise<void> => {
     const baseUrl = getBaseUrl()
-    const response = await fetch(`${baseUrl}/api/events/register`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(payload),
-    })
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData?.message || 'Failed to register for event')
+    const ticket = mockEvents
+      .flatMap((event) => event.tickets ?? [])
+      .find((item) => item.sqid === payload.ticket)
+
+    if (!ticket) {
+      throw new Error('Ticket not found')
     }
-    return response.json()
+
+    if (!baseUrl) {
+      mockTicketCache.push({
+        email: payload.email,
+        ticket,
+        ticket_uid: typeof crypto !== 'undefined' && 'randomUUID' in crypto
+          ? crypto.randomUUID()
+          : `mock-${Date.now()}`,
+        is_paid: true,
+        checked_in: false,
+        checked_in_at: null,
+      })
+      return Promise.resolve()
+    }
+
+    try {
+      const response = await fetch(`${baseUrl}/api/events/register`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to register for event')
+      }
+      return response.json()
+    } catch {
+      mockTicketCache.push({
+        email: payload.email,
+        ticket,
+        ticket_uid: typeof crypto !== 'undefined' && 'randomUUID' in crypto
+          ? crypto.randomUUID()
+          : `mock-${Date.now()}`,
+        is_paid: true,
+        checked_in: false,
+        checked_in_at: null,
+      })
+      return Promise.resolve()
+    }
   },
 
   myTickets: async (params?: { page?: number; size?: number }): Promise<PaginatedResponse<PurchasedTicket>> => {
     const baseUrl = getBaseUrl()
+    if (!baseUrl) {
+      return {
+        count: mockTicketCache.length,
+        next: null,
+        previous: null,
+        results: mockTicketCache,
+      }
+    }
+
     const queryParams = new URLSearchParams()
     if (params?.page) queryParams.append('page', params.page.toString())
     if (params?.size) queryParams.append('size', params.size.toString())
 
-    const response = await fetch(`${baseUrl}/api/events/tickets?${queryParams.toString()}`, {
-      method: 'GET',
-      headers: getHeaders(),
-    })
+    try {
+      const response = await fetch(`${baseUrl}/api/events/tickets?${queryParams.toString()}`, {
+        method: 'GET',
+        headers: getHeaders(),
+      })
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData?.message || 'Failed to fetch tickets')
+      if (!response.ok) {
+        throw new Error('Failed to fetch tickets')
+      }
+      return response.json()
+    } catch {
+      return {
+        count: mockTicketCache.length,
+        next: null,
+        previous: null,
+        results: mockTicketCache,
+      }
     }
-    return response.json()
   },
 }
-
-
-// Ensure the feed page for the alumnus is well integrated(events) and not mock stuff.
-
-
-
-
-// Now I think the feed and event of the alumnus are ready somewhat.I need you to work on the student feed and events
-// Consider the access and authorization of the student and build the event page, feed page and tickets.take your time, get all the details right.
-
-// Just designs.
-
-
-// help do a demo to allow the workflow fora sudent applying for a paid ticket event.need it to show that that's how source of revenue

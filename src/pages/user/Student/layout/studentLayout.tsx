@@ -7,28 +7,30 @@ import {
 import {
     Briefcase,
     Calendar,
-    LayoutDashboard,
     LogOut,
     Menu,
     MessageSquare,
     Rss,
     Settings,
+    TicketCheck,
+    BarChart3,
     Users,
     X,
 } from "lucide-react";
-import { Avatar, AvatarFallback,  } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import profPic from "@/assets/testProfilePic2.png"
 
 const sidebarItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/student/dashboard" },
   { icon: Rss, label: "Feed", path: "/student/feed" },
   { icon: Briefcase, label: "Internship", path: "/student/internships" },
   { icon: Users, label: "Mentorship", path: "/student/mentorships" },
   { icon: Calendar, label: "Events", path: "/student/events" },
+  { icon: TicketCheck, label: "Tickets", path: "/student/tickets" },
   { icon: MessageSquare, label: "Messages", path: "/student/messages" },
   { icon: Calendar, label: "Calendar", path: "/student/calendar" },
+  { icon: BarChart3, label: "Analytics", path: "/student/analytics" },
   { icon: Settings, label: "Settings", path: "/student/settings" },
 ];
 
