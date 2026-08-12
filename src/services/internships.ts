@@ -6,8 +6,8 @@ export const InternshipService = {
     return data;
   },
 
-  getOne: async (id: number) => {
-    const {data} = await api.get(`/api/internships/${id}`);
+  getOne: async (sqid: string) => {
+    const {data} = await api.get(`/api/internships/${sqid}`);
     return data;
   },
 
@@ -16,13 +16,13 @@ export const InternshipService = {
     return data;
   },
 
-  update: async (id: number, payload: any) => {
-    const {data} = await api.patch(`/api/internships/${id}`, payload);
+  update: async (sqid: string, payload: any) => {
+    const {data} = await api.patch(`/api/internships/${sqid}`, payload);
     return data;
   },
 
-  delete: async (id: number) => {
-    const {data} = await api.delete(`/api/internships/${id}`);
+  delete: async (sqid: string) => {
+    const {data} = await api.delete(`/api/internships/${sqid}`);
     return data;
   },
 };
@@ -77,8 +77,8 @@ export const InternshipEngagementsService = {
     const { data } = await api.get(`/api/internships/engagements`)
     return data
   },
-  getOne: async (id: number) => {
-    const { data } = await api.get(`/api/internships/engagements/${id}`)
+  getOne: async (sqid: string) => {
+    const { data } = await api.get(`/api/internships/engagements/${sqid}`)
     return data
   },
 }

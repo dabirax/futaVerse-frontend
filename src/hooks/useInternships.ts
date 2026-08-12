@@ -21,18 +21,18 @@ export const useCreateInternship = () => {
   });
 };
 
-export const useInternship = (id: number) => {
+export const useInternship = (sqid: string) => {
   return useQuery({
-    queryKey: ["internship", id],
-    queryFn: () => InternshipService.getOne(id),
-    enabled: !!id,
+    queryKey: ["internship", sqid],
+    queryFn: () => InternshipService.getOne(sqid),
+    enabled: !!sqid,
   });
 };
 
 export const useUpdateInternship = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, payload }: { id: number; payload: any }) =>
+    mutationFn: ({ id, payload }: { id: string; payload: any }) =>
       InternshipService.update(id, payload),
     onSuccess: (_, variables) => {
       qc.invalidateQueries({ queryKey: ["internships"] });
@@ -44,7 +44,7 @@ export const useUpdateInternship = () => {
 export const useDeleteInternship = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: number) => InternshipService.delete(id),
+    mutationFn: (id: string) => InternshipService.delete(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["internships"] });
     },
@@ -65,6 +65,7 @@ export const useAcceptInternshipOffer = () => {
     mutationFn: (id: string) => InternshipOffersService.acceptOffer(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["internship-offers"] });
+      qc.invalidateQueries({ queryKey: ["internship-engagements"] });
     },
   });
 };
@@ -102,6 +103,7 @@ export const useAcceptInternshipApplication = () => {
     mutationFn: (id: string) => InternshipApplicationsService.acceptApplication(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["internship-applications"] });
+      qc.invalidateQueries({ queryKey: ["internship-engagements"] });
     },
   });
 };
@@ -135,10 +137,10 @@ export const useInternshipEngagements = () => {
   });
 };
 
-export const useInternshipEngagement = (id: number) => {
+export const useInternshipEngagement = (sqid: string) => {
   return useQuery({
-    queryKey: ['internship', id],
-    queryFn: () => InternshipEngagementsService.getOne(id),
-    enabled: !!id,
+    queryKey: ['internship-engagement', sqid],
+    queryFn: () => InternshipEngagementsService.getOne(sqid),
+    enabled: !!sqid,
   })
 }

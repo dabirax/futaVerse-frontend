@@ -61,7 +61,7 @@ export default function EditInternship() {
   const { toast } = useToast();
   const [skillInput, setSkillInput] = useState("");
   
-  const { data: currentData, isLoading, isError } = useInternship(Number(id));
+  const { data: currentData, isLoading, isError } = useInternship(id);
   
   const { mutate, isPending: isUpdating, isError: isUpdateError } = useUpdateInternship();
   const { mutate: deleteInternship, isPending: isDeleting } = useDeleteInternship();
@@ -140,7 +140,7 @@ export default function EditInternship() {
 };
 
   mutate(
-    { id: Number(id), payload: formatted },
+    { id, payload: formatted },
     {
       onSuccess: () => {
         toast({
@@ -161,7 +161,7 @@ export default function EditInternship() {
 };
 
   const handleDelete = () => {
-    deleteInternship(Number(id), {
+    deleteInternship(id, {
             onSuccess: () => {
               toast({
                 title: "Deleted",

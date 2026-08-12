@@ -45,7 +45,7 @@ const formSchema = z
       .string()
       .min(10, 'Description must be at least 10 characters')
       .max(2000),
-    work_mode: z.enum(['Remote', 'Hybrid', 'On-site']),
+    work_mode: z.enum(['Remote', 'Hybrid', 'Onsite']),
     engagement_type: z.enum(['Full-time', 'Part-time', 'Contract']),
     location: z.string().min(1, 'Location is required'),
     industry: z.string().min(1, 'Industry is required'),
@@ -64,12 +64,19 @@ const formSchema = z
     skills_required: z
       .array(z.string())
       .min(1, 'At least one skill is required'),
+    levels: z
+      .array(z.number())
+      .min(1, 'Select at least one level'),
+    company: z.string().min(1, 'Company is required'),
+    company_type: z.string().min(1, 'Company type is required'),
+    company_linkedin_url: z.string().optional(),
+    company_website_url: z.string().optional(),
   })
   .refine(
     (data) =>
       data.start_date && data.end_date && data.end_date > data.start_date,
     {
-      message: 'End date must be after start date',
+      message: 'Start and end dates are required, and end must be after start',
       path: ['end_date'],
     },
   )
@@ -101,17 +108,37 @@ export default function CreateInternship() {
       require_resume: true,
       require_cover_letter: false,
       skills_required: [],
+      levels: [],
+      company: '',
+      company_type: '',
+      company_linkedin_url: '',
+      company_website_url: '',
     },
   })
 
   const isPaid = form.watch('is_paid')
   const skills = form.watch('skills_required')
+  const levels = form.watch('levels')
 
-  const getErrorMessage = (error: unknown) => {
+  const extractApiErrors = (error: unknown): string => {
     if (error instanceof AxiosError) {
-      return error.response?.data?.message || 'Request failed'
+      const data = error.response?.data
+      if (!data) return 'Request failed'
+      if (typeof data.message === 'string') return data.message
+      if (typeof data === 'object' && data !== null) {
+        const entries = Object.entries(data)
+        if (entries.length > 0) {
+          return entries
+            .map(([key, val]) => {
+              const msg = Array.isArray(val) ? val[0] : val
+              return `${key}: ${msg}`
+            })
+            .join('\n')
+        }
+      }
+      return 'Request failed'
     }
-    return 'Unexpected error occurred.'
+    return 'An unexpected error occurred.'
   }
 
   const addSkill = () => {
@@ -128,6 +155,15 @@ export default function CreateInternship() {
     )
   }
 
+  const toggleLevel = (level: number) => {
+    form.setValue(
+      'levels',
+      levels.includes(level)
+        ? levels.filter((l) => l !== level)
+        : [...levels, level],
+    )
+  }
+
   const onSubmit = (values: FormValues) => {
     const formatted = {
       ...values,
@@ -137,6 +173,8 @@ export default function CreateInternship() {
       end_date: values.end_date ? format(values.end_date, 'yyyy-MM-dd') : null,
       stipend: values.is_paid ? values.stipend || '0' : '0',
       remaining_slots: values.available_slots,
+      company_linkedin_url: values.company_linkedin_url || undefined,
+      company_website_url: values.company_website_url || undefined,
     }
     createInternship.mutate(formatted, {
       onSuccess: () => {
@@ -146,12 +184,10 @@ export default function CreateInternship() {
         })
         router.navigate({ to: '/alumnus/internships' })
       },
-      onError: (error: any) => {
+      onError: (error: unknown) => {
         toast({
           title: 'Error',
-          description:
-            error?.response?.data?.message ||
-            'Failed to create internship. Fix your backend or your life.',
+          description: extractApiErrors(error),
           variant: 'destructive',
         })
       },
@@ -209,17 +245,92 @@ export default function CreateInternship() {
                 </FormItem>
               )}
             />
+          </div>
+
+          {/* Company Information */}
+          <div className="rounded-lg border border-border bg-card p-6 space-y-6">
+            <h2 className="text-xl font-semibold text-foreground">
+              Company Information
+            </h2>
 
             <div className="grid md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
-                name="industry"
+                name="company"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Industry</FormLabel>
+                    <FormLabel>Company</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Acme Inc." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="company_type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Company Type</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select company type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Startup">Startup</SelectItem>
+                        <SelectItem value="SME">SME</SelectItem>
+                        <SelectItem value="Corporate">Corporate</SelectItem>
+                        <SelectItem value="NGO / Non-profit">
+                          NGO / Non-profit
+                        </SelectItem>
+                        <SelectItem value="Government">
+                          Government
+                        </SelectItem>
+                        <SelectItem value="Educational Institution">
+                          Educational Institution
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="industry"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Industry</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="e.g., Technology, Finance, Healthcare"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="company_linkedin_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>LinkedIn URL (optional)</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="e.g., Technology, Finance, Healthcare"
+                        placeholder="https://linkedin.com/company/..."
                         {...field}
                       />
                     </FormControl>
@@ -230,12 +341,15 @@ export default function CreateInternship() {
 
               <FormField
                 control={form.control}
-                name="location"
+                name="company_website_url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Location</FormLabel>
+                    <FormLabel>Website URL (optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Lagos, Nigeria" {...field} />
+                      <Input
+                        placeholder="https://example.com"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -269,7 +383,7 @@ export default function CreateInternship() {
                       <SelectContent>
                         <SelectItem value="Remote">Remote</SelectItem>
                         <SelectItem value="Hybrid">Hybrid</SelectItem>
-                        <SelectItem value="On-site">On-site</SelectItem>
+                        <SelectItem value="Onsite">Onsite</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -303,6 +417,46 @@ export default function CreateInternship() {
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Lagos, Nigeria" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="levels"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Target Levels</FormLabel>
+                  <div className="flex flex-wrap gap-2">
+                    {[100, 200, 300, 400, 500, 600].map((level) => (
+                      <Badge
+                        key={level}
+                        variant={levels.includes(level) ? 'default' : 'outline'}
+                        className="cursor-pointer select-none"
+                        onClick={() => toggleLevel(level)}
+                      >
+                        {level} Level
+                      </Badge>
+                    ))}
+                  </div>
+                  <FormDescription>
+                    Select which academic levels this internship targets
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <div className="grid md:grid-cols-3 gap-6">
               <FormField
@@ -590,8 +744,8 @@ export default function CreateInternship() {
 
             {/* Error State */}
             {createInternship.isError && (
-              <div className="rounded-lg border border-border bg-red-50 text-red-700 p-4">
-                {getErrorMessage(createInternship.error)}
+              <div className="rounded-lg border border-border bg-red-50 text-red-700 p-4 whitespace-pre-line">
+                {extractApiErrors(createInternship.error)}
               </div>
             )}
             <Link to="/alumnus/internships">

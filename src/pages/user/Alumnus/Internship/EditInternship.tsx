@@ -1,6 +1,7 @@
 import {useEffect, useState,  } from "react";
 import { useRouter} from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { CalendarIcon, X,} from "lucide-react";
@@ -9,7 +10,7 @@ import { alumnusEditInternshipRoute } from "@/routes/user-alumnus";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,7 +37,7 @@ import { BackButton2 } from "@/components/BackButtons";
 const formSchema = z.object({
   title: z.string().min(1, "Title is required").max(200),
   description: z.string().min(1, "Description is required"),
-  work_mode: z.enum(["Remote", "On-site", "Hybrid"]),
+  work_mode: z.enum(["Remote", "Onsite", "Hybrid"]),
   engagement_type: z.enum(["Full-time", "Part-time"]),
   location: z.string().min(1, "Location is required"),
   industry: z.string().min(1, "Industry is required"),
@@ -50,6 +51,11 @@ const formSchema = z.object({
   require_resume: z.boolean(),
   require_cover_letter: z.boolean(),
   skills_required: z.array(z.string()).min(1, "At least one skill is required"),
+  levels: z.array(z.number()).min(1, "Select at least one level"),
+  company: z.string().min(1, "Company is required"),
+  company_type: z.string().min(1, "Company type is required"),
+  company_linkedin_url: z.string().optional(),
+  company_website_url: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -84,6 +90,11 @@ export default function EditInternship() {
       require_resume: true,
       require_cover_letter: false,
       skills_required: [],
+      levels: [],
+      company: '',
+      company_type: '',
+      company_linkedin_url: '',
+      company_website_url: '',
     },
   })
 
@@ -108,11 +119,38 @@ export default function EditInternship() {
       require_resume: currentData.require_resume,
       require_cover_letter: currentData.require_cover_letter,
       skills_required: currentData.skills_required,
+      levels: currentData.levels || [],
+      company: currentData.company || '',
+      company_type: currentData.company_type || '',
+      company_linkedin_url: currentData.company_linkedin_url || '',
+      company_website_url: currentData.company_website_url || '',
     });
   }, [currentData, form]);
 
   const isPaid = form.watch("is_paid");
   const skills = form.watch("skills_required");
+  const levels = form.watch("levels");
+
+  const extractApiErrors = (error: unknown): string => {
+    if (error instanceof AxiosError) {
+      const data = error.response?.data;
+      if (!data) return 'Request failed';
+      if (typeof data.message === 'string') return data.message;
+      if (typeof data === 'object' && data !== null) {
+        const entries = Object.entries(data);
+        if (entries.length > 0) {
+          return entries
+            .map(([key, val]) => {
+              const msg = Array.isArray(val) ? val[0] : val;
+              return `${key}: ${msg}`;
+            })
+            .join('\n');
+        }
+      }
+      return 'Request failed';
+    }
+    return 'An unexpected error occurred.';
+  };
 
   const addSkill = () => {
     if (skillInput.trim() && !skills.includes(skillInput.trim())) {
@@ -128,37 +166,48 @@ export default function EditInternship() {
     );
   };
 
+  const toggleLevel = (level: number) => {
+    form.setValue(
+      "levels",
+      levels.includes(level)
+        ? levels.filter((l) => l !== level)
+        : [...levels, level],
+    );
+  };
+
 
   const onSubmit = (data: FormValues) => {
 
     const formatted = {
-  ...data,
-  remaining_slots: data.available_slots,
-  start_date: data.start_date ? format(data.start_date, "yyyy-MM-dd") : null,
-  end_date: data.end_date ? format(data.end_date, "yyyy-MM-dd") : null,
-  stipend: data.stipend ? Number(data.stipend) : null
-};
+      ...data,
+      remaining_slots: data.available_slots,
+      start_date: data.start_date ? format(data.start_date, "yyyy-MM-dd") : null,
+      end_date: data.end_date ? format(data.end_date, "yyyy-MM-dd") : null,
+      stipend: data.is_paid ? data.stipend || '0' : '0',
+      company_linkedin_url: data.company_linkedin_url || undefined,
+      company_website_url: data.company_website_url || undefined,
+    };
 
-  mutate(
-    { id: sqid, payload: formatted },
-    {
-      onSuccess: () => {
-        toast({
-          title: "Success",
-          description: "Internship updated successfully!",
-        });
-        router.navigate({ to: `/alumnus/internships/${sqid}` });
-      },
-      onError: (err: any) => {
-        toast({
-          title: "Error",
-          description: err?.response?.data?.message || "Failed to update internship.",
-          variant: "destructive",
-        });
-      },
-    }
-  );
-};
+    mutate(
+      { id: sqid, payload: formatted },
+      {
+        onSuccess: () => {
+          toast({
+            title: "Success",
+            description: "Internship updated successfully!",
+          });
+          router.navigate({ to: `/alumnus/internships/${sqid}` });
+        },
+        onError: (err: unknown) => {
+          toast({
+            title: "Error",
+            description: extractApiErrors(err),
+            variant: "destructive",
+          });
+        },
+      }
+    );
+  };
 
   const handleDelete = () => {
     deleteInternship(sqid, {
@@ -244,6 +293,65 @@ export default function EditInternship() {
                     </FormItem>
                   )}
                 />
+              </CardContent>
+            </Card>
+
+            {/* Company Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Company Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="company"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Company</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g. Acme Inc." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="company_type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Company Type</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select company type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Startup">Startup</SelectItem>
+                            <SelectItem value="SME">SME</SelectItem>
+                            <SelectItem value="Corporate">Corporate</SelectItem>
+                            <SelectItem value="NGO / Non-profit">
+                              NGO / Non-profit
+                            </SelectItem>
+                            <SelectItem value="Government">
+                              Government
+                            </SelectItem>
+                            <SelectItem value="Educational Institution">
+                              Educational Institution
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 <FormField
                   control={form.control}
@@ -261,6 +369,42 @@ export default function EditInternship() {
                     </FormItem>
                   )}
                 />
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="company_linkedin_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>LinkedIn URL (optional)</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="https://linkedin.com/company/..."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="company_website_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Website URL (optional)</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="https://example.com"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </CardContent>
             </Card>
 
@@ -288,7 +432,7 @@ export default function EditInternship() {
                           </FormControl>
                           <SelectContent>
                             <SelectItem value="Remote">Remote</SelectItem>
-                            <SelectItem value="On-site">On-site</SelectItem>
+                            <SelectItem value="Onsite">Onsite</SelectItem>
                             <SelectItem value="Hybrid">Hybrid</SelectItem>
                           </SelectContent>
                         </Select>
@@ -332,6 +476,32 @@ export default function EditInternship() {
                       <FormControl>
                         <Input placeholder="e.g. Lagos, Nigeria" {...field} />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="levels"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Target Levels</FormLabel>
+                      <div className="flex flex-wrap gap-2">
+                        {[100, 200, 300, 400, 500, 600].map((level) => (
+                          <Badge
+                            key={level}
+                            variant={levels.includes(level) ? 'default' : 'outline'}
+                            className="cursor-pointer select-none"
+                            onClick={() => toggleLevel(level)}
+                          >
+                            {level} Level
+                          </Badge>
+                        ))}
+                      </div>
+                      <FormDescription>
+                        Select which academic levels this internship targets
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

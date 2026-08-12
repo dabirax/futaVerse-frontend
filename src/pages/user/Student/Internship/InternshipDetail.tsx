@@ -1,324 +1,216 @@
-import { useState } from 'react'
-import { Plus } from 'lucide-react'
-import StudentCard from '../../../../components/user/internships/StudentCard'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Link } from '@tanstack/react-router'
+import { Building2, Calendar, Clock, MapPin, MessageSquare, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { studentInternshipDetailsRoute } from '@/routes/user-student'
 import { useInternshipEngagement } from '@/hooks/useInternships'
-import {CardSkeleton2 }from '@/components/CardSkeletons'
+import { CardSkeleton2 } from '@/components/CardSkeletons'
 import { BackButton2 } from '@/components/BackButtons'
 
-const mockOffers = [
-  {
-    studentName: 'Chioma Adebayo',
-    internshipTitle: 'Frontend Developer Intern',
-  },
-]
-
-const mockApplications = [
-  {
-    studentName: 'Blessing Okonkwo',
-    internshipTitle: 'Frontend Developer Intern',
-  },
-  {
-    studentName: 'Emmanuel Nwosu',
-    internshipTitle: 'Frontend Developer Intern',
-  },
-]
-
-const mockInterns = [
-  {
-    studentName: 'Fatima Ibrahim',
-    internshipTitle: 'Frontend Developer Intern',
-  },
-]
-
 export default function InternshipDetail() {
-
   const { sqid } = studentInternshipDetailsRoute.useParams()
   const { data, isLoading, isError } = useInternshipEngagement(sqid)
 
-  const [activeTab, setActiveTab] = useState('details')
-  const [isActive, setIsActive] = useState(data?.is_active)
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <BackButton2 />
+          <h1 className="text-2xl font-semibold">Loading...</h1>
+        </div>
+        <CardSkeleton2 />
+      </div>
+    )
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <BackButton2 />
+        </div>
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-lg font-semibold text-foreground">
+              This internship isn't available right now.
+            </p>
+            <p className="text-sm text-muted-foreground mt-2">
+              It may have been removed or you don't have access yet.
+            </p>
+            <Link to="/student/internships">
+              <Button variant="outline" className="mt-4">
+                Back to Internships
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const info = data.internship_info
+  const isEngaged = Boolean(data.status)
+  const hasSlots = info.remaining_slots > 0
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center gap-4">
         <BackButton2 />
-
-        <h1 className="text-2xl font-semibold">{data?.title}</h1>
+        <h1 className="text-2xl font-semibold">{info.title}</h1>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="details">Details</TabsTrigger>
-          <TabsTrigger value="offers">Offers</TabsTrigger>
-          <TabsTrigger value="applications">Applications</TabsTrigger>
-          <TabsTrigger value="interns">Interns</TabsTrigger>
-        </TabsList>
-
-        {/* DETAILS TAB */}
-        <TabsContent value="details" className="space-y-4">
-          <div className="flex justify-end">
-            
-          </div>
-          {isLoading && <CardSkeleton2 />}
-          {isError && (
-            <p className="text-center font-bold text-destructive text-2xl">
-              Error loading internship details.
-            </p>
-          )}
-
-          {isLoading || isError ? null : (
-            <div className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                {/* Basic Information */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Basic Information</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div>
-                      <Label className="text-muted-foreground">Title</Label>
-                      <p className="font-medium">{data?.title}</p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">
-                        Description
-                      </Label>
-                      <p className="text-sm">{data?.description}</p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">Industry</Label>
-                      <p className="font-medium">{data?.industry}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Work Details */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Work Details</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div>
-                      <Label className="text-muted-foreground">Work Mode</Label>
-                      <p className="font-medium">{data?.work_mode}</p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">
-                        Engagement Type
-                      </Label>
-                      <p className="font-medium">{data?.engagement_type}</p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">Location</Label>
-                      <p className="font-medium">{data?.location}</p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">Duration</Label>
-                      <p className="font-medium">
-                        {data?.duration_weeks} weeks
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Timeline */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Timeline</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div>
-                      <Label className="text-muted-foreground">
-                        Start Date
-                      </Label>
-                      <p className="font-medium">
-                        {new Date(data?.start_date || '').toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">End Date</Label>
-                      <p className="font-medium">
-                        {new Date(data?.end_date || '').toLocaleDateString()}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Compensation & Slots */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Compensation & Availability</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div>
-                      <Label className="text-muted-foreground">Is Paid</Label>
-                      <p className="font-medium">
-                        {data?.is_paid ? 'Yes' : 'No'}
-                      </p>
-                    </div>
-                    {data?.is_paid && (
-                      <div>
-                        <Label className="text-muted-foreground">Stipend</Label>
-                        <p className="font-medium">
-                          ₦{parseFloat(data?.stipend || '0').toLocaleString()}
-                        </p>
-                      </div>
-                    )}
-                    <div>
-                      <Label className="text-muted-foreground">
-                        Available Slots
-                      </Label>
-                      <p className="font-medium">{data?.available_slots}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Skills & Requirements */}
-                <Card className="md:col-span-2">
-                  <CardHeader>
-                    <CardTitle>Skills & Requirements</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label className="text-muted-foreground">
-                        Required Skills
-                      </Label>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {data?.skills_required.map(
-                          (skill: string, index: number) => (
-                            <Badge key={index} variant="accent">
-                              {skill}
-                            </Badge>
-                          ),
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex gap-6">
-                      <div className="flex items-center gap-2">
-                        <Label className="text-muted-foreground">
-                          Resume Required:
-                        </Label>
-                        <Badge
-                          variant={data?.require_resume ? 'default' : 'outline'}
-                        >
-                          {data?.require_resume ? 'Yes' : 'No'}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Label className="text-muted-foreground">
-                          Cover Letter Required:
-                        </Label>
-                        <Badge
-                          variant={
-                            data?.require_cover_letter ? 'default' : 'outline'
-                          }
-                        >
-                          {data?.require_cover_letter ? 'Yes' : 'No'}
-                        </Badge>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+      {isEngaged && (
+        <Card className="border-primary/50 bg-primary/5">
+          <CardContent className="py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Badge variant="default">{data.status}</Badge>
+                <span className="text-sm text-muted-foreground">
+                  via {data.source}
+                </span>
               </div>
-              {/* Active/Inactive Toggle */}
-              <Card>
-                <CardContent className="p-4 flex items-center justify-between">
-                  <div>
-                    <Label className="text-base font-semibold">
-                      Internship Status
-                    </Label>
-                    <p className="text-sm text-muted-foreground">
-                      {isActive
-                        ? 'This internship is currently active and accepting applications'
-                        : 'This internship is currently inactive'}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Switch checked={isActive} onCheckedChange={setIsActive} />
-                    <Label>{isActive ? 'Active' : 'Inactive'}</Label>
-                  </div>
-                </CardContent>
-              </Card>
+              {data.alumnus_info && (
+                <Link to="/student/messages">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <MessageSquare className="h-4 w-4" />
+                    Message {data.alumnus_info.name}
+                  </Button>
+                </Link>
+              )}
             </div>
-          )}
-        </TabsContent>
+          </CardContent>
+        </Card>
+      )}
 
-        {/* OFFERS TAB */}
-        <TabsContent value="offers" className="space-y-4">
-          <div className="flex justify-end">
-            <Button>
-              <Plus className="h-4 w-4" />
-              Share Offer
-            </Button>
-          </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Description</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground whitespace-pre-line">
+              {info.description}
+            </p>
+          </CardContent>
+        </Card>
 
-          <div className="space-y-3">
-            {mockOffers.length > 0 ? (
-              mockOffers.map((offer, index) => (
-                <StudentCard
-                  key={index}
-                  {...offer}
-                  variant="offer"
-                  onWithdraw={() => console.log('Withdraw offer')}
-                />
-              ))
-            ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                No offers sent for this internship yet.
+        <Card>
+          <CardHeader>
+            <CardTitle>Work Details</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-start gap-3">
+              <MapPin className="h-5 w-5 text-muted-foreground mt-1" />
+              <div>
+                <p className="text-sm text-muted-foreground">Location</p>
+                <p className="font-semibold">{info.location}</p>
               </div>
-            )}
-          </div>
-        </TabsContent>
-
-        {/* APPLICATIONS TAB */}
-        <TabsContent value="applications" className="space-y-4">
-          <div className="space-y-3">
-            {mockApplications.length > 0 ? (
-              mockApplications.map((application, index) => (
-                <StudentCard
-                  key={index}
-                  {...application}
-                  variant="applicant"
-                  onAccept={() => console.log('Accept application')}
-                  onWithdraw={() => console.log('Reject application')}
-                />
-              ))
-            ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                No applications received for this internship yet.
+            </div>
+            <div className="flex items-start gap-3">
+              <Clock className="h-5 w-5 text-muted-foreground mt-1" />
+              <div>
+                <p className="text-sm text-muted-foreground">Duration</p>
+                <p className="font-semibold">{info.duration_weeks} weeks</p>
               </div>
-            )}
-          </div>
-        </TabsContent>
-
-        {/* INTERNS TAB */}
-        <TabsContent value="interns" className="space-y-4">
-          <div className="space-y-3">
-            {mockInterns.length > 0 ? (
-              mockInterns.map((intern, index) => (
-                <StudentCard
-                  key={index}
-                  {...intern}
-                  variant="message"
-                  onMessage={() => console.log('Message intern')}
-                />
-              ))
-            ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                No active interns for this internship yet.
+            </div>
+            <div className="flex items-start gap-3">
+              <Calendar className="h-5 w-5 text-muted-foreground mt-1" />
+              <div>
+                <p className="text-sm text-muted-foreground">Timeline</p>
+                <p className="font-semibold">
+                  {new Date(info.start_date).toLocaleDateString()} –{' '}
+                  {new Date(info.end_date).toLocaleDateString()}
+                </p>
               </div>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
+            </div>
+            <div className="flex items-start gap-3">
+              <Building2 className="h-5 w-5 text-muted-foreground mt-1" />
+              <div>
+                <p className="text-sm text-muted-foreground">Company</p>
+                <p className="font-semibold">
+                  {info.company} · {info.industry}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Compensation & Availability</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div>
+              <Label className="text-muted-foreground">Stipend</Label>
+              <p className="font-medium">
+                {info.is_paid
+                  ? `₦${parseFloat(info.stipend || '0').toLocaleString()}/month`
+                  : 'Unpaid'}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-muted-foreground" />
+              <Label className="text-muted-foreground">Slots</Label>
+              <p className="font-medium">
+                {info.remaining_slots} of {info.available_slots} remaining
+              </p>
+            </div>
+            <div className="flex gap-2 pt-2">
+              <Badge variant="outline">{info.work_mode}</Badge>
+              <Badge variant="secondary">{info.engagement_type}</Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="md:col-span-2">
+          <CardHeader>
+            <CardTitle>Skills & Requirements</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label className="text-muted-foreground">Required Skills</Label>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {info.skills_required.map((skill: string, index: number) => (
+                  <Badge key={index} variant="accent">
+                    {skill}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <Badge variant={info.require_resume ? 'default' : 'outline'}>
+                {info.require_resume ? 'Resume required' : 'Resume optional'}
+              </Badge>
+              <Badge
+                variant={info.require_cover_letter ? 'default' : 'outline'}
+              >
+                {info.require_cover_letter
+                  ? 'Cover letter required'
+                  : 'Cover letter optional'}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {!isEngaged && (
+        <Card>
+          <CardContent className="py-6">
+            <div className="flex flex-col gap-3">
+              <Button disabled className="w-full">
+                {hasSlots ? 'Apply Now' : 'No slots available'}
+              </Button>
+              <p className="text-center text-sm text-muted-foreground">
+                {hasSlots
+                  ? "Applying isn't available yet - check back soon."
+                  : 'All slots for this internship are currently filled.'}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
