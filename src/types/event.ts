@@ -46,7 +46,7 @@ export interface Event {
   created_at: string
   updated_at: string
   creator: number
-  tickets?: Ticket[]
+  tickets?: Array<Ticket>
   virtual_meeting?: VirtualMeeting
   starting_price?: string
 }
@@ -115,7 +115,7 @@ export interface CreateEventPayload {
   platform?: VirtualMeeting['platform']
   redirect_after_auth?: string
   free_ticket?: FreeTicketConfig
-  tickets?: PaidTicketInput[]
+  tickets?: Array<PaidTicketInput>
 }
 
 /** Paystack bank entry returned from GET /api/payments/banks. */

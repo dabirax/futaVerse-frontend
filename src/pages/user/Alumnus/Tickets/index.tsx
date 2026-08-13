@@ -1,6 +1,15 @@
 import { useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import {
+  Calendar,
+  MapPin,
+  Search,
+  Ticket as TicketIcon,
+  Video,
+} from 'lucide-react'
+import { format } from 'date-fns'
+import type { Event, PurchasedTicket } from '@/types/event'
+import {
   Card,
   CardContent,
   CardDescription,
@@ -12,16 +21,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  Search,
-  Ticket as TicketIcon,
-  Calendar,
-  MapPin,
-  Video,
-} from 'lucide-react'
-import { format } from 'date-fns'
 import { useMyTicketsWithEvents } from '@/hooks/useEvents'
-import { Event, PurchasedTicket } from '@/types/event'
 
 interface PurchaseRow extends PurchasedTicket {
   event: Event | undefined
@@ -33,7 +33,7 @@ export default function AlumnusTickets() {
 
   const { data: rows = [], isLoading, isError } = useMyTicketsWithEvents()
 
-  const filtered = (rows as PurchaseRow[]).filter(
+  const filtered = (rows as Array<PurchaseRow>).filter(
     (r) =>
       (r.event?.title ?? '').toLowerCase().includes(search.toLowerCase()) ||
       r.ticket.name.toLowerCase().includes(search.toLowerCase()),
@@ -124,7 +124,7 @@ function TicketList({
   rows,
   onView,
 }: {
-  rows: PurchaseRow[]
+  rows: Array<PurchaseRow>
   onView: (eventSqid: string) => void
 }) {
   if (rows.length === 0) {

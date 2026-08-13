@@ -6,8 +6,8 @@ export const MentorshipService = {
     return data
   },
 
-  getOne: async (id: number) => {
-    const { data } = await api.get(`/api/mentorships/${id}`)
+  getOne: async (sqid: string) => {
+    const { data } = await api.get(`/api/mentorships/${sqid}`)
     return data
   },
 
@@ -16,13 +16,25 @@ export const MentorshipService = {
     return data
   },
 
-  update: async (id: number, payload: any) => {
-    const { data } = await api.patch(`/api/mentorships/${id}`, payload)
+  update: async (sqid: string, payload: any) => {
+    const { data } = await api.patch(`/api/mentorships/${sqid}`, payload)
     return data
   },
 
-  delete: async (id: number) => {
-    const { data } = await api.delete(`/api/mentorships/${id}`)
+  delete: async (sqid: string) => {
+    const { data } = await api.delete(`/api/mentorships/${sqid}`)
+    return data
+  },
+
+  getChoices: async () => {
+    const { data } = await api.get(`/api/mentorships/choices`)
+    return data
+  },
+
+  toggleActive: async (sqid: string, is_active: boolean) => {
+    const { data } = await api.patch(`/api/mentorships/${sqid}/toggle-active`, {
+      is_active,
+    })
     return data
   },
 }
@@ -34,17 +46,22 @@ export const MentorshipOffersService = {
     return data
   },
 
-  acceptOffer: async (id: number) => {
-    const { data } = await api.post(`/api/mentorships/offers/${id}/accept`)
+  createOffer: async (payload: any) => {
+    const { data } = await api.post(`/api/mentorships/offer`, payload)
     return data
   },
 
-  rejectOffer: async (id: number) => {
-    const { data } = await api.post(`/api/mentorships/offers/${id}/reject`)
+  acceptOffer: async (sqid: string) => {
+    const { data } = await api.post(`/api/mentorships/offers/${sqid}/accept`)
     return data
   },
-  withdrawOffer: async (id: number) => {
-    const { data } = await api.post(`/api/mentorships/offers/${id}/withdraw`)
+
+  rejectOffer: async (sqid: string) => {
+    const { data } = await api.post(`/api/mentorships/offers/${sqid}/reject`)
+    return data
+  },
+  withdrawOffer: async (sqid: string) => {
+    const { data } = await api.post(`/api/mentorships/offers/${sqid}/withdraw`)
     return data
   },
 }
@@ -56,25 +73,25 @@ export const MentorshipApplicationsService = {
     return data
   },
   createApplication: async (payload: any) => {
-    const { data } = await api.post(`/api/mentorships/applications`, payload)
+    const { data } = await api.post(`/api/mentorships/application`, payload)
     return data
   },
-  acceptApplication: async (id: number) => {
+  acceptApplication: async (sqid: string) => {
     const { data } = await api.post(
-      `/api/mentorships/applications/${id}/accept`,
+      `/api/mentorships/applications/${sqid}/accept`,
     )
     return data
   },
 
-  rejectApplication: async (id: number) => {
+  rejectApplication: async (sqid: string) => {
     const { data } = await api.post(
-      `/api/mentorships/applications/${id}/reject`,
+      `/api/mentorships/applications/${sqid}/reject`,
     )
     return data
   },
-  withdrawApplication: async (id: number) => {
+  withdrawApplication: async (sqid: string) => {
     const { data } = await api.post(
-      `/api/mentorships/applications/${id}/withdraw`,
+      `/api/mentorships/applications/${sqid}/withdraw`,
     )
     return data
   },
@@ -86,8 +103,8 @@ export const MentorshipEngagementsService = {
     const { data } = await api.get(`/api/mentorships/engagements`)
     return data
   },
-  getOne: async (id: number) => {
-    const { data } = await api.get(`/api/mentorships/engagements/${id}`)
+  getOne: async (sqid: string) => {
+    const { data } = await api.get(`/api/mentorships/engagements/${sqid}`)
     return data
   },
 }

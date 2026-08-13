@@ -1,9 +1,8 @@
-
-import { SunIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import { Logo } from "./logo";
-import { NavMenu } from "./nav-menu";
-import { NavigationSheet } from "./navigation-sheet";
+import { SunIcon } from 'lucide-react'
+import { Button } from '../ui/button'
+import { Logo } from './logo'
+import { NavMenu } from './nav-menu'
+import { NavigationSheet } from './navigation-sheet'
 
 const Navbar02Page = () => {
   return (
@@ -34,7 +33,7 @@ const Navbar02Page = () => {
         </div>
       </nav>
     </div>
-  );
-};
+  )
+}
 
-export default Navbar02Page;
+export default Navbar02Page

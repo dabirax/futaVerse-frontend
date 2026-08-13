@@ -1,11 +1,20 @@
-import { useState } from "react";
-import { useRouter} from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { useState } from 'react'
+import { useRouter } from '@tanstack/react-router'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { ArrowLeft, CalendarIcon } from 'lucide-react'
+import { format } from 'date-fns'
+import type { TicketScenario } from '@/components/user/events/TicketsSection'
+import type {
+  CreateEventPayload,
+  FreeTicketConfig,
+  LinkedBankAccount,
+  PaidTicketInput,
+} from '@/types/event'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Form,
   FormControl,
@@ -14,141 +23,132 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Calendar } from "@/components/ui/calendar";
+} from '@/components/ui/select'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Switch } from '@/components/ui/switch'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { ArrowLeft, CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
-import { useCreateEvent } from "@/hooks/useEvents";
-import TicketsSection, {
-  TicketScenario,
-} from "@/components/user/events/TicketsSection";
-import {
-  CreateEventPayload,
-  FreeTicketConfig,
-  LinkedBankAccount,
-  PaidTicketInput,
-} from "@/types/event";
-
+} from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
+import { useCreateEvent } from '@/hooks/useEvents'
+import TicketsSection from '@/components/user/events/TicketsSection'
 
 const formSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200, "Title too long"),
-  description: z.string().min(1, "Description is required"),
+  title: z.string().min(1, 'Title is required').max(200, 'Title too long'),
+  description: z.string().min(1, 'Description is required'),
   category: z.enum([
-    "workshop",
-    "seminar",
-    "networking",
-    "career_fair",
-    "webinar",
-    "conference",
+    'workshop',
+    'seminar',
+    'networking',
+    'career_fair',
+    'webinar',
+    'conference',
   ]),
-  mode: z.enum(["virtual", "physical", "hybrid"]),
-  platform: z.enum(["meet", "zoom", "teams"]).optional(),
+  mode: z.enum(['virtual', 'physical', 'hybrid']),
+  platform: z.enum(['meet', 'zoom', 'teams']).optional(),
   venue: z.string().optional(),
-  date: z.date({ required_error: "Date is required" }),
-  start_time: z.string().min(1, "Start time is required"),
-  duration_mins: z.coerce.number().min(15, "Duration must be at least 15 minutes"),
-  max_capacity: z.coerce.number().min(1, "Capacity must be at least 1"),
+  date: z.date({ required_error: 'Date is required' }),
+  start_time: z.string().min(1, 'Start time is required'),
+  duration_mins: z.coerce
+    .number()
+    .min(15, 'Duration must be at least 15 minutes'),
+  max_capacity: z.coerce.number().min(1, 'Capacity must be at least 1'),
   allow_sponsorship: z.boolean(),
   allow_donations: z.boolean(),
   is_published: z.boolean(),
-});
+})
 
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.infer<typeof formSchema>
 
 export default function CreateEvent() {
-  const router = useRouter();
-  const { toast } = useToast();
-  const createEvent = useCreateEvent();
-  const [scenario, setScenario] = useState<TicketScenario>("free");
+  const router = useRouter()
+  const { toast } = useToast()
+  const createEvent = useCreateEvent()
+  const [scenario, setScenario] = useState<TicketScenario>('free')
   const [freeTicket, setFreeTicket] = useState<FreeTicketConfig>({
     required: true,
     quantity: 100,
-  });
-  const [paidTickets, setPaidTickets] = useState<PaidTicketInput[]>([]);
+  })
+  const [paidTickets, setPaidTickets] = useState<Array<PaidTicketInput>>([])
   const [linkedBankAccount, setLinkedBankAccount] =
-    useState<LinkedBankAccount | null>(null);
-  const [submitType, setSubmitType] = useState<"publish" | "draft" | null>(null);
+    useState<LinkedBankAccount | null>(null)
+  const [submitType, setSubmitType] = useState<'publish' | 'draft' | null>(null)
 
   const handleCreate = (isDraft: boolean) => {
-    setSubmitType(isDraft ? "draft" : "publish");
-    form.setValue("is_published", !isDraft);
+    setSubmitType(isDraft ? 'draft' : 'publish')
+    form.setValue('is_published', !isDraft)
     form.handleSubmit((data) => {
-      onSubmit({ ...data, is_published: !isDraft });
-    })();
-  };
+      onSubmit({ ...data, is_published: !isDraft })
+    })()
+  }
 
   const getErrorMessage = (error: unknown) => {
     if (error instanceof Error) {
-      return error.message;
+      return error.message
     }
-    return "Unexpected error occurred.";
-  };
+    return 'Unexpected error occurred.'
+  }
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      category: "workshop",
-      mode: "virtual",
-      platform: "meet",
-      venue: "",
-      start_time: "09:00",
+      title: '',
+      description: '',
+      category: 'workshop',
+      mode: 'virtual',
+      platform: 'meet',
+      venue: '',
+      start_time: '09:00',
       duration_mins: 60,
       max_capacity: 100,
       allow_sponsorship: false,
       allow_donations: false,
       is_published: false,
     },
-  });
+  })
 
-  const mode = form.watch("mode");
+  const mode = form.watch('mode')
 
   const onSubmit = (data: FormData) => {
     // Validate scenario-specific requirements before submitting.
-    const usesPaid = scenario === "paid" || scenario === "free_and_paid";
+    const usesPaid = scenario === 'paid' || scenario === 'free_and_paid'
     if (usesPaid && paidTickets.length === 0) {
       toast({
-        title: "Add at least one paid ticket",
-        description: "You picked a scenario that requires paid tickets.",
-        variant: "destructive",
-      });
-      return;
+        title: 'Add at least one paid ticket',
+        description: 'You picked a scenario that requires paid tickets.',
+        variant: 'destructive',
+      })
+      return
     }
     if (usesPaid && !linkedBankAccount) {
       toast({
-        title: "Link a payout account",
-        description: "Paid ticket sales require a linked Paystack account.",
-        variant: "destructive",
-      });
-      return;
+        title: 'Link a payout account',
+        description: 'Paid ticket sales require a linked Paystack account.',
+        variant: 'destructive',
+      })
+      return
     }
     if (
-      (scenario === "free" || scenario === "free_and_paid") &&
+      (scenario === 'free' || scenario === 'free_and_paid') &&
       freeTicket.quantity <= 0
     ) {
       toast({
-        title: "Set free ticket quantity",
-        description: "Free tickets must have at least 1 available seat.",
-        variant: "destructive",
-      });
-      return;
+        title: 'Set free ticket quantity',
+        description: 'Free tickets must have at least 1 available seat.',
+        variant: 'destructive',
+      })
+      return
     }
 
     const payload: CreateEventPayload = {
@@ -156,17 +156,17 @@ export default function CreateEvent() {
       description: data.description,
       category: data.category,
       mode: data.mode,
-      venue: data.venue || "",
-      date: format(data.date, "yyyy-MM-dd"),
+      venue: data.venue || '',
+      date: format(data.date, 'yyyy-MM-dd'),
       start_time: data.start_time,
       duration_mins: data.duration_mins,
       max_capacity: data.max_capacity,
       allow_sponsorship: data.allow_sponsorship,
       allow_donations: data.allow_donations,
       is_published: data.is_published,
-      ...(mode !== "physical" ? { platform: data.platform } : {}),
+      ...(mode !== 'physical' ? { platform: data.platform } : {}),
       free_ticket:
-        scenario === "free" || scenario === "free_and_paid"
+        scenario === 'free' || scenario === 'free_and_paid'
           ? { required: true, quantity: freeTicket.quantity }
           : { required: false, quantity: 0 },
       ...(usesPaid
@@ -178,25 +178,25 @@ export default function CreateEvent() {
             })),
           }
         : {}),
-    };
+    }
 
     createEvent.mutate(payload, {
       onSuccess: () => {
         toast({
-          title: "Event Created",
+          title: 'Event Created',
           description: `"${data.title}" has been created successfully.`,
-        });
-        router.navigate({ to: "/alumnus/events" });
+        })
+        router.navigate({ to: '/alumnus/events' })
       },
       onError: (error) => {
         toast({
-          title: "Error",
+          title: 'Error',
           description: getErrorMessage(error),
-          variant: "destructive",
-        });
+          variant: 'destructive',
+        })
       },
-    });
-  };
+    })
+  }
 
   return (
     <div className="space-y-6">
@@ -489,7 +489,7 @@ export default function CreateEvent() {
                   )}
                 </CardContent>
               </Card>
-                  
+
               {/* Tickets (3 scenarios + inline Paystack link) */}
               <TicketsSection
                 scenario={scenario}
@@ -552,8 +552,6 @@ export default function CreateEvent() {
                       </FormItem>
                     )}
                   />
-
-
                 </CardContent>
               </Card>
 
@@ -565,22 +563,26 @@ export default function CreateEvent() {
                       {getErrorMessage(createEvent.error)}
                     </div>
                   )}
-                  <Button 
-                    type="button" 
+                  <Button
+                    type="button"
                     className="w-full"
                     disabled={createEvent.isPending}
                     onClick={() => handleCreate(false)}
                   >
-                    {createEvent.isPending && submitType === "publish" ? "Creating..." : "Create Event"}
+                    {createEvent.isPending && submitType === 'publish'
+                      ? 'Creating...'
+                      : 'Create Event'}
                   </Button>
-                  <Button 
-                    type="button" 
+                  <Button
+                    type="button"
                     variant="outline"
                     className="w-full"
                     disabled={createEvent.isPending}
                     onClick={() => handleCreate(true)}
                   >
-                    {createEvent.isPending && submitType === "draft" ? "Saving..." : "Save as Draft"}
+                    {createEvent.isPending && submitType === 'draft'
+                      ? 'Saving...'
+                      : 'Save as Draft'}
                   </Button>
                   <Button
                     type="button"
@@ -598,5 +600,5 @@ export default function CreateEvent() {
         </form>
       </Form>
     </div>
-  );
+  )
 }

@@ -1,12 +1,11 @@
-
-import {Link} from "@tanstack/react-router";
+import { Link } from '@tanstack/react-router'
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "../ui/navigation-menu";
-import type { ComponentProps } from "react";
+} from '../ui/navigation-menu'
+import type { ComponentProps } from 'react'
 
 export const NavMenu = (props: ComponentProps<typeof NavigationMenu>) => (
   <NavigationMenu {...props}>
@@ -18,19 +17,19 @@ export const NavMenu = (props: ComponentProps<typeof NavigationMenu>) => (
       </NavigationMenuItem>
       <NavigationMenuItem>
         <NavigationMenuLink asChild>
-          <Link to=''>Blog</Link>
+          <Link to="">Blog</Link>
         </NavigationMenuLink>
       </NavigationMenuItem>
       <NavigationMenuItem>
         <NavigationMenuLink asChild>
-          <Link to=''>About</Link>
+          <Link to="">About</Link>
         </NavigationMenuLink>
       </NavigationMenuItem>
       <NavigationMenuItem>
         <NavigationMenuLink asChild>
-          <Link to=''>Contact Us</Link>
+          <Link to="">Contact Us</Link>
         </NavigationMenuLink>
       </NavigationMenuItem>
     </NavigationMenuList>
   </NavigationMenu>
-);
+)

@@ -1,5 +1,5 @@
-import { useInternshipEngagements } from '@/hooks/useInternships'
 import StudentCard from '../../../../../components/user/internships/StudentCard'
+import { useInternshipEngagements } from '@/hooks/useInternships'
 import { CardSkeleton5 } from '@/components/CardSkeletons'
 
 export default function InternsTab() {

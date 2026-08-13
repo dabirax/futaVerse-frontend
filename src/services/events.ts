@@ -1,4 +1,4 @@
-import {
+import type {
   CreateEventPayload,
   Event,
   EventListItem,
@@ -15,7 +15,7 @@ export interface PaginatedResponse<T> {
   count: number
   next: string | null
   previous: string | null
-  results: T[]
+  results: Array<T>
 }
 
 export interface UpdateEventPayload {
@@ -55,10 +55,13 @@ const getHeaders = (): Record<string, string> => {
 }
 
 const getBaseUrl = () => import.meta.env.VITE_API_URL || ''
-const mockTicketCache: PurchasedTicket[] = [...mockPurchasedTickets]
+const mockTicketCache: Array<PurchasedTicket> = [...mockPurchasedTickets]
 
 export const EventsService = {
-  list: async (params?: { page?: number; size?: number }): Promise<PaginatedResponse<EventListItem>> => {
+  list: async (params?: {
+    page?: number
+    size?: number
+  }): Promise<PaginatedResponse<EventListItem>> => {
     const baseUrl = getBaseUrl()
     if (!baseUrl) {
       return {
@@ -74,10 +77,13 @@ export const EventsService = {
     if (params?.size) queryParams.append('size', params.size.toString())
 
     try {
-      const response = await fetch(`${baseUrl}/api/events/list?${queryParams.toString()}`, {
-        method: 'GET',
-        headers: getHeaders(),
-      })
+      const response = await fetch(
+        `${baseUrl}/api/events/list?${queryParams.toString()}`,
+        {
+          method: 'GET',
+          headers: getHeaders(),
+        },
+      )
 
       if (!response.ok) {
         throw new Error('Failed to fetch events')
@@ -145,13 +151,16 @@ export const EventsService = {
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))  
+      const errorData = await response.json().catch(() => ({}))
       throw new Error(errorData?.message || 'Failed to update event')
     }
     return response.json()
   },
 
-  updateMode: async (sqid: string, payload: UpdateEventModePayload): Promise<Event> => {
+  updateMode: async (
+    sqid: string,
+    payload: UpdateEventModePayload,
+  ): Promise<Event> => {
     const baseUrl = getBaseUrl()
     const response = await fetch(`${baseUrl}/api/events/update/${sqid}/mode`, {
       method: 'PATCH',
@@ -181,7 +190,10 @@ export const EventsService = {
     return response.json()
   },
 
-  register: async (payload: { ticket: string; email: string }): Promise<void> => {
+  register: async (payload: {
+    ticket: string
+    email: string
+  }): Promise<void> => {
     const baseUrl = getBaseUrl()
 
     const ticket = mockEvents
@@ -196,9 +208,10 @@ export const EventsService = {
       mockTicketCache.push({
         email: payload.email,
         ticket,
-        ticket_uid: typeof crypto !== 'undefined' && 'randomUUID' in crypto
-          ? crypto.randomUUID()
-          : `mock-${Date.now()}`,
+        ticket_uid:
+          typeof crypto !== 'undefined' && 'randomUUID' in crypto
+            ? crypto.randomUUID()
+            : `mock-${Date.now()}`,
         is_paid: true,
         checked_in: false,
         checked_in_at: null,
@@ -221,9 +234,10 @@ export const EventsService = {
       mockTicketCache.push({
         email: payload.email,
         ticket,
-        ticket_uid: typeof crypto !== 'undefined' && 'randomUUID' in crypto
-          ? crypto.randomUUID()
-          : `mock-${Date.now()}`,
+        ticket_uid:
+          typeof crypto !== 'undefined' && 'randomUUID' in crypto
+            ? crypto.randomUUID()
+            : `mock-${Date.now()}`,
         is_paid: true,
         checked_in: false,
         checked_in_at: null,
@@ -232,7 +246,10 @@ export const EventsService = {
     }
   },
 
-  myTickets: async (params?: { page?: number; size?: number }): Promise<PaginatedResponse<PurchasedTicket>> => {
+  myTickets: async (params?: {
+    page?: number
+    size?: number
+  }): Promise<PaginatedResponse<PurchasedTicket>> => {
     const baseUrl = getBaseUrl()
     if (!baseUrl) {
       return {
@@ -248,10 +265,13 @@ export const EventsService = {
     if (params?.size) queryParams.append('size', params.size.toString())
 
     try {
-      const response = await fetch(`${baseUrl}/api/events/tickets?${queryParams.toString()}`, {
-        method: 'GET',
-        headers: getHeaders(),
-      })
+      const response = await fetch(
+        `${baseUrl}/api/events/tickets?${queryParams.toString()}`,
+        {
+          method: 'GET',
+          headers: getHeaders(),
+        },
+      )
 
       if (!response.ok) {
         throw new Error('Failed to fetch tickets')

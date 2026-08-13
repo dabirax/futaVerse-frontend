@@ -1,25 +1,47 @@
-import {useEffect, useState,  } from "react";
-import { useRouter} from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { AxiosError } from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { CalendarIcon, X,} from "lucide-react";
-import { format } from "date-fns";
-import { alumnusEditInternshipRoute } from "@/routes/user-alumnus";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
-import { useDeleteInternship, useInternship, useUpdateInternship } from "@/hooks/useInternships";
+import { useEffect, useState } from 'react'
+import { useRouter } from '@tanstack/react-router'
+import { useForm } from 'react-hook-form'
+import { AxiosError } from 'axios'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { CalendarIcon, X } from 'lucide-react'
+import { format } from 'date-fns'
+import { alumnusEditInternshipRoute } from '@/routes/user-alumnus'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Calendar } from '@/components/ui/calendar'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
+import {
+  useDeleteInternship,
+  useInternship,
+  useUpdateInternship,
+} from '@/hooks/useInternships'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,47 +52,50 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { BackButton2 } from "@/components/BackButtons";
-
+} from '@/components/ui/alert-dialog'
+import { BackButton2 } from '@/components/BackButtons'
 
 const formSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200),
-  description: z.string().min(1, "Description is required"),
-  work_mode: z.enum(["Remote", "Onsite", "Hybrid"]),
-  engagement_type: z.enum(["Full-time", "Part-time"]),
-  location: z.string().min(1, "Location is required"),
-  industry: z.string().min(1, "Industry is required"),
-  duration_weeks: z.number().min(1, "Duration must be at least 1 week"),
+  title: z.string().min(1, 'Title is required').max(200),
+  description: z.string().min(1, 'Description is required'),
+  work_mode: z.enum(['Remote', 'Onsite', 'Hybrid']),
+  engagement_type: z.enum(['Full-time', 'Part-time']),
+  location: z.string().min(1, 'Location is required'),
+  industry: z.string().min(1, 'Industry is required'),
+  duration_weeks: z.number().min(1, 'Duration must be at least 1 week'),
   start_date: z.date().optional(),
   end_date: z.date().optional(),
   is_paid: z.boolean(),
   stipend: z.string().optional(),
-  available_slots: z.number().min(1, "At least 1 slot is required"),
+  available_slots: z.number().min(1, 'At least 1 slot is required'),
   remaining_slots: z.number().min(0),
   require_resume: z.boolean(),
   require_cover_letter: z.boolean(),
-  skills_required: z.array(z.string()).min(1, "At least one skill is required"),
-  levels: z.array(z.number()).min(1, "Select at least one level"),
-  company: z.string().min(1, "Company is required"),
-  company_type: z.string().min(1, "Company type is required"),
+  skills_required: z.array(z.string()).min(1, 'At least one skill is required'),
+  levels: z.array(z.number()).min(1, 'Select at least one level'),
+  company: z.string().min(1, 'Company is required'),
+  company_type: z.string().min(1, 'Company type is required'),
   company_linkedin_url: z.string().optional(),
   company_website_url: z.string().optional(),
-});
+})
 
-type FormValues = z.infer<typeof formSchema>;
-
+type FormValues = z.infer<typeof formSchema>
 
 export default function EditInternship() {
-  const { sqid } = alumnusEditInternshipRoute.useParams();
-  const router = useRouter();
-  const { toast } = useToast();
-  const [skillInput, setSkillInput] = useState("");
-  
-  const { data: currentData, isLoading, isError } = useInternship(sqid);
-  
-  const { mutate, isPending: isUpdating, isError: isUpdateError } = useUpdateInternship();
-  const { mutate: deleteInternship, isPending: isDeleting } = useDeleteInternship();
+  const { sqid } = alumnusEditInternshipRoute.useParams()
+  const router = useRouter()
+  const { toast } = useToast()
+  const [skillInput, setSkillInput] = useState('')
+
+  const { data: currentData, isLoading, isError } = useInternship(sqid)
+
+  const {
+    mutate,
+    isPending: isUpdating,
+    isError: isUpdateError,
+  } = useUpdateInternship()
+  const { mutate: deleteInternship, isPending: isDeleting } =
+    useDeleteInternship()
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -100,8 +125,8 @@ export default function EditInternship() {
 
   // Load internship data
   useEffect(() => {
-    if (!currentData) return; 
-    
+    if (!currentData) return
+
     form.reset({
       title: currentData.title,
       description: currentData.description,
@@ -124,112 +149,112 @@ export default function EditInternship() {
       company_type: currentData.company_type || '',
       company_linkedin_url: currentData.company_linkedin_url || '',
       company_website_url: currentData.company_website_url || '',
-    });
-  }, [currentData, form]);
+    })
+  }, [currentData, form])
 
-  const isPaid = form.watch("is_paid");
-  const skills = form.watch("skills_required");
-  const levels = form.watch("levels");
+  const isPaid = form.watch('is_paid')
+  const skills = form.watch('skills_required')
+  const levels = form.watch('levels')
 
   const extractApiErrors = (error: unknown): string => {
     if (error instanceof AxiosError) {
-      const data = error.response?.data;
-      if (!data) return 'Request failed';
-      if (typeof data.message === 'string') return data.message;
+      const data = error.response?.data
+      if (!data) return 'Request failed'
+      if (typeof data.message === 'string') return data.message
       if (typeof data === 'object' && data !== null) {
-        const entries = Object.entries(data);
+        const entries = Object.entries(data)
         if (entries.length > 0) {
           return entries
             .map(([key, val]) => {
-              const msg = Array.isArray(val) ? val[0] : val;
-              return `${key}: ${msg}`;
+              const msg = Array.isArray(val) ? val[0] : val
+              return `${key}: ${msg}`
             })
-            .join('\n');
+            .join('\n')
         }
       }
-      return 'Request failed';
+      return 'Request failed'
     }
-    return 'An unexpected error occurred.';
-  };
+    return 'An unexpected error occurred.'
+  }
 
   const addSkill = () => {
     if (skillInput.trim() && !skills.includes(skillInput.trim())) {
-      form.setValue("skills_required", [...skills, skillInput.trim()]);
-      setSkillInput("");
+      form.setValue('skills_required', [...skills, skillInput.trim()])
+      setSkillInput('')
     }
-  };
+  }
 
   const removeSkill = (skillToRemove: string) => {
     form.setValue(
-      "skills_required",
-      skills.filter((skill) => skill !== skillToRemove)
-    );
-  };
+      'skills_required',
+      skills.filter((skill) => skill !== skillToRemove),
+    )
+  }
 
   const toggleLevel = (level: number) => {
     form.setValue(
-      "levels",
+      'levels',
       levels.includes(level)
         ? levels.filter((l) => l !== level)
         : [...levels, level],
-    );
-  };
-
+    )
+  }
 
   const onSubmit = (data: FormValues) => {
-
     const formatted = {
       ...data,
       remaining_slots: data.available_slots,
-      start_date: data.start_date ? format(data.start_date, "yyyy-MM-dd") : null,
-      end_date: data.end_date ? format(data.end_date, "yyyy-MM-dd") : null,
+      start_date: data.start_date
+        ? format(data.start_date, 'yyyy-MM-dd')
+        : null,
+      end_date: data.end_date ? format(data.end_date, 'yyyy-MM-dd') : null,
       stipend: data.is_paid ? data.stipend || '0' : '0',
       company_linkedin_url: data.company_linkedin_url || undefined,
       company_website_url: data.company_website_url || undefined,
-    };
+    }
 
     mutate(
       { id: sqid, payload: formatted },
       {
         onSuccess: () => {
           toast({
-            title: "Success",
-            description: "Internship updated successfully!",
-          });
-          router.navigate({ to: `/alumnus/internships/${sqid}` });
+            title: 'Success',
+            description: 'Internship updated successfully!',
+          })
+          router.navigate({ to: `/alumnus/internships/${sqid}` })
         },
         onError: (err: unknown) => {
           toast({
-            title: "Error",
+            title: 'Error',
             description: extractApiErrors(err),
-            variant: "destructive",
-          });
+            variant: 'destructive',
+          })
         },
-      }
-    );
-  };
+      },
+    )
+  }
 
   const handleDelete = () => {
     deleteInternship(sqid, {
-            onSuccess: () => {
-              toast({
-                title: "Deleted",
-                description: "Internship removed successfully.",
-              });
-              router.navigate({ to: "/alumnus/internships" });
-            },
-            onError: (err: any) => {
-              toast({
-                title: "Error",
-                description: err?.response?.data?.message || "Delete failed.",
-                variant: "destructive"
-              });
-            }
-          });
-  };
+      onSuccess: () => {
+        toast({
+          title: 'Deleted',
+          description: 'Internship removed successfully.',
+        })
+        router.navigate({ to: '/alumnus/internships' })
+      },
+      onError: (err: any) => {
+        toast({
+          title: 'Error',
+          description: err?.response?.data?.message || 'Delete failed.',
+          variant: 'destructive',
+        })
+      },
+    })
+  }
 
-  const handleCancel = () => {  
-    router.navigate({to: `/alumnus/internships/${sqid}`});
+  const handleCancel = () => {
+    router.navigate({ to: `/alumnus/internships/${sqid}` })
   }
 
   return (
@@ -395,10 +420,7 @@ export default function EditInternship() {
                       <FormItem>
                         <FormLabel>Website URL (optional)</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="https://example.com"
-                            {...field}
-                          />
+                          <Input placeholder="https://example.com" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -491,7 +513,9 @@ export default function EditInternship() {
                         {[100, 200, 300, 400, 500, 600].map((level) => (
                           <Badge
                             key={level}
-                            variant={levels.includes(level) ? 'default' : 'outline'}
+                            variant={
+                              levels.includes(level) ? 'default' : 'outline'
+                            }
                             className="cursor-pointer select-none"
                             onClick={() => toggleLevel(level)}
                           >

@@ -1,26 +1,22 @@
-import { useState } from "react";
+import { useState } from 'react'
+import { Link, Outlet, useNavigate } from '@tanstack/react-router'
 import {
-  Link,
-  Outlet,
-  useNavigate,
-} from "@tanstack/react-router";
-import {
-    Briefcase,
-    Calendar,
-    BarChart3,
-    LogOut,
-    Menu,
-    MessageSquare,
-    Rss,
+  BarChart3,
+  Briefcase,
+  Calendar,
+  LogOut,
+  Menu,
+  MessageSquare,
+  Rss,
   Settings,
-    TicketCheck,
-    Users,
-    X,
-} from "lucide-react";
-import { Avatar, AvatarFallback,  } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import profPic from "@/assets/testImage.jpeg"
+  TicketCheck,
+  Users,
+  X,
+} from 'lucide-react'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import profPic from '@/assets/testImage.jpeg'
 
 const sidebarItems = [
   { icon: Rss, label: 'Feed', path: '/alumnus/feed' },
@@ -35,15 +31,13 @@ const sidebarItems = [
 ]
 
 export default function AlumnusLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleSignOut = () => {
     // Implement logout logic here
-    navigate({ to: "/" });
-  };
-
-
+    navigate({ to: '/' })
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -71,21 +65,26 @@ export default function AlumnusLayout() {
       {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-screen w-64 bg-card border-r transition-transform duration-300 z-50 flex flex-col
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
       >
         {/* Branding */}
         <div className="flex items-center gap-2.5 px-4 h-16 border-b shrink-0">
           <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
             <span className="text-primary-foreground text-sm font-bold">F</span>
           </div>
-          <span className="font-bold text-foreground tracking-wide">FUTAVERSE</span>
+          <span className="font-bold text-foreground tracking-wide">
+            FUTAVERSE
+          </span>
         </div>
 
         {/* Profile Section */}
         <div className="p-3 border-b">
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
-              <img src={profPic} className="object-cover"/>
+              <img
+                src={sessionStorage.getItem('profile_img') || profPic}
+                className="object-cover"
+              />
               <AvatarFallback>AL</AvatarFallback>
             </Avatar>
             <div>
@@ -108,14 +107,19 @@ export default function AlumnusLayout() {
                   to={item.path}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150 text-sm"
                   activeProps={{
-                    className: "bg-primary text-primary-foreground font-semibold",
+                    className:
+                      'bg-primary text-primary-foreground font-semibold',
                   }}
                   inactiveProps={{
-                    className: "text-muted-foreground hover:bg-muted hover:text-foreground font-medium",
+                    className:
+                      'text-muted-foreground hover:bg-muted hover:text-foreground font-medium',
                   }}
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <item.icon className="h-4.5 w-4.5 shrink-0" style={{ width: '1.125rem', height: '1.125rem' }} />
+                  <item.icon
+                    className="h-4.5 w-4.5 shrink-0"
+                    style={{ width: '1.125rem', height: '1.125rem' }}
+                  />
                   <span>{item.label}</span>
                 </Link>
               </li>
@@ -146,5 +150,5 @@ export default function AlumnusLayout() {
         </div>
       </main>
     </div>
-  );
+  )
 }

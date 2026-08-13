@@ -2,7 +2,7 @@ import { useRouter } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { AxiosError } from 'axios'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {  CalendarIcon } from 'lucide-react'
+import { CalendarIcon, Check } from 'lucide-react'
 import { format } from 'date-fns'
 import * as z from 'zod'
 import { Button } from '@/components/ui/button'
@@ -32,7 +32,10 @@ import {
 } from '@/components/ui/form'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
-import { useCreateMentorship } from '@/hooks/useMentorships'
+import {
+  useCreateMentorship,
+  useMentorshipChoices,
+} from '@/hooks/useMentorships'
 import { BackButton2 } from '@/components/BackButtons'
 
 const formSchema = z
@@ -43,7 +46,7 @@ const formSchema = z
       .min(10, 'Description must be at least 10 characters')
       .max(2000),
     category: z.string().min(1, 'Category is required'),
-    work_mode: z.enum(['Remote', 'Hybrid', 'On-site']),
+    work_mode: z.enum(['Remote', 'Hybrid', 'Onsite']),
     duration_weeks: z
       .number()
       .min(1, 'Duration must be at least 1 week')
@@ -51,6 +54,7 @@ const formSchema = z
     start_date: z.date().optional(),
     end_date: z.date().optional(),
     available_slots: z.number().min(1, 'Must have at least 1 slot').max(50),
+    focus_areas: z.array(z.string()),
   })
   .refine(
     (data) =>
@@ -67,6 +71,7 @@ export default function CreateMentorship() {
   const router = useRouter()
   const { toast } = useToast()
   const createMentorship = useCreateMentorship()
+  const { data: choices } = useMentorshipChoices()
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -79,6 +84,7 @@ export default function CreateMentorship() {
       start_date: undefined,
       end_date: undefined,
       available_slots: 1,
+      focus_areas: [],
     },
   })
 
@@ -177,12 +183,25 @@ export default function CreateMentorship() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g., Technology, Business, Design"
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value || undefined}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {choices?.categories?.map(
+                          (c: { value: string; label: string }) => (
+                            <SelectItem key={c.value} value={c.value}>
+                              {c.label}
+                            </SelectItem>
+                          ),
+                        )}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -206,7 +225,7 @@ export default function CreateMentorship() {
                       <SelectContent>
                         <SelectItem value="Remote">Remote</SelectItem>
                         <SelectItem value="Hybrid">Hybrid</SelectItem>
-                        <SelectItem value="On-site">On-site</SelectItem>
+                        <SelectItem value="Onsite">On-site</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -214,6 +233,51 @@ export default function CreateMentorship() {
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="focus_areas"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Focus Areas</FormLabel>
+                  <div className="flex flex-wrap gap-2">
+                    {choices?.focus_areas?.map(
+                      (f: { value: string; label: string }) => {
+                        const selected = field.value.includes(f.value)
+                        return (
+                          <button
+                            key={f.value}
+                            type="button"
+                            onClick={() =>
+                              field.onChange(
+                                selected
+                                  ? field.value.filter(
+                                      (v: string) => v !== f.value,
+                                    )
+                                  : [...field.value, f.value],
+                              )
+                            }
+                            className={cn(
+                              'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
+                              selected
+                                ? 'border-primary bg-primary/10 text-primary'
+                                : 'border-border text-muted-foreground hover:border-primary/50',
+                            )}
+                          >
+                            {selected && <Check className="h-3 w-3" />}
+                            {f.label}
+                          </button>
+                        )
+                      },
+                    )}
+                  </div>
+                  <FormDescription>
+                    Select the areas this mentorship covers.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
           {/* Duration & Dates */}

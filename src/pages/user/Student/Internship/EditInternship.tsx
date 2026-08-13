@@ -1,24 +1,45 @@
-import {useEffect, useState,  } from "react";
-import { useRouter} from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { CalendarIcon, X,} from "lucide-react";
-import { format } from "date-fns";
-import { alumnusEditInternshipRoute } from "@/routes/user-alumnus";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
-import { useDeleteInternship, useInternship, useUpdateInternship } from "@/hooks/useInternships";
+import { useEffect, useState } from 'react'
+import { useRouter } from '@tanstack/react-router'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { CalendarIcon, X } from 'lucide-react'
+import { format } from 'date-fns'
+import { alumnusEditInternshipRoute } from '@/routes/user-alumnus'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Calendar } from '@/components/ui/calendar'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
+import {
+  useDeleteInternship,
+  useInternship,
+  useUpdateInternship,
+} from '@/hooks/useInternships'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,68 +50,71 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { BackButton2 } from "@/components/BackButtons";
-
+} from '@/components/ui/alert-dialog'
+import { BackButton2 } from '@/components/BackButtons'
 
 const formSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200),
-  description: z.string().min(1, "Description is required"),
-  work_mode: z.enum(["Remote", "On-site", "Hybrid"]),
-  engagement_type: z.enum(["Full-time", "Part-time"]),
-  location: z.string().min(1, "Location is required"),
-  industry: z.string().min(1, "Industry is required"),
-  duration_weeks: z.number().min(1, "Duration must be at least 1 week"),
+  title: z.string().min(1, 'Title is required').max(200),
+  description: z.string().min(1, 'Description is required'),
+  work_mode: z.enum(['Remote', 'On-site', 'Hybrid']),
+  engagement_type: z.enum(['Full-time', 'Part-time']),
+  location: z.string().min(1, 'Location is required'),
+  industry: z.string().min(1, 'Industry is required'),
+  duration_weeks: z.number().min(1, 'Duration must be at least 1 week'),
   start_date: z.date().optional(),
   end_date: z.date().optional(),
   is_paid: z.boolean(),
   stipend: z.string().optional(),
-  available_slots: z.number().min(1, "At least 1 slot is required"),
+  available_slots: z.number().min(1, 'At least 1 slot is required'),
   remaining_slots: z.number().min(0),
   require_resume: z.boolean(),
   require_cover_letter: z.boolean(),
-  skills_required: z.array(z.string()).min(1, "At least one skill is required"),
-});
+  skills_required: z.array(z.string()).min(1, 'At least one skill is required'),
+})
 
-type FormValues = z.infer<typeof formSchema>;
-
+type FormValues = z.infer<typeof formSchema>
 
 export default function EditInternship() {
-  const { id } = alumnusEditInternshipRoute.useParams();
-  const router = useRouter();
-  const { toast } = useToast();
-  const [skillInput, setSkillInput] = useState("");
-  
-  const { data: currentData, isLoading, isError } = useInternship(id);
-  
-  const { mutate, isPending: isUpdating, isError: isUpdateError } = useUpdateInternship();
-  const { mutate: deleteInternship, isPending: isDeleting } = useDeleteInternship();
+  const { id } = alumnusEditInternshipRoute.useParams()
+  const router = useRouter()
+  const { toast } = useToast()
+  const [skillInput, setSkillInput] = useState('')
+
+  const { data: currentData, isLoading, isError } = useInternship(id)
+
+  const {
+    mutate,
+    isPending: isUpdating,
+    isError: isUpdateError,
+  } = useUpdateInternship()
+  const { mutate: deleteInternship, isPending: isDeleting } =
+    useDeleteInternship()
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      work_mode: "Remote",
-      engagement_type: "Full-time",
-      location: "",
-      industry: "",
+      title: '',
+      description: '',
+      work_mode: 'Remote',
+      engagement_type: 'Full-time',
+      location: '',
+      industry: '',
       duration_weeks: 8,
       start_date: new Date(),
       end_date: new Date(),
       is_paid: false,
-      stipend: "",
+      stipend: '',
       available_slots: 1,
       remaining_slots: 1,
       require_resume: true,
       require_cover_letter: false,
       skills_required: [],
     },
-  });
+  })
 
   // Load internship data
   useEffect(() => {
-    if (!currentData) return; 
-    
+    if (!currentData) return
+
     form.reset({
       title: currentData.title,
       description: currentData.description,
@@ -108,79 +132,80 @@ export default function EditInternship() {
       require_resume: currentData.require_resume,
       require_cover_letter: currentData.require_cover_letter,
       skills_required: currentData.skills_required,
-    });
-  }, [currentData, form]);
+    })
+  }, [currentData, form])
 
-  const isPaid = form.watch("is_paid");
-  const skills = form.watch("skills_required");
+  const isPaid = form.watch('is_paid')
+  const skills = form.watch('skills_required')
 
   const addSkill = () => {
     if (skillInput.trim() && !skills.includes(skillInput.trim())) {
-      form.setValue("skills_required", [...skills, skillInput.trim()]);
-      setSkillInput("");
+      form.setValue('skills_required', [...skills, skillInput.trim()])
+      setSkillInput('')
     }
-  };
+  }
 
   const removeSkill = (skillToRemove: string) => {
     form.setValue(
-      "skills_required",
-      skills.filter((skill) => skill !== skillToRemove)
-    );
-  };
-
+      'skills_required',
+      skills.filter((skill) => skill !== skillToRemove),
+    )
+  }
 
   const onSubmit = (data: FormValues) => {
-
     const formatted = {
-  ...data,
-  remaining_slots: data.available_slots,
-  start_date: data.start_date ? format(data.start_date, "yyyy-MM-dd") : null,
-  end_date: data.end_date ? format(data.end_date, "yyyy-MM-dd") : null,
-  stipend: data.stipend ? Number(data.stipend) : null
-};
-
-  mutate(
-    { id, payload: formatted },
-    {
-      onSuccess: () => {
-        toast({
-          title: "Success",
-          description: "Internship updated successfully!",
-        });
-        router.navigate({ to: `/alumnus/internships/${id}` });
-      },
-      onError: (err: any) => {
-        toast({
-          title: "Error",
-          description: err?.response?.data?.message || "Failed to update internship.",
-          variant: "destructive",
-        });
-      },
+      ...data,
+      remaining_slots: data.available_slots,
+      start_date: data.start_date
+        ? format(data.start_date, 'yyyy-MM-dd')
+        : null,
+      end_date: data.end_date ? format(data.end_date, 'yyyy-MM-dd') : null,
+      stipend: data.stipend ? Number(data.stipend) : null,
     }
-  );
-};
+
+    mutate(
+      { id, payload: formatted },
+      {
+        onSuccess: () => {
+          toast({
+            title: 'Success',
+            description: 'Internship updated successfully!',
+          })
+          router.navigate({ to: `/alumnus/internships/${id}` })
+        },
+        onError: (err: any) => {
+          toast({
+            title: 'Error',
+            description:
+              err?.response?.data?.message || 'Failed to update internship.',
+            variant: 'destructive',
+          })
+        },
+      },
+    )
+  }
 
   const handleDelete = () => {
     deleteInternship(id, {
-            onSuccess: () => {
-              toast({
-                title: "Deleted",
-                description: "Internship removed successfully.",
-              });
-              router.navigate({ to: "/alumnus/internships" });
-            },
-            onError: (err: any) => {
-              toast({
-                title: "Error",
-                description: err?.response?.data?.message || "Delete failed.",
-                variant: "destructive"
-              });
-            }
-          });
-  };
+      onSuccess: () => {
+        toast({
+          title: 'Deleted',
+          description: 'Internship removed successfully.',
+        })
+        router.navigate({ to: '/alumnus/internships' })
+      },
+      onError: (err: any) => {
+        toast({
+          title: 'Error',
+          description: err?.response?.data?.message || 'Delete failed.',
+          variant: 'destructive',
+        })
+      },
+    })
+  }
 
-  const handleCancel = () => {  
-    router.navigate({to: `/alumnus/internships/${id}`});
+  const handleCancel = () => {
+    router.navigate({ to: `/alumnus/internships/${id}` })
   }
 
   return (

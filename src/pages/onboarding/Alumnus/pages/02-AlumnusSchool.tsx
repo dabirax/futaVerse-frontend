@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { useRouter } from '@tanstack/react-router'
+import { MoveLeft } from 'lucide-react'
 import { BackButton } from '../../../../components/BackButtons'
 import {
   useAlumnusStoreData,
@@ -23,7 +24,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { containerVariants, itemVariants } from '@/animationVariants'
-import { MoveLeft } from 'lucide-react'
 
 const AlumnusSchool = () => {
   // Type definitions for form input and output based on the schema

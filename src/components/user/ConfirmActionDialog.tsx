@@ -1,4 +1,6 @@
-import { cloneElement, isValidElement, ReactNode, useState } from 'react'
+import { cloneElement, isValidElement, useState } from 'react'
+import { CheckCircle2, Loader2 } from 'lucide-react'
+import type { ReactNode } from 'react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +20,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { CheckCircle2, Loader2 } from 'lucide-react'
 
 export interface ConfirmActionDialogProps {
   /** Element that opens the confirm dialog (e.g. a Button). Must accept onClick. */
@@ -89,13 +90,13 @@ export default function ConfirmActionDialog({
       setSuccessOpen(true)
     } catch (err) {
       console.error('ConfirmActionDialog onConfirm failed:', err)
-    // const fallback =
-    //   err instanceof Error && err.message
-    //     ? err.message
-    //     : 'Please try again in a moment.'
-    // setErrorMessage(errorDescription ?? fallback)
-    setConfirmOpen(false)
-    // setErrorOpen(true)
+      // const fallback =
+      //   err instanceof Error && err.message
+      //     ? err.message
+      //     : 'Please try again in a moment.'
+      // setErrorMessage(errorDescription ?? fallback)
+      setConfirmOpen(false)
+      // setErrorOpen(true)
     } finally {
       setLoading(false)
     }

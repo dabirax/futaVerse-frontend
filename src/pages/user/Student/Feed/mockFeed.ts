@@ -1,3 +1,5 @@
+import type { Event, EventListItem, PurchasedTicket } from '@/types/event'
+
 export interface FeedMentorship {
   sqid: string
   title: string
@@ -29,14 +31,14 @@ export interface FeedInternship {
   stipend: string
   available_slots: number
   remaining_slots: number
-  skills_required: string[]
+  skills_required: Array<string>
   require_resume: boolean
   require_cover_letter: boolean
   created_at: string
   alumnus: number
 }
 
-export const feedMentorships: FeedMentorship[] = [
+export const feedMentorships: Array<FeedMentorship> = [
   {
     created_at: '2026-02-04T19:52:03.203209Z',
     title: 'Frontend Development Mentorship',
@@ -159,7 +161,7 @@ export const feedMentorships: FeedMentorship[] = [
   },
 ]
 
-export const feedInternships: FeedInternship[] = [
+export const feedInternships: Array<FeedInternship> = [
   {
     id: 8,
     skills_required: ['Computer Hardware', 'Cable Management', 'Basic Linux'],
@@ -327,10 +329,7 @@ export const feedInternships: FeedInternship[] = [
   },
 ]
 
-
-import { Event, EventListItem, PurchasedTicket } from '@/types/event'
-
-export const mockEvents: Event[] = [
+export const mockEvents: Array<Event> = [
   {
     sqid: 'evt001',
     title: 'Tech Career Workshop 2026',
@@ -516,11 +515,11 @@ export const mockEvents: Event[] = [
   },
 ]
 
-export const mockEventListItems: EventListItem[] = mockEvents.map(
+export const mockEventListItems: Array<EventListItem> = mockEvents.map(
   ({ tickets, creator, ...rest }) => rest,
 )
 
-export const mockPurchasedTickets: PurchasedTicket[] = [
+export const mockPurchasedTickets: Array<PurchasedTicket> = [
   {
     email: 'student@futa.edu.ng',
     ticket: mockEvents[0].tickets![0],

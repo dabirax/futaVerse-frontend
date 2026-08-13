@@ -1,9 +1,9 @@
-import { useEffect} from 'react'
+import { useEffect } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { CalendarIcon} from 'lucide-react'
+import { CalendarIcon, Check } from 'lucide-react'
 import { format } from 'date-fns'
 import { alumnusEditMentorshipRoute } from '@/routes/user-alumnus'
 import { Button } from '@/components/ui/button'
@@ -35,9 +35,10 @@ import {
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 import {
-  useMentorship,
-  useUpdateMentorship,
   useDeleteMentorship,
+  useMentorship,
+  useMentorshipChoices,
+  useUpdateMentorship,
 } from '@/hooks/useMentorships'
 import {
   AlertDialog,
@@ -60,7 +61,7 @@ const formSchema = z
       .min(10, 'Description must be at least 10 characters')
       .max(2000),
     category: z.string().min(1, 'Category is required'),
-    work_mode: z.enum(['Remote', 'Hybrid', 'On-site']),
+    work_mode: z.enum(['Remote', 'Hybrid', 'Onsite']),
     duration_weeks: z
       .number()
       .min(1, 'Duration must be at least 1 week')
@@ -68,6 +69,7 @@ const formSchema = z
     start_date: z.date().optional(),
     end_date: z.date().optional(),
     available_slots: z.number().min(1, 'Must have at least 1 slot').max(50),
+    focus_areas: z.array(z.string()),
   })
   .refine(
     (data) =>
@@ -86,6 +88,7 @@ export default function EditMentorship() {
   const { toast } = useToast()
 
   const { data: currentData, isLoading, isError } = useMentorship(sqid)
+  const { data: choices } = useMentorshipChoices()
   const { mutate: updateMentorship, isPending: isUpdating } =
     useUpdateMentorship()
   const { mutate: deleteMentorship, isPending: isDeleting } =
@@ -102,6 +105,7 @@ export default function EditMentorship() {
       start_date: undefined,
       end_date: undefined,
       available_slots: 1,
+      focus_areas: [],
     },
   })
 
@@ -118,6 +122,7 @@ export default function EditMentorship() {
       start_date: new Date(currentData.start_date),
       end_date: new Date(currentData.end_date),
       available_slots: currentData.available_slots,
+      focus_areas: currentData.focus_areas || [],
     })
   }, [currentData, form])
 
@@ -131,7 +136,7 @@ export default function EditMentorship() {
     }
 
     updateMentorship(
-      { id: sqid, payload: formatted },
+      { sqid, payload: formatted },
       {
         onSuccess: () => {
           toast({
@@ -245,12 +250,67 @@ export default function EditMentorship() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Category</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="e.g., Technology, Business, Design"
-                          {...field}
-                        />
-                      </FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value || undefined}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {choices?.categories?.map(
+                            (c: { value: string; label: string }) => (
+                              <SelectItem key={c.value} value={c.value}>
+                                {c.label}
+                              </SelectItem>
+                            ),
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="focus_areas"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Focus Areas</FormLabel>
+                      <div className="flex flex-wrap gap-2">
+                        {choices?.focus_areas?.map(
+                          (f: { value: string; label: string }) => {
+                            const selected = field.value.includes(f.value)
+                            return (
+                              <button
+                                key={f.value}
+                                type="button"
+                                onClick={() =>
+                                  field.onChange(
+                                    selected
+                                      ? field.value.filter(
+                                          (v: string) => v !== f.value,
+                                        )
+                                      : [...field.value, f.value],
+                                  )
+                                }
+                                className={cn(
+                                  'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
+                                  selected
+                                    ? 'border-primary bg-primary/10 text-primary'
+                                    : 'border-border text-muted-foreground hover:border-primary/50',
+                                )}
+                              >
+                                {selected && <Check className="h-3 w-3" />}
+                                {f.label}
+                              </button>
+                            )
+                          },
+                        )}
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -283,7 +343,7 @@ export default function EditMentorship() {
                           <SelectContent>
                             <SelectItem value="Remote">Remote</SelectItem>
                             <SelectItem value="Hybrid">Hybrid</SelectItem>
-                            <SelectItem value="On-site">On-site</SelectItem>
+                            <SelectItem value="Onsite">On-site</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />

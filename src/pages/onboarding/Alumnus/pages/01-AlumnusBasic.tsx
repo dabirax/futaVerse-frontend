@@ -221,7 +221,11 @@ const AlumnusBasic = () => {
                               onClick={() => setShowPassword((p) => !p)}
                               className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
                             >
-                              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                              {showPassword ? (
+                                <EyeOff size={18} />
+                              ) : (
+                                <Eye size={18} />
+                              )}
                             </button>
                           </div>
                           <FormMessage />
@@ -253,7 +257,11 @@ const AlumnusBasic = () => {
                               onClick={() => setShowConfirmPassword((p) => !p)}
                               className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
                             >
-                              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                              {showConfirmPassword ? (
+                                <EyeOff size={18} />
+                              ) : (
+                                <Eye size={18} />
+                              )}
                             </button>
                           </div>
                           <FormMessage />

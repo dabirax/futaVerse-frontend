@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { useRouter } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
+import { AlertCircle, MoveLeft, WifiOff } from 'lucide-react'
 import { BackButton } from '../../../../components/BackButtons'
 import { LeftContainer } from '../../components/LeftContainer'
 import {
@@ -33,7 +34,7 @@ import {
 } from '@/components/ui/select'
 import { api } from '@/lib/api'
 import { containerVariants, itemVariants } from '@/animationVariants'
-import { AlertCircle, MoveLeft, WifiOff } from 'lucide-react'
+import { uploadProfileImage } from '@/services/uploads'
 
 const industries = [
   'Information Technology',
@@ -79,7 +80,9 @@ const AlumnusProfessional = () => {
     defaultValues: {
       current_job_title: _s.current_job_title || '',
       current_company: _s.current_company || '',
-      previous_comps: Array.isArray(_s.previous_comps) ? _s.previous_comps.join(', ') : (_s.previous_comps || ''),
+      previous_comps: Array.isArray(_s.previous_comps)
+        ? _s.previous_comps.join(', ')
+        : _s.previous_comps || '',
       years_of_exp: _s.years_of_exp ?? 0,
       description: _s.description || '',
       linkedin_url: _s.linkedin_url || '',
@@ -126,6 +129,21 @@ const AlumnusProfessional = () => {
     setSignupEmail(email || '')
     setUserType('alumnus')
 
+    let profileImgUrl: string | undefined
+    if (profilePic instanceof File) {
+      try {
+        const uploaded = await uploadProfileImage(profilePic)
+        profileImgUrl = uploaded.url
+      } catch (err: any) {
+        setServerError({
+          message: err?.message ?? 'Profile picture upload failed.',
+          hint: 'Please try again with a different image.',
+        })
+        setIsLoading(false)
+        return
+      }
+    }
+
     const payload = {
       email,
       password,
@@ -133,7 +151,7 @@ const AlumnusProfessional = () => {
         firstname,
         lastname,
         middlename,
-        gender: gender ? (gender.charAt(0) + gender.slice(1)) : gender,
+        gender: gender ? gender.charAt(0) + gender.slice(1) : gender,
         phone_num,
         address,
         street: '',
@@ -144,7 +162,13 @@ const AlumnusProfessional = () => {
         department,
         faculty,
         grad_year,
-        previous_comps: data.previous_comps ? data.previous_comps.split(',').map(s => s.trim()).filter(Boolean) : [],
+        profile_img: profileImgUrl,
+        previous_comps: data.previous_comps
+          ? data.previous_comps
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : [],
         current_job_title: data.current_job_title,
         current_company: data.current_company,
         years_of_exp: data.years_of_exp,
@@ -294,7 +318,8 @@ const AlumnusProfessional = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-slate-600 font-medium">
-                            Current Job Title <span className="text-red-500">*</span>
+                            Current Job Title{' '}
+                            <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
                             <Input placeholder="Software Engineer" {...field} />
@@ -311,7 +336,8 @@ const AlumnusProfessional = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-slate-600 font-medium">
-                            Current Company <span className="text-red-500">*</span>
+                            Current Company{' '}
+                            <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
                             <Input placeholder="Google" {...field} />
@@ -509,7 +535,9 @@ const AlumnusProfessional = () => {
                         {serverError.message}
                       </p>
                       {serverError.hint && (
-                        <p className="text-xs text-red-500">{serverError.hint}</p>
+                        <p className="text-xs text-red-500">
+                          {serverError.hint}
+                        </p>
                       )}
                     </div>
                   </motion.div>

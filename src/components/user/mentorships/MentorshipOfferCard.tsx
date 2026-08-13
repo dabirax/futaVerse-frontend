@@ -1,7 +1,7 @@
+import { Calendar, Send, User } from 'lucide-react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Calendar, User, Send } from 'lucide-react'
 
 interface MentorshipOfferCardProps {
   studentName: string

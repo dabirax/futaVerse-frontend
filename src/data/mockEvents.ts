@@ -1,6 +1,6 @@
-import { Event, EventListItem, PurchasedTicket } from '@/types/event'
+import type { Event, EventListItem, PurchasedTicket } from '@/types/event'
 
-export const mockEvents: Event[] = [
+export const mockEvents: Array<Event> = [
   {
     sqid: 'evt001',
     title: 'Tech Career Workshop 2026',
@@ -186,11 +186,11 @@ export const mockEvents: Event[] = [
   },
 ]
 
-export const mockEventListItems: EventListItem[] = mockEvents.map(
+export const mockEventListItems: Array<EventListItem> = mockEvents.map(
   ({ tickets, creator, ...rest }) => rest,
 )
 
-export const mockPurchasedTickets: PurchasedTicket[] = [
+export const mockPurchasedTickets: Array<PurchasedTicket> = [
   {
     email: 'student@futa.edu.ng',
     ticket: mockEvents[0].tickets![0],

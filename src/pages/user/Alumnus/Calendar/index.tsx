@@ -1,9 +1,5 @@
-
-
 const AlumnusCalendar = () => {
-  return (
-    <div>AlumnusCalendar</div>
-  )
+  return <div>AlumnusCalendar</div>
 }
 
 export default AlumnusCalendar

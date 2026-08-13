@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion'
 import { Link } from '@tanstack/react-router'
+import { Book, People, Teacher } from 'iconsax-reactjs'
+import { LeftContainer } from './components/LeftContainer'
 import { BackButton } from '@/components/BackButtons'
 import Logo from '@/components/logo'
-import { LeftContainer } from './components/LeftContainer'
-import { Book, People, Teacher } from 'iconsax-reactjs'
 
 const roles = [
   {

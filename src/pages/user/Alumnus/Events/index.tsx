@@ -1,20 +1,20 @@
-import { useState } from "react";
-import { useRouter } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react'
+import { useRouter } from '@tanstack/react-router'
+import { Plus, Search, Ticket } from 'lucide-react'
+import type { EventListItem } from '@/types/event'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search, Ticket } from "lucide-react";
-import EventCard from "@/components/user/events/EventCard";
-import { EventListItem } from "@/types/event";
-import { useHostedEvents } from "@/hooks/useEvents";
-import { Skeleton } from "@/components/ui/skeleton";
+} from '@/components/ui/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import EventCard from '@/components/user/events/EventCard'
+import { useHostedEvents } from '@/hooks/useEvents'
+import { Skeleton } from '@/components/ui/skeleton'
 
 function EventListSkeleton() {
   return (
@@ -23,32 +23,34 @@ function EventListSkeleton() {
         <Skeleton key={i} className="h-32 w-full rounded-xl" />
       ))}
     </div>
-  );
+  )
 }
 
 export default function AlumnusEvents() {
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
-  const [modeFilter, setModeFilter] = useState<string>("all");
+  const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState<string>('all')
+  const [modeFilter, setModeFilter] = useState<string>('all')
 
-  const { data, isLoading, isError } = useHostedEvents();
-  const events: EventListItem[] = data?.results ?? [];
+  const { data, isLoading, isError } = useHostedEvents()
+  const events: Array<EventListItem> = data?.results ?? []
 
-  const publishedEvents = events.filter((e) => e.is_published && !e.is_cancelled);
-  const draftEvents = events.filter((e) => !e.is_published && !e.is_cancelled);
-  const cancelledEvents = events.filter((e) => e.is_cancelled);
+  const publishedEvents = events.filter(
+    (e) => e.is_published && !e.is_cancelled,
+  )
+  const draftEvents = events.filter((e) => !e.is_published && !e.is_cancelled)
+  const cancelledEvents = events.filter((e) => e.is_cancelled)
 
-  const filterEvents = (list: EventListItem[]) =>
+  const filterEvents = (list: Array<EventListItem>) =>
     list.filter((event) => {
       const matchesSearch =
         event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.description.toLowerCase().includes(searchQuery.toLowerCase());
+        event.description.toLowerCase().includes(searchQuery.toLowerCase())
       const matchesCategory =
-        categoryFilter === "all" || event.category === categoryFilter;
-      const matchesMode = modeFilter === "all" || event.mode === modeFilter;
-      return matchesSearch && matchesCategory && matchesMode;
-    });
+        categoryFilter === 'all' || event.category === categoryFilter
+      const matchesMode = modeFilter === 'all' || event.mode === modeFilter
+      return matchesSearch && matchesCategory && matchesMode
+    })
 
   return (
     <div className="space-y-6">
@@ -62,12 +64,14 @@ export default function AlumnusEvents() {
         <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
-            onClick={() => router.navigate({ to: "/alumnus/events/tickets" })}
+            onClick={() => router.navigate({ to: '/alumnus/events/tickets' })}
           >
             <Ticket className="h-4 w-4 mr-2" />
             My tickets
           </Button>
-          <Button onClick={() => router.navigate({ to: "/alumnus/events/create" })}>
+          <Button
+            onClick={() => router.navigate({ to: '/alumnus/events/create' })}
+          >
             <Plus className="h-4 w-4 mr-2" />
             Create Event
           </Button>
@@ -189,5 +193,5 @@ export default function AlumnusEvents() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

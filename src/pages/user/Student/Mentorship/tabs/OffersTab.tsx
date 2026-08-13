@@ -1,9 +1,9 @@
+import { useEffect } from 'react'
 import {
-  useMentorshipOffers,
   useAcceptMentorshipOffer,
+  useMentorshipOffers,
   useRejectMentorshipOffer,
 } from '@/hooks/useMentorships'
-import { useEffect } from 'react'
 import InternshipCard2 from '@/components/user/internships/InternshipCard2'
 
 export default function OffersTab() {
@@ -36,8 +36,10 @@ export default function OffersTab() {
       {offers.map((offer: any) => (
         <InternshipCard2
           key={offer.id}
-          alumnusName={offer.alumnus_info.firstname+ " " + offer.alumnus_info.lastname}
-          title={offer.mentorship_info.title }
+          alumnusName={
+            offer.alumnus_info.firstname + ' ' + offer.alumnus_info.lastname
+          }
+          title={offer.mentorship_info.title}
           variant="acceptOrReject"
           onAccept={() => acceptOffer.mutate(offer.sqid)}
           onReject={() => rejectOffer.mutate(offer.sqid)}

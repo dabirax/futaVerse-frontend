@@ -26,6 +26,7 @@ export default function MyInternshipsTab() {
                 key={internship.id}
                 role="student"
                 {...internship}
+                sqid={internship.internship_info.sqid}
                 title={internship.internship_info.title}
                 alumnusName={`${internship.alumnus_info.firstname} ${internship.alumnus_info.lastname}`}
                 company={internship.internship_info.industry}

@@ -64,9 +64,7 @@ const formSchema = z
     skills_required: z
       .array(z.string())
       .min(1, 'At least one skill is required'),
-    levels: z
-      .array(z.number())
-      .min(1, 'Select at least one level'),
+    levels: z.array(z.number()).min(1, 'Select at least one level'),
     company: z.string().min(1, 'Company is required'),
     company_type: z.string().min(1, 'Company type is required'),
     company_linkedin_url: z.string().optional(),
@@ -274,10 +272,7 @@ export default function CreateInternship() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Company Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select company type" />
@@ -290,9 +285,7 @@ export default function CreateInternship() {
                         <SelectItem value="NGO / Non-profit">
                           NGO / Non-profit
                         </SelectItem>
-                        <SelectItem value="Government">
-                          Government
-                        </SelectItem>
+                        <SelectItem value="Government">Government</SelectItem>
                         <SelectItem value="Educational Institution">
                           Educational Institution
                         </SelectItem>
@@ -346,10 +339,7 @@ export default function CreateInternship() {
                   <FormItem>
                     <FormLabel>Website URL (optional)</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="https://example.com"
-                        {...field}
-                      />
+                      <Input placeholder="https://example.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

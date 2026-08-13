@@ -5,5 +5,5 @@ export default function ReportsTab() {
         Reports feature coming soon.
       </div>
     </div>
-  );
+  )
 }

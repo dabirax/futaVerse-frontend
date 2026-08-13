@@ -1,14 +1,20 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { format } from "date-fns";
-import { ArrowLeft, CalendarIcon, XCircle } from "lucide-react";
+import { useEffect, useState } from 'react'
+import { useRouter } from '@tanstack/react-router'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { format } from 'date-fns'
+import { ArrowLeft, CalendarIcon, XCircle } from 'lucide-react'
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import type { TicketScenario } from '@/components/user/events/TicketsSection'
+import type {
+  FreeTicketConfig,
+  LinkedBankAccount,
+  PaidTicketInput,
+} from '@/types/event'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Form,
   FormControl,
@@ -17,110 +23,107 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Calendar } from "@/components/ui/calendar";
+} from '@/components/ui/select'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Switch } from '@/components/ui/switch'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from '@/components/ui/popover'
 
-import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
-import { useEvent, useUpdateEvent, useUpdateEventMode, useAddEventTicket } from "@/hooks/useEvents";
-
-import TicketsSection, {
-  TicketScenario,
-} from "@/components/user/events/TicketsSection";
-
-import ConfirmActionDialog from "@/components/user/ConfirmActionDialog";
-
+import { cn } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
 import {
-  FreeTicketConfig,
-  LinkedBankAccount,
-  PaidTicketInput,
-} from "@/types/event";
+  useAddEventTicket,
+  useEvent,
+  useUpdateEvent,
+  useUpdateEventMode,
+} from '@/hooks/useEvents'
 
-import { alumnusEditEventRoute } from "@/routes/user-alumnus";
-import { BackButton2 } from "@/components/BackButtons";
+import TicketsSection from '@/components/user/events/TicketsSection'
+
+import ConfirmActionDialog from '@/components/user/ConfirmActionDialog'
+
+import { alumnusEditEventRoute } from '@/routes/user-alumnus'
+import { BackButton2 } from '@/components/BackButtons'
 
 const formSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200, "Title too long"),
-  description: z.string().min(1, "Description is required"),
+  title: z.string().min(1, 'Title is required').max(200, 'Title too long'),
+  description: z.string().min(1, 'Description is required'),
   date: z.date(),
-  start_time: z.string().min(1, "Start time is required"),
+  start_time: z.string().min(1, 'Start time is required'),
   duration_mins: z.coerce.number().min(15),
   venue: z.string().optional(),
   category: z.enum([
-    "workshop",
-    "seminar",
-    "networking",
-    "career_fair",
-    "webinar",
-    "conference",
+    'workshop',
+    'seminar',
+    'networking',
+    'career_fair',
+    'webinar',
+    'conference',
   ]),
   max_capacity: z.coerce.number().min(1),
   allow_sponsorship: z.boolean(),
   allow_donations: z.boolean(),
   is_published: z.boolean(),
   is_cancelled: z.boolean(),
-  mode: z.enum(["virtual", "physical", "hybrid"]),
-  platform: z.enum(["meet", "zoom", "teams"]).optional(),
-});
+  mode: z.enum(['virtual', 'physical', 'hybrid']),
+  platform: z.enum(['meet', 'zoom', 'teams']).optional(),
+})
 
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.infer<typeof formSchema>
 
 export default function EditEvent() {
-  const { id } = alumnusEditEventRoute.useParams();
-  const router = useRouter();
-  const { toast } = useToast();
+  const { id } = alumnusEditEventRoute.useParams()
+  const router = useRouter()
+  const { toast } = useToast()
 
-  const { data: event, isLoading, isError, error } = useEvent(id);
+  const { data: event, isLoading, isError, error } = useEvent(id)
 
-  const updateEvent = useUpdateEvent();
-  const updateEventMode = useUpdateEventMode();
-  const addTicket = useAddEventTicket();
+  const updateEvent = useUpdateEvent()
+  const updateEventMode = useUpdateEventMode()
+  const addTicket = useAddEventTicket()
 
-  const [scenario, setScenario] = useState<TicketScenario>("free");
+  const [scenario, setScenario] = useState<TicketScenario>('free')
   const [freeTicket, setFreeTicket] = useState<FreeTicketConfig>({
     required: true,
     quantity: 100,
-  });
-  const [paidTickets, setPaidTickets] = useState<PaidTicketInput[]>([]);
+  })
+  const [paidTickets, setPaidTickets] = useState<Array<PaidTicketInput>>([])
   const [linkedBankAccount, setLinkedBankAccount] =
-    useState<LinkedBankAccount | null>(null);
+    useState<LinkedBankAccount | null>(null)
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
+      title: '',
+      description: '',
       date: new Date(),
-      start_time: "09:00",
+      start_time: '09:00',
       duration_mins: 60,
-      venue: "",
-      category: "workshop",
+      venue: '',
+      category: 'workshop',
       max_capacity: 100,
       allow_sponsorship: false,
       allow_donations: false,
       is_published: false,
       is_cancelled: false,
-      mode: "virtual",
-      platform: "meet",
+      mode: 'virtual',
+      platform: 'meet',
     },
-  });
+  })
 
-  const mode = form.watch("mode");
-  const isCancelled = form.watch("is_cancelled");
+  const mode = form.watch('mode')
+  const isCancelled = form.watch('is_cancelled')
 
   useEffect(() => {
     if (event) {
@@ -128,9 +131,9 @@ export default function EditEvent() {
         title: event.title,
         description: event.description,
         date: new Date(event.date),
-        start_time: event.start_time?.slice(0, 5) || "09:00",
+        start_time: event.start_time?.slice(0, 5) || '09:00',
         duration_mins: event.duration_mins,
-        venue: event.venue || "",
+        venue: event.venue || '',
         category: event.category,
         max_capacity: event.max_capacity,
         allow_sponsorship: event.allow_sponsorship,
@@ -138,8 +141,8 @@ export default function EditEvent() {
         is_published: event.is_published,
         is_cancelled: event.is_cancelled,
         mode: event.mode,
-        platform: event.virtual_meeting?.platform || "meet",
-      });
+        platform: event.virtual_meeting?.platform || 'meet',
+      })
 
       const initialPaid = (event.tickets || [])
         .filter((t) => parseFloat(t.price) > 0)
@@ -147,103 +150,110 @@ export default function EditEvent() {
           name: t.name,
           description: t.description,
           price: t.price,
-          discount_perc: t.discount_perc || "0",
+          discount_perc: t.discount_perc || '0',
           quantity: t.quantity,
-          sales_start: t.sales_start.replace("Z", "").slice(0, 16),
-          sales_end: t.sales_end.replace("Z", "").slice(0, 16),
+          sales_start: t.sales_start.replace('Z', '').slice(0, 16),
+          sales_end: t.sales_end.replace('Z', '').slice(0, 16),
           is_active: t.is_active,
-        }));
-      setPaidTickets(initialPaid);
+        }))
+      setPaidTickets(initialPaid)
 
-      const free = event.tickets?.find((t) => parseFloat(t.price) === 0);
+      const free = event.tickets?.find((t) => parseFloat(t.price) === 0)
       setFreeTicket(
         free
           ? { required: true, quantity: free.quantity }
-          : { required: false, quantity: 100 }
-      );
+          : { required: false, quantity: 100 },
+      )
 
-      const hasFree = free !== undefined;
-      const hasPaid = initialPaid.length > 0;
-      setScenario(hasFree && hasPaid ? "free_and_paid" : hasPaid ? "paid" : "free");
+      const hasFree = free !== undefined
+      const hasPaid = initialPaid.length > 0
+      setScenario(
+        hasFree && hasPaid ? 'free_and_paid' : hasPaid ? 'paid' : 'free',
+      )
     }
-  }, [event, form]);
+  }, [event, form])
 
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <h2 className="text-xl font-semibold">Loading event details...</h2>
       </div>
-    );
+    )
   }
 
   if (isError || !event) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <h2 className="text-xl font-semibold">
-          {error instanceof Error ? error.message : "Event not found"}
+          {error instanceof Error ? error.message : 'Event not found'}
         </h2>
         <Button
           variant="link"
-          onClick={() => router.navigate({ to: "/alumnus/events" })}
+          onClick={() => router.navigate({ to: '/alumnus/events' })}
           className="mt-4"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Events
         </Button>
       </div>
-    );
+    )
   }
 
   const onSubmit = async (data: FormData) => {
-    const usesPaid =
-      scenario === "paid" || scenario === "free_and_paid";
+    const usesPaid = scenario === 'paid' || scenario === 'free_and_paid'
 
     if (usesPaid && paidTickets.length === 0) {
       toast({
-        title: "Add at least one paid ticket",
-        variant: "destructive",
-      });
-      return;
+        title: 'Add at least one paid ticket',
+        variant: 'destructive',
+      })
+      return
     }
 
     if (usesPaid && !linkedBankAccount) {
       toast({
-        title: "Link a payout account",
-        description:
-          "Paid tickets require a linked Paystack account.",
-        variant: "destructive",
-      });
-      return;
+        title: 'Link a payout account',
+        description: 'Paid tickets require a linked Paystack account.',
+        variant: 'destructive',
+      })
+      return
     }
 
     const updatePayload = {
       title: data.title,
       description: data.description,
-      date: format(data.date, "yyyy-MM-dd"),
+      date: format(data.date, 'yyyy-MM-dd'),
       start_time: data.start_time,
       duration_mins: data.duration_mins,
-      venue: data.venue || "",
+      venue: data.venue || '',
       max_capacity: data.max_capacity,
       allow_sponsorship: data.allow_sponsorship,
       allow_donations: data.allow_donations,
       is_published: data.is_published,
       is_cancelled: data.is_cancelled,
-    };
+    }
 
     try {
-      await updateEvent.mutateAsync({ sqid: event.sqid, payload: updatePayload });
+      await updateEvent.mutateAsync({
+        sqid: event.sqid,
+        payload: updatePayload,
+      })
 
       await updateEventMode.mutateAsync({
         sqid: event.sqid,
         payload: {
           mode: data.mode,
-          venue: data.venue || "",
-          ...(data.mode !== "physical" ? { platform: data.platform } : {}),
+          venue: data.venue || '',
+          ...(data.mode !== 'physical' ? { platform: data.platform } : {}),
         },
-      });
+      })
 
-      const existingTicketNames = new Set((event.tickets || []).map((t) => t.name));
-      const newTickets = paidTickets.filter((t) => !existingTicketNames.has(t.name));
+      const existingTicketNames = new Set(
+        (event.tickets || []).map((t) => t.name),
+      )
+      const newTickets = paidTickets.filter(
+        (t) => !existingTicketNames.has(t.name),
+      )
 
       await Promise.all(
         newTickets.map((ticket) =>
@@ -252,37 +262,38 @@ export default function EditEvent() {
             ...ticket,
             sales_start: new Date(ticket.sales_start).toISOString(),
             sales_end: new Date(ticket.sales_end).toISOString(),
-          })
-        )
-      );
+          }),
+        ),
+      )
 
       toast({
-        title: "Event Updated",
+        title: 'Event Updated',
         description: `"${data.title}" updated successfully.`,
-      });
+      })
 
       router.navigate({
         to: `/alumnus/events/${event.sqid}`,
-      });
+      })
     } catch (err: any) {
       toast({
-        title: "Error updating event",
-        description: err?.message || "Failed to update event. Please try again.",
-        variant: "destructive",
-      });
+        title: 'Error updating event',
+        description:
+          err?.message || 'Failed to update event. Please try again.',
+        variant: 'destructive',
+      })
     }
-  };
+  }
 
   const cancelEvent = async () => {
-    form.setValue("is_cancelled", true);
-    await form.handleSubmit(onSubmit)();
-  };
+    form.setValue('is_cancelled', true)
+    await form.handleSubmit(onSubmit)()
+  }
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <BackButton2/>
+        <BackButton2 />
 
         <div>
           <h1 className="text-2xl font-bold">Edit Event</h1>
@@ -604,24 +615,43 @@ export default function EditEvent() {
               {/* Actions */}
               <Card>
                 <CardContent className="pt-6 space-y-3">
-                  {(updateEvent.isError || updateEventMode.isError || addTicket.isError) && (
+                  {(updateEvent.isError ||
+                    updateEventMode.isError ||
+                    addTicket.isError) && (
                     <div className="text-sm rounded-lg border border-red-200 bg-red-50 p-3 text-red-800 dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-300">
-                      {updateEvent.error?.message || updateEventMode.error?.message || addTicket.error?.message || "Failed to update event."}
+                      {updateEvent.error?.message ||
+                        updateEventMode.error?.message ||
+                        addTicket.error?.message ||
+                        'Failed to update event.'}
                     </div>
                   )}
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="w-full"
-                    disabled={updateEvent.isPending || updateEventMode.isPending || addTicket.isPending}
+                    disabled={
+                      updateEvent.isPending ||
+                      updateEventMode.isPending ||
+                      addTicket.isPending
+                    }
                   >
-                    {updateEvent.isPending || updateEventMode.isPending || addTicket.isPending ? "Saving..." : "Save Changes"}
+                    {updateEvent.isPending ||
+                    updateEventMode.isPending ||
+                    addTicket.isPending
+                      ? 'Saving...'
+                      : 'Save Changes'}
                   </Button>
                   <Button
                     type="button"
                     variant="outline"
                     className="w-full"
-                    onClick={() => router.navigate({ to: `/alumnus/events/${event.sqid}` })}
-                    disabled={updateEvent.isPending || updateEventMode.isPending || addTicket.isPending}
+                    onClick={() =>
+                      router.navigate({ to: `/alumnus/events/${event.sqid}` })
+                    }
+                    disabled={
+                      updateEvent.isPending ||
+                      updateEventMode.isPending ||
+                      addTicket.isPending
+                    }
                   >
                     Cancel
                   </Button>

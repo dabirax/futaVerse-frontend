@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { Edit, Plus } from 'lucide-react'
+import MenteeCard from '../../../../components/user/mentorships/MenteeCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,8 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { alumnusMentorshipDetailRoute } from '@/routes/user-alumnus'
 import { useMentorship } from '@/hooks/useMentorships'
-import {CardSkeleton2} from '@/components/CardSkeletons'
-import MenteeCard from '../../../../components/user/mentorships/MenteeCard'
+import { CardSkeleton2 } from '@/components/CardSkeletons'
 import { BackButton2 } from '@/components/BackButtons'
 
 const mockOffers = [

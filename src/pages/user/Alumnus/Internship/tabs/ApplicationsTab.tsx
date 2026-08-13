@@ -1,9 +1,9 @@
-import { CardSkeleton4 } from '@/components/CardSkeletons'
 import StudentCard from '../../../../../components/user/internships/StudentCard'
+import { CardSkeleton4 } from '@/components/CardSkeletons'
 import {
   useAcceptInternshipApplication,
-  useRejectInternshipApplication,
   useInternshipApplications,
+  useRejectInternshipApplication,
 } from '@/hooks/useInternships'
 
 export default function ApplicationsTab() {

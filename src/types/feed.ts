@@ -14,7 +14,7 @@ export interface FeedInternship {
   stipend: string
   available_slots: number
   remaining_slots: number
-  skills_required: string[]
+  skills_required: Array<string>
   require_resume: boolean
   require_cover_letter: boolean
   created_at: string
@@ -53,12 +53,17 @@ export interface FeedItemData {
   date?: string
   mode?: string
   virtual_meeting?: string
-  focus_areas?: string[]
+  focus_areas?: Array<string>
 }
 
 export interface FeedResponseItem {
   sqid: string
-  event_type: 'mentorship_created' | 'mentorship_started' | 'internship_created' | 'internship_started' | 'event_created'
+  event_type:
+    | 'mentorship_created'
+    | 'mentorship_started'
+    | 'internship_created'
+    | 'internship_started'
+    | 'event_created'
   data: FeedItemData
   score: number
   created_at: string

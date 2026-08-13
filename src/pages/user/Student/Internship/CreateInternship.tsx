@@ -1,139 +1,163 @@
-import { useState } from "react";
-import { Link, useRouter, } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { AxiosError } from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {  CalendarIcon, X,} from "lucide-react";
-import { format } from "date-fns";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
-import { useCreateInternship } from "@/hooks/useInternships";
-import { BackButton2 } from "@/components/BackButtons";
+import { useState } from 'react'
+import { Link, useRouter } from '@tanstack/react-router'
+import { useForm } from 'react-hook-form'
+import { AxiosError } from 'axios'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { CalendarIcon, X } from 'lucide-react'
+import { format } from 'date-fns'
+import * as z from 'zod'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Switch } from '@/components/ui/switch'
+import { Calendar } from '@/components/ui/calendar'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
+import { useCreateInternship } from '@/hooks/useInternships'
+import { BackButton2 } from '@/components/BackButtons'
 
+const formSchema = z
+  .object({
+    title: z.string().min(1, 'Title is required').max(200),
+    description: z
+      .string()
+      .min(10, 'Description must be at least 10 characters')
+      .max(2000),
+    work_mode: z.enum(['Remote', 'Hybrid', 'On-site']),
+    engagement_type: z.enum(['Full-time', 'Part-time', 'Contract']),
+    location: z.string().min(1, 'Location is required'),
+    industry: z.string().min(1, 'Industry is required'),
+    duration_weeks: z
+      .number()
+      .min(1, 'Duration must be at least 1 week')
+      .max(104),
+    start_date: z.date().optional(),
+    end_date: z.date().optional(),
+    is_paid: z.boolean(),
+    stipend: z.string().optional(),
+    available_slots: z.number().min(1, 'Must have at least 1 slot').max(50),
+    remaining_slots: z.number().min(0).max(50),
+    require_resume: z.boolean(),
+    require_cover_letter: z.boolean(),
+    skills_required: z
+      .array(z.string())
+      .min(1, 'At least one skill is required'),
+  })
+  .refine(
+    (data) =>
+      data.start_date && data.end_date && data.end_date > data.start_date,
+    {
+      message: 'End date must be after start date',
+      path: ['end_date'],
+    },
+  )
 
-const formSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200),
-  description: z.string().min(10, "Description must be at least 10 characters").max(2000),
-  work_mode: z.enum(["Remote", "Hybrid", "On-site"]),
-  engagement_type: z.enum(["Full-time", "Part-time", "Contract"]),
-  location: z.string().min(1, "Location is required"),
-  industry: z.string().min(1, "Industry is required"),
-  duration_weeks: z.number().min(1, "Duration must be at least 1 week").max(104),
-  start_date: z.date().optional(),
-  end_date: z.date().optional(),
-  is_paid: z.boolean(),
-  stipend: z.string().optional(),
-  available_slots: z.number().min(1, "Must have at least 1 slot").max(50),
-  remaining_slots: z.number().min(0).max(50),
-  require_resume: z.boolean(),
-  require_cover_letter: z.boolean(),
-  skills_required: z.array(z.string()).min(1, "At least one skill is required"),
-}).refine(
-  (data) => data.start_date && data.end_date && data.end_date > data.start_date,
-  {
-    message: "End date must be after start date",
-    path: ["end_date"],
-  }
-);
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 export default function CreateInternship() {
-  const router = useRouter();
-  const { toast } = useToast();
-  const [skillInput, setSkillInput] = useState("");
-  const createInternship = useCreateInternship();
-
+  const router = useRouter()
+  const { toast } = useToast()
+  const [skillInput, setSkillInput] = useState('')
+  const createInternship = useCreateInternship()
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      work_mode: "Remote",
-      engagement_type: "Full-time",
-      location: "",
-      industry: "",
+      title: '',
+      description: '',
+      work_mode: 'Remote',
+      engagement_type: 'Full-time',
+      location: '',
+      industry: '',
       duration_weeks: 12,
-    start_date: undefined,
-    end_date: undefined,
+      start_date: undefined,
+      end_date: undefined,
       is_paid: false,
-      stipend: "",
+      stipend: '',
       available_slots: 1,
       remaining_slots: 1,
       require_resume: true,
       require_cover_letter: false,
       skills_required: [],
     },
-  });
+  })
 
-  const isPaid = form.watch("is_paid");
-  const skills = form.watch("skills_required");
+  const isPaid = form.watch('is_paid')
+  const skills = form.watch('skills_required')
 
   const getErrorMessage = (error: unknown) => {
-  if (error instanceof AxiosError) {
-    return error.response?.data?.message || "Request failed";
+    if (error instanceof AxiosError) {
+      return error.response?.data?.message || 'Request failed'
+    }
+    return 'Unexpected error occurred.'
   }
-  return "Unexpected error occurred.";
-};
-
 
   const addSkill = () => {
     if (skillInput.trim() && !skills.includes(skillInput.trim())) {
-      form.setValue("skills_required", [...skills, skillInput.trim()]);
-      setSkillInput("");
+      form.setValue('skills_required', [...skills, skillInput.trim()])
+      setSkillInput('')
     }
-  };
+  }
 
   const removeSkill = (skill: string) => {
     form.setValue(
-      "skills_required",
-      skills.filter((s) => s !== skill)
-    );
-  };
+      'skills_required',
+      skills.filter((s) => s !== skill),
+    )
+  }
 
   const onSubmit = (values: FormValues) => {
-   const formatted = {
-    ...values,
-    start_date: values.start_date
-      ? format(values.start_date, "yyyy-MM-dd")
-      : null,
-    end_date: values.end_date
-      ? format(values.end_date, "yyyy-MM-dd")
-      : null,
-    stipend: values.is_paid ? values.stipend || "0" : "0",
-    remaining_slots: values.available_slots
-  };
-console.log(formatted)
-  createInternship.mutate(formatted, {
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Internship created successfully!",
-      });
-      router.navigate({ to: "/alumnus/internships" });
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Error",
-        description:
-          error?.response?.data?.message ||
-          "Failed to create internship. Fix your backend or your life.",
-        variant: "destructive",
-      });
-    },
-  });
-};
+    const formatted = {
+      ...values,
+      start_date: values.start_date
+        ? format(values.start_date, 'yyyy-MM-dd')
+        : null,
+      end_date: values.end_date ? format(values.end_date, 'yyyy-MM-dd') : null,
+      stipend: values.is_paid ? values.stipend || '0' : '0',
+      remaining_slots: values.available_slots,
+    }
+    console.log(formatted)
+    createInternship.mutate(formatted, {
+      onSuccess: () => {
+        toast({
+          title: 'Success',
+          description: 'Internship created successfully!',
+        })
+        router.navigate({ to: '/alumnus/internships' })
+      },
+      onError: (error: any) => {
+        toast({
+          title: 'Error',
+          description:
+            error?.response?.data?.message ||
+            'Failed to create internship. Fix your backend or your life.',
+          variant: 'destructive',
+        })
+      },
+    })
+  }
 
   return (
     <div className="space-y-6 pb-8">

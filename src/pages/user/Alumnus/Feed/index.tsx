@@ -1,9 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Briefcase,
   Calendar,
@@ -16,7 +12,11 @@ import {
   Zap,
 } from 'lucide-react'
 import { format } from 'date-fns'
-import { FeedItemData } from '@/types/feed'
+import type { FeedItemData } from '@/types/feed'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { useFeed } from '@/hooks/useFeed'
 import { useMentorships } from '@/hooks/useMentorships'
 
@@ -42,7 +42,15 @@ function getGreeting(): string {
 
 // ----------- Card Components -----------
 
-function InternshipCard({ item, sqid, created_at }: { item: FeedItemData; sqid: string; created_at: string }) {
+function InternshipCard({
+  item,
+  sqid,
+  created_at,
+}: {
+  item: FeedItemData
+  sqid: string
+  created_at: string
+}) {
   const router = useRouter()
 
   return (
@@ -54,7 +62,9 @@ function InternshipCard({ item, sqid, created_at }: { item: FeedItemData; sqid: 
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide bg-green-100 text-green-700">
           New Internship
         </span>
-        <span className="text-xs text-muted-foreground">{timeAgo(created_at)}</span>
+        <span className="text-xs text-muted-foreground">
+          {timeAgo(created_at)}
+        </span>
       </div>
 
       <div className="flex items-start gap-3">
@@ -65,14 +75,20 @@ function InternshipCard({ item, sqid, created_at }: { item: FeedItemData; sqid: 
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <h3 className="font-semibold text-foreground text-sm leading-tight">{item.title}</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">{item.company || 'Unknown Company'}</p>
+              <h3 className="font-semibold text-foreground text-sm leading-tight">
+                {item.title}
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {item.company || 'Unknown Company'}
+              </p>
             </div>
           </div>
 
           <p className="text-xs text-muted-foreground mt-2">
             {item.work_mode || 'Flexible'} • {item.engagement_type || 'Role'}
-            {item.is_paid && item.stipend && ` • Stipend: ₦${parseFloat(item.stipend).toLocaleString()} / month`}
+            {item.is_paid &&
+              item.stipend &&
+              ` • Stipend: ₦${parseFloat(item.stipend).toLocaleString()} / month`}
           </p>
 
           {item.remaining_slots !== undefined && item.remaining_slots > 0 && (
@@ -86,7 +102,15 @@ function InternshipCard({ item, sqid, created_at }: { item: FeedItemData; sqid: 
   )
 }
 
-function MentorshipCard({ item, sqid, created_at }: { item: FeedItemData; sqid: string; created_at: string }) {
+function MentorshipCard({
+  item,
+  sqid,
+  created_at,
+}: {
+  item: FeedItemData
+  sqid: string
+  created_at: string
+}) {
   const router = useRouter()
 
   return (
@@ -98,7 +122,9 @@ function MentorshipCard({ item, sqid, created_at }: { item: FeedItemData; sqid: 
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide bg-purple-100 text-purple-700">
           Mentorship
         </span>
-        <span className="text-xs text-muted-foreground">{timeAgo(created_at)}</span>
+        <span className="text-xs text-muted-foreground">
+          {timeAgo(created_at)}
+        </span>
       </div>
 
       <div className="flex items-start gap-3">
@@ -109,15 +135,25 @@ function MentorshipCard({ item, sqid, created_at }: { item: FeedItemData; sqid: 
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <h3 className="font-semibold text-foreground text-sm leading-tight">{item.title}</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">{item.category}</p>
+              <h3 className="font-semibold text-foreground text-sm leading-tight">
+                {item.title}
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {item.category}
+              </p>
             </div>
-            {item.work_mode && <Badge variant="secondary" className="text-xs shrink-0">{item.work_mode}</Badge>}
+            {item.work_mode && (
+              <Badge variant="secondary" className="text-xs shrink-0">
+                {item.work_mode}
+              </Badge>
+            )}
           </div>
 
           {/* Fallback for missing description */}
           <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
-            {item.alumni ? `Hosted by ${item.alumni}` : 'A new mentorship opportunity.'}
+            {item.alumni
+              ? `Hosted by ${item.alumni}`
+              : 'A new mentorship opportunity.'}
           </p>
 
           <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
@@ -140,9 +176,19 @@ function MentorshipCard({ item, sqid, created_at }: { item: FeedItemData; sqid: 
   )
 }
 
-function EventCard({ item, sqid, created_at }: { item: FeedItemData; sqid: string; created_at: string }) {
+function EventCard({
+  item,
+  sqid,
+  created_at,
+}: {
+  item: FeedItemData
+  sqid: string
+  created_at: string
+}) {
   const router = useRouter()
-  const formattedDate = item.date ? format(new Date(item.date), 'EEE, d MMM yyyy') : ''
+  const formattedDate = item.date
+    ? format(new Date(item.date), 'EEE, d MMM yyyy')
+    : ''
 
   return (
     <div className="bg-card rounded-xl border shadow-sm p-4">
@@ -150,7 +196,9 @@ function EventCard({ item, sqid, created_at }: { item: FeedItemData; sqid: strin
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide bg-blue-100 text-blue-700">
           Upcoming Event
         </span>
-        <span className="text-xs text-muted-foreground">{timeAgo(created_at)}</span>
+        <span className="text-xs text-muted-foreground">
+          {timeAgo(created_at)}
+        </span>
       </div>
 
       <div className="flex items-start gap-3">
@@ -159,7 +207,9 @@ function EventCard({ item, sqid, created_at }: { item: FeedItemData; sqid: strin
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-foreground text-sm leading-tight line-clamp-2">{item.title}</h3>
+          <h3 className="font-semibold text-foreground text-sm leading-tight line-clamp-2">
+            {item.title}
+          </h3>
           <div className="mt-2 space-y-1">
             {formattedDate && (
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -197,9 +247,30 @@ function EventCard({ item, sqid, created_at }: { item: FeedItemData; sqid: strin
 // ----------- Right Sidebar -----------
 
 const mockAlumniSuggestions = [
-  { id: 1, name: 'Oluseyi A.', role: 'Software Engineer', company: 'Moniepoint', gradYear: '2018', initials: 'OA' },
-  { id: 2, name: 'Grace B.', role: 'Product Manager', company: 'Flutterwave', gradYear: '2017', initials: 'GB' },
-  { id: 3, name: 'Kehinde P.', role: 'Data Scientist', company: 'PiggyVest', gradYear: '2019', initials: 'KP' },
+  {
+    id: 1,
+    name: 'Oluseyi A.',
+    role: 'Software Engineer',
+    company: 'Moniepoint',
+    gradYear: '2018',
+    initials: 'OA',
+  },
+  {
+    id: 2,
+    name: 'Grace B.',
+    role: 'Product Manager',
+    company: 'Flutterwave',
+    gradYear: '2017',
+    initials: 'GB',
+  },
+  {
+    id: 3,
+    name: 'Kehinde P.',
+    role: 'Data Scientist',
+    company: 'PiggyVest',
+    gradYear: '2019',
+    initials: 'KP',
+  },
 ]
 
 const quickActions = [
@@ -211,15 +282,21 @@ const quickActions = [
 
 function RightSidebar() {
   const { data: mentorships } = useMentorships()
-  const availableMentors = (mentorships?.results ?? []).filter((m: any) => m.remaining_slots > 0).slice(0, 2)
+  const availableMentors = (mentorships?.results ?? [])
+    .filter((m: any) => m.remaining_slots > 0)
+    .slice(0, 2)
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">
       {/* Alumni You Might Know */}
       <div className="bg-card rounded-xl border shadow-sm p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-sm text-foreground">Alumni You Might Know</h3>
-          <button className="text-xs text-primary font-medium hover:underline">See all</button>
+          <h3 className="font-semibold text-sm text-foreground">
+            Alumni You Might Know
+          </h3>
+          <button className="text-xs text-primary font-medium hover:underline">
+            See all
+          </button>
         </div>
 
         <div className="space-y-3">
@@ -231,11 +308,21 @@ function RightSidebar() {
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-foreground leading-tight truncate">{alumni.name}</p>
-                <p className="text-xs text-muted-foreground truncate">{alumni.role} at {alumni.company}</p>
-                <p className="text-xs text-muted-foreground">FUTA • {alumni.gradYear}</p>
+                <p className="text-xs font-semibold text-foreground leading-tight truncate">
+                  {alumni.name}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {alumni.role} at {alumni.company}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  FUTA • {alumni.gradYear}
+                </p>
               </div>
-              <Button variant="outline" size="sm" className="shrink-0 h-7 text-xs px-3">
+              <Button
+                variant="outline"
+                size="sm"
+                className="shrink-0 h-7 text-xs px-3"
+              >
                 Connect
               </Button>
             </div>
@@ -247,8 +334,12 @@ function RightSidebar() {
       {availableMentors.length > 0 && (
         <div className="bg-card rounded-xl border shadow-sm p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-sm text-foreground">Mentor Availability</h3>
-            <button className="text-xs text-primary font-medium hover:underline">See all</button>
+            <h3 className="font-semibold text-sm text-foreground">
+              Mentor Availability
+            </h3>
+            <button className="text-xs text-primary font-medium hover:underline">
+              See all
+            </button>
           </div>
 
           <div className="space-y-3">
@@ -260,10 +351,17 @@ function RightSidebar() {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-foreground leading-tight truncate">{mentor.title}</p>
-                  <p className="text-xs text-muted-foreground truncate">{mentor.category}</p>
-                  <p className={`text-xs font-medium ${mentor.remaining_slots > 1 ? 'text-green-600' : 'text-amber-600'}`}>
-                    {mentor.remaining_slots} slot{mentor.remaining_slots !== 1 ? 's' : ''} available
+                  <p className="text-xs font-semibold text-foreground leading-tight truncate">
+                    {mentor.title}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {mentor.category}
+                  </p>
+                  <p
+                    className={`text-xs font-medium ${mentor.remaining_slots > 1 ? 'text-green-600' : 'text-amber-600'}`}
+                  >
+                    {mentor.remaining_slots} slot
+                    {mentor.remaining_slots !== 1 ? 's' : ''} available
                   </p>
                 </div>
                 <Button size="sm" className="shrink-0 h-7 text-xs px-3">
@@ -277,7 +375,9 @@ function RightSidebar() {
 
       {/* Quick Actions */}
       <div className="bg-card rounded-xl border shadow-sm p-4">
-        <h3 className="font-semibold text-sm text-foreground mb-2">Quick Actions</h3>
+        <h3 className="font-semibold text-sm text-foreground mb-2">
+          Quick Actions
+        </h3>
         <div className="space-y-0.5">
           {quickActions.map((action) => (
             <button
@@ -285,7 +385,9 @@ function RightSidebar() {
               className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-muted transition-colors text-left"
             >
               <action.icon className="h-4 w-4 text-muted-foreground shrink-0" />
-              <span className="flex-1 text-xs font-medium text-foreground">{action.label}</span>
+              <span className="flex-1 text-xs font-medium text-foreground">
+                {action.label}
+              </span>
               <ChevronRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
             </button>
           ))}
@@ -294,7 +396,9 @@ function RightSidebar() {
 
       {/* Your Stats */}
       <div className="bg-card rounded-xl border shadow-sm p-4">
-        <h3 className="font-semibold text-sm text-foreground mb-3">Your Stats</h3>
+        <h3 className="font-semibold text-sm text-foreground mb-3">
+          Your Stats
+        </h3>
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
             <p className="text-xs text-muted-foreground">Profile views</p>
@@ -316,7 +420,7 @@ function RightSidebar() {
 
 // ----------- Filter config -----------
 
-const filters: { label: string; value: FeedFilter }[] = [
+const filters: Array<{ label: string; value: FeedFilter }> = [
   { label: 'All', value: 'all' },
   { label: 'Opportunities', value: 'opportunities' },
   { label: 'Mentorship', value: 'mentorship' },
@@ -335,9 +439,12 @@ export default function AlumnusFeed() {
   const filteredItems = useMemo(() => {
     let items = feedItems
 
-    if (activeFilter === 'opportunities') items = items.filter((i) => i.event_type.includes('internship'))
-    else if (activeFilter === 'mentorship') items = items.filter((i) => i.event_type.includes('mentorship'))
-    else if (activeFilter === 'events') items = items.filter((i) => i.event_type.includes('event'))
+    if (activeFilter === 'opportunities')
+      items = items.filter((i) => i.event_type.includes('internship'))
+    else if (activeFilter === 'mentorship')
+      items = items.filter((i) => i.event_type.includes('mentorship'))
+    else if (activeFilter === 'events')
+      items = items.filter((i) => i.event_type.includes('event'))
 
     if (search.trim()) {
       const q = search.toLowerCase()
@@ -357,7 +464,9 @@ export default function AlumnusFeed() {
         {/* Greeting */}
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">{getGreeting()} 👋</h1>
+            <h1 className="text-2xl font-bold text-foreground">
+              {getGreeting()} 👋
+            </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
               Discover mentorships, internships, and events in your network.
             </p>
@@ -399,9 +508,33 @@ export default function AlumnusFeed() {
             </div>
           ) : (
             filteredItems.map((item) => {
-              if (item.event_type.includes('internship')) return <InternshipCard key={item.sqid} item={item.data} sqid={item.sqid} created_at={item.created_at} />
-              if (item.event_type.includes('mentorship')) return <MentorshipCard key={item.sqid} item={item.data} sqid={item.sqid} created_at={item.created_at} />
-              if (item.event_type.includes('event')) return <EventCard key={item.sqid} item={item.data} sqid={item.sqid} created_at={item.created_at} />
+              if (item.event_type.includes('internship'))
+                return (
+                  <InternshipCard
+                    key={item.sqid}
+                    item={item.data}
+                    sqid={item.sqid}
+                    created_at={item.created_at}
+                  />
+                )
+              if (item.event_type.includes('mentorship'))
+                return (
+                  <MentorshipCard
+                    key={item.sqid}
+                    item={item.data}
+                    sqid={item.sqid}
+                    created_at={item.created_at}
+                  />
+                )
+              if (item.event_type.includes('event'))
+                return (
+                  <EventCard
+                    key={item.sqid}
+                    item={item.data}
+                    sqid={item.sqid}
+                    created_at={item.created_at}
+                  />
+                )
               return null
             })
           )}

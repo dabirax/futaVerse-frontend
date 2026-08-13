@@ -1,14 +1,26 @@
 import { useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
+import {
+  Calendar,
+  MapPin,
+  Search,
+  Ticket as TicketIcon,
+  Video,
+} from 'lucide-react'
+import { format } from 'date-fns'
+import type { Event, PurchasedTicket } from '@/types/event'
 import { useMyTicketsWithEvents } from '@/hooks/useEvents'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Search, Ticket as TicketIcon, Calendar, MapPin, Video } from 'lucide-react'
-import { format } from 'date-fns'
-import { Event, PurchasedTicket } from '@/types/event'
 
 interface PurchaseRow extends PurchasedTicket {
   event: Event | undefined
@@ -20,14 +32,16 @@ export default function StudentTickets() {
 
   const { data: rows = [], isError } = useMyTicketsWithEvents()
 
-  const filtered = (rows as PurchaseRow[]).filter(
+  const filtered = (rows as Array<PurchaseRow>).filter(
     (r) =>
       (r.event?.title ?? '').toLowerCase().includes(search.toLowerCase()) ||
       r.ticket.name.toLowerCase().includes(search.toLowerCase()),
   )
 
   const today = new Date()
-  const upcoming = filtered.filter((r) => r.event && new Date(r.event.date) >= today)
+  const upcoming = filtered.filter(
+    (r) => r.event && new Date(r.event.date) >= today,
+  )
   const past = filtered.filter((r) => r.event && new Date(r.event.date) < today)
 
   return (
@@ -61,23 +75,37 @@ export default function StudentTickets() {
       <Tabs defaultValue="upcoming">
         <div className="overflow-x-auto -mx-1 px-1 pb-1">
           <TabsList className="inline-flex w-max">
-            <TabsTrigger value="upcoming">Upcoming ({upcoming.length})</TabsTrigger>
+            <TabsTrigger value="upcoming">
+              Upcoming ({upcoming.length})
+            </TabsTrigger>
             <TabsTrigger value="past">Past ({past.length})</TabsTrigger>
           </TabsList>
         </div>
 
         <TabsContent value="upcoming" className="mt-4">
-          <TicketList rows={upcoming} onView={(id) => router.navigate({ to: `/student/events/${id}` })} />
+          <TicketList
+            rows={upcoming}
+            onView={(id) => router.navigate({ to: `/student/events/${id}` })}
+          />
         </TabsContent>
         <TabsContent value="past" className="mt-4">
-          <TicketList rows={past} onView={(id) => router.navigate({ to: `/student/events/${id}` })} />
+          <TicketList
+            rows={past}
+            onView={(id) => router.navigate({ to: `/student/events/${id}` })}
+          />
         </TabsContent>
       </Tabs>
     </div>
   )
 }
 
-function TicketList({ rows, onView }: { rows: PurchaseRow[]; onView: (eventSqid: string) => void }) {
+function TicketList({
+  rows,
+  onView,
+}: {
+  rows: Array<PurchaseRow>
+  onView: (eventSqid: string) => void
+}) {
   if (!rows.length) {
     return (
       <Card className="border-dashed bg-muted/30">
@@ -91,10 +119,15 @@ function TicketList({ rows, onView }: { rows: PurchaseRow[]; onView: (eventSqid:
   return (
     <div className="grid gap-4">
       {rows.map((row) => (
-        <Card key={row.ticket_uid} className="cursor-pointer hover:shadow-md transition-shadow">
+        <Card
+          key={row.ticket_uid}
+          className="cursor-pointer hover:shadow-md transition-shadow"
+        >
           <CardHeader className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
             <div className="space-y-1">
-              <CardTitle className="text-lg">{row.event?.title ?? 'Event'}</CardTitle>
+              <CardTitle className="text-lg">
+                {row.event?.title ?? 'Event'}
+              </CardTitle>
               <CardDescription className="flex flex-wrap gap-3 text-xs text-muted-foreground">
                 {row.event && (
                   <>
@@ -132,7 +165,9 @@ function TicketList({ rows, onView }: { rows: PurchaseRow[]; onView: (eventSqid:
                   ? 'Free'
                   : `₦${parseFloat(row.ticket.price).toLocaleString()}`}
               </div>
-              <div className="font-mono text-xs text-muted-foreground">Ref: {row.ticket_uid.slice(0, 12)}…</div>
+              <div className="font-mono text-xs text-muted-foreground">
+                Ref: {row.ticket_uid.slice(0, 12)}…
+              </div>
             </div>
             {row.event && (
               <Button variant="outline" onClick={() => onView(row.event!.sqid)}>

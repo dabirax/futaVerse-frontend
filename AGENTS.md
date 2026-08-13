@@ -5,7 +5,7 @@ React 19 + Vite + TanStack Router/Query + Tailwind v4 SPA ("futaverse-frontend")
 ## Commands
 
 - `pnpm dev` / `pnpm start` — dev server on port 3000
-- `pnpm build` — `vite build && tsc` (tsc is `noEmit`; typecheck runs *after* the build). Typecheck only: `npx tsc`
+- `pnpm build` — `vite build && tsc` (tsc is `noEmit`; typecheck runs _after_ the build). Typecheck only: `npx tsc`
 - `pnpm check` — `prettier --write . && eslint --fix` (mutates files; fastest way to fix lint/format before committing)
 - `pnpm test` — `vitest run`. **Currently broken**: the `test` block (jsdom env) in `vite.config.ts` is commented out, so the one existing test (`src/App.test.tsx`) fails with `document is not defined`. Uncomment that block or add `// @vitest-environment jsdom` to test files to make DOM tests work.
 

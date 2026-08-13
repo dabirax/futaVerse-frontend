@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Plus, Users } from 'lucide-react'
+import type { PaidTicketInput, Ticket } from '@/types/event'
 import {
   Card,
   CardContent,
@@ -38,9 +40,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Plus, Users } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
-import { PaidTicketInput, Ticket } from '@/types/event'
 import { paidTicketSchema } from '@/components/user/events/TicketsSection'
 import { useAddEventTicket, useEvent, useHostedEvents } from '@/hooks/useEvents'
 
@@ -74,7 +74,9 @@ export default function EventTicketsManager({
   const { data: hostedData, isLoading: loadingEvents } = useHostedEvents()
   const hostedEvents = hostedData?.results ?? []
 
-  const [selectedEventSqid, setSelectedEventSqid] = useState<string>(eventSqid ?? '')
+  const [selectedEventSqid, setSelectedEventSqid] = useState<string>(
+    eventSqid ?? '',
+  )
   const activeSqid = eventSqid ?? selectedEventSqid
 
   // Once the event list loads, default to first event if none selected.
@@ -88,9 +90,11 @@ export default function EventTicketsManager({
 
   // Local overrides for quantity/active — applied on top of server data.
   // These are not persisted (no PATCH /api/events/ticket endpoint in spec).
-  const [ticketOverrides, setTicketOverrides] = useState<Record<string, Partial<Ticket>>>({})
+  const [ticketOverrides, setTicketOverrides] = useState<
+    Record<string, Partial<Ticket>>
+  >({})
 
-  const eventTickets: Ticket[] = useMemo(
+  const eventTickets: Array<Ticket> = useMemo(
     () =>
       (selectedEvent?.tickets ?? []).map((t) => ({
         ...t,
@@ -174,7 +178,9 @@ export default function EventTicketsManager({
                 disabled={loadingEvents}
               >
                 <SelectTrigger className="w-65">
-                  <SelectValue placeholder={loadingEvents ? 'Loading…' : 'Select event'} />
+                  <SelectValue
+                    placeholder={loadingEvents ? 'Loading…' : 'Select event'}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {hostedEvents.map((ev) => (
@@ -197,7 +203,8 @@ export default function EventTicketsManager({
                 <DialogHeader>
                   <DialogTitle>New ticket variation</DialogTitle>
                   <DialogDescription>
-                    Adds a paid ticket to {selectedEvent?.title ?? 'this event'}.
+                    Adds a paid ticket to {selectedEvent?.title ?? 'this event'}
+                    .
                   </DialogDescription>
                 </DialogHeader>
 
@@ -208,7 +215,9 @@ export default function EventTicketsManager({
                       <Input
                         placeholder="e.g. VIP"
                         value={draft.name}
-                        onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({ ...draft, name: e.target.value })
+                        }
                       />
                     </div>
                     <div className="space-y-1">
@@ -218,7 +227,10 @@ export default function EventTicketsManager({
                         min={1}
                         value={draft.quantity}
                         onChange={(e) =>
-                          setDraft({ ...draft, quantity: parseInt(e.target.value, 10) || 1 })
+                          setDraft({
+                            ...draft,
+                            quantity: parseInt(e.target.value, 10) || 1,
+                          })
                         }
                       />
                     </div>
@@ -228,7 +240,9 @@ export default function EventTicketsManager({
                     <Textarea
                       placeholder="What's included with this ticket?"
                       value={draft.description}
-                      onChange={(e) => setDraft({ ...draft, description: e.target.value })}
+                      onChange={(e) =>
+                        setDraft({ ...draft, description: e.target.value })
+                      }
                     />
                   </div>
                   <div className="grid sm:grid-cols-2 gap-3">
@@ -239,7 +253,9 @@ export default function EventTicketsManager({
                         min={0}
                         step="0.01"
                         value={draft.price}
-                        onChange={(e) => setDraft({ ...draft, price: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({ ...draft, price: e.target.value })
+                        }
                       />
                     </div>
                     <div className="space-y-1">
@@ -249,7 +265,9 @@ export default function EventTicketsManager({
                         min={0}
                         max={100}
                         value={draft.discount_perc}
-                        onChange={(e) => setDraft({ ...draft, discount_perc: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({ ...draft, discount_perc: e.target.value })
+                        }
                       />
                     </div>
                   </div>
@@ -259,7 +277,9 @@ export default function EventTicketsManager({
                       <Input
                         type="datetime-local"
                         value={draft.sales_start}
-                        onChange={(e) => setDraft({ ...draft, sales_start: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({ ...draft, sales_start: e.target.value })
+                        }
                       />
                     </div>
                     <div className="space-y-1">
@@ -267,14 +287,18 @@ export default function EventTicketsManager({
                       <Input
                         type="datetime-local"
                         value={draft.sales_end}
-                        onChange={(e) => setDraft({ ...draft, sales_end: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({ ...draft, sales_end: e.target.value })
+                        }
                       />
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Switch
                       checked={draft.is_active}
-                      onCheckedChange={(v) => setDraft({ ...draft, is_active: v })}
+                      onCheckedChange={(v) =>
+                        setDraft({ ...draft, is_active: v })
+                      }
                     />
                     <span className="text-sm">Active immediately</span>
                   </div>
@@ -295,7 +319,9 @@ export default function EventTicketsManager({
                     onClick={handleCreateTicket}
                     disabled={addTicketMutation.isPending}
                   >
-                    {addTicketMutation.isPending ? 'Creating…' : 'Create ticket'}
+                    {addTicketMutation.isPending
+                      ? 'Creating…'
+                      : 'Create ticket'}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -327,7 +353,10 @@ export default function EventTicketsManager({
             <StatCard label="Variations" value={eventTickets.length} />
             <StatCard label="Total quantity" value={totalQty} />
             <StatCard label="Sold" value={totalSold} />
-            <StatCard label="Remaining" value={Math.max(0, totalQty - totalSold)} />
+            <StatCard
+              label="Remaining"
+              value={Math.max(0, totalQty - totalSold)}
+            />
           </div>
 
           <Tabs defaultValue="variations">
@@ -403,7 +432,9 @@ export default function EventTicketsManager({
                             <TableCell>
                               <Switch
                                 checked={t.is_active}
-                                onCheckedChange={(v) => handleToggleActive(t.sqid, v)}
+                                onCheckedChange={(v) =>
+                                  handleToggleActive(t.sqid, v)
+                                }
                               />
                             </TableCell>
                           </TableRow>

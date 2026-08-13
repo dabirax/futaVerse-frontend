@@ -8,4 +8,3 @@ describe('App', () => {
     expect(screen.getByText('Learn React')).toBeDefined()
   })
 })
-  

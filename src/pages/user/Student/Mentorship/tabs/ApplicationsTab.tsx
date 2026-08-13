@@ -1,13 +1,13 @@
+import { useEffect } from 'react'
 import InternshipCard2 from '@/components/user/internships/InternshipCard2'
 import {
   useMentorshipApplications,
   useWithdrawMentorshipApplication,
 } from '@/hooks/useMentorships'
-import { useEffect } from 'react'
 
 export default function MyApplicationsTab() {
   const { data, isLoading, isError, refetch } = useMentorshipApplications()
-    const { mutate: withdrawApplication } = useWithdrawMentorshipApplication();
+  const { mutate: withdrawApplication } = useWithdrawMentorshipApplication()
   const applications = data?.results || []
 
   useEffect(() => {
@@ -37,13 +37,13 @@ export default function MyApplicationsTab() {
     <div className="space-y-3">
       {applications.map((application: any, index: number) => (
         <InternshipCard2
-                  key={index}
-                  {...application}
-                  title={application.mentorship_info.title}
-                  alumnusName={`${application.alumnus_info.firstname} ${application.alumnus_info.lastname}`}
-                  variant="withdraw"
-                  onWithdraw={() => withdrawApplication(application.sqid)}
-                />
+          key={index}
+          {...application}
+          title={application.mentorship_info.title}
+          alumnusName={`${application.alumnus_info.firstname} ${application.alumnus_info.lastname}`}
+          variant="withdraw"
+          onWithdraw={() => withdrawApplication(application.sqid)}
+        />
       ))}
     </div>
   )

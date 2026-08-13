@@ -1,92 +1,95 @@
-import { useRouter} from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { useRouter } from '@tanstack/react-router'
 import {
   ArrowLeft,
   Calendar,
   Clock,
+  DollarSign,
   Edit,
   ExternalLink,
+  Heart,
   MapPin,
   Users,
   Video,
-  DollarSign,
-  Heart,
-} from "lucide-react";
-import { format } from "date-fns";
-import { useEvent } from "@/hooks/useEvents";
+} from 'lucide-react'
+import { format } from 'date-fns'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import { useEvent } from '@/hooks/useEvents'
 
-import { alumnusEventDetailRoute } from "@/routes/user-alumnus"
-import EventTicketsManager from "@/components/user/events/EventTicketsManager";
-import { BackButton2 } from "@/components/BackButtons";
-
+import { alumnusEventDetailRoute } from '@/routes/user-alumnus'
+import EventTicketsManager from '@/components/user/events/EventTicketsManager'
+import { BackButton2 } from '@/components/BackButtons'
 
 const categoryLabels: Record<string, string> = {
-  workshop: "Workshop",
-  seminar: "Seminar",
-  networking: "Networking",
-  career_fair: "Career Fair",
-  webinar: "Webinar",
-  conference: "Conference",
-};
+  workshop: 'Workshop',
+  seminar: 'Seminar',
+  networking: 'Networking',
+  career_fair: 'Career Fair',
+  webinar: 'Webinar',
+  conference: 'Conference',
+}
 
 const platformLabels: Record<string, string> = {
-  meet: "Google Meet",
-  zoom: "Zoom",
-  teams: "Microsoft Teams",
-};
+  meet: 'Google Meet',
+  zoom: 'Zoom',
+  teams: 'Microsoft Teams',
+}
 
 export default function EventDetail() {
-  const { id } = alumnusEventDetailRoute.useParams();
-  const router = useRouter();
-  const { data: event, isLoading, isError, error } = useEvent(id);
+  const { id } = alumnusEventDetailRoute.useParams()
+  const router = useRouter()
+  const { data: event, isLoading, isError, error } = useEvent(id)
 
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <h2 className="text-xl font-semibold text-foreground">Loading event details...</h2>
+        <h2 className="text-xl font-semibold text-foreground">
+          Loading event details...
+        </h2>
       </div>
-    );
+    )
   }
 
   if (isError || !event) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <h2 className="text-xl font-semibold text-foreground">
-          {error instanceof Error ? error.message : "Event not found"}
+          {error instanceof Error ? error.message : 'Event not found'}
         </h2>
         <Button
           variant="link"
-          onClick={() => router.navigate({ to: "/alumnus/events" })}
+          onClick={() => router.navigate({ to: '/alumnus/events' })}
           className="mt-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Events
         </Button>
       </div>
-    );
+    )
   }
 
-  const formattedDate = format(new Date(event.date), "EEEE, MMMM d, yyyy");
+  const formattedDate = format(new Date(event.date), 'EEEE, MMMM d, yyyy')
   const formattedTime = format(
     new Date(`2000-01-01T${event.start_time}`),
-    "h:mm a"
-  );
-  const durationHours = Math.floor(event.duration_mins / 60);
-  const durationMins = event.duration_mins % 60;
-  const durationText = `${durationHours > 0 ? `${durationHours}h ` : ""}${durationMins > 0 ? `${durationMins}m` : ""}`;
+    'h:mm a',
+  )
+  const durationHours = Math.floor(event.duration_mins / 60)
+  const durationMins = event.duration_mins % 60
+  const durationText = `${durationHours > 0 ? `${durationHours}h ` : ''}${durationMins > 0 ? `${durationMins}m` : ''}`
 
-  const totalTickets = event.tickets?.reduce((sum, t) => sum + t.quantity, 0) || 0;
-  const soldTickets = event.tickets?.reduce((sum, t) => sum + t.quantity_sold, 0) || 0;
+  const totalTickets =
+    event.tickets?.reduce((sum, t) => sum + t.quantity, 0) || 0
+  const soldTickets =
+    event.tickets?.reduce((sum, t) => sum + t.quantity_sold, 0) || 0
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
         <div className="flex items-center gap-4">
-          <BackButton2/>
+          <BackButton2 />
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Badge variant="secondary">
@@ -113,7 +116,11 @@ export default function EventDetail() {
             </h1>
           </div>
         </div>
-        <Button onClick={() => router.navigate({ to: `/alumnus/events/${event.sqid}/edit` })}>
+        <Button
+          onClick={() =>
+            router.navigate({ to: `/alumnus/events/${event.sqid}/edit` })
+          }
+        >
           <Edit className="h-4 w-4 mr-2" />
           Edit Event
         </Button>

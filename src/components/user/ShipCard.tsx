@@ -1,7 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
+import { ArrowRight, MapPin } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { ArrowRight, MapPin } from 'lucide-react'
 
 interface InternshipCardProps {
   sqid: string
@@ -58,7 +58,9 @@ export default function ShipCard({
           </div>
 
           {role === 'alumnus' ? (
-            <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{description}</p>
+            <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+              {description}
+            </p>
           ) : (
             <p className="text-xs text-muted-foreground mt-1">
               {company ?? '—'} · Posted by {alumnusName}
@@ -83,7 +85,9 @@ export default function ShipCard({
               </Badge>
             )}
             {remaining_slots !== undefined && available_slots !== undefined && (
-              <span className={`text-xs font-medium ${remaining_slots > 0 ? 'text-green-600' : 'text-muted-foreground'}`}>
+              <span
+                className={`text-xs font-medium ${remaining_slots > 0 ? 'text-green-600' : 'text-muted-foreground'}`}
+              >
                 {remaining_slots}/{available_slots} slots
               </span>
             )}

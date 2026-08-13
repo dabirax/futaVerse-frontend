@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
+import type { FeedResponseItem } from '@/types/feed'
+import type { PaginatedResponse } from '@/services/events'
 import { FeedService } from '@/services/feed'
-import { FeedResponseItem } from '@/types/feed'
-import { PaginatedResponse } from '@/services/events'
 import { mockEvents } from '@/data/mockEvents'
 
-const buildMockFeedItems = (): FeedResponseItem[] =>
+const buildMockFeedItems = (): Array<FeedResponseItem> =>
   mockEvents.map((event) => ({
     sqid: event.sqid,
     event_type: 'event_created',

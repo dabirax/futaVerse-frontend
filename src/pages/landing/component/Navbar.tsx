@@ -1,9 +1,9 @@
-import { Menu } from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Menu } from 'lucide-react'
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
 
 const Navbar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border z-50">
@@ -18,16 +18,28 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#about" className="text-foreground hover:text-primary transition-colors font-medium">
+            <a
+              href="#about"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
               About
             </a>
-            <a href="#how-it-works" className="text-foreground hover:text-primary transition-colors font-medium">
+            <a
+              href="#how-it-works"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
               How It Works
             </a>
-            <a href="#features" className="text-foreground hover:text-primary transition-colors font-medium">
+            <a
+              href="#features"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
               Features
             </a>
-            <a href="#testimonials" className="text-foreground hover:text-primary transition-colors font-medium">
+            <a
+              href="#testimonials"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
               Testimonials
             </a>
           </div>
@@ -87,7 +99,7 @@ const Navbar = () => {
         )}
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

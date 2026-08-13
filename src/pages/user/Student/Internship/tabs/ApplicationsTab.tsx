@@ -1,14 +1,14 @@
-
 import { CardSkeleton5 } from '@/components/CardSkeletons'
-import InternshipCard2 from "@/components/user/internships/InternshipCard2";
-import { useInternshipApplications, useWithdrawInternshipApplication } from "@/hooks/useInternships";
-
+import InternshipCard2 from '@/components/user/internships/InternshipCard2'
+import {
+  useInternshipApplications,
+  useWithdrawInternshipApplication,
+} from '@/hooks/useInternships'
 
 export default function StudentApplicationsTab() {
-    const { data, isLoading, isError } = useInternshipApplications();
-    const { mutate: withdrawApplication } = useWithdrawInternshipApplication();
-  
-  
+  const { data, isLoading, isError } = useInternshipApplications()
+  const { mutate: withdrawApplication } = useWithdrawInternshipApplication()
+
   if (isLoading) {
     return <CardSkeleton5 variant="r-sm" />
   }
@@ -22,7 +22,7 @@ export default function StudentApplicationsTab() {
   if (!data?.results?.length) {
     return <p className="text-sm text-muted-foreground">No applications yet</p>
   }
-    
+
   return (
     <div className="space-y-4">
       {data.results.map((application: any, index: number) => (

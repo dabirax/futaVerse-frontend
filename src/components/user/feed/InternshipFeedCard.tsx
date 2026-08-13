@@ -1,15 +1,17 @@
 import { useRouter } from '@tanstack/react-router'
+import { ArrowRight, Briefcase, DollarSign } from 'lucide-react'
+import type { FeedItemData } from '@/types/feed'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import {
-  Briefcase,
-  ArrowRight,
-  DollarSign
-} from 'lucide-react'
-import { FeedItemData } from '@/types/feed'
 
-export default function InternshipFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
+export default function InternshipFeedCard({
+  item,
+  sqid,
+}: {
+  item: FeedItemData
+  sqid: string
+}) {
   const router = useRouter()
   const navigate = router.navigate
 
@@ -44,9 +46,11 @@ export default function InternshipFeedCard({ item, sqid }: { item: FeedItemData;
             <h3 className="font-semibold text-foreground line-clamp-1">
               {item.title}
             </h3>
-            
+
             <p className="text-sm text-muted-foreground line-clamp-2">
-              {item.alumni ? `Posted by ${item.alumni}` : 'A new internship opportunity'}
+              {item.alumni
+                ? `Posted by ${item.alumni}`
+                : 'A new internship opportunity'}
             </p>
 
             <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">

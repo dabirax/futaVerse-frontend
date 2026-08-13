@@ -1,8 +1,5 @@
-
 const AlumnusAnalytics = () => {
-  return (
-    <div>AlumnusAnalytics</div>
-  )
+  return <div>AlumnusAnalytics</div>
 }
 
 export default AlumnusAnalytics

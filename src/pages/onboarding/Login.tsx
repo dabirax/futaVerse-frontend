@@ -55,9 +55,9 @@ const LoginPage = () => {
       return res.data
     },
     onSuccess: (data) => {
-      const { access_token, role } = data.data
+      const { access_token, role, refresh_token } = data.data
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
-      login(access_token, role)
+      login(access_token, role, refresh_token)
       if (role === 'alumni') router.navigate({ to: '/alumnus/feed' })
       if (role === 'student') router.navigate({ to: '/student/feed' })
     },
@@ -230,7 +230,9 @@ const LoginPage = () => {
                         {serverError.message}
                       </p>
                       {serverError.hint && (
-                        <p className="text-xs text-red-500">{serverError.hint}</p>
+                        <p className="text-xs text-red-500">
+                          {serverError.hint}
+                        </p>
                       )}
                     </div>
                   </motion.div>

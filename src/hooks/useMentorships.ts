@@ -19,27 +19,45 @@ export const useCreateMentorship = () => {
   return useMutation({
     mutationFn: (payload: any) => MentorshipService.create(payload),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['mentorship s'] })
+      qc.invalidateQueries({ queryKey: ['mentorships'] })
     },
   })
 }
 
-export const useMentorship = (id: number) => {
+export const useMentorshipChoices = () => {
   return useQuery({
-    queryKey: ['mentorship', id],
-    queryFn: () => MentorshipService.getOne(id),
-    enabled: !!id,
+    queryKey: ['mentorship-choices'],
+    queryFn: MentorshipService.getChoices,
+  })
+}
+
+export const useToggleMentorshipActive = () => {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ sqid, is_active }: { sqid: string; is_active: boolean }) =>
+      MentorshipService.toggleActive(sqid, is_active),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['mentorships'] })
+    },
+  })
+}
+
+export const useMentorship = (sqid: string) => {
+  return useQuery({
+    queryKey: ['mentorship', sqid],
+    queryFn: () => MentorshipService.getOne(sqid),
+    enabled: !!sqid,
   })
 }
 
 export const useUpdateMentorship = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, payload }: { id: number; payload: any }) =>
-      MentorshipService.update(id, payload),
+    mutationFn: ({ sqid, payload }: { sqid: string; payload: any }) =>
+      MentorshipService.update(sqid, payload),
     onSuccess: (_, variables) => {
       qc.invalidateQueries({ queryKey: ['mentorships'] })
-      qc.invalidateQueries({ queryKey: ['mentorship', variables.id] })
+      qc.invalidateQueries({ queryKey: ['mentorship', variables.sqid] })
     },
   })
 }
@@ -47,7 +65,7 @@ export const useUpdateMentorship = () => {
 export const useDeleteMentorship = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (id: number) => MentorshipService.delete(id),
+    mutationFn: (sqid: string) => MentorshipService.delete(sqid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['mentorships'] })
     },
@@ -62,12 +80,23 @@ export const useMentorshipOffers = () => {
   })
 }
 
+export const useCreateMentorshipOffer = () => {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: any) => MentorshipOffersService.createOffer(payload),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['mentorship-offers'] })
+    },
+  })
+}
+
 export const useAcceptMentorshipOffer = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (id: number) => MentorshipOffersService.acceptOffer(id),
+    mutationFn: (sqid: string) => MentorshipOffersService.acceptOffer(sqid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['mentorship-offers'] })
+      qc.invalidateQueries({ queryKey: ['mentorship-engagements'] })
     },
   })
 }
@@ -75,7 +104,7 @@ export const useAcceptMentorshipOffer = () => {
 export const useRejectMentorshipOffer = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (id: number) => MentorshipOffersService.rejectOffer(id),
+    mutationFn: (sqid: string) => MentorshipOffersService.rejectOffer(sqid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['mentorship-offers'] })
     },
@@ -85,7 +114,7 @@ export const useRejectMentorshipOffer = () => {
 export const useWithdrawMentorshipOffer = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (id: number) => MentorshipOffersService.withdrawOffer(id),
+    mutationFn: (sqid: string) => MentorshipOffersService.withdrawOffer(sqid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['mentorship-offers'] })
     },
@@ -107,6 +136,7 @@ export const useCreateMentorshipApplication = () => {
       MentorshipApplicationsService.createApplication(payload),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['mentorship-applications'] })
+      qc.invalidateQueries({ queryKey: ['mentorship-engagements'] })
     },
   })
 }
@@ -114,10 +144,11 @@ export const useCreateMentorshipApplication = () => {
 export const useAcceptMentorshipApplication = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (id: number) =>
-      MentorshipApplicationsService.acceptApplication(id),
+    mutationFn: (sqid: string) =>
+      MentorshipApplicationsService.acceptApplication(sqid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['mentorship-applications'] })
+      qc.invalidateQueries({ queryKey: ['mentorship-engagements'] })
     },
   })
 }
@@ -125,8 +156,8 @@ export const useAcceptMentorshipApplication = () => {
 export const useRejectMentorshipApplication = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (id: number) =>
-      MentorshipApplicationsService.rejectApplication(id),
+    mutationFn: (sqid: string) =>
+      MentorshipApplicationsService.rejectApplication(sqid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['mentorship-applications'] })
     },
@@ -136,8 +167,8 @@ export const useRejectMentorshipApplication = () => {
 export const useWithdrawMentorshipApplication = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (id: number) =>
-      MentorshipApplicationsService.withdrawApplication(id),
+    mutationFn: (sqid: string) =>
+      MentorshipApplicationsService.withdrawApplication(sqid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['mentorship-applications'] })
     },
@@ -147,15 +178,15 @@ export const useWithdrawMentorshipApplication = () => {
 // Engagements
 export const useMentorshipEngagements = () => {
   return useQuery({
-    queryKey: ["mentorship-engagements"],
+    queryKey: ['mentorship-engagements'],
     queryFn: MentorshipEngagementsService.getAll,
-  });
-};
+  })
+}
 
-export const useMentorshipEngagement = (id: number) => {
+export const useMentorshipEngagement = (sqid: string) => {
   return useQuery({
-    queryKey: ['mentorship', id],
-    queryFn: () => MentorshipEngagementsService.getOne(id),
-    enabled: !!id,
+    queryKey: ['mentorship-engagement', sqid],
+    queryFn: () => MentorshipEngagementsService.getOne(sqid),
+    enabled: !!sqid,
   })
 }

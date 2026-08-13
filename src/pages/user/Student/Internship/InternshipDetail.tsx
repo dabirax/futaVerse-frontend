@@ -1,19 +1,78 @@
 import { Link } from '@tanstack/react-router'
-import { Building2, Calendar, Clock, MapPin, MessageSquare, Users } from 'lucide-react'
+import { useState } from 'react'
+import {
+  Building2,
+  Calendar,
+  Clock,
+  FileText,
+  MapPin,
+  MessageSquare,
+  Users,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { studentInternshipDetailsRoute } from '@/routes/user-student'
-import { useInternshipEngagement } from '@/hooks/useInternships'
+import {
+  useCreateInternshipApplication,
+  useInternship,
+  useInternshipEngagements,
+} from '@/hooks/useInternships'
+import { useResumes } from '@/hooks/useResumes'
 import { CardSkeleton2 } from '@/components/CardSkeletons'
 import { BackButton2 } from '@/components/BackButtons'
 
 export default function InternshipDetail() {
   const { sqid } = studentInternshipDetailsRoute.useParams()
-  const { data, isLoading, isError } = useInternshipEngagement(sqid)
+  const { data: info, isLoading, isError } = useInternship(sqid)
+  const {
+    data: engagementsData,
+    isLoading: engagementsLoading,
+    isError: engagementsError,
+  } = useInternshipEngagements()
+  const createApplication = useCreateInternshipApplication()
+  const { data: resumesData, isLoading: resumesLoading } = useResumes()
 
-  if (isLoading) {
+  const [resumeSqid, setResumeSqid] = useState('')
+  const [coverLetter, setCoverLetter] = useState('')
+  const [applyError, setApplyError] = useState<string | null>(null)
+
+  const resumes = resumesData?.results ?? []
+
+  const handleApply = () => {
+    setApplyError(null)
+
+    if (!resumeSqid) {
+      setApplyError('Please select a resume to apply.')
+      return
+    }
+
+    createApplication.mutate(
+      {
+        internship: sqid,
+        resume: resumeSqid,
+        cover_letter: coverLetter || undefined,
+      },
+      {
+        onError: (err: any) => {
+          setApplyError(
+            err?.message ?? 'Something went wrong. Please try again.',
+          )
+        },
+      },
+    )
+  }
+
+  if (isLoading || engagementsLoading) {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
@@ -25,7 +84,7 @@ export default function InternshipDetail() {
     )
   }
 
-  if (isError || !data) {
+  if (isError || engagementsError || !info) {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
@@ -50,8 +109,10 @@ export default function InternshipDetail() {
     )
   }
 
-  const info = data.internship_info
-  const isEngaged = Boolean(data.status)
+  const engagement = engagementsData?.results?.find(
+    (e: any) => e.internship_info?.sqid === sqid,
+  )
+  const isEngaged = Boolean(engagement)
   const hasSlots = info.remaining_slots > 0
 
   return (
@@ -66,16 +127,22 @@ export default function InternshipDetail() {
           <CardContent className="py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Badge variant="default">{data.status}</Badge>
+                <Badge variant="default">{engagement.status}</Badge>
                 <span className="text-sm text-muted-foreground">
-                  via {data.source}
+                  via {engagement.source}
                 </span>
               </div>
-              {data.alumnus_info && (
+              {engagement.alumnus_info && (
                 <Link to="/student/messages">
                   <Button variant="outline" size="sm" className="gap-2">
                     <MessageSquare className="h-4 w-4" />
-                    Message {data.alumnus_info.name}
+                    Message{' '}
+                    {[
+                      engagement.alumnus_info.firstname,
+                      engagement.alumnus_info.lastname,
+                    ]
+                      .filter(Boolean)
+                      .join(' ') || 'Alumnus'}
                   </Button>
                 </Link>
               )}
@@ -195,19 +262,103 @@ export default function InternshipDetail() {
         </Card>
       </div>
 
-      {!isEngaged && (
+      {!isEngaged && hasSlots && (
         <Card>
-          <CardContent className="py-6">
+          <CardHeader>
+            <CardTitle>Apply for this internship</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Resume <span className="text-red-500">*</span>
+              </Label>
+              {resumesLoading ? (
+                <p className="text-sm text-muted-foreground">
+                  Loading your resumes...
+                </p>
+              ) : resumes.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  You haven't uploaded any resumes yet.{' '}
+                  <Link
+                    to="/student/settings"
+                    className="text-primary underline"
+                  >
+                    Upload one in Settings
+                  </Link>{' '}
+                  to apply.
+                </p>
+              ) : (
+                <Select
+                  value={resumeSqid}
+                  onValueChange={(value) => {
+                    setResumeSqid(value)
+                    setApplyError(null)
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a resume" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {resumes.map((resume) => (
+                      <SelectItem key={resume.sqid} value={resume.sqid}>
+                        {resume.filename}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+
+            {info.require_cover_letter && (
+              <div className="space-y-2">
+                <Label>
+                  Cover Letter <span className="text-red-500">*</span>
+                </Label>
+                <Textarea
+                  placeholder="Tell the alumnus why you're a great fit..."
+                  value={coverLetter}
+                  onChange={(e) => setCoverLetter(e.target.value)}
+                  rows={5}
+                />
+              </div>
+            )}
+
+            {applyError && (
+              <p className="text-sm text-red-500 font-medium">{applyError}</p>
+            )}
+
             <div className="flex flex-col gap-3">
-              <Button disabled className="w-full">
-                {hasSlots ? 'Apply Now' : 'No slots available'}
+              <Button
+                className="w-full"
+                disabled={
+                  createApplication.isPending ||
+                  resumesLoading ||
+                  resumes.length === 0
+                }
+                onClick={handleApply}
+              >
+                {createApplication.isPending ? 'Applying...' : 'Apply Now'}
               </Button>
               <p className="text-center text-sm text-muted-foreground">
-                {hasSlots
-                  ? "Applying isn't available yet - check back soon."
-                  : 'All slots for this internship are currently filled.'}
+                {createApplication.isSuccess
+                  ? 'Application submitted! The alumnus will review it shortly.'
+                  : 'Your application will be sent to the alumnus for review.'}
               </p>
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {!isEngaged && !hasSlots && (
+        <Card>
+          <CardContent className="py-6">
+            <Button disabled className="w-full">
+              No slots available
+            </Button>
+            <p className="text-center text-sm text-muted-foreground mt-3">
+              All slots for this internship are currently filled.
+            </p>
           </CardContent>
         </Card>
       )}

@@ -1,19 +1,19 @@
-import { MessageSquare } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import ConfirmActionDialog from "../ConfirmActionDialog";
+import { MessageSquare } from 'lucide-react'
+import ConfirmActionDialog from '../ConfirmActionDialog'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 
 interface StudentCardProps {
-  studentName: string;
-  studentImage?: string;
-  title?: string;
-  showActions?: boolean;
-  onAccept?: () => void;
-  onReject?: () => void;
-  onWithdraw?: () => void;
-  onMessage?: () => void;
-  variant?: "applicant" | "offer" | "message";
+  studentName: string
+  studentImage?: string
+  title?: string
+  showActions?: boolean
+  onAccept?: () => void
+  onReject?: () => void
+  onWithdraw?: () => void
+  onMessage?: () => void
+  variant?: 'applicant' | 'offer' | 'message'
 }
 
 export default function StudentCard({
@@ -25,7 +25,7 @@ export default function StudentCard({
   onWithdraw,
   onReject,
   onMessage,
-  variant = "applicant",
+  variant = 'applicant',
 }: StudentCardProps) {
   return (
     <Card>
@@ -48,7 +48,6 @@ export default function StudentCard({
               <p className="text-sm text-muted-foreground">{title}</p>
             </div>
           </div>
-
 
           {showActions && (
             <div className="flex gap-2">

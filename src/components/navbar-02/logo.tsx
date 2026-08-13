@@ -16,4 +16,4 @@ export const Logo = () => (
       className="fill-foreground"
     />
   </svg>
-);
+)

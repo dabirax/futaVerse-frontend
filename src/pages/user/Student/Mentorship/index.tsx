@@ -1,9 +1,13 @@
 import { useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import MyMentorshipsTab from './tabs/MyMentorshipsTab'
 import OffersTab from './tabs/OffersTab'
 import MyApplicationsTab from './tabs/ApplicationsTab'
-import { useMentorshipOffers, useMentorshipApplications, useMentorshipEngagements } from '@/hooks/useMentorships'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  useMentorshipApplications,
+  useMentorshipEngagements,
+  useMentorshipOffers,
+} from '@/hooks/useMentorships'
 import { Card, CardContent } from '@/components/ui/card'
 
 export default function StudentMentorship() {
@@ -78,7 +82,9 @@ export default function StudentMentorship() {
 
         {/* REPORTS TAB */}
         <TabsContent value="reports" className="space-y-4">
-          <p className="text-center py-12 text-muted-foreground">No reports yet</p>
+          <p className="text-center py-12 text-muted-foreground">
+            No reports yet
+          </p>
         </TabsContent>
       </Tabs>
     </div>

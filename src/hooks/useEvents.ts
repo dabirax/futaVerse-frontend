@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
+import type {
   AddTicketPayload,
-  EventsService,
   UpdateEventModePayload,
   UpdateEventPayload,
 } from '@/services/events'
-import { CreateEventPayload } from '@/types/event'
+import type { CreateEventPayload } from '@/types/event'
+import { EventsService } from '@/services/events'
 
 export const useHostedEvents = (params?: { page?: number; size?: number }) => {
   return useQuery({
@@ -35,8 +35,13 @@ export const useCreateEvent = () => {
 export const useUpdateEvent = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: ({ sqid, payload }: { sqid: string; payload: UpdateEventPayload }) =>
-      EventsService.update(sqid, payload),
+    mutationFn: ({
+      sqid,
+      payload,
+    }: {
+      sqid: string
+      payload: UpdateEventPayload
+    }) => EventsService.update(sqid, payload),
     onSuccess: (_, { sqid }) => {
       qc.invalidateQueries({ queryKey: ['hosted-events'] })
       qc.invalidateQueries({ queryKey: ['event', sqid] })
@@ -47,8 +52,13 @@ export const useUpdateEvent = () => {
 export const useUpdateEventMode = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: ({ sqid, payload }: { sqid: string; payload: UpdateEventModePayload }) =>
-      EventsService.updateMode(sqid, payload),
+    mutationFn: ({
+      sqid,
+      payload,
+    }: {
+      sqid: string
+      payload: UpdateEventModePayload
+    }) => EventsService.updateMode(sqid, payload),
     onSuccess: (_, { sqid }) => {
       qc.invalidateQueries({ queryKey: ['hosted-events'] })
       qc.invalidateQueries({ queryKey: ['event', sqid] })
@@ -70,7 +80,8 @@ export const useAddEventTicket = () => {
 export const useRegisterEvent = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (payload: { ticket: string; email: string }) => EventsService.register(payload),
+    mutationFn: (payload: { ticket: string; email: string }) =>
+      EventsService.register(payload),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['my-tickets'] })
       qc.invalidateQueries({ queryKey: ['my-tickets-with-events'] })
@@ -93,7 +104,9 @@ export const useMyTicketsWithEvents = () => {
     queryFn: async () => {
       const { results } = await EventsService.myTickets()
       const uniqueSqids = [...new Set(results.map((r) => r.ticket.event))]
-      const events = await Promise.all(uniqueSqids.map((sqid) => EventsService.getOne(sqid)))
+      const events = await Promise.all(
+        uniqueSqids.map((sqid) => EventsService.getOne(sqid)),
+      )
       const eventMap = Object.fromEntries(events.map((e) => [e.sqid, e]))
       return results.map((r) => ({ ...r, event: eventMap[r.ticket.event] }))
     },

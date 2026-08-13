@@ -19,7 +19,7 @@ export function BackButton() {
         }
       }}
     >
-      <ArrowLeft className="bg-primary-dark text-white" strokeWidth={2.5}/>
+      <ArrowLeft className="bg-primary-dark text-white" strokeWidth={2.5} />
     </motion.div>
   )
 }

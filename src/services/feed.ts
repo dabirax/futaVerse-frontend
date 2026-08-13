@@ -1,4 +1,4 @@
-import { PaginatedResponse } from './events'
+import type { PaginatedResponse } from './events'
 import { mockEvents } from '@/data/mockEvents'
 
 const getHeaders = (): Record<string, string> => {
@@ -14,7 +14,7 @@ const getHeaders = (): Record<string, string> => {
 
 const getBaseUrl = () => import.meta.env.VITE_API_URL || ''
 
-const buildMockFeedItems = (): any[] =>
+const buildMockFeedItems = (): Array<any> =>
   mockEvents.map((event) => ({
     sqid: event.sqid,
     event_type: 'event_created',
@@ -33,7 +33,10 @@ const buildMockFeedItems = (): any[] =>
   }))
 
 export const FeedService = {
-  list: async (params?: { page?: number; size?: number }): Promise<PaginatedResponse<any>> => {
+  list: async (params?: {
+    page?: number
+    size?: number
+  }): Promise<PaginatedResponse<any>> => {
     const baseUrl = getBaseUrl()
     if (!baseUrl) {
       return {
@@ -47,11 +50,14 @@ export const FeedService = {
     const queryParams = new URLSearchParams()
     if (params?.page) queryParams.append('page', params.page.toString())
     if (params?.size) queryParams.append('size', params.size.toString())
-    
-    const response = await fetch(`${baseUrl}/api/feed?${queryParams.toString()}`, {
-      method: 'GET',
-      headers: getHeaders(),
-    })
+
+    const response = await fetch(
+      `${baseUrl}/api/feed?${queryParams.toString()}`,
+      {
+        method: 'GET',
+        headers: getHeaders(),
+      },
+    )
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))

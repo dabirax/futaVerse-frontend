@@ -1,49 +1,43 @@
-import { useState } from "react";
+import { useState } from 'react'
+import { Link, Outlet, useNavigate } from '@tanstack/react-router'
 import {
-  Link,
-  Outlet,
-  useNavigate,
-} from "@tanstack/react-router";
-import {
-    Briefcase,
-    Calendar,
-    LogOut,
-    Menu,
-    MessageSquare,
-    Rss,
-    Settings,
-    TicketCheck,
-    BarChart3,
-    Users,
-    X,
-} from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import profPic from "@/assets/testProfilePic2.png"
+  BarChart3,
+  Briefcase,
+  Calendar,
+  LogOut,
+  Menu,
+  MessageSquare,
+  Rss,
+  Settings,
+  TicketCheck,
+  Users,
+  X,
+} from 'lucide-react'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import profPic from '@/assets/testProfilePic2.png'
 
 const sidebarItems = [
-  { icon: Rss, label: "Feed", path: "/student/feed" },
-  { icon: Briefcase, label: "Internship", path: "/student/internships" },
-  { icon: Users, label: "Mentorship", path: "/student/mentorships" },
-  { icon: Calendar, label: "Events", path: "/student/events" },
-  { icon: TicketCheck, label: "Tickets", path: "/student/tickets" },
-  { icon: MessageSquare, label: "Messages", path: "/student/messages" },
-  { icon: Calendar, label: "Calendar", path: "/student/calendar" },
-  { icon: BarChart3, label: "Analytics", path: "/student/analytics" },
-  { icon: Settings, label: "Settings", path: "/student/settings" },
-];
+  { icon: Rss, label: 'Feed', path: '/student/feed' },
+  { icon: Briefcase, label: 'Internship', path: '/student/internships' },
+  { icon: Users, label: 'Mentorship', path: '/student/mentorships' },
+  { icon: Calendar, label: 'Events', path: '/student/events' },
+  { icon: TicketCheck, label: 'Tickets', path: '/student/tickets' },
+  { icon: MessageSquare, label: 'Messages', path: '/student/messages' },
+  { icon: Calendar, label: 'Calendar', path: '/student/calendar' },
+  { icon: BarChart3, label: 'Analytics', path: '/student/analytics' },
+  { icon: Settings, label: 'Settings', path: '/student/settings' },
+]
 
 export default function StudentLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleSignOut = () => {
     // Implement logout logic here
-    navigate({ to: "/" });
-  };
-
-  
+    navigate({ to: '/' })
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -71,13 +65,16 @@ export default function StudentLayout() {
       {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-screen w-64 bg-card border-r transition-transform duration-300 z-50 flex flex-col
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
       >
         {/* Profile Section */}
         <div className="p-2">
           <div className="flex items-center gap-3">
             <Avatar className="h-12 w-12">
-              <img src={profPic} className="object-cover"/>
+              <img
+                src={sessionStorage.getItem('profile_img') || profPic}
+                className="object-cover"
+              />
               <AvatarFallback>ST</AvatarFallback>
             </Avatar>
             <div>
@@ -102,12 +99,11 @@ export default function StudentLayout() {
                   to={item.path}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200"
                   activeProps={{
-                    className:
-                      "bg-primary text-primary-foreground shadow-md",
+                    className: 'bg-primary text-primary-foreground shadow-md',
                   }}
                   inactiveProps={{
                     className:
-                      "text-muted-foreground hover:scale-105 hover:text-foreground",
+                      'text-muted-foreground hover:scale-105 hover:text-foreground',
                   }}
                   onClick={() => setSidebarOpen(false)}
                 >
@@ -141,5 +137,5 @@ export default function StudentLayout() {
         </div>
       </main>
     </div>
-  );
+  )
 }

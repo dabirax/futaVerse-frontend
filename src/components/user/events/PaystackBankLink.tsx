@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { CheckCircle2, Landmark, Loader2 } from 'lucide-react'
+import ConfirmActionDialog from '../ConfirmActionDialog'
+import type { LinkedBankAccount } from '@/types/event'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -9,10 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { CheckCircle2, Landmark, Loader2 } from 'lucide-react'
 import { mockBanks } from '@/data/mockBanks'
-import { LinkedBankAccount } from '@/types/event'
-import ConfirmActionDialog from '../ConfirmActionDialog'
 
 interface PaystackBankLinkProps {
   /** Existing linked account (e.g. from the alumnus profile). */

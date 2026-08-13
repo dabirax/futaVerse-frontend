@@ -1,22 +1,19 @@
-import { useState } from "react";
-import MyInternshipsTab from "./tabs/MyInternshipsTab";
-import OffersTab from "./tabs/OffersTab";
-import ApplicationsTab from "./tabs/ApplicationsTab";
+import { useState } from 'react'
+import MyInternshipsTab from './tabs/MyInternshipsTab'
+import OffersTab from './tabs/OffersTab'
+import ApplicationsTab from './tabs/ApplicationsTab'
 // import InternsTab from "./tabs/InternsTab";
-import ReportsTab from "./tabs/ReportsTab";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ReportsTab from './tabs/ReportsTab'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function AlumnusInternship() {
-
-  const [activeTab, setActiveTab] = useState("my-internships");
+  const [activeTab, setActiveTab] = useState('my-internships')
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-foreground">Internships</h1>
       </div>
-
-
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-4 mb-5">
@@ -30,7 +27,6 @@ export default function AlumnusInternship() {
           <MyInternshipsTab />
         </TabsContent>
 
-
         <TabsContent value="offers">
           <OffersTab />
         </TabsContent>
@@ -39,12 +35,10 @@ export default function AlumnusInternship() {
           <ApplicationsTab />
         </TabsContent>
 
-       
-
         <TabsContent value="reports">
           <ReportsTab />
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

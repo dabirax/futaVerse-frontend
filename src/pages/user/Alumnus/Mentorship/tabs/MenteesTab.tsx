@@ -3,18 +3,15 @@ import { CardSkeleton5 } from '@/components/CardSkeletons'
 import StudentCard from '@/components/user/internships/StudentCard'
 
 export default function MenteesTab() {
-  
-    const { data, isLoading, isError } = useMentorshipEngagements()
+  const { data, isLoading, isError } = useMentorshipEngagements()
 
-    if (isLoading) {
-        return <CardSkeleton5 variant="r-full" />
-      }
-    
-      if (isError) {
-        return (
-          <p className="text-sm text-destructive">Failed to load interns</p>
-        )
-      }
+  if (isLoading) {
+    return <CardSkeleton5 variant="r-full" />
+  }
+
+  if (isError) {
+    return <p className="text-sm text-destructive">Failed to load interns</p>
+  }
 
   return (
     <div className="space-y-3">

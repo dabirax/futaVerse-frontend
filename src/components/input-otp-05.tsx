@@ -2,7 +2,7 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
+} from '@/components/ui/input-otp'
 
 export default function InputOTPDemo() {
   return (
@@ -26,5 +26,5 @@ export default function InputOTPDemo() {
         />
       </InputOTPGroup>
     </InputOTP>
-  );
+  )
 }

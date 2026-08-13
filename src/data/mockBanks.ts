@@ -1,7 +1,7 @@
-import { PaystackBank } from '@/types/event'
+import type { PaystackBank } from '@/types/event'
 
 /** Sample of Nigerian banks as returned by Paystack's /bank endpoint. */
-export const mockBanks: PaystackBank[] = [
+export const mockBanks: Array<PaystackBank> = [
   { code: '044', name: 'Access Bank', slug: 'access-bank' },
   { code: '063', name: 'Access Bank (Diamond)', slug: 'access-bank-diamond' },
   { code: '035', name: 'Wema Bank', slug: 'wema-bank' },

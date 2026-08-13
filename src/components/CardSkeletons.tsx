@@ -137,4 +137,3 @@ export const CardSkeleton5 = ({ variant }: CardSkeleton4Props) => {
     </div>
   )
 }
-

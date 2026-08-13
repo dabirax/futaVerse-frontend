@@ -1,49 +1,49 @@
-import { useRouter } from "@tanstack/react-router";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, Users, Video } from "lucide-react";
-import { format } from "date-fns";
-import { EventListItem } from "@/types/event";
+import { useRouter } from '@tanstack/react-router'
+import { Calendar, Clock, MapPin, Users, Video } from 'lucide-react'
+import { format } from 'date-fns'
+import type { EventListItem } from '@/types/event'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
 interface EventCardProps {
-  event: EventListItem;
+  event: EventListItem
 }
 
-const categoryLabels: Record<EventListItem["category"], string> = {
-  workshop: "Workshop",
-  seminar: "Seminar",
-  networking: "Networking",
-  career_fair: "Career Fair",
-  webinar: "Webinar",
-  conference: "Conference",
-};
+const categoryLabels: Record<EventListItem['category'], string> = {
+  workshop: 'Workshop',
+  seminar: 'Seminar',
+  networking: 'Networking',
+  career_fair: 'Career Fair',
+  webinar: 'Webinar',
+  conference: 'Conference',
+}
 
-const categoryColors: Record<EventListItem["category"], string> = {
-  workshop: "bg-blue-100 text-blue-700",
-  seminar: "bg-purple-100 text-purple-700",
-  networking: "bg-green-100 text-green-700",
-  career_fair: "bg-orange-100 text-orange-700",
-  webinar: "bg-indigo-100 text-indigo-700",
-  conference: "bg-rose-100 text-rose-700",
-};
+const categoryColors: Record<EventListItem['category'], string> = {
+  workshop: 'bg-blue-100 text-blue-700',
+  seminar: 'bg-purple-100 text-purple-700',
+  networking: 'bg-green-100 text-green-700',
+  career_fair: 'bg-orange-100 text-orange-700',
+  webinar: 'bg-indigo-100 text-indigo-700',
+  conference: 'bg-rose-100 text-rose-700',
+}
 
 export default function EventCard({ event }: EventCardProps) {
-  const router = useRouter();
+  const router = useRouter()
 
-  const formattedDate = format(new Date(event.date), "EEE, MMM d, yyyy");
+  const formattedDate = format(new Date(event.date), 'EEE, MMM d, yyyy')
   const formattedTime = format(
     new Date(`2000-01-01T${event.start_time}`),
-    "h:mm a"
-  );
+    'h:mm a',
+  )
 
   const modeLabel =
-    event.mode === "virtual"
-      ? "Virtual"
-      : event.mode === "physical"
-        ? event.venue || "In-person"
-        : "Hybrid";
+    event.mode === 'virtual'
+      ? 'Virtual'
+      : event.mode === 'physical'
+        ? event.venue || 'In-person'
+        : 'Hybrid'
 
-  const ModeIcon = event.mode === "virtual" ? Video : MapPin;
+  const ModeIcon = event.mode === 'virtual' ? Video : MapPin
 
   return (
     <div
@@ -62,7 +62,10 @@ export default function EventCard({ event }: EventCardProps) {
                 {categoryLabels[event.category]}
               </span>
               {!event.is_published && (
-                <Badge variant="outline" className="text-xs text-muted-foreground">
+                <Badge
+                  variant="outline"
+                  className="text-xs text-muted-foreground"
+                >
                   Draft
                 </Badge>
               )}
@@ -109,7 +112,7 @@ export default function EventCard({ event }: EventCardProps) {
             {event.starting_price && (
               <span className="text-sm font-semibold text-primary">
                 {parseFloat(event.starting_price) === 0
-                  ? "Free"
+                  ? 'Free'
                   : `From ₦${parseFloat(event.starting_price).toLocaleString()}`}
               </span>
             )}
@@ -118,8 +121,8 @@ export default function EventCard({ event }: EventCardProps) {
               size="sm"
               className="text-xs h-8"
               onClick={(e) => {
-                e.stopPropagation();
-                router.navigate({ to: `/alumnus/events/${event.sqid}` });
+                e.stopPropagation()
+                router.navigate({ to: `/alumnus/events/${event.sqid}` })
               }}
             >
               View Details
@@ -128,5 +131,5 @@ export default function EventCard({ event }: EventCardProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

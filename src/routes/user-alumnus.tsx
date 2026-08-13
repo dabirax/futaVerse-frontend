@@ -22,6 +22,7 @@ import CreateInternship from '@/pages/user/Alumnus/Internship/CreateInternship'
 import EditEvent from '@/pages/user/Alumnus/Events/EditEvent'
 import CreateMentorship from '@/pages/user/Alumnus/Mentorship/create'
 import EditMentorship from '@/pages/user/Alumnus/Mentorship/edit'
+import SendMentorshipOffer from '@/pages/user/Alumnus/Mentorship/send-offer'
 import MentorshipDetails from '@/pages/user/Alumnus/Mentorship/details'
 import AlumnusTickets from '@/pages/user/Alumnus/Tickets'
 import ManageEventTickets from '@/pages/user/Alumnus/Events/ManageEventTickets'
@@ -87,8 +88,15 @@ export const alumnusMentorshipRoute = createRoute({
 export const alumnusCreateMentorshipRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   // getParentRoute: () => publicRoute,
-  path: '/alumnus/mentorship/create',
+  path: '/alumnus/mentorships/create',
   component: CreateMentorship,
+})
+
+export const alumnusSendMentorshipOfferRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  // getParentRoute: () => publicRoute,
+  path: '/alumnus/mentorships/send-offer',
+  component: SendMentorshipOffer,
 })
 
 export const alumnusEditMentorshipRoute = createRoute({
@@ -147,7 +155,7 @@ export const alumnusEventTicketManager = createRoute({
   component: ManageEventTickets,
 })
 
-//Tickets Section
+// Tickets Section
 export const alumnusTicketsRoute = createRoute({
   getParentRoute: () => alumnusRoute,
   path: '/alumnus/tickets',

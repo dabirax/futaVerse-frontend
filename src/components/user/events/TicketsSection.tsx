@@ -1,5 +1,12 @@
 import { useState } from 'react'
 import { z } from 'zod'
+import { Plus, Ticket as TicketIcon, Trash2 } from 'lucide-react'
+import PaystackBankLink from './PaystackBankLink'
+import type {
+  FreeTicketConfig,
+  LinkedBankAccount,
+  PaidTicketInput,
+} from '@/types/event'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -13,13 +20,6 @@ import {
 } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
-import { Plus, Trash2, Ticket as TicketIcon } from 'lucide-react'
-import {
-  FreeTicketConfig,
-  LinkedBankAccount,
-  PaidTicketInput,
-} from '@/types/event'
-import PaystackBankLink from './PaystackBankLink'
 
 export type TicketScenario = 'free' | 'free_and_paid' | 'paid'
 
@@ -39,8 +39,8 @@ interface TicketsSectionProps {
   onScenarioChange: (s: TicketScenario) => void
   freeTicket: FreeTicketConfig
   onFreeTicketChange: (cfg: FreeTicketConfig) => void
-  paidTickets: PaidTicketInput[]
-  onPaidTicketsChange: (tickets: PaidTicketInput[]) => void
+  paidTickets: Array<PaidTicketInput>
+  onPaidTicketsChange: (tickets: Array<PaidTicketInput>) => void
   linkedBankAccount: LinkedBankAccount | null
   onLinkedBankAccountChange: (acc: LinkedBankAccount | null) => void
 }

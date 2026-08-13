@@ -1,10 +1,10 @@
 import {
+  BarChart3,
   Briefcase,
   Calendar,
   Check,
-  MessageCircle,
-  BarChart3,
   Eye,
+  MessageCircle,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 

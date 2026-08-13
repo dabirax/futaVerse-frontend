@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { api } from '@/lib/api'
+import { uploadProfileImage } from '@/services/uploads'
 
 const StudentProfessional = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -50,7 +51,9 @@ const StudentProfessional = () => {
   >({
     resolver: zodResolver(studentProfessionalSchema),
     defaultValues: {
-      skills: Array.isArray(_s.skills) ? (_s.skills as string[]).join(', ') : (_s.skills || ''),
+      skills: Array.isArray(_s.skills)
+        ? (_s.skills as Array<string>).join(', ')
+        : _s.skills || '',
       description: _s.description || '',
       linkedin_url: _s.linkedin_url || '',
       x_url: _s.x_url || '',
@@ -97,6 +100,21 @@ const StudentProfessional = () => {
     setSignupEmail(email || '')
     setUserType('student')
 
+    let profileImgUrl: string | undefined
+    if (profilePic instanceof File) {
+      try {
+        const uploaded = await uploadProfileImage(profilePic)
+        profileImgUrl = uploaded.url
+      } catch (err: any) {
+        setServerError({
+          message: err?.message ?? 'Profile picture upload failed.',
+          hint: 'Please try again with a different image.',
+        })
+        setIsLoading(false)
+        return
+      }
+    }
+
     const payload = {
       email,
       password,
@@ -104,9 +122,7 @@ const StudentProfessional = () => {
         firstname,
         lastname,
         middlename,
-        gender: gender
-          ? gender.charAt(0) + gender.slice(1)
-          : gender,
+        gender: gender ? gender.charAt(0) + gender.slice(1) : gender,
         phone_num,
         address,
         street: '',
@@ -119,7 +135,13 @@ const StudentProfessional = () => {
         expected_grad_year,
         level,
         cgpa,
-        previous_comps: data.skills ? data.skills.split(',').map(s => s.trim()).filter(Boolean) : [],
+        profile_img: profileImgUrl,
+        previous_comps: data.skills
+          ? data.skills
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : [],
         description: data.description,
         linkedin_url: data.linkedin_url,
         company_linkedin_url: '',

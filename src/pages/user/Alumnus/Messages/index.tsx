@@ -1,9 +1,5 @@
-
-
 const AlumnusMessages = () => {
-  return (
-    <div>AlumnusMessages</div>
-  )
+  return <div>AlumnusMessages</div>
 }
 
 export default AlumnusMessages

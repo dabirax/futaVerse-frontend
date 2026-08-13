@@ -1,4 +1,3 @@
-
 import MentorshipCard from '../../../../../components/user/ShipCard'
 import { CardSkeleton1 } from '@/components/CardSkeletons'
 import { useMentorshipEngagements } from '@/hooks/useMentorships'
@@ -26,11 +25,12 @@ export default function MyMentorshipsTab() {
               <MentorshipCard
                 key={mentorship.id}
                 {...mentorship}
+                sqid={mentorship.mentorship_info.sqid}
                 role="student"
                 title={mentorship.mentorship_info.title}
                 alumnusName={`${mentorship.alumnus_info.firstname} ${mentorship.alumnus_info.lastname}`}
                 company={mentorship.mentorship_info.category}
-                ship='mentorship'
+                ship="mentorship"
               />
             ))
           ) : (
