@@ -118,6 +118,16 @@ export default function CreateInternship() {
   const skills = form.watch('skills_required')
   const levels = form.watch('levels')
 
+  const onInvalid = () => {
+    document
+      .querySelector('[aria-invalid="true"]')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    toast({
+      title: 'Some required fields are incomplete',
+      variant: 'destructive',
+    })
+  }
+
   const extractApiErrors = (error: unknown): string => {
     if (error instanceof AxiosError) {
       const data = error.response?.data
@@ -202,7 +212,10 @@ export default function CreateInternship() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit, onInvalid)}
+          className="space-y-8"
+        >
           {/* Basic Information */}
           <div className="rounded-lg border border-border bg-card p-6 space-y-6">
             <h2 className="text-xl font-semibold text-foreground">

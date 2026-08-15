@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import {
   ArrowLeft,
@@ -13,15 +13,18 @@ import {
 } from 'lucide-react'
 import { format } from 'date-fns'
 import type { Ticket } from '@/types/event'
+import { EventsService } from '@/services/events'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useEvent, useRegisterEvent } from '@/hooks/useEvents'
 import { studentEventDetailRoute } from '@/routes/user-student'
 import { BackButton2 } from '@/components/BackButtons'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import logoChip from '@/assets/logos/FV_logo_whitebg.png'
 
 const categoryLabels: Record<string, string> = {
   workshop: 'Workshop',
@@ -42,10 +45,152 @@ export default function StudentEventDetails() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [checkoutStep, setCheckoutStep] = useState<
-    'form' | 'processing' | 'success' | 'billing'
+    'form' | 'payment' | 'processing' | 'success'
   >('form')
+  const [formError, setFormError] = useState<string | null>(null)
+  const [paymentError, setPaymentError] = useState<string | null>(null)
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null)
+  const [pollStatus, setPollStatus] = useState<'waiting' | 'timeout'>('waiting')
 
   const registerMutation = useRegisterEvent()
+  const pollInterval = useRef<ReturnType<typeof setInterval> | null>(null)
+  const pollAttempts = useRef(0)
+
+  const stopPolling = useCallback(() => {
+    if (pollInterval.current) {
+      clearInterval(pollInterval.current)
+      pollInterval.current = null
+    }
+  }, [])
+
+  useEffect(() => stopPolling, [stopPolling])
+
+  const checkPaidTicket = useCallback(async () => {
+    if (!selectedTicket) return false
+    try {
+      const { results } = await EventsService.myTickets()
+      return results.some(
+        (item) => item.ticket.event === selectedTicket.event && item.is_paid,
+      )
+    } catch {
+      return false
+    }
+  }, [selectedTicket])
+
+  const startPolling = useCallback(async () => {
+    pollAttempts.current = 0
+    setPollStatus('waiting')
+    stopPolling()
+
+    const verify = async () => {
+      const paid = await checkPaidTicket()
+      if (paid) {
+        stopPolling()
+        setCheckoutStep('success')
+        return
+      }
+      pollAttempts.current += 1
+      if (pollAttempts.current >= 30) {
+        stopPolling()
+        setPollStatus('timeout')
+      }
+    }
+
+    await verify()
+    pollInterval.current = setInterval(verify, 4000)
+  }, [checkPaidTicket, stopPolling])
+
+  const handleTicketSelect = (ticket: Ticket) => {
+    stopPolling()
+    setSelectedTicket(ticket)
+    setCheckoutStep('form')
+    setIsCheckoutOpen(true)
+    setFormError(null)
+    setPaymentError(null)
+    setCheckoutUrl(null)
+  }
+
+  const closeCheckout = () => {
+    stopPolling()
+    setIsCheckoutOpen(false)
+    setSelectedTicket(null)
+    setCheckoutStep('form')
+    setEmail('')
+    setFormError(null)
+    setPaymentError(null)
+    setCheckoutUrl(null)
+  }
+
+  const handleContinue = () => {
+    if (!selectedTicket || !email) return
+    setFormError(null)
+
+    if (parseFloat(selectedTicket.price) > 0) {
+      setCheckoutStep('payment')
+      return
+    }
+
+    setCheckoutStep('processing')
+    registerMutation.mutate(
+      { ticket: selectedTicket.sqid, email },
+      {
+        onSuccess: () => setCheckoutStep('success'),
+        onError: (err) => {
+          setFormError(
+            err instanceof Error
+              ? err.message
+              : 'Registration failed. Please try again.',
+          )
+          setCheckoutStep('form')
+        },
+      },
+    )
+  }
+
+  const handlePayWithPaystack = () => {
+    if (!selectedTicket || !email) return
+    setPaymentError(null)
+    setCheckoutUrl(null)
+    setCheckoutStep('processing')
+    setPollStatus('waiting')
+
+    // Open the tab synchronously so the popup isn't blocked by the browser.
+    const paystackWin = window.open('', '_blank')
+
+    registerMutation.mutate(
+      { ticket: selectedTicket.sqid, email },
+      {
+        onSuccess: (data) => {
+          const url = data.checkout_url
+          if (!url) {
+            paystackWin?.close()
+            setCheckoutStep('success')
+            return
+          }
+          setCheckoutUrl(url)
+          if (paystackWin && !paystackWin.closed) {
+            paystackWin.location.href = url
+          } else {
+            window.location.href = url
+          }
+          void startPolling()
+        },
+        onError: (err) => {
+          paystackWin?.close()
+          setPaymentError(
+            err instanceof Error
+              ? err.message
+              : 'Could not start payment. Please try again.',
+          )
+          setCheckoutStep('payment')
+        },
+      },
+    )
+  }
+
+  const handleRecheckPayment = () => {
+    void startPolling()
+  }
 
   if (isLoading) {
     return (
@@ -86,36 +231,6 @@ export default function StudentEventDetails() {
   const durationHours = Math.floor(event.duration_mins / 60)
   const durationMins = event.duration_mins % 60
   const durationText = `${durationHours > 0 ? `${durationHours}h ` : ''}${durationMins > 0 ? `${durationMins}m` : ''}`
-
-  const handleTicketSelect = (ticket: Ticket) => {
-    setSelectedTicket(ticket)
-    setCheckoutStep('form')
-    setIsCheckoutOpen(true)
-  }
-
-  // const handleSimulatePayment = () => {
-  //   if (!email || !selectedTicket) return
-
-  //   setCheckoutStep('processing')
-
-  //   // Simulate payment gateway delay (e.g., Paystack popup closing and verifying)
-  //   setTimeout(() => {
-  //     registerMutation.mutate(
-  //       { ticket: selectedTicket.sqid, email },
-  //       {
-  //         onSuccess: () => {
-  //           setCheckoutStep('success')
-  //         },
-  //         onError: (err) => {
-  //           // In a real app we'd show an error, but for the demo we'll fallback to success
-  //           // if the backend endpoint isn't fully ready yet.
-  //           console.error(err)
-  //           setCheckoutStep('success')
-  //         }
-  //       }
-  //     )
-  //   }, 2000)
-  // }
 
   return (
     <div className="space-y-8 pb-12 max-w-5xl mx-auto">
@@ -337,21 +452,20 @@ export default function StudentEventDetails() {
         }
       >
         <DialogContent className="sm:max-w-130 p-0 overflow-hidden border-0 shadow-2xl">
-          {/* Step 1: Contact & Attendee Details */}
+          {/* Step 1: Email & Attendee */}
           {checkoutStep === 'form' && selectedTicket && (
             <>
               <div className="bg-slate-900 p-6 text-white">
                 <div className="flex justify-between items-center mb-6">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center font-bold">
-                      F
-                    </div>
-                    <span className="font-semibold tracking-wide">
-                      FutaVerse
-                    </span>
+                    <img
+                      src={logoChip}
+                      alt="FUTAVerse"
+                      className="h-8 w-auto"
+                    />
                   </div>
                   <span className="text-sm text-slate-400 font-medium">
-                    TEST MODE
+                    CHECKOUT
                   </span>
                 </div>
 
@@ -372,81 +486,64 @@ export default function StudentEventDetails() {
               </div>
 
               <div className="p-6 space-y-4 bg-white">
-                <div className="grid grid-cols-1 gap-3">
-                  <div>
-                    <Label htmlFor="fullname" className="text-sm font-medium">
-                      Full Name
-                    </Label>
-                    <Input
-                      id="fullname"
-                      placeholder="John Student"
-                      value={email ? '' : ''}
-                      onChange={() => {}}
-                      className="h-11 border-slate-200"
-                    />
-                    {/* We'll manage attendee info in billing step; keep a small note here. */}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="email" className="text-sm font-medium">
-                      Email Address
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="student@futa.edu.ng"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="h-11 border-slate-200"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="phone" className="text-sm font-medium">
-                      Phone Number
-                    </Label>
-                    <Input
-                      id="phone"
-                      placeholder="0801 000 0000"
-                      value={''}
-                      onChange={() => {}}
-                      className="h-11 border-slate-200"
-                    />
-                  </div>
+                <div>
+                  <Label htmlFor="email" className="text-sm font-medium">
+                    Email Address
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="student@futa.edu.ng"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="h-11 border-slate-200"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1.5">
+                    We'll send your ticket to this email.
+                  </p>
                 </div>
+
+                {formError && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{formError}</AlertDescription>
+                  </Alert>
+                )}
 
                 <div className="flex gap-3">
                   <Button
                     className="flex-1 h-11 font-semibold"
-                    onClick={() => {
-                      // move to billing/payment step
-                      setCheckoutStep('billing')
-                    }}
-                    disabled={!email}
+                    onClick={handleContinue}
+                    disabled={!email || registerMutation.isPending}
                   >
-                    Continue to Payment
+                    {registerMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Registering...
+                      </>
+                    ) : parseFloat(selectedTicket.price) > 0 ? (
+                      'Continue to Payment'
+                    ) : (
+                      'Register Now'
+                    )}
                   </Button>
                   <Button
                     variant="secondary"
                     className="h-11"
-                    onClick={() => {
-                      setIsCheckoutOpen(false)
-                      setSelectedTicket(null)
-                    }}
+                    onClick={closeCheckout}
                   >
                     Cancel
                   </Button>
                 </div>
 
                 <div className="flex items-center justify-center gap-2 text-xs text-slate-400 font-medium pb-2">
-                  <span>🔒 Secured by Paystack (Mock)</span>
+                  <span>🔒 Secured by Paystack</span>
                 </div>
               </div>
             </>
           )}
 
-          {/* Step 2: Billing & Card Details */}
-          {checkoutStep === 'billing' && selectedTicket && (
+          {/* Step 2: Paystack checkout */}
+          {checkoutStep === 'payment' && selectedTicket && (
             <>
               <div className="bg-white p-6 border-b">
                 <div className="flex items-center justify-between">
@@ -459,64 +556,52 @@ export default function StudentEventDetails() {
                   <div className="text-right">
                     <div className="text-sm text-muted-foreground">Amount</div>
                     <div className="text-xl font-bold">
-                      {parseFloat(selectedTicket.price) > 0
-                        ? `₦${parseFloat(selectedTicket.price).toLocaleString()}`
-                        : 'Free'}
+                      ₦{parseFloat(selectedTicket.price).toLocaleString()}
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="p-6 bg-white space-y-4">
-                <div>
-                  <Label className="text-sm font-medium">Cardholder Name</Label>
-                  <Input placeholder="John Student" className="h-11" />
+                <div className="rounded-md border bg-slate-50 p-4 text-sm">
+                  <p className="font-medium text-slate-700 mb-1">
+                    Secure checkout via Paystack
+                  </p>
+                  <p className="text-muted-foreground text-xs leading-relaxed">
+                    You'll be taken to Paystack's secure page to pay by card,
+                    bank transfer, or USSD. Keep this tab open — your ticket is
+                    confirmed automatically once payment is verified.
+                  </p>
                 </div>
 
-                <div>
-                  <Label className="text-sm font-medium">
-                    Card Number (Mock)
-                  </Label>
-                  <Input placeholder="4242 4242 4242 4242" className="h-11" />
-                </div>
-
-                <div className="grid grid-cols-3 gap-3">
-                  <Input placeholder="MM/YY" className="h-11" />
-                  <Input placeholder="CVV" className="h-11" />
-                  <Input placeholder="Student ID (optional)" className="h-11" />
-                </div>
+                {paymentError && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{paymentError}</AlertDescription>
+                  </Alert>
+                )}
 
                 <div className="flex gap-3">
                   <Button
                     className="flex-1 h-11 bg-[#0BA4DB] text-white font-semibold"
-                    onClick={() => {
-                      // start processing and simulate payment
-                      setCheckoutStep('processing')
-                      setTimeout(() => {
-                        if (!selectedTicket) return
-                        registerMutation.mutate(
-                          { ticket: selectedTicket.sqid, email },
-                          {
-                            onSuccess: () => {
-                              setCheckoutStep('success')
-                            },
-                            onError: () => {
-                              // fallback to success for demo
-                              setCheckoutStep('success')
-                            },
-                          },
-                        )
-                      }, 2000)
-                    }}
+                    onClick={handlePayWithPaystack}
+                    disabled={registerMutation.isPending}
                   >
-                    {parseFloat(selectedTicket.price) > 0
-                      ? `Pay ₦${parseFloat(selectedTicket.price).toLocaleString()}`
-                      : 'Complete Registration'}
+                    {registerMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Redirecting...
+                      </>
+                    ) : (
+                      `Pay ₦${parseFloat(selectedTicket.price).toLocaleString()}`
+                    )}
                   </Button>
                   <Button
                     variant="secondary"
                     className="h-11"
-                    onClick={() => setCheckoutStep('form')}
+                    onClick={() => {
+                      setCheckoutStep('form')
+                      setPaymentError(null)
+                    }}
                   >
                     Back
                   </Button>
@@ -525,16 +610,58 @@ export default function StudentEventDetails() {
             </>
           )}
 
-          {/* Processing */}
+          {/* Processing / waiting for payment */}
           {checkoutStep === 'processing' && (
             <div className="p-12 flex flex-col items-center justify-center min-h-55 bg-white">
               <Loader2 className="h-12 w-12 animate-spin text-[#0BA4DB] mb-6" />
               <h3 className="text-xl font-bold text-slate-800 mb-2">
-                Processing Payment...
+                {pollStatus === 'timeout'
+                  ? 'Still waiting for payment...'
+                  : checkoutUrl
+                    ? 'Awaiting payment confirmation...'
+                    : 'Redirecting to Paystack...'}
               </h3>
-              <p className="text-slate-500 text-center text-sm">
-                Simulating gateway verification. Do not close.
+              <p className="text-slate-500 text-center text-sm max-w-sm">
+                {checkoutUrl
+                  ? 'Complete payment in the Paystack tab that just opened. Your ticket is confirmed automatically once payment is verified.'
+                  : 'Contacting Paystack to start your secure checkout...'}
               </p>
+              {checkoutUrl && (
+                <p className="text-xs text-slate-400 mt-1.5">
+                  Lost the Paystack tab?{' '}
+                  <a
+                    href={checkoutUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[#0BA4DB] underline font-medium"
+                  >
+                    Open checkout again
+                  </a>
+                </p>
+              )}
+              {pollStatus === 'timeout' && (
+                <p className="text-sm text-slate-500 mt-4 text-center max-w-sm">
+                  Payment is taking longer than expected. If you've paid,
+                  confirm below to refresh your ticket.
+                </p>
+              )}
+              <div className="mt-6 space-y-2 w-full max-w-64">
+                <Button
+                  className="w-full h-11"
+                  onClick={handleRecheckPayment}
+                  disabled={registerMutation.isPending}
+                >
+                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                  I've completed payment
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full h-11"
+                  onClick={closeCheckout}
+                >
+                  Cancel
+                </Button>
+              </div>
             </div>
           )}
 
@@ -546,28 +673,29 @@ export default function StudentEventDetails() {
                   <CheckCircle2 className="h-10 w-10 text-green-600" />
                 </div>
                 <h3 className="text-2xl font-bold text-slate-900 mb-2">
-                  Payment Successful!
+                  {parseFloat(selectedTicket.price) > 0
+                    ? 'Payment Successful!'
+                    : "You're Registered!"}
                 </h3>
                 <p className="text-slate-600 mb-4">
-                  Your ticket has been added to your account.
+                  Your {selectedTicket.name} ticket has been added to your
+                  account.
                 </p>
               </div>
 
               <div className="mt-4 border rounded-md p-4 bg-slate-50">
                 <div className="flex justify-between mb-2">
-                  <div className="text-sm text-muted-foreground">Order ID</div>
-                  <div className="font-mono text-sm">
-                    INV-{Date.now().toString().slice(-6)}
-                  </div>
+                  <div className="text-sm text-muted-foreground">Event</div>
+                  <div className="text-sm font-medium">{event.title}</div>
                 </div>
                 <div className="flex justify-between mb-2">
-                  <div className="text-sm text-muted-foreground">Event</div>
-                  <div className="text-sm">{event.title}</div>
+                  <div className="text-sm text-muted-foreground">Ticket</div>
+                  <div className="text-sm font-medium">
+                    {selectedTicket.name}
+                  </div>
                 </div>
                 <div className="flex justify-between">
-                  <div className="text-sm text-muted-foreground">
-                    Amount Paid
-                  </div>
+                  <div className="text-sm text-muted-foreground">Amount</div>
                   <div className="font-semibold">
                     {parseFloat(selectedTicket.price) > 0
                       ? `₦${parseFloat(selectedTicket.price).toLocaleString()}`
@@ -580,7 +708,7 @@ export default function StudentEventDetails() {
                 <Button
                   className="w-full h-11 bg-slate-900 hover:bg-slate-800 text-white"
                   onClick={() => {
-                    setIsCheckoutOpen(false)
+                    closeCheckout()
                     router.navigate({ to: '/student/tickets' })
                   }}
                 >
@@ -589,12 +717,7 @@ export default function StudentEventDetails() {
                 <Button
                   variant="outline"
                   className="w-full h-11"
-                  onClick={() => {
-                    // Close but stay on event page
-                    setIsCheckoutOpen(false)
-                    setSelectedTicket(null)
-                    setCheckoutStep('form')
-                  }}
+                  onClick={closeCheckout}
                 >
                   Done
                 </Button>

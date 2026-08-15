@@ -30,6 +30,13 @@ const otpSchema = z.object({
   otp: z.string().length(6, 'OTP must be 6 digits'),
 })
 
+const maskEmail = (email: string) => {
+  const [user, domain] = email.split('@')
+  const maskedUser =
+    user.length > 2 ? `${user[0]}***${user[user.length - 1]}` : `${user[0]}***`
+  return `${maskedUser}@${domain}`
+}
+
 interface VerifyOtpPayload {
   email: string
   otp: string
@@ -101,7 +108,7 @@ const SignUpOTP = () => {
               <p className="text-slate-500 mt-2 text-sm">
                 We have sent an email with the OTP to{' '}
                 <span className="font-semibold text-slate-700 underline italic">
-                  n****e@e***e.com
+                  {email ? maskEmail(email) : 'your email'}
                 </span>
               </p>
             </div>

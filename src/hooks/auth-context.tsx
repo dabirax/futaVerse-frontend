@@ -7,7 +7,13 @@ export type AuthContextType = {
   role: string | null
   token: string | null
   refreshToken: string | null
-  login: (token: string, role: string, refreshToken?: string) => void
+  userSqid: string | null
+  login: (
+    token: string,
+    role: string,
+    refreshToken?: string,
+    userSqid?: string,
+  ) => void
   logout: () => void
 }
 
@@ -23,6 +29,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [role, setRole] = useState<string | null>(() =>
     sessionStorage.getItem('role'),
   )
+  const [userSqid, setUserSqid] = useState<string | null>(() =>
+    sessionStorage.getItem('user_sqid'),
+  )
   const [isLoggedIn, setIsLoggedIn] = useState(
     () => !!sessionStorage.getItem('access_token'),
   )
@@ -31,14 +40,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     newToken: string,
     newRole: string,
     newRefreshToken?: string,
+    newUserSqid?: string,
   ) => {
     sessionStorage.setItem('access_token', newToken)
     if (newRefreshToken)
       sessionStorage.setItem('refresh_token', newRefreshToken)
     sessionStorage.setItem('role', newRole)
+    if (newUserSqid) sessionStorage.setItem('user_sqid', newUserSqid)
     setToken(newToken)
     setRefreshToken(newRefreshToken ?? sessionStorage.getItem('refresh_token'))
     setRole(newRole)
+    setUserSqid(newUserSqid ?? sessionStorage.getItem('user_sqid'))
     setIsLoggedIn(true)
   }
 
@@ -47,13 +59,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(null)
     setRefreshToken(null)
     setRole(null)
+    setUserSqid(null)
     setIsLoggedIn(false)
     window.location.href = '/login'
   }
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, role, token, refreshToken, login, logout }}
+      value={{
+        isLoggedIn,
+        role,
+        token,
+        refreshToken,
+        userSqid,
+        login,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

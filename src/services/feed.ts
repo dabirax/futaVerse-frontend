@@ -1,5 +1,10 @@
-import type { PaginatedResponse } from './events'
 import { mockEvents } from '@/data/mockEvents'
+
+export interface CursorPaginatedResponse<T> {
+  next: string | null
+  previous: string | null
+  results: Array<T>
+}
 
 const getHeaders = (): Record<string, string> => {
   const token = sessionStorage.getItem('access_token')
@@ -33,31 +38,26 @@ const buildMockFeedItems = (): Array<any> =>
   }))
 
 export const FeedService = {
-  list: async (params?: {
-    page?: number
-    size?: number
-  }): Promise<PaginatedResponse<any>> => {
+  list: async (
+    nextUrl?: string | null,
+  ): Promise<CursorPaginatedResponse<any>> => {
     const baseUrl = getBaseUrl()
     if (!baseUrl) {
       return {
-        count: mockEvents.length,
         next: null,
         previous: null,
         results: buildMockFeedItems(),
       }
     }
 
-    const queryParams = new URLSearchParams()
-    if (params?.page) queryParams.append('page', params.page.toString())
-    if (params?.size) queryParams.append('size', params.size.toString())
+    // Cursor pagination: after the first page, fetch the backend's absolute
+    // `next` URL verbatim (it carries the pre-encoded cursor param).
+    const url = nextUrl ?? `${baseUrl}/api/feed`
 
-    const response = await fetch(
-      `${baseUrl}/api/feed?${queryParams.toString()}`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      },
-    )
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getHeaders(),
+    })
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))

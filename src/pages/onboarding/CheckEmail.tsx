@@ -64,16 +64,24 @@ const CheckEmail = () => {
       return res.data
     },
     onSuccess: (data) => {
-      const token = data.token ?? data.reset_token ?? null
+      const token =
+        data?.data?.access_token ?? data?.access_token ?? data?.token ?? null
+      if (!token) {
+        setServerError(
+          'Verification succeeded but no reset token was returned. Please try again.',
+        )
+        return
+      }
       setToken(token)
       navigate({ to: '/reset-password' })
     },
     onError: (err: any) => {
       const status = err.response?.status
+      const detail = err.response?.data?.detail
       if (status === 400) {
-        setServerError('Invalid OTP. Please try again.')
+        setServerError(detail ?? 'Invalid OTP. Please try again.')
       } else if (status === 404) {
-        setServerError('OTP has expired. Please request a new one.')
+        setServerError(detail ?? 'OTP has expired. Please request a new one.')
       } else if (status === 403) {
         setServerError('Maximum attempts exceeded. Please request a new OTP.')
       } else if (status === 429) {

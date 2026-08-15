@@ -12,6 +12,7 @@ import type {
   LinkedBankAccount,
   PaidTicketInput,
 } from '@/types/event'
+import { EventApiError } from '@/services/events'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -84,6 +85,7 @@ export default function CreateEvent() {
   const [linkedBankAccount, setLinkedBankAccount] =
     useState<LinkedBankAccount | null>(null)
   const [submitType, setSubmitType] = useState<'publish' | 'draft' | null>(null)
+  const [authUrl, setAuthUrl] = useState<string | null>(null)
 
   const handleCreate = (isDraft: boolean) => {
     setSubmitType(isDraft ? 'draft' : 'publish')
@@ -165,10 +167,9 @@ export default function CreateEvent() {
       allow_donations: data.allow_donations,
       is_published: data.is_published,
       ...(mode !== 'physical' ? { platform: data.platform } : {}),
-      free_ticket:
-        scenario === 'free' || scenario === 'free_and_paid'
-          ? { required: true, quantity: freeTicket.quantity }
-          : { required: false, quantity: 0 },
+      ...(scenario === 'free' || scenario === 'free_and_paid'
+        ? { free_ticket: { required: true, quantity: freeTicket.quantity } }
+        : {}),
       ...(usesPaid
         ? {
             tickets: paidTickets.map((t) => ({
@@ -189,6 +190,16 @@ export default function CreateEvent() {
         router.navigate({ to: '/alumnus/events' })
       },
       onError: (error) => {
+        if (error instanceof EventApiError && error.authUrl) {
+          setAuthUrl(error.authUrl)
+          toast({
+            title: 'Google account required',
+            description:
+              'Connect your Google Calendar to generate the meeting link.',
+            variant: 'destructive',
+          })
+          return
+        }
         toast({
           title: 'Error',
           description: getErrorMessage(error),
@@ -326,45 +337,48 @@ export default function CreateEvent() {
                     <FormField
                       control={form.control}
                       name="date"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Date</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant="outline"
-                                  className={cn(
-                                    'pl-3 text-left font-normal',
-                                    !field.value && 'text-muted-foreground',
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, 'PPP')
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) => date < new Date()}
-                                initialFocus
-                                className="p-3 pointer-events-auto"
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      render={({ field }) => {
+                        const date = field.value as Date | undefined
+                        return (
+                          <FormItem className="flex flex-col">
+                            <FormLabel>Date</FormLabel>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant="outline"
+                                    className={cn(
+                                      'pl-3 text-left font-normal',
+                                      !date && 'text-muted-foreground',
+                                    )}
+                                  >
+                                    {date ? (
+                                      format(date, 'PPP')
+                                    ) : (
+                                      <span>Pick a date</span>
+                                    )}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent
+                                className="w-auto p-0"
+                                align="start"
+                              >
+                                <Calendar
+                                  mode="single"
+                                  selected={field.value}
+                                  onSelect={field.onChange}
+                                  disabled={(day) => day < new Date()}
+                                  initialFocus
+                                  className="p-3 pointer-events-auto"
+                                />
+                              </PopoverContent>
+                            </Popover>
+                            <FormMessage />
+                          </FormItem>
+                        )
+                      }}
                     />
 
                     <FormField
@@ -554,6 +568,35 @@ export default function CreateEvent() {
                   />
                 </CardContent>
               </Card>
+
+              {/* Google Calendar connect (required for virtual meeting links) */}
+              {authUrl && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Connect Google Calendar</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      To generate the meeting link for this event, connect your
+                      Google account. You'll be taken to Google to grant access,
+                      then come back and submit again.
+                    </p>
+                    <Button asChild className="w-full">
+                      <a href={authUrl} target="_blank" rel="noreferrer">
+                        Continue with Google
+                      </a>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => setAuthUrl(null)}
+                    >
+                      Cancel
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Actions */}
               <Card>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import {
   Briefcase,
@@ -20,7 +20,16 @@ import { Input } from '@/components/ui/input'
 import { useFeed } from '@/hooks/useFeed'
 import { useMentorships } from '@/hooks/useMentorships'
 
-type FeedFilter = 'all' | 'opportunities' | 'mentorship' | 'events'
+type FeedFilter = 'all' | 'opportunities' | 'mentorship' | 'events' | 'posts'
+
+const POST_EVENT_TYPES = new Set([
+  'internship_started',
+  'internship_completed',
+  'mentorship_started',
+  'mentorship_completed',
+  'engagement_started',
+  'engagement_completed',
+])
 
 function timeAgo(dateStr: string): string {
   const diffMs = Date.now() - new Date(dateStr).getTime()
@@ -425,6 +434,7 @@ const filters: Array<{ label: string; value: FeedFilter }> = [
   { label: 'Opportunities', value: 'opportunities' },
   { label: 'Mentorship', value: 'mentorship' },
   { label: 'Events', value: 'events' },
+  { label: 'Posts', value: 'posts' },
 ]
 
 // ----------- Main Page -----------
@@ -433,8 +443,27 @@ export default function AlumnusFeed() {
   const [search, setSearch] = useState('')
   const [activeFilter, setActiveFilter] = useState<FeedFilter>('all')
 
-  const { data: feedData } = useFeed()
-  const feedItems = feedData?.results ?? []
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useFeed()
+  const feedItems = useMemo(
+    () => data?.pages.flatMap((page) => page.results) ?? [],
+    [data],
+  )
+
+  const sentinelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel || !hasNextPage) return
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    })
+
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
   const filteredItems = useMemo(() => {
     let items = feedItems
@@ -445,12 +474,14 @@ export default function AlumnusFeed() {
       items = items.filter((i) => i.event_type.includes('mentorship'))
     else if (activeFilter === 'events')
       items = items.filter((i) => i.event_type.includes('event'))
+    else if (activeFilter === 'posts')
+      items = items.filter((i) => POST_EVENT_TYPES.has(i.event_type))
 
     if (search.trim()) {
       const q = search.toLowerCase()
       items = items.filter((item) => {
         const d = item.data
-        return d.title?.toLowerCase().includes(q)
+        return d.title.toLowerCase().includes(q)
       })
     }
 
@@ -537,6 +568,15 @@ export default function AlumnusFeed() {
                 )
               return null
             })
+          )}
+
+          {hasNextPage && (
+            <div
+              ref={sentinelRef}
+              className="py-4 text-center text-sm text-muted-foreground"
+            >
+              {isFetchingNextPage ? 'Loading more…' : ''}
+            </div>
           )}
         </div>
       </div>

@@ -163,6 +163,7 @@ export default function EditMentorship() {
         toast({
           title: 'Deleted',
           description: 'Mentorship removed successfully.',
+          variant: 'destructive',
         })
         router.navigate({ to: '/alumnus/mentorships' })
       },

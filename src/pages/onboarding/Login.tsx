@@ -55,9 +55,9 @@ const LoginPage = () => {
       return res.data
     },
     onSuccess: (data) => {
-      const { access_token, role, refresh_token } = data.data
+      const { access_token, role, refresh_token, user_sqid } = data.data
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
-      login(access_token, role, refresh_token)
+      login(access_token, role, refresh_token, user_sqid)
       if (role === 'alumni') router.navigate({ to: '/alumnus/feed' })
       if (role === 'student') router.navigate({ to: '/student/feed' })
     },

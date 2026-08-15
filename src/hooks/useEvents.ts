@@ -4,7 +4,7 @@ import type {
   UpdateEventModePayload,
   UpdateEventPayload,
 } from '@/services/events'
-import type { CreateEventPayload } from '@/types/event'
+import type { CreateEventPayload, Event } from '@/types/event'
 import { EventsService } from '@/services/events'
 
 export const useHostedEvents = (params?: { page?: number; size?: number }) => {
@@ -107,7 +107,9 @@ export const useMyTicketsWithEvents = () => {
       const events = await Promise.all(
         uniqueSqids.map((sqid) => EventsService.getOne(sqid)),
       )
-      const eventMap = Object.fromEntries(events.map((e) => [e.sqid, e]))
+      const eventMap: Record<string, Event | undefined> = Object.fromEntries(
+        events.map((e) => [e.sqid, e]),
+      )
       return results.map((r) => ({ ...r, event: eventMap[r.ticket.event] }))
     },
   })

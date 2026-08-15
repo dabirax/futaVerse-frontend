@@ -1,6 +1,7 @@
 import { Menu } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import logo from '@/assets/logos/FV_logo_backgroundless.png'
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -11,9 +12,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <a href="/" className="flex items-center space-x-2">
-            <span className="text-2xl lg:text-3xl font-black bg-linear-to-r from-primary to-primary-dark bg-clip-text text-transparent">
-              FV
-            </span>
+            <img src={logo} alt="FUTAVerse" className="h-10 w-auto" />
           </a>
 
           {/* Desktop Navigation */}

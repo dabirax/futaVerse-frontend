@@ -1,19 +1,25 @@
 import { useRouter } from '@tanstack/react-router'
-import { ArrowRight, Calendar, Clock, GraduationCap, Users } from 'lucide-react'
+import { ArrowRight, Calendar, GraduationCap, Users } from 'lucide-react'
 import { format } from 'date-fns'
-import type { FeedMentorship } from '@/types/feed'
+import type { FeedItemData } from '@/types/feed'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
-export default function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
+export default function MentorshipFeedCard({
+  item,
+  sqid,
+}: {
+  item: FeedItemData
+  sqid: string
+}) {
   const router = useRouter()
   const navigate = router.navigate
 
   return (
     <Card
       className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-primary"
-      onClick={() => navigate({ to: `/student/mentorships/${item.sqid}` })}
+      onClick={() => navigate({ to: `/student/mentorships/${sqid}` })}
     >
       <CardContent className="p-5">
         <div className="flex items-start gap-4">
@@ -31,31 +37,35 @@ export default function MentorshipFeedCard({ item }: { item: FeedMentorship }) {
               <Badge variant="outline" className="text-xs">
                 {item.category}
               </Badge>
-              <Badge variant="secondary" className="text-xs">
-                {item.work_mode}
-              </Badge>
+              {item.work_mode && (
+                <Badge variant="secondary" className="text-xs">
+                  {item.work_mode}
+                </Badge>
+              )}
             </div>
 
             <h3 className="font-semibold text-foreground line-clamp-1">
               {item.title}
             </h3>
             <p className="text-sm text-muted-foreground line-clamp-2">
-              {item.description}
+              {item.alumni
+                ? `Hosted by ${item.alumni}`
+                : 'A new mentorship opportunity.'}
             </p>
 
             <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">
-              <span className="flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" />
-                {item.duration_weeks} weeks
-              </span>
-              <span className="flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5" />
-                {format(new Date(item.start_date), 'MMM d, yyyy')}
-              </span>
-              <span className="flex items-center gap-1">
-                <Users className="h-3.5 w-3.5" />
-                {item.remaining_slots} of {item.available_slots} slots
-              </span>
+              {item.start_date && (
+                <span className="flex items-center gap-1">
+                  <Calendar className="h-3.5 w-3.5" />
+                  {format(new Date(item.start_date), 'MMM d, yyyy')}
+                </span>
+              )}
+              {item.remaining_slots !== undefined && (
+                <span className="flex items-center gap-1">
+                  <Users className="h-3.5 w-3.5" />
+                  {item.remaining_slots} of {item.available_slots} slots
+                </span>
+              )}
             </div>
           </div>
 

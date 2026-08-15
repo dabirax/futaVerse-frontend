@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import studentsIllustration from '@/assets/landing/students-illustration.png'
+import logoChip from '@/assets/logos/FV_logo_whitebg.png'
 
 const CTA = () => {
   return (
@@ -17,6 +18,7 @@ const CTA = () => {
           </div>
 
           <div className="space-y-6 relative z-10">
+            <img src={logoChip} alt="FUTAVerse" className="h-14 w-auto" />
             <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-white/90">
               Your next opportunity starts here.
             </div>

@@ -61,8 +61,12 @@ export interface FeedResponseItem {
   event_type:
     | 'mentorship_created'
     | 'mentorship_started'
+    | 'mentorship_completed'
     | 'internship_created'
     | 'internship_started'
+    | 'internship_completed'
+    | 'engagement_started'
+    | 'engagement_completed'
     | 'event_created'
   data: FeedItemData
   score: number

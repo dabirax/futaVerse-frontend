@@ -5,11 +5,20 @@ import {
 } from '@/hooks/useMentorships'
 import { CardSkeleton4 } from '@/components/CardSkeletons'
 import StudentCard from '@/components/user/internships/StudentCard'
+import { useToast } from '@/hooks/use-toast'
 
 export default function ApplicationsTab() {
   const { data, isLoading, isError } = useMentorshipApplications()
-  const { mutate: acceptApplication } = useAcceptMentorshipApplication()
-  const { mutate: rejectApplication } = useRejectMentorshipApplication()
+  const { mutateAsync: acceptApplication } = useAcceptMentorshipApplication()
+  const { mutateAsync: rejectApplication } = useRejectMentorshipApplication()
+  const { toast } = useToast()
+
+  const getErrorMessage = (err: any, fallback: string) =>
+    err?.response?.data?.detail?.[0] ||
+    err?.response?.data?.detail ||
+    err?.response?.data?.message ||
+    err?.message ||
+    fallback
 
   if (isLoading) {
     return <CardSkeleton4 variant="r-full" />
@@ -36,8 +45,42 @@ export default function ApplicationsTab() {
           studentName={`${application.student_info.firstname} ${application.student_info.lastname}`}
           title={application.mentorship_info.title}
           variant="applicant"
-          onAccept={() => acceptApplication(application.sqid)}
-          onReject={() => rejectApplication(application.sqid)}
+          onAccept={() =>
+            acceptApplication(application.sqid, {
+              onSuccess: () =>
+                toast({
+                  title: 'Success',
+                  description: 'Application accepted!',
+                }),
+              onError: (err: any) =>
+                toast({
+                  title: 'Error',
+                  description: getErrorMessage(
+                    err,
+                    'Failed to accept application.',
+                  ),
+                  variant: 'destructive',
+                }),
+            })
+          }
+          onReject={() =>
+            rejectApplication(application.sqid, {
+              onSuccess: () =>
+                toast({
+                  title: 'Success',
+                  description: 'Application rejected.',
+                }),
+              onError: (err: any) =>
+                toast({
+                  title: 'Error',
+                  description: getErrorMessage(
+                    err,
+                    'Failed to reject application.',
+                  ),
+                  variant: 'destructive',
+                }),
+            })
+          }
         />
       ))}
     </div>

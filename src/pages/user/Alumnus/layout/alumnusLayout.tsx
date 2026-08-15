@@ -7,6 +7,7 @@ import {
   LogOut,
   Menu,
   MessageSquare,
+  Newspaper,
   Rss,
   Settings,
   TicketCheck,
@@ -17,9 +18,11 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import profPic from '@/assets/testImage.jpeg'
+import logo from '@/assets/logos/FV_logo_backgroundless.png'
 
 const sidebarItems = [
   { icon: Rss, label: 'Feed', path: '/alumnus/feed' },
+  { icon: Newspaper, label: 'My Posts', path: '/alumnus/posts' },
   { icon: Briefcase, label: 'Internships', path: '/alumnus/internships' },
   { icon: Users, label: 'Mentorships', path: '/alumnus/mentorships' },
   { icon: Calendar, label: 'Events', path: '/alumnus/events' },
@@ -50,7 +53,7 @@ export default function AlumnusLayout() {
         >
           {sidebarOpen ? <X /> : <Menu />}
         </Button>
-        <h1 className="text-lg font-semibold text-primary">FUTAVerse</h1>
+        <img src={logo} alt="FUTAVerse" className="h-9 w-auto" />
         <div className="w-10" />
       </header>
 
@@ -68,13 +71,8 @@ export default function AlumnusLayout() {
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
       >
         {/* Branding */}
-        <div className="flex items-center gap-2.5 px-4 h-16 border-b shrink-0">
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-            <span className="text-primary-foreground text-sm font-bold">F</span>
-          </div>
-          <span className="font-bold text-foreground tracking-wide">
-            FUTAVERSE
-          </span>
+        <div className="flex items-center px-4 h-16 border-b shrink-0">
+          <img src={logo} alt="FUTAVerse" className="h-10 w-auto" />
         </div>
 
         {/* Profile Section */}

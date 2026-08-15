@@ -240,6 +240,7 @@ export default function EditInternship() {
         toast({
           title: 'Deleted',
           description: 'Internship removed successfully.',
+          variant: 'destructive',
         })
         router.navigate({ to: '/alumnus/internships' })
       },

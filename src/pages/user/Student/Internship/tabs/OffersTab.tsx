@@ -8,8 +8,8 @@ import {
 
 export default function OffersPage() {
   const { data, isLoading, isError } = useInternshipOffers()
-  const { mutate: acceptOffer } = useAcceptInternshipOffer()
-  const { mutate: rejectOffer } = useRejectInternshipOffer()
+  const { mutateAsync: acceptOffer } = useAcceptInternshipOffer()
+  const { mutateAsync: rejectOffer } = useRejectInternshipOffer()
 
   if (isLoading) {
     return <CardSkeleton4 variant="r-sm" />
@@ -32,12 +32,8 @@ export default function OffersPage() {
           alumnusName={`${offer.alumnus_info.firstname} ${offer.alumnus_info.lastname}`}
           company={offer.internship_info.industry}
           variant="acceptOrReject"
-          onAccept={() => {
-            acceptOffer(offer.sqid)
-          }}
-          onReject={() => {
-            rejectOffer(offer.sqid)
-          }}
+          onAccept={() => acceptOffer(offer.sqid)}
+          onReject={() => rejectOffer(offer.sqid)}
         />
       ))}
     </div>

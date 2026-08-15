@@ -61,7 +61,7 @@ const ResetPassword = () => {
 
   useEffect(() => {
     if (!email) {
-      navigate({ to: '/forgot-password' })
+      navigate({ to: '/reset-success' })
     }
   }, [email, navigate])
 
@@ -69,20 +69,14 @@ const ResetPassword = () => {
     mutationFn: async (payload: { new_password: string }) => {
       const res = await api.patch(
         '/api/auth/reset-password',
-        {
-          email,
-          otp: otpToken ?? undefined,
-          new_password: payload.new_password,
-        },
-        otpToken
-          ? { headers: { Authorization: `Bearer ${otpToken}` } }
-          : undefined,
+        { new_password: payload.new_password },
+        { headers: { Authorization: `Bearer ${otpToken}` } },
       )
       return res.data
     },
     onSuccess: () => {
-      resetStore()
       navigate({ to: '/reset-success' })
+      resetStore()
     },
     onError: (err: any) => {
       const status = err.response?.status
@@ -120,6 +114,13 @@ const ResetPassword = () => {
 
   const onSubmit = (data: z.infer<typeof resetPasswordSchema>) => {
     setServerError(null)
+    if (!otpToken) {
+      setServerError({
+        message: 'Your reset session has expired.',
+        hint: 'Please request a new OTP and try again.',
+      })
+      return
+    }
     resetPasswordMutation.mutate({ new_password: data.password })
   }
 

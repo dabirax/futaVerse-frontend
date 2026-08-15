@@ -7,7 +7,8 @@ import {
 
 export default function StudentApplicationsTab() {
   const { data, isLoading, isError } = useInternshipApplications()
-  const { mutate: withdrawApplication } = useWithdrawInternshipApplication()
+  const { mutateAsync: withdrawApplication } =
+    useWithdrawInternshipApplication()
 
   if (isLoading) {
     return <CardSkeleton5 variant="r-sm" />

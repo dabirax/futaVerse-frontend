@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { ExternalLink, FileText, Trash2, UploadCloud } from 'lucide-react'
+import { BackButton2 } from '@/components/BackButtons'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -96,11 +97,14 @@ const StudentSettings = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Settings</h1>
-        <p className="text-sm text-muted-foreground">
-          Manage your profile and preferences
-        </p>
+      <div className="flex items-center gap-4">
+        <BackButton2 />
+        <div>
+          <h1 className="text-2xl font-semibold">Settings</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage your profile and preferences
+          </p>
+        </div>
       </div>
 
       <Card>

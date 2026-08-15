@@ -225,11 +225,11 @@ export default function EventTicketsManager({
                       <Input
                         type="number"
                         min={1}
-                        value={draft.quantity}
+                        value={draft.quantity || ''}
                         onChange={(e) =>
                           setDraft({
                             ...draft,
-                            quantity: parseInt(e.target.value, 10) || 1,
+                            quantity: parseInt(e.target.value, 10) || 0,
                           })
                         }
                       />
@@ -416,7 +416,7 @@ export default function EventTicketsManager({
                               <Input
                                 type="number"
                                 min={t.quantity_sold}
-                                value={t.quantity}
+                                value={t.quantity || ''}
                                 className="w-24"
                                 onChange={(e) =>
                                   handleQuantityChange(

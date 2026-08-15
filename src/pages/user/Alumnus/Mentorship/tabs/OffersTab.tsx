@@ -7,11 +7,20 @@ import {
 } from '@/hooks/useMentorships'
 import { CardSkeleton5 } from '@/components/CardSkeletons'
 import StudentCard from '@/components/user/internships/StudentCard'
+import { useToast } from '@/hooks/use-toast'
 
 export default function OffersSentTab() {
   const navigate = useRouter().navigate
   const { data, isLoading, isError } = useMentorshipOffers()
-  const { mutate: withdrawOffer } = useWithdrawMentorshipOffer()
+  const { mutateAsync: withdrawOffer } = useWithdrawMentorshipOffer()
+  const { toast } = useToast()
+
+  const getErrorMessage = (err: any, fallback: string) =>
+    err?.response?.data?.detail?.[0] ||
+    err?.response?.data?.detail ||
+    err?.response?.data?.message ||
+    err?.message ||
+    fallback
   if (isLoading) {
     return <CardSkeleton5 variant="r-full" />
   }
@@ -44,7 +53,24 @@ export default function OffersSentTab() {
             variant="offer"
             studentName={`${offer.student_info.firstname} ${offer.student_info.lastname}`}
             title={offer.mentorship_info.title}
-            onWithdraw={() => withdrawOffer(offer.sqid)}
+            onWithdraw={() =>
+              withdrawOffer(offer.sqid, {
+                onSuccess: () =>
+                  toast({
+                    title: 'Success',
+                    description: 'Offer withdrawn.',
+                  }),
+                onError: (err: any) =>
+                  toast({
+                    title: 'Error',
+                    description: getErrorMessage(
+                      err,
+                      'Failed to withdraw offer.',
+                    ),
+                    variant: 'destructive',
+                  }),
+              })
+            }
           />
         ))}
       </div>

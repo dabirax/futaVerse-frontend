@@ -26,6 +26,8 @@ import SendMentorshipOffer from '@/pages/user/Alumnus/Mentorship/send-offer'
 import MentorshipDetails from '@/pages/user/Alumnus/Mentorship/details'
 import AlumnusTickets from '@/pages/user/Alumnus/Tickets'
 import ManageEventTickets from '@/pages/user/Alumnus/Events/ManageEventTickets'
+import AlumnusPosts from '@/pages/user/Alumnus/Posts'
+import AlumnusUserPosts from '@/pages/user/Alumnus/Posts/UserPosts'
 
 /* -------------------------- ALUMNUS ROUTES -------------------------- */
 export const alumnusRoute = createRoute({
@@ -190,4 +192,16 @@ export const alumnusAnalyticsRoute = createRoute({
   // getParentRoute: () => publicRoute,
   path: '/alumnus/analytics',
   component: AlumnusAnalytics,
+})
+
+export const alumnusPostsRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: '/alumnus/posts',
+  component: AlumnusPosts,
+})
+
+export const alumnusUserPostsRoute = createRoute({
+  getParentRoute: () => alumnusRoute,
+  path: '/alumnus/posts/u/$sqid',
+  component: AlumnusUserPosts,
 })

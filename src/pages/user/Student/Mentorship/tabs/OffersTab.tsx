@@ -5,15 +5,24 @@ import {
   useRejectMentorshipOffer,
 } from '@/hooks/useMentorships'
 import InternshipCard2 from '@/components/user/internships/InternshipCard2'
+import { useToast } from '@/hooks/use-toast'
 
 export default function OffersTab() {
   const { data, isLoading, isError, refetch } = useMentorshipOffers()
   const acceptOffer = useAcceptMentorshipOffer()
   const rejectOffer = useRejectMentorshipOffer()
+  const { toast } = useToast()
   const offers = data?.results || []
 
+  const getErrorMessage = (err: any, fallback: string) =>
+    err?.response?.data?.detail?.[0] ||
+    err?.response?.data?.detail ||
+    err?.response?.data?.message ||
+    err?.message ||
+    fallback
+
   useEffect(() => {
-    refetch?.()
+    refetch()
   }, [refetch])
 
   if (isLoading)
@@ -41,8 +50,36 @@ export default function OffersTab() {
           }
           title={offer.mentorship_info.title}
           variant="acceptOrReject"
-          onAccept={() => acceptOffer.mutate(offer.sqid)}
-          onReject={() => rejectOffer.mutate(offer.sqid)}
+          onAccept={() =>
+            acceptOffer.mutateAsync(offer.sqid, {
+              onSuccess: () =>
+                toast({
+                  title: 'Success',
+                  description: 'Offer accepted! You are now a mentee.',
+                }),
+              onError: (err: any) =>
+                toast({
+                  title: 'Error',
+                  description: getErrorMessage(err, 'Failed to accept offer.'),
+                  variant: 'destructive',
+                }),
+            })
+          }
+          onReject={() =>
+            rejectOffer.mutateAsync(offer.sqid, {
+              onSuccess: () =>
+                toast({
+                  title: 'Success',
+                  description: 'Offer rejected.',
+                }),
+              onError: (err: any) =>
+                toast({
+                  title: 'Error',
+                  description: getErrorMessage(err, 'Failed to reject offer.'),
+                  variant: 'destructive',
+                }),
+            })
+          }
         />
       ))}
     </div>

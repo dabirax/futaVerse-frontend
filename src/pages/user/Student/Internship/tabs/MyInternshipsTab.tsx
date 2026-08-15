@@ -1,5 +1,6 @@
 import InternshipCard from '../../../../../components/user/ShipCard'
 import { CardSkeleton1 } from '@/components/CardSkeletons'
+import ShareEngagementButtons from '@/components/user/posts/ShareEngagementButtons'
 import { useInternshipEngagements } from '@/hooks/useInternships'
 
 export default function MyInternshipsTab() {
@@ -22,16 +23,24 @@ export default function MyInternshipsTab() {
         <div className="grid gap-4 md:grid-cols-2">
           {internships !== undefined && internships.length > 0 ? (
             internships.map((internship: any) => (
-              <InternshipCard
-                key={internship.id}
-                role="student"
-                {...internship}
-                sqid={internship.internship_info.sqid}
-                title={internship.internship_info.title}
-                alumnusName={`${internship.alumnus_info.firstname} ${internship.alumnus_info.lastname}`}
-                company={internship.internship_info.industry}
-                ship="internship"
-              />
+              <div key={internship.id} className="space-y-2">
+                <InternshipCard
+                  role="student"
+                  {...internship}
+                  sqid={internship.internship_info.sqid}
+                  title={internship.internship_info.title}
+                  alumnusName={`${internship.alumnus_info.firstname} ${internship.alumnus_info.lastname}`}
+                  company={internship.internship_info.industry}
+                  ship="internship"
+                />
+                <ShareEngagementButtons
+                  engagement={{
+                    sqid: internship.sqid ?? internship.id,
+                    title: internship.internship_info.title,
+                    kind: 'internship',
+                  }}
+                />
+              </div>
             ))
           ) : (
             <div className="col-span-2 text-center py-12 text-muted-foreground">

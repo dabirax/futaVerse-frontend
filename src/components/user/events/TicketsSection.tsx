@@ -237,11 +237,11 @@ export default function TicketsSection({
                   placeholder="Quantity"
                   type="number"
                   min={1}
-                  value={draft.quantity}
+                  value={draft.quantity || ''}
                   onChange={(e) =>
                     setDraft({
                       ...draft,
-                      quantity: parseInt(e.target.value, 10) || 1,
+                      quantity: parseInt(e.target.value, 10) || 0,
                     })
                   }
                 />

@@ -42,6 +42,7 @@ import {
 
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
+import { EventApiError } from '@/services/events'
 import {
   useAddEventTicket,
   useEvent,
@@ -101,6 +102,7 @@ export default function EditEvent() {
   const [paidTickets, setPaidTickets] = useState<Array<PaidTicketInput>>([])
   const [linkedBankAccount, setLinkedBankAccount] =
     useState<LinkedBankAccount | null>(null)
+  const [authUrl, setAuthUrl] = useState<string | null>(null)
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -131,7 +133,7 @@ export default function EditEvent() {
         title: event.title,
         description: event.description,
         date: new Date(event.date),
-        start_time: event.start_time?.slice(0, 5) || '09:00',
+        start_time: event.start_time.slice(0, 5) || '09:00',
         duration_mins: event.duration_mins,
         venue: event.venue || '',
         category: event.category,
@@ -275,6 +277,16 @@ export default function EditEvent() {
         to: `/alumnus/events/${event.sqid}`,
       })
     } catch (err: any) {
+      if (err instanceof EventApiError && err.authUrl) {
+        setAuthUrl(err.authUrl)
+        toast({
+          title: 'Google account required',
+          description:
+            'Connect your Google Calendar to generate the meeting link.',
+          variant: 'destructive',
+        })
+        return
+      }
       toast({
         title: 'Error updating event',
         description:
@@ -374,16 +386,9 @@ export default function EditEvent() {
                               <FormControl>
                                 <Button
                                   variant="outline"
-                                  className={cn(
-                                    'pl-3 text-left font-normal',
-                                    !field.value && 'text-muted-foreground',
-                                  )}
+                                  className={cn('pl-3 text-left font-normal')}
                                 >
-                                  {field.value ? (
-                                    format(field.value, 'PPP')
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
+                                  {format(field.value, 'PPP')}
                                   <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                 </Button>
                               </FormControl>
@@ -611,6 +616,35 @@ export default function EditEvent() {
                   />
                 </CardContent>
               </Card>
+
+              {/* Google Calendar connect (required for virtual meeting links) */}
+              {authUrl && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Connect Google Calendar</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      To generate the meeting link for this event, connect your
+                      Google account. You'll be taken to Google to grant access,
+                      then come back and submit again.
+                    </p>
+                    <Button asChild className="w-full">
+                      <a href={authUrl} target="_blank" rel="noreferrer">
+                        Continue with Google
+                      </a>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => setAuthUrl(null)}
+                    >
+                      Cancel
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Actions */}
               <Card>

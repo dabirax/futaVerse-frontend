@@ -13,6 +13,8 @@ import StudentCalendar from '../pages/user/Student/Calendar'
 import StudentSettings from '../pages/user/Student/Settings'
 import StudentTickets from '../pages/user/Student/Tickets'
 import StudentAnalytics from '../pages/user/Student/Analytics'
+import StudentPosts from '../pages/user/Student/Posts'
+import StudentUserPosts from '../pages/user/Student/Posts/UserPosts'
 
 import { rootRoute } from './__root'
 import { requireRole } from '@/lib/guard'
@@ -114,4 +116,16 @@ export const studentSettingsRoute = createRoute({
   getParentRoute: () => studentRoute,
   path: '/student/settings',
   component: StudentSettings,
+})
+
+export const studentPostsRoute = createRoute({
+  getParentRoute: () => studentRoute,
+  path: '/student/posts',
+  component: StudentPosts,
+})
+
+export const studentUserPostsRoute = createRoute({
+  getParentRoute: () => studentRoute,
+  path: '/student/posts/u/$sqid',
+  component: StudentUserPosts,
 })

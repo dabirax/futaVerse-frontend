@@ -1,4 +1,5 @@
 import { Facebook, Instagram, Linkedin, Mail, Twitter } from 'lucide-react'
+import logo from '@/assets/logos/FV_logo_backgroundless.png'
 
 const Footer = () => {
   return (
@@ -7,9 +8,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-black bg-linear-to-r from-primary to-primary-dark bg-clip-text text-transparent">
-              FV
-            </h3>
+            <img src={logo} alt="FUTAVerse" className="h-10 w-auto" />
             <p className="text-muted-foreground">
               Connecting FUTA alumni and students through meaningful mentorship
               and professional development.

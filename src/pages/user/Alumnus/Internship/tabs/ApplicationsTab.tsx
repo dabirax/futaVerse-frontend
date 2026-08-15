@@ -8,8 +8,8 @@ import {
 
 export default function ApplicationsTab() {
   const { data, isLoading, isError } = useInternshipApplications()
-  const { mutate: acceptApplication } = useAcceptInternshipApplication()
-  const { mutate: rejectApplication } = useRejectInternshipApplication()
+  const { mutateAsync: acceptApplication } = useAcceptInternshipApplication()
+  const { mutateAsync: rejectApplication } = useRejectInternshipApplication()
 
   if (isLoading) {
     return <CardSkeleton4 variant="r-full" />

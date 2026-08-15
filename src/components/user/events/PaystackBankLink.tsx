@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CheckCircle2, Landmark, Loader2 } from 'lucide-react'
 import ConfirmActionDialog from '../ConfirmActionDialog'
 import type { LinkedBankAccount } from '@/types/event'
+import type { Bank } from '@/services/payments'
+import { PaymentsService } from '@/services/payments'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -12,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { mockBanks } from '@/data/mockBanks'
+import { useToast } from '@/hooks/use-toast'
 
 interface PaystackBankLinkProps {
   /** Existing linked account (e.g. from the alumnus profile). */
@@ -36,36 +38,60 @@ export default function PaystackBankLink({
   onLinked,
   onUnlinked,
 }: PaystackBankLinkProps) {
+  const { toast } = useToast()
+
+  const [banks, setBanks] = useState<Array<Bank>>([])
+  const [banksError, setBanksError] = useState<string | null>(null)
   const [bankCode, setBankCode] = useState<string>('')
   const [accountNumber, setAccountNumber] = useState('')
   const [resolvedName, setResolvedName] = useState<string | null>(null)
   const [resolving, setResolving] = useState(false)
-  const [resolveError, setResolveError] = useState<string | null>(null)
+  const [linking, setLinking] = useState(false)
 
-  const selectedBank = mockBanks.find((b) => b.code === bankCode)
+  useEffect(() => {
+    let active = true
+    PaymentsService.listBanks()
+      .then((data) => {
+        if (active) setBanks(data)
+      })
+      .catch((error: unknown) => {
+        if (active) {
+          setBanksError(
+            error instanceof Error ? error.message : 'Failed to fetch banks',
+          )
+        }
+      })
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const selectedBank = banks.find((b) => b.code === bankCode)
   const canResolve = !!bankCode && /^\d{10}$/.test(accountNumber)
 
   const resolveAccount = async () => {
+    if (!selectedBank) return
     setResolving(true)
-    setResolveError(null)
     setResolvedName(null)
     try {
-      // TODO: replace with real POST /api/payments/resolve call
-      await new Promise((r) => setTimeout(r, 600))
-      // Mock: derive a deterministic name from the account number.
-      const fakeNames = [
-        'ADEYEMI OLUWASEUN JOHN',
-        'CHIDINMA NGOZI OKAFOR',
-        'IBRAHIM MUSA YAKUBU',
-        'FOLAKE ADEBAYO WILLIAMS',
-      ]
-      const name =
-        fakeNames[parseInt(accountNumber.slice(-1), 10) % fakeNames.length]
-      setResolvedName(name)
-    } catch {
-      setResolveError(
-        'Could not resolve account. Check the number and try again.',
-      )
+      const result = await PaymentsService.resolveAccount({
+        account_number: accountNumber,
+        // bank_code: selectedBank.code,
+        bank_code: '001',
+        bank_name: selectedBank.name,
+      })
+      setResolvedName(result.account_name)
+      toast({
+        title: 'Account verified',
+        description: result.account_name,
+      })
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description:
+          error instanceof Error ? error.message : 'Could not resolve account.',
+        variant: 'destructive',
+      })
     } finally {
       setResolving(false)
     }
@@ -73,17 +99,35 @@ export default function PaystackBankLink({
 
   const linkAccount = async () => {
     if (!selectedBank || !resolvedName) return
-    // TODO: replace with real POST /api/payments/link-account call
-    await new Promise((r) => setTimeout(r, 500))
-    onLinked?.({
-      bank_code: selectedBank.code,
-      bank_name: selectedBank.name,
-      account_number: accountNumber,
-      account_name: resolvedName,
-    })
-    setBankCode('')
-    setAccountNumber('')
-    setResolvedName(null)
+    setLinking(true)
+    try {
+      await PaymentsService.linkAccount({
+        account_number: accountNumber,
+        // bank_code: selectedBank.code,
+        bank_code: '001',
+        bank_name: selectedBank.name,
+      })
+      onLinked?.({
+        // bank_code: selectedBank.code,
+        bank_code: '001',
+        bank_name: selectedBank.name,
+        account_number: accountNumber,
+        account_name: resolvedName,
+      })
+      setBankCode('')
+      setAccountNumber('')
+      setResolvedName(null)
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to link account.'
+      throw new Error(
+        /Subaccount already exists/i.test(message)
+          ? 'A payout account is already linked to your profile — the existing (old) account is still being used for payouts. This new account could not be added.'
+          : message,
+      )
+    } finally {
+      setLinking(false)
+    }
   }
 
   if (value) {
@@ -136,17 +180,28 @@ export default function PaystackBankLink({
         <div className="space-y-1">
           <label className="text-sm font-medium">Bank</label>
           <Select value={bankCode} onValueChange={setBankCode}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select bank" />
+            <SelectTrigger disabled={banks.length === 0 && !banksError}>
+              <SelectValue
+                placeholder={
+                  banksError
+                    ? 'Unavailable'
+                    : banks.length === 0
+                      ? 'Loading banks...'
+                      : 'Select bank'
+                }
+              />
             </SelectTrigger>
             <SelectContent>
-              {mockBanks.map((bank: any) => (
+              {banks.map((bank) => (
                 <SelectItem key={bank.code} value={bank.code}>
                   {bank.name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+          {banksError && (
+            <p className="text-xs text-destructive">{banksError}</p>
+          )}
         </div>
 
         <div className="space-y-1">
@@ -159,25 +214,10 @@ export default function PaystackBankLink({
             onChange={(e) => {
               setAccountNumber(e.target.value.replace(/\D/g, '').slice(0, 10))
               setResolvedName(null)
-              setResolveError(null)
             }}
           />
         </div>
       </div>
-
-      {resolvedName && (
-        <Alert>
-          <CheckCircle2 className="h-4 w-4" />
-          <AlertTitle>Account verified</AlertTitle>
-          <AlertDescription>{resolvedName}</AlertDescription>
-        </Alert>
-      )}
-
-      {resolveError && (
-        <Alert variant="destructive">
-          <AlertDescription>{resolveError}</AlertDescription>
-        </Alert>
-      )}
 
       <div className="flex flex-wrap gap-2">
         <Button
@@ -198,9 +238,21 @@ export default function PaystackBankLink({
 
         {resolvedName && (
           <ConfirmActionDialog
-            trigger={<Button type="button">Link account</Button>}
+            trigger={
+              <Button type="button" disabled={linking}>
+                {linking ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Linking...
+                  </>
+                ) : (
+                  'Link account'
+                )}
+              </Button>
+            }
             title="Link this account?"
             description={`Funds from paid ticket sales will be paid out to ${resolvedName} (${selectedBank?.name} • ${accountNumber}).`}
+            errorTitle="Payout account already linked"
             confirmLabel="Yes, link account"
             successTitle="Payout account linked"
             successDescription="You can now publish events with paid tickets."

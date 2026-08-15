@@ -1,5 +1,5 @@
 import { cloneElement, isValidElement, useState } from 'react'
-import { CheckCircle2, Loader2 } from 'lucide-react'
+import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 import type { ReactNode } from 'react'
 import {
   AlertDialog,
@@ -67,14 +67,14 @@ export default function ConfirmActionDialog({
   destructive = false,
   successTitle = 'Done',
   successDescription = 'The action completed successfully.',
-  // errorTitle = 'Something went wrong',
-  // errorDescription,
+  errorTitle = 'Something went wrong',
+  errorDescription,
   onConfirm,
 }: ConfirmActionDialogProps) {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [successOpen, setSuccessOpen] = useState(false)
-  // const [errorOpen, setErrorOpen] = useState(false)
-  // const [errorMessage, setErrorMessage] = useState<string>('')
+  const [errorOpen, setErrorOpen] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const [loading, setLoading] = useState(false)
 
   const handleTriggerClick = (e: React.MouseEvent) => {
@@ -90,13 +90,13 @@ export default function ConfirmActionDialog({
       setSuccessOpen(true)
     } catch (err) {
       console.error('ConfirmActionDialog onConfirm failed:', err)
-      // const fallback =
-      //   err instanceof Error && err.message
-      //     ? err.message
-      //     : 'Please try again in a moment.'
-      // setErrorMessage(errorDescription ?? fallback)
+      const fallback =
+        err instanceof Error && err.message
+          ? err.message
+          : 'Please try again in a moment.'
+      setErrorMessage(errorDescription ?? fallback)
       setConfirmOpen(false)
-      // setErrorOpen(true)
+      setErrorOpen(true)
     } finally {
       setLoading(false)
     }
@@ -167,6 +167,25 @@ export default function ConfirmActionDialog({
           </DialogHeader>
           <DialogFooter className="sm:justify-center">
             <Button onClick={() => setSuccessOpen(false)}>Got it</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={errorOpen} onOpenChange={setErrorOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+              <XCircle className="h-7 w-7 text-destructive" />
+            </div>
+            <DialogTitle className="text-center">{errorTitle}</DialogTitle>
+            <DialogDescription className="text-center">
+              {errorMessage}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center">
+            <Button variant="destructive" onClick={() => setErrorOpen(false)}>
+              Got it
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -10,7 +10,7 @@ import { CardSkeleton5 } from '@/components/CardSkeletons'
 
 export default function OffersTab() {
   const { data, isLoading, isError } = useInternshipOffers()
-  const { mutate: withdrawOffer } = useWithdrawInternshipOffer()
+  const { mutateAsync: withdrawOffer } = useWithdrawInternshipOffer()
   if (isLoading) {
     return <CardSkeleton5 variant="r-full" />
   }

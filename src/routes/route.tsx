@@ -36,9 +36,11 @@ import {
   alumnusMentorshipDetailRoute,
   alumnusMentorshipRoute,
   alumnusMessagesRoute,
+  alumnusPostsRoute,
   alumnusRoute,
   alumnusSettingsRoute,
   alumnusTicketsRoute,
+  alumnusUserPostsRoute,
 } from './user-alumnus'
 import {
   studentAnalyticsRoute,
@@ -52,9 +54,11 @@ import {
   studentMentorshipDetailRoute,
   studentMentorshipRoute,
   studentMessagesRoute,
+  studentPostsRoute,
   studentRoute,
   studentSettingsRoute,
   studentTicketsRoute,
+  studentUserPostsRoute,
 } from './user-student'
 
 // Build full route tree
@@ -97,6 +101,8 @@ export const routeTree = rootRoute.addChildren([
     alumnusCreateMentorshipRoute,
     alumnusEditMentorshipRoute,
     alumnusMentorshipDetailRoute,
+    alumnusPostsRoute,
+    alumnusUserPostsRoute,
   ]),
   studentRoute.addChildren([
     studentDashboardRoute,
@@ -112,5 +118,7 @@ export const routeTree = rootRoute.addChildren([
     studentInternshipDetailsRoute,
     studentMentorshipDetailRoute,
     studentEventDetailRoute,
+    studentPostsRoute,
+    studentUserPostsRoute,
   ]),
 ])

@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import type { FeedResponseItem } from '@/types/feed'
-import type { PaginatedResponse } from '@/services/events'
+import type { CursorPaginatedResponse } from '@/services/feed'
 import { FeedService } from '@/services/feed'
 import { mockEvents } from '@/data/mockEvents'
 
@@ -21,21 +21,21 @@ const buildMockFeedItems = (): Array<FeedResponseItem> =>
     created_at: event.created_at,
   }))
 
-export const useFeed = (params?: { page?: number; size?: number }) => {
-  return useQuery<PaginatedResponse<FeedResponseItem>>({
-    queryKey: ['feed', params],
-    queryFn: async () => {
+export const useFeed = () => {
+  return useInfiniteQuery<CursorPaginatedResponse<FeedResponseItem>>({
+    queryKey: ['feed'],
+    queryFn: async ({ pageParam }) => {
       try {
-        return await FeedService.list(params)
+        return await FeedService.list(pageParam as string | null)
       } catch {
-        const results = buildMockFeedItems()
         return {
-          count: results.length,
           next: null,
           previous: null,
-          results,
+          results: buildMockFeedItems(),
         }
       }
     },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => lastPage.next ?? undefined,
   })
 }

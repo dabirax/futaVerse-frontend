@@ -4,14 +4,24 @@ import {
   useMentorshipApplications,
   useWithdrawMentorshipApplication,
 } from '@/hooks/useMentorships'
+import { useToast } from '@/hooks/use-toast'
 
 export default function MyApplicationsTab() {
   const { data, isLoading, isError, refetch } = useMentorshipApplications()
-  const { mutate: withdrawApplication } = useWithdrawMentorshipApplication()
+  const { mutateAsync: withdrawApplication } =
+    useWithdrawMentorshipApplication()
+  const { toast } = useToast()
   const applications = data?.results || []
 
+  const getErrorMessage = (err: any, fallback: string) =>
+    err?.response?.data?.detail?.[0] ||
+    err?.response?.data?.detail ||
+    err?.response?.data?.message ||
+    err?.message ||
+    fallback
+
   useEffect(() => {
-    refetch?.()
+    refetch()
   }, [refetch])
 
   if (isLoading)
@@ -42,7 +52,24 @@ export default function MyApplicationsTab() {
           title={application.mentorship_info.title}
           alumnusName={`${application.alumnus_info.firstname} ${application.alumnus_info.lastname}`}
           variant="withdraw"
-          onWithdraw={() => withdrawApplication(application.sqid)}
+          onWithdraw={() =>
+            withdrawApplication(application.sqid, {
+              onSuccess: () =>
+                toast({
+                  title: 'Success',
+                  description: 'Application withdrawn.',
+                }),
+              onError: (err: any) =>
+                toast({
+                  title: 'Error',
+                  description: getErrorMessage(
+                    err,
+                    'Failed to withdraw application.',
+                  ),
+                  variant: 'destructive',
+                }),
+            })
+          }
         />
       ))}
     </div>
