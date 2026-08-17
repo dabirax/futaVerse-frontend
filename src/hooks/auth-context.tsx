@@ -1,6 +1,7 @@
 // src/hooks/AuthContext.tsx
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
+import { SESSION_UPDATED_EVENT } from '@/hooks/useMe'
 
 export type AuthContextType = {
   isLoggedIn: boolean
@@ -35,6 +36,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(
     () => !!sessionStorage.getItem('access_token'),
   )
+
+  useEffect(() => {
+    const sync = () => {
+      setRole(sessionStorage.getItem('role'))
+      setUserSqid(sessionStorage.getItem('user_sqid'))
+    }
+    window.addEventListener(SESSION_UPDATED_EVENT, sync)
+    return () => window.removeEventListener(SESSION_UPDATED_EVENT, sync)
+  }, [])
 
   const login = (
     newToken: string,

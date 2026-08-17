@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useFeed } from '@/hooks/useFeed'
+import { useMe } from '@/hooks/useMe'
 import InternshipFeedCard from '@/components/user/feed/InternshipFeedCard'
 
 type FeedFilter = 'all' | 'opportunities' | 'mentorship' | 'events' | 'posts'
@@ -298,6 +299,9 @@ export default function StudentFeed() {
   const [search, setSearch] = useState('')
   const [activeTab, setActiveTab] = useState<FeedFilter>('all')
 
+  const { data: me } = useMe()
+  const firstName = me?.role === 'student' ? me.profile.firstname : undefined
+
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useFeed()
   const feedItems = useMemo(
     () => data?.pages.flatMap((page) => page.results) ?? [],
@@ -348,7 +352,7 @@ export default function StudentFeed() {
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="space-y-2">
             <h1 className="text-2xl font-bold text-foreground">
-              {getGreeting()} 👋
+              {getGreeting()}, {firstName ?? 'there'} 👋
             </h1>
             <p className="text-sm text-muted-foreground">
               Discover mentorships, internships, and events across the FUTA

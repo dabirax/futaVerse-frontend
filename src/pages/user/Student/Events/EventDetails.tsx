@@ -463,6 +463,9 @@ export default function StudentEventDetails() {
                       alt="FUTAVerse"
                       className="h-8 w-auto"
                     />
+                    <span className="font-montserrat font-semibold text-base tracking-tight bg-linear-to-r from-primary-light to-accent-light bg-clip-text text-transparent">
+                      FUTAVerse
+                    </span>
                   </div>
                   <span className="text-sm text-slate-400 font-medium">
                     CHECKOUT

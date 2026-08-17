@@ -18,7 +18,12 @@ const CTA = () => {
           </div>
 
           <div className="space-y-6 relative z-10">
-            <img src={logoChip} alt="FUTAVerse" className="h-14 w-auto" />
+            <div className="flex items-center gap-3">
+              <img src={logoChip} alt="FUTAVerse" className="h-14 w-auto" />
+              <span className="font-montserrat font-bold text-3xl tracking-tight bg-linear-to-r from-primary-light to-accent-light bg-clip-text text-transparent">
+                FUTAVerse
+              </span>
+            </div>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-white/90">
               Your next opportunity starts here.
             </div>

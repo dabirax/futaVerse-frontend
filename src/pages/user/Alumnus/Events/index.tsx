@@ -67,7 +67,7 @@ export default function AlumnusEvents() {
             onClick={() => router.navigate({ to: '/alumnus/events/tickets' })}
           >
             <Ticket className="h-4 w-4 mr-2" />
-            My tickets
+            Tickets Manager
           </Button>
           <Button
             onClick={() => router.navigate({ to: '/alumnus/events/create' })}

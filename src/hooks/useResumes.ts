@@ -14,6 +14,7 @@ export const useUploadResume = () => {
     mutationFn: (file: File) => uploadResume(file),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['resumes'] })
+      qc.invalidateQueries({ queryKey: ['me'] })
     },
   })
 }
@@ -24,6 +25,7 @@ export const useDeleteResume = () => {
     mutationFn: (sqid: string) => deleteResume(sqid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['resumes'] })
+      qc.invalidateQueries({ queryKey: ['me'] })
     },
   })
 }

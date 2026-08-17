@@ -7,7 +7,7 @@ export default function StudentPosts() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold text-foreground">My Posts</h1>
+        <h1 className="text-2xl font-bold text-foreground">Posts</h1>
         <p className="text-sm text-muted-foreground">
           Posts you have shared with the FUTA community.
         </p>

@@ -14,15 +14,15 @@ import {
   Users,
   X,
 } from 'lucide-react'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import profPic from '@/assets/testImage.jpeg'
+import { useMe } from '@/hooks/useMe'
 import logo from '@/assets/logos/FV_logo_backgroundless.png'
 
 const sidebarItems = [
   { icon: Rss, label: 'Feed', path: '/alumnus/feed' },
-  { icon: Newspaper, label: 'My Posts', path: '/alumnus/posts' },
+  { icon: Newspaper, label: 'Posts', path: '/alumnus/posts' },
   { icon: Briefcase, label: 'Internships', path: '/alumnus/internships' },
   { icon: Users, label: 'Mentorships', path: '/alumnus/mentorships' },
   { icon: Calendar, label: 'Events', path: '/alumnus/events' },
@@ -36,6 +36,21 @@ const sidebarItems = [
 export default function AlumnusLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const navigate = useNavigate()
+  const { data: me } = useMe()
+
+  const profile = me?.profile
+  const displayName = profile
+    ? [profile.firstname, profile.lastname].filter(Boolean).join(' ') ||
+      'Alumnus'
+    : 'Alumnus'
+  const initials =
+    profile?.firstname || profile?.lastname
+      ? `${profile.firstname.charAt(0)}${profile.lastname.charAt(0)}`.toUpperCase()
+      : 'AL'
+  const avatarSrc =
+    profile?.profile_img_url ??
+    sessionStorage.getItem('profile_img') ??
+    undefined
 
   const handleSignOut = () => {
     // Implement logout logic here
@@ -53,7 +68,9 @@ export default function AlumnusLayout() {
         >
           {sidebarOpen ? <X /> : <Menu />}
         </Button>
-        <img src={logo} alt="FUTAVerse" className="h-9 w-auto" />
+        <div className="flex items-center">
+          <img src={logo} alt="FUTAVerse" className="h-9 w-auto" />
+        </div>
         <div className="w-10" />
       </header>
 
@@ -71,23 +88,23 @@ export default function AlumnusLayout() {
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
       >
         {/* Branding */}
-        <div className="flex items-center px-4 h-16 border-b shrink-0">
+        <div className="flex items-center gap-2 px-4 h-16 border-b shrink-0">
           <img src={logo} alt="FUTAVerse" className="h-10 w-auto" />
+          <span className="font-montserrat font-bold text-2xl tracking-tight bg-linear-to-r from-primary-dark to-accent bg-clip-text text-transparent">
+            FUTAVerse
+          </span>
         </div>
 
         {/* Profile Section */}
         <div className="p-3 border-b">
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
-              <img
-                src={sessionStorage.getItem('profile_img') || profPic}
-                className="object-cover"
-              />
-              <AvatarFallback>AL</AvatarFallback>
+              <AvatarImage src={avatarSrc} alt="Profile" />
+              <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
             <div>
               <h3 className="font-semibold text-sm text-foreground">
-                {/* {user?.firstName} {user?.lastName} */}
+                {displayName}
               </h3>
               <p className="text-xs text-muted-foreground">Alumnus</p>
             </div>

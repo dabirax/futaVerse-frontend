@@ -119,7 +119,7 @@ const LoginPage = () => {
               <div className="transition-transform hover:-translate-x-1">
                 <BackButton />
               </div>
-              <Logo />
+              <Logo showWordmark={false} />
             </div>
 
             <div className="text-center mb-10">

@@ -13,6 +13,9 @@ const Navbar = () => {
           {/* Logo */}
           <a href="/" className="flex items-center space-x-2">
             <img src={logo} alt="FUTAVerse" className="h-10 w-auto" />
+            <span className="font-montserrat font-bold text-2xl tracking-tight bg-linear-to-r from-primary-dark to-accent bg-clip-text text-transparent">
+              FUTAVerse
+            </span>
           </a>
 
           {/* Desktop Navigation */}

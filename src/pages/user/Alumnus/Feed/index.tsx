@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useFeed } from '@/hooks/useFeed'
+import { useMe } from '@/hooks/useMe'
 import { useMentorships } from '@/hooks/useMentorships'
 
 type FeedFilter = 'all' | 'opportunities' | 'mentorship' | 'events' | 'posts'
@@ -443,6 +444,9 @@ export default function AlumnusFeed() {
   const [search, setSearch] = useState('')
   const [activeFilter, setActiveFilter] = useState<FeedFilter>('all')
 
+  const { data: me } = useMe()
+  const firstName = me?.role === 'alumni' ? me.profile.firstname : undefined
+
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useFeed()
   const feedItems = useMemo(
     () => data?.pages.flatMap((page) => page.results) ?? [],
@@ -496,7 +500,7 @@ export default function AlumnusFeed() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-foreground">
-              {getGreeting()} 👋
+              {getGreeting()}, {firstName ?? 'there'} 👋
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
               Discover mentorships, internships, and events in your network.
