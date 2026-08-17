@@ -16,6 +16,7 @@ import CheckEmail from '@/pages/onboarding/CheckEmail'
 import ResetPassword from '@/pages/onboarding/ResetPassword'
 import ResetSuccess from '@/pages/onboarding/ResetSuccess'
 import SignUpOTP from '@/pages/onboarding/SignUpOTP'
+import Showcase from '@/pages/design-system/Showcase'
 
 // Public parent route (no auth required)
 export const publicRoute = createRoute({
@@ -120,4 +121,10 @@ export const resetSuccessRoute = createRoute({
   getParentRoute: () => publicRoute,
   path: '/reset-success',
   component: ResetSuccess,
+})
+
+export const designSystemRoute = createRoute({
+  getParentRoute: () => publicRoute,
+  path: '/design-system',
+  component: Showcase,
 })

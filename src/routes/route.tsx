@@ -4,6 +4,7 @@ import {
   alumnusProfessionalRoute,
   alumnusSchoolRoute,
   checkEmailRoute,
+  designSystemRoute,
   forgotPasswordRoute,
   landingRoute,
   lecturerBasicRoute,
@@ -80,6 +81,7 @@ export const routeTree = rootRoute.addChildren([
     resetPasswordRoute,
     resetSuccessRoute,
     checkEmailRoute,
+    designSystemRoute,
   ]),
   alumnusRoute.addChildren([
     alumnusAnalyticsRoute,
