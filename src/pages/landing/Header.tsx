@@ -16,11 +16,12 @@ const Header = () => {
         <div className="flex items-center justify-between max-w-(--breakpoint-xl) mx-auto px-4 sm:px-6 lg:px-8 h-16 bg-background shadow-md">
           <div className="flex items-center space-x-2">
             <img
-                          src={futaLogo}
-                          alt="Federal University of Technology Akure"
-                          className="mx-auto max-w-10 rounded-xl"
-                        />
-          <Logo /></div>
+              src={futaLogo}
+              alt="Federal University of Technology Akure"
+              className="mx-auto max-w-10 rounded-xl"
+            />
+            <Logo />
+          </div>
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             <a

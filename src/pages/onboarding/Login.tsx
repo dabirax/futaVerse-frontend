@@ -105,24 +105,24 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 h-screen mlg:h-auto">
-      <div className="w-full h-full grid lg:grid-cols-2 z-10">
+    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 h-screen mlg:h-auto overflow-hidden">
+      <div className="w-full h-full flex flex-col lg:flex-row z-10">
         <LeftContainer />
 
-        <div className="flex flex-col items-center justify-center py-8 px-4 sm:px-6">
+        <div className="flex flex-col items-center justify-center py-6 px-4 sm:px-6 overflow-y-auto lg:w-1/2">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-xl bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-8 md:p-12"
+            className="w-full max-w-xl bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-6 md:p-8"
           >
-            <div className="flex items-center justify-between w-full mb-8">
+            <div className="flex items-center justify-between w-full mb-6">
               <div className="transition-transform hover:-translate-x-1">
                 <BackButton />
               </div>
               <Logo showWordmark={false} />
             </div>
 
-            <div className="text-center mb-10">
+            <div className="text-center mb-6">
               <h2 className="text-3xl font-bold tracking-tight text-primary-dark">
                 Sign In
               </h2>
@@ -136,7 +136,7 @@ const LoginPage = () => {
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="space-y-6"
+                className="space-y-4"
                 onSubmit={form.handleSubmit(onSubmit)}
               >
                 <motion.div variants={itemVariants}>
@@ -268,7 +268,7 @@ const LoginPage = () => {
                   </Link>
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="relative py-4">
+                <motion.div variants={itemVariants} className="relative py-2">
                   <div className="absolute inset-0 flex items-center">
                     <Separator className="w-full" />
                   </div>
