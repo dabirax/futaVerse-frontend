@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from '@tanstack/react-router'
 import { Book, People, Teacher } from 'iconsax-reactjs'
-import { LeftContainer } from './components/LeftContainer'
+import { AuthLayout } from './components/AuthLayout'
 import { BackButton } from '@/components/BackButtons'
 import Logo from '@/components/logo'
 
@@ -21,56 +21,50 @@ const roles = [
 
 const SignUp = () => {
   return (
-    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 h-screen mlg:h-auto">
-      <div className="w-full h-full grid lg:grid-cols-2 z-10">
-        <LeftContainer />
-
-        <div className="flex flex-col items-center justify-center py-8 px-4 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-2xl bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-8 md:p-12"
-          >
-            <div className="flex items-center justify-between w-full mb-8">
-              <div className="transition-transform hover:-translate-x-1">
-                <BackButton />
-              </div>
-              <Logo />
-            </div>
-
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold tracking-tight text-primary-dark">
-                Join the Network
-              </h2>
-              <p className="text-slate-500 mt-2 text-sm">
-                Select your role to get started
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-              {roles.map((role) => (
-                <RoleCard
-                  key={role.path}
-                  label={role.label}
-                  icon={role.icon}
-                  path={role.path}
-                />
-              ))}
-            </div>
-
-            <div className="text-center text-sm text-slate-500">
-              Already have an account?{' '}
-              <Link
-                to="/login"
-                className="text-primary font-semibold hover:underline"
-              >
-                Sign In
-              </Link>
-            </div>
-          </motion.div>
+    <AuthLayout>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-2xl bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-8 md:p-12"
+      >
+        <div className="flex items-center justify-between w-full mb-8">
+          <div className="transition-transform hover:-translate-x-1">
+            <BackButton />
+          </div>
+          <Logo />
         </div>
-      </div>
-    </div>
+
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold tracking-tight text-primary-dark">
+            Join the Network
+          </h2>
+          <p className="text-slate-500 mt-2 text-sm">
+            Select your role to get started
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+          {roles.map((role) => (
+            <RoleCard
+              key={role.path}
+              label={role.label}
+              icon={role.icon}
+              path={role.path}
+            />
+          ))}
+        </div>
+
+        <div className="text-center text-sm text-slate-500">
+          Already have an account?{' '}
+          <Link
+            to="/login"
+            className="text-primary font-semibold hover:underline"
+          >
+            Sign In
+          </Link>
+        </div>
+      </motion.div>
+    </AuthLayout>
   )
 }
 
