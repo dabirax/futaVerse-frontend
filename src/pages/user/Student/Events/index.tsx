@@ -5,7 +5,6 @@ import {
   CalendarDays,
   CheckCircle2,
   Clock,
-  Loader2,
   MapPin,
   Search,
   Ticket as TicketIcon,
@@ -18,6 +17,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { StudentEventCardSkeleton } from '@/components/CardSkeletons'
 
 export default function StudentEvents() {
   const router = useRouter()
@@ -116,10 +116,7 @@ export default function StudentEvents() {
 
         <div className="mt-6">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-16">
-              <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-              <p className="text-muted-foreground">Loading your tickets...</p>
-            </div>
+            <StudentEventCardSkeleton />
           ) : displayedTickets.length === 0 ? (
             <Card className="border-dashed bg-muted/30">
               <CardContent className="flex flex-col items-center justify-center p-12 text-center">

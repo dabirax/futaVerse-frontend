@@ -14,17 +14,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import EventCard from '@/components/user/events/EventCard'
 import { useHostedEvents } from '@/hooks/useEvents'
-import { Skeleton } from '@/components/ui/skeleton'
-
-function EventListSkeleton() {
-  return (
-    <div className="grid gap-4">
-      {[1, 2, 3].map((i) => (
-        <Skeleton key={i} className="h-32 w-full rounded-xl" />
-      ))}
-    </div>
-  )
-}
+import { EventCardSkeleton } from '@/components/CardSkeletons'
 
 export default function AlumnusEvents() {
   const router = useRouter()
@@ -140,7 +130,7 @@ export default function AlumnusEvents() {
 
         <TabsContent value="published" className="mt-6">
           {isLoading ? (
-            <EventListSkeleton />
+            <EventCardSkeleton />
           ) : (
             <div className="grid gap-4">
               {filterEvents(publishedEvents).length > 0 ? (
@@ -158,7 +148,7 @@ export default function AlumnusEvents() {
 
         <TabsContent value="drafts" className="mt-6">
           {isLoading ? (
-            <EventListSkeleton />
+            <EventCardSkeleton />
           ) : (
             <div className="grid gap-4">
               {filterEvents(draftEvents).length > 0 ? (
@@ -176,7 +166,7 @@ export default function AlumnusEvents() {
 
         <TabsContent value="cancelled" className="mt-6">
           {isLoading ? (
-            <EventListSkeleton />
+            <EventCardSkeleton />
           ) : (
             <div className="grid gap-4">
               {filterEvents(cancelledEvents).length > 0 ? (

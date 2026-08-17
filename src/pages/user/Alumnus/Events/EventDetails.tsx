@@ -21,6 +21,7 @@ import { useEvent } from '@/hooks/useEvents'
 import { alumnusEventDetailRoute } from '@/routes/user-alumnus'
 import EventTicketsManager from '@/components/user/events/EventTicketsManager'
 import { BackButton2 } from '@/components/BackButtons'
+import { EventDetailSkeleton } from '@/components/CardSkeletons'
 
 const categoryLabels: Record<string, string> = {
   workshop: 'Workshop',
@@ -44,10 +45,9 @@ export default function EventDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <h2 className="text-xl font-semibold text-foreground">
-          Loading event details...
-        </h2>
+      <div className="space-y-6 max-w-5xl mx-auto pb-12">
+        <BackButton2 />
+        <EventDetailSkeleton />
       </div>
     )
   }

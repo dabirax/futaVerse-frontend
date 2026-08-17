@@ -21,6 +21,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useEvent, useRegisterEvent } from '@/hooks/useEvents'
 import { studentEventDetailRoute } from '@/routes/user-student'
 import { BackButton2 } from '@/components/BackButtons'
+import { EventDetailSkeleton } from '@/components/CardSkeletons'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -194,11 +195,9 @@ export default function StudentEventDetails() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-        <h2 className="text-xl font-medium text-foreground">
-          Loading event...
-        </h2>
+      <div className="space-y-6 max-w-5xl mx-auto pb-12">
+        <BackButton2 />
+        <EventDetailSkeleton />
       </div>
     )
   }

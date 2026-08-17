@@ -1,5 +1,6 @@
 import { useRouter } from '@tanstack/react-router'
 import { ArrowRight, MapPin } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 
@@ -17,6 +18,7 @@ interface InternshipCardProps {
   alumnusName?: string
   ship: 'internship' | 'mentorship'
   role: 'student' | 'alumnus'
+  children?: ReactNode
 }
 
 export default function ShipCard({
@@ -33,6 +35,7 @@ export default function ShipCard({
   alumnusName,
   ship,
   role,
+  children,
 }: InternshipCardProps) {
   const router = useRouter()
 
@@ -94,6 +97,8 @@ export default function ShipCard({
           </div>
         </div>
       </div>
+
+      {children && <div className="mt-3 pt-3 border-t">{children}</div>}
     </div>
   )
 }

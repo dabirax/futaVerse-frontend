@@ -20,6 +20,7 @@ import {
 } from '@/pages/onboarding/Student/lib/studentSchema'
 import { updateStudentProfile } from '@/services/profile'
 import { BackButton2 } from '@/components/BackButtons'
+import { SettingsSkeleton } from '@/components/CardSkeletons'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -320,13 +321,8 @@ const StudentSettings = () => {
   if (meLoading || !profile) {
     return (
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <BackButton2 />
-          <div>
-            <h1 className="text-2xl font-semibold">Settings</h1>
-            <p className="text-sm text-muted-foreground">Loading...</p>
-          </div>
-        </div>
+        <BackButton2 />
+        <SettingsSkeleton />
       </div>
     )
   }

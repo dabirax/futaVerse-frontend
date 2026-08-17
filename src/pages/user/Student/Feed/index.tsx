@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useFeed } from '@/hooks/useFeed'
 import { useMe } from '@/hooks/useMe'
 import InternshipFeedCard from '@/components/user/feed/InternshipFeedCard'
+import { FeedCardSkeleton } from '@/components/CardSkeletons'
 
 type FeedFilter = 'all' | 'opportunities' | 'mentorship' | 'events' | 'posts'
 
@@ -302,7 +303,8 @@ export default function StudentFeed() {
   const { data: me } = useMe()
   const firstName = me?.role === 'student' ? me.profile.firstname : undefined
 
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useFeed()
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useFeed()
   const feedItems = useMemo(
     () => data?.pages.flatMap((page) => page.results) ?? [],
     [data],
@@ -388,7 +390,9 @@ export default function StudentFeed() {
         </div>
 
         <div className="space-y-3 pt-2">
-          {filteredItems.length === 0 ? (
+          {isLoading ? (
+            <FeedCardSkeleton />
+          ) : filteredItems.length === 0 ? (
             <div className="bg-card rounded-xl border shadow-sm p-12 text-center">
               <p className="text-sm text-muted-foreground">No results found</p>
             </div>
