@@ -5,6 +5,7 @@
 
 html {
   font-size: 20px;
+  scroll-padding-top: 5rem;
 }
 
 @import 'tailwindcss';
