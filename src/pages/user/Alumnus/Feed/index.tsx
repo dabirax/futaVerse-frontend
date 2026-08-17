@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input'
 import { useFeed } from '@/hooks/useFeed'
 import { useMe } from '@/hooks/useMe'
 import { useMentorships } from '@/hooks/useMentorships'
+import { FeedCardSkeleton } from '@/components/CardSkeletons'
 
 type FeedFilter = 'all' | 'opportunities' | 'mentorship' | 'events' | 'posts'
 
@@ -447,7 +448,8 @@ export default function AlumnusFeed() {
   const { data: me } = useMe()
   const firstName = me?.role === 'alumni' ? me.profile.firstname : undefined
 
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useFeed()
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useFeed()
   const feedItems = useMemo(
     () => data?.pages.flatMap((page) => page.results) ?? [],
     [data],
@@ -537,7 +539,9 @@ export default function AlumnusFeed() {
 
         {/* Feed Cards */}
         <div className="space-y-3">
-          {filteredItems.length === 0 ? (
+          {isLoading ? (
+            <FeedCardSkeleton />
+          ) : filteredItems.length === 0 ? (
             <div className="bg-card rounded-xl border shadow-sm p-12 text-center">
               <p className="text-sm text-muted-foreground">No results found</p>
             </div>

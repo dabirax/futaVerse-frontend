@@ -19,9 +19,9 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useMyTicketsWithEvents } from '@/hooks/useEvents'
+import { TicketCardSkeleton } from '@/components/CardSkeletons'
 
 interface PurchaseRow extends PurchasedTicket {
   event: Event | undefined
@@ -87,7 +87,7 @@ export default function AlumnusTickets() {
 
         <TabsContent value="upcoming" className="mt-4">
           {isLoading ? (
-            <TicketSkeleton />
+            <TicketCardSkeleton />
           ) : (
             <TicketList
               rows={upcoming}
@@ -97,7 +97,7 @@ export default function AlumnusTickets() {
         </TabsContent>
         <TabsContent value="past" className="mt-4">
           {isLoading ? (
-            <TicketSkeleton />
+            <TicketCardSkeleton />
           ) : (
             <TicketList
               rows={past}
@@ -106,16 +106,6 @@ export default function AlumnusTickets() {
           )}
         </TabsContent>
       </Tabs>
-    </div>
-  )
-}
-
-function TicketSkeleton() {
-  return (
-    <div className="grid gap-4">
-      {[1, 2].map((i) => (
-        <Skeleton key={i} className="h-36 w-full rounded-xl" />
-      ))}
     </div>
   )
 }

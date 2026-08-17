@@ -20,6 +20,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { TicketCardSkeleton } from '@/components/CardSkeletons'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface PurchaseRow extends PurchasedTicket {
@@ -30,7 +31,7 @@ export default function StudentTickets() {
   const router = useRouter()
   const [search, setSearch] = useState('')
 
-  const { data: rows = [], isError } = useMyTicketsWithEvents()
+  const { data: rows = [], isLoading, isError } = useMyTicketsWithEvents()
 
   const filtered = (rows as Array<PurchaseRow>).filter(
     (r) =>
@@ -83,16 +84,24 @@ export default function StudentTickets() {
         </div>
 
         <TabsContent value="upcoming" className="mt-4">
-          <TicketList
-            rows={upcoming}
-            onView={(id) => router.navigate({ to: `/student/events/${id}` })}
-          />
+          {isLoading ? (
+            <TicketCardSkeleton />
+          ) : (
+            <TicketList
+              rows={upcoming}
+              onView={(id) => router.navigate({ to: `/student/events/${id}` })}
+            />
+          )}
         </TabsContent>
         <TabsContent value="past" className="mt-4">
-          <TicketList
-            rows={past}
-            onView={(id) => router.navigate({ to: `/student/events/${id}` })}
-          />
+          {isLoading ? (
+            <TicketCardSkeleton />
+          ) : (
+            <TicketList
+              rows={past}
+              onView={(id) => router.navigate({ to: `/student/events/${id}` })}
+            />
+          )}
         </TabsContent>
       </Tabs>
     </div>

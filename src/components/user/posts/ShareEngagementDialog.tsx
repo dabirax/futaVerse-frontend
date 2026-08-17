@@ -31,6 +31,7 @@ interface ShareEngagementDialogProps {
   onOpenChange: (open: boolean) => void
   engagement: { sqid: string; title: string; kind: EngagementKind }
   status: EngagementPostStatus
+  onSuccess?: () => void
 }
 
 export default function ShareEngagementDialog({
@@ -38,6 +39,7 @@ export default function ShareEngagementDialog({
   onOpenChange,
   engagement,
   status,
+  onSuccess,
 }: ShareEngagementDialogProps) {
   const [content, setContent] = useState('')
   const [successOpen, setSuccessOpen] = useState(false)
@@ -63,6 +65,7 @@ export default function ShareEngagementDialog({
         content: content.trim(),
       })
       onOpenChange(false)
+      onSuccess?.()
       setSuccessOpen(true)
     } catch (err) {
       setErrorMessage(

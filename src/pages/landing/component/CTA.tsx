@@ -24,7 +24,7 @@ const CTA = () => {
                 FUTAVerse
               </span>
             </div>
-            
+
             <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
               Your next opportunity{' '}
               <span className="text-[#c4b5fd]">starts here.</span>
