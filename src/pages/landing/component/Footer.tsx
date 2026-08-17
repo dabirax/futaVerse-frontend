@@ -1,63 +1,58 @@
 import { Facebook, Instagram, Linkedin, Mail, Twitter } from 'lucide-react'
-import logo from '@/assets/logos/FV_logo_backgroundless.png'
+import Logo from '@/components/logo'
 
 const Footer = () => {
   return (
-    <footer className="bg-card border-t border-border">
-      <div className="container mx-auto px-4 lg:px-8 py-2 lg:py-4">
+    <footer className="bg-surface border-t border-line">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20 py-8 lg:py-12">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <img src={logo} alt="FUTAVerse" className="h-10 w-auto" />
-              <span className="font-montserrat font-bold text-2xl tracking-tight bg-linear-to-r from-primary-dark to-accent bg-clip-text text-transparent">
-                FUTAVerse
-              </span>
-            </div>
-            <p className="text-muted-foreground">
+            <Logo />
+            <p className="text-sm text-ink-soft leading-relaxed">
               Connecting FUTA alumni and students through meaningful mentorship
               and professional development.
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               <a
                 href="#"
-                className="w-10 h-10 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center"
+                className="w-8 h-8 rounded-xs bg-surface-2 hover:bg-indigo hover:text-white transition-colors flex items-center justify-center text-ink-soft"
                 aria-label="Facebook"
               >
-                <Facebook className="w-5 h-5" />
+                <Facebook className="w-3.5 h-3.5" />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center"
+                className="w-8 h-8 rounded-xs bg-surface-2 hover:bg-indigo hover:text-white transition-colors flex items-center justify-center text-ink-soft"
                 aria-label="Twitter"
               >
-                <Twitter className="w-5 h-5" />
+                <Twitter className="w-3.5 h-3.5" />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center"
+                className="w-8 h-8 rounded-xs bg-surface-2 hover:bg-indigo hover:text-white transition-colors flex items-center justify-center text-ink-soft"
                 aria-label="LinkedIn"
               >
-                <Linkedin className="w-5 h-5" />
+                <Linkedin className="w-3.5 h-3.5" />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center"
+                className="w-8 h-8 rounded-xs bg-surface-2 hover:bg-indigo hover:text-white transition-colors flex items-center justify-center text-ink-soft"
                 aria-label="Instagram"
               >
-                <Instagram className="w-5 h-5" />
+                <Instagram className="w-3.5 h-3.5" />
               </a>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-bold mb-4 text-foreground">Quick Links</h4>
-            <ul className="space-y-2">
+            <h4 className="font-semibold text-sm text-ink mb-4">Quick Links</h4>
+            <ul className="space-y-2.5">
               <li>
                 <a
                   href="#about"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-ink-soft hover:text-ink transition-colors"
                 >
                   About
                 </a>
@@ -65,7 +60,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#how-it-works"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-ink-soft hover:text-ink transition-colors"
                 >
                   How It Works
                 </a>
@@ -73,7 +68,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#features"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-ink-soft hover:text-ink transition-colors"
                 >
                   Features
                 </a>
@@ -81,7 +76,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#roles"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-ink-soft hover:text-ink transition-colors"
                 >
                   Roles
                 </a>
@@ -91,12 +86,12 @@ const Footer = () => {
 
           {/* Resources */}
           <div>
-            <h4 className="font-bold mb-4 text-foreground">Resources</h4>
-            <ul className="space-y-2">
+            <h4 className="font-semibold text-sm text-ink mb-4">Resources</h4>
+            <ul className="space-y-2.5">
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-ink-soft hover:text-ink transition-colors"
                 >
                   Student Guide
                 </a>
@@ -104,7 +99,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-ink-soft hover:text-ink transition-colors"
                 >
                   Mentor Handbook
                 </a>
@@ -112,7 +107,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-ink-soft hover:text-ink transition-colors"
                 >
                   FAQ
                 </a>
@@ -120,7 +115,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-ink-soft hover:text-ink transition-colors"
                 >
                   Support
                 </a>
@@ -130,47 +125,49 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="font-bold mb-4 text-foreground">Contact</h4>
-            <ul className="space-y-2">
-              <li className="flex items-center gap-2 text-muted-foreground">
-                <Mail className="w-4 h-4" />
+            <h4 className="font-semibold text-sm text-ink mb-4">Contact</h4>
+            <ul className="space-y-2.5">
+              <li className="flex items-center gap-2 text-sm text-ink-soft">
+                <Mail className="w-3.5 h-3.5 shrink-0" />
                 <a
                   href="mailto:info@futaverse.com"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-ink transition-colors"
                 >
                   info@futaverse.com
                 </a>
               </li>
-              <li className="text-muted-foreground">
+              <li className="text-sm text-ink-soft">
                 Federal University of Technology, Akure
               </li>
-              <li className="text-muted-foreground">Ondo State, Nigeria</li>
+              <li className="text-sm text-ink-soft">
+                Ondo State, Nigeria
+              </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground text-center md:text-left">
-            © {new Date().getFullYear()} FUTAVerse. All rights reserved. Powered
+        <div className="pt-6 border-t border-line flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-ink-faint text-center md:text-left">
+            &copy; {new Date().getFullYear()} FUTAVerse. All rights reserved. Powered
             by FUTA Alumni Network.
           </p>
-          <div className="flex gap-6 text-sm">
+          <div className="flex gap-5 text-xs">
             <a
               href="#"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-ink-faint hover:text-ink transition-colors"
             >
               Privacy Policy
             </a>
             <a
               href="#"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-ink-faint hover:text-ink transition-colors"
             >
               Terms of Service
             </a>
             <a
               href="#"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-ink-faint hover:text-ink transition-colors"
             >
               Contact
             </a>

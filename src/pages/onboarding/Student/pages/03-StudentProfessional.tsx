@@ -1,10 +1,14 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { motion } from 'framer-motion'
 import { useRouter } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { AlertCircle, WifiOff } from 'lucide-react'
+<<<<<<< HEAD
+import { LeftContainer } from '../../components/LeftContainer'
+import { SignupStepIndicator } from '../../components/SignupStepIndicator'
+=======
 import { AuthLayout } from '../../components/AuthLayout'
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
 import { BackButton } from '../../../../components/BackButtons'
 import { useSignupOTPStore } from '../../hooks/useSignupOTPStore'
 import {
@@ -15,7 +19,6 @@ import { studentProfessionalSchema } from '../lib/studentSchema'
 import type { StudentProfessionalFormData } from '../lib/studentSchema'
 import type { z } from 'zod'
 import { Button } from '@/components/ui/button'
-import Logo from '@/components/logo'
 import {
   Form,
   FormControl,
@@ -247,6 +250,251 @@ const StudentProfessional = () => {
   ])
 
   return (
+<<<<<<< HEAD
+    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+      <LeftContainer />
+      <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
+        <div className="w-full max-w-lg">
+          <div className="mb-8">
+            <BackButton />
+          </div>
+
+          <SignupStepIndicator
+            steps={[{ label: 'Personal' }, { label: 'School' }, { label: 'Professional' }]}
+            currentStep={2}
+            role="student"
+          />
+
+          <div className="mb-8 text-center">
+            <h1 className="font-display text-2xl font-semibold text-ink tracking-tight">
+              Professional Information
+            </h1>
+            <p className="text-ink-soft text-sm mt-1.5">
+              Tell us about your skills and social presence
+            </p>
+          </div>
+
+          <Form {...form}>
+            <form
+              className="space-y-5"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <FormField
+                control={form.control}
+                name="skills"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      Skills
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Enter your skills"
+                        className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      Personal Description
+                    </FormLabel>
+                    <FormControl>
+                      <textarea
+                        placeholder="Describe yourself"
+                        className="w-full h-20 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint p-3 text-sm focus-visible:outline-none focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px] transition-colors"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="linkedin_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        LinkedIn
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="url"
+                          placeholder="LinkedIn profile URL"
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="x_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        X
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="url"
+                          placeholder="X profile URL"
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="instagram_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        Instagram URL
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="url"
+                          placeholder="Instagram profile URL"
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="facebook_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        Facebook URL
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="url"
+                          placeholder="Facebook profile URL"
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="github_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        GitHub URL
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="url"
+                          placeholder="GitHub profile URL"
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="website_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        Website URL
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="url"
+                          placeholder="Your website URL"
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="text-ink-soft hover:text-ink"
+                  onClick={() => router.history.back()}
+                >
+                  Back
+                </Button>
+
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-indigo text-white rounded-sm px-8 h-10 font-medium hover:bg-indigo-hover transition-colors"
+                >
+                  {isLoading ? 'Submitting...' : 'Submit'}
+                </Button>
+              </div>
+
+              {serverError && (
+                <div className="rounded-xs bg-destructive-soft border border-destructive px-4 py-3 flex gap-3 mt-4">
+                  <div className="shrink-0 mt-0.5 text-destructive">
+                    {serverError.isNetwork ? (
+                      <WifiOff size={16} />
+                    ) : (
+                      <AlertCircle size={16} />
+                    )}
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium text-destructive">
+                      {serverError.message}
+                    </p>
+                    {serverError.hint && (
+                      <p className="text-xs text-destructive/70">
+                        {serverError.hint}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </form>
+          </Form>
+=======
     <AuthLayout>
       <div className="w-full max-w-2xl bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-8 md:p-12">
         <div className="flex items-center justify-between w-full mb-8">
@@ -254,6 +502,7 @@ const StudentProfessional = () => {
             <BackButton />
           </div>
           <Logo />
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
         </div>
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold tracking-tight text-primary-dark">

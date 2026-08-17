@@ -1,12 +1,31 @@
 import { Link } from '@tanstack/react-router'
-import { motion } from 'framer-motion'
 import { CircleCheckBig } from 'lucide-react'
 import { AuthLayout } from './components/AuthLayout'
 import { Button } from '@/components/ui/button'
-import { itemVariants } from '@/animationVariants'
 
 const ResetSuccess = () => {
   return (
+<<<<<<< HEAD
+    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+      <LeftContainer />
+      <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
+        <div className="w-full max-w-md flex flex-col items-center text-center animate-in fade-in duration-500">
+          <div className="w-16 h-16 rounded-full bg-green-soft flex items-center justify-center mb-6 animate-in fade-in duration-700">
+            <CircleCheckBig className="text-green" size={32} />
+          </div>
+
+          <h1 className="font-display text-2xl font-semibold text-ink tracking-tight mb-2">
+            All Set!
+          </h1>
+          <p className="text-ink-soft text-sm leading-relaxed max-w-xs mb-8">
+            Your password has been successfully reset. You can now sign in to
+            your Futaverse account.
+          </p>
+
+          <Link to="/login" className="w-full max-w-xs">
+            <Button className="w-full h-10">Back to Login</Button>
+          </Link>
+=======
     <AuthLayout>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -35,6 +54,7 @@ const ResetSuccess = () => {
             Your password has been successfully reset. <br />
             You can now sign in to your Futaverse account.
           </p>
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
         </div>
 
         <motion.div

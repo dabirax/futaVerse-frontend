@@ -3,13 +3,11 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
 import { AlertCircle, Eye, EyeOff, WifiOff } from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
 import { BackButton } from '../../components/BackButtons'
 import { AuthLayout } from './components/AuthLayout'
 import { useForgotPasswordStore } from './hooks/useForgotPasswordStore'
-import Logo from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -21,7 +19,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { api } from '@/lib/api'
-import { containerVariants, itemVariants } from '@/animationVariants'
 
 const resetPasswordSchema = z
   .object({
@@ -125,6 +122,149 @@ const ResetPassword = () => {
   }
 
   return (
+<<<<<<< HEAD
+    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+      <LeftContainer />
+      <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
+        <div className="w-full max-w-md animate-in fade-in duration-500">
+          <div className="mb-8">
+            <BackButton />
+          </div>
+
+          <div className="mb-8">
+            <h1 className="font-display text-2xl font-semibold text-ink tracking-tight">
+              Reset Password
+            </h1>
+            <p className="text-ink-soft text-sm mt-1.5">
+              Choose a new, secure password for your account
+            </p>
+          </div>
+
+          <Form {...form}>
+            <form
+              className="space-y-6"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      New Password
+                    </FormLabel>
+                    <div className="relative">
+                      <FormControl>
+                        <Input
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="********"
+                          className="pr-10"
+                          disabled={resetPasswordMutation.isPending}
+                          {...field}
+                        />
+                      </FormControl>
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((p) => !p)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-faint hover:text-ink transition-colors"
+                      >
+                        {showPassword ? (
+                          <EyeOff size={16} />
+                        ) : (
+                          <Eye size={16} />
+                        )}
+                      </button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      Confirm New Password
+                    </FormLabel>
+                    <div className="relative">
+                      <FormControl>
+                        <Input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          placeholder="********"
+                          className="pr-10"
+                          disabled={resetPasswordMutation.isPending}
+                          {...field}
+                        />
+                      </FormControl>
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword((p) => !p)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-faint hover:text-ink transition-colors"
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff size={16} />
+                        ) : (
+                          <Eye size={16} />
+                        )}
+                      </button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {serverError && (
+                <div className="rounded-xs bg-destructive-soft border border-destructive/20 px-4 py-3 flex gap-3">
+                  <div className="shrink-0 mt-0.5 text-destructive">
+                    {serverError.isNetwork ? (
+                      <WifiOff size={16} />
+                    ) : (
+                      <AlertCircle size={16} />
+                    )}
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium text-destructive-on-soft">
+                      {serverError.message}
+                    </p>
+                    {serverError.hint && (
+                      <p className="text-xs text-ink-soft">
+                        {serverError.hint}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-4 pt-4">
+                <Button
+                  type="submit"
+                  disabled={resetPasswordMutation.isPending}
+                  className="w-full h-10"
+                >
+                  {resetPasswordMutation.isPending ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin" />
+                      Resetting...
+                    </div>
+                  ) : (
+                    'Reset Password'
+                  )}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => navigate({ to: '/login' })}
+                  className="w-full h-10"
+                >
+                  Back to Login
+                </Button>
+              </div>
+            </form>
+          </Form>
+=======
     <AuthLayout>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -136,6 +276,7 @@ const ResetPassword = () => {
             <BackButton />
           </div>
           <Logo />
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
         </div>
 
         <div className="text-center mb-10">

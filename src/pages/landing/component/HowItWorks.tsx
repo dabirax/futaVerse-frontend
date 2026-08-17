@@ -1,78 +1,90 @@
 import { Calendar, UserCheck, UserPlus, Video } from 'lucide-react'
 
-const HowItWorks = () => {
-  const steps = [
-    {
-      icon: UserPlus,
-      number: '01',
-      title: 'Register as Student or Alumni',
-      description:
-        'Create your profile and join the FUTAVerse community in minutes.',
-    },
-    {
-      icon: UserCheck,
-      number: '02',
-      title: 'Get Matched for Mentorship or Internships',
-      description:
-        'Our smart matching connects you with the perfect mentorship or internship opportunity.',
-    },
-    {
-      icon: Video,
-      number: '03',
-      title: 'Schedule Sessions',
-      description:
-        'Book online sessions via Google Meet or arrange in-person meetings.',
-    },
-    {
-      icon: Calendar,
-      number: '04',
-      title: 'Attend Events & Track Progress',
-      description:
-        'Participate in events, monitor your growth, and build your network.',
-    },
-  ]
+const steps = [
+  {
+    icon: UserPlus,
+    number: '01',
+    title: 'Register as Student or Alumni',
+    description:
+      'Create your profile and join the FUTAVerse community in minutes.',
+    ringColor: 'border-indigo',
+    iconColor: 'text-indigo',
+    iconBg: 'bg-indigo-soft',
+  },
+  {
+    icon: UserCheck,
+    number: '02',
+    title: 'Get Matched for Mentorship or Internships',
+    description:
+      'Our smart matching connects you with the perfect mentorship or internship opportunity.',
+    ringColor: 'border-maroon',
+    iconColor: 'text-maroon',
+    iconBg: 'bg-maroon-soft',
+  },
+  {
+    icon: Video,
+    number: '03',
+    title: 'Schedule Sessions',
+    description:
+      'Book online sessions via Google Meet or arrange in-person meetings.',
+    ringColor: 'border-gold',
+    iconColor: 'text-gold',
+    iconBg: 'bg-gold-soft',
+  },
+  {
+    icon: Calendar,
+    number: '04',
+    title: 'Attend Events & Track Progress',
+    description:
+      'Participate in events, monitor your growth, and build your network.',
+    ringColor: 'border-green',
+    iconColor: 'text-green',
+    iconBg: 'bg-green-soft',
+  },
+]
 
+const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="py-8 lg:py-16 gradient-soft">
-      <div className="container mx-auto px-6 sm:px-12 lg:px-20">
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
-            How It{' '}
-            <span className="bg-linear-to-r from-accent to-primary bg-clip-text text-transparent">
-              Works
-            </span>
+    <section id="how-it-works" className="py-16 lg:py-24 bg-surface-2 border-t border-line">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20">
+        <div className="max-w-3xl mb-16">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="w-4 h-px bg-gold" />
+            <p className="font-mono text-xs uppercase tracking-widest text-ink-soft">
+              How It Works
+            </p>
+          </div>
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-ink leading-tight">
+            Getting started is simple
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Getting started with FUTAVerse is simple. Follow these four easy
-            steps to begin your mentorship journey.
+          <p className="mt-4 text-base text-ink-soft leading-relaxed max-w-2xl">
+            Follow these four steps to begin your mentorship journey with FUTA alumni.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
           {steps.map((step, index) => {
             const Icon = step.icon
             return (
-              <div key={index} className="relative group">
+              <div key={index} className="relative">
                 {/* Connector Line (hidden on mobile and last item) */}
                 {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-16 left-full w-full h-0.5 bg-linear-to-r from-primary to-transparent -translate-x-1/2 z-0" />
+                  <div className="hidden lg:block absolute top-8 left-full w-full h-px bg-line -translate-x-1/2 z-0" />
                 )}
 
-                <div className="relative bg-card rounded-2xl p-6 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-soft hover:-translate-y-2 z-10">
-                  {/* Step Number */}
-                  <div className="text-6xl font-black text-primary/10 absolute top-4 right-4">
+                <div className="relative bg-surface border border-line p-6 z-10 hover:border-line-strong transition-colors">
+                  <div className="font-mono text-[2.5rem] font-medium text-indigo/10 absolute top-4 right-4 leading-none">
                     {step.number}
                   </div>
 
-                  {/* Icon */}
-                  <div className="w-14 h-14 rounded-xl bg-linear-to-br from-primary to-primary-dark flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-20">
-                    <Icon className="w-7 h-7 text-primary-foreground" />
+                  <div className={`w-10 h-10 rounded-full border ${step.ringColor} ${step.iconBg} flex items-center justify-center mb-4 relative z-20`}>
+                    <Icon className={`w-4 h-4 ${step.iconColor}`} />
                   </div>
 
-                  <h3 className="text-xl font-bold mb-3 relative z-20">
+                  <h3 className="font-display text-base font-semibold mb-2 relative z-20 text-ink">
                     {step.title}
                   </h3>
-                  <p className="text-muted-foreground relative z-20">
+                  <p className="text-sm text-ink-soft relative z-20 leading-relaxed">
                     {step.description}
                   </p>
                 </div>

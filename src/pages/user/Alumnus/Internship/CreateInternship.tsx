@@ -206,7 +206,7 @@ export default function CreateInternship() {
     <div className="space-y-6 pb-8">
       <div className="flex items-center gap-4">
         <BackButton2 />
-        <h1 className="text-3xl font-bold text-foreground">
+        <h1 className="font-display text-xl text-ink">
           Create New Internship
         </h1>
       </div>
@@ -214,13 +214,11 @@ export default function CreateInternship() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit, onInvalid)}
-          className="space-y-8"
+          className="space-y-4"
         >
           {/* Basic Information */}
-          <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">
-              Basic Information
-            </h2>
+          <section className="rounded-md border border-line bg-surface p-6 space-y-5">
+            <h2 className="text-overline text-maroon">Basic Information</h2>
 
             <FormField
               control={form.control}
@@ -256,15 +254,13 @@ export default function CreateInternship() {
                 </FormItem>
               )}
             />
-          </div>
+          </section>
 
           {/* Company Information */}
-          <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">
-              Company Information
-            </h2>
+          <section className="rounded-md border border-line bg-surface p-6 space-y-5">
+            <h2 className="text-overline text-maroon">Company Information</h2>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-5">
               <FormField
                 control={form.control}
                 name="company"
@@ -327,7 +323,7 @@ export default function CreateInternship() {
               )}
             />
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-5">
               <FormField
                 control={form.control}
                 name="company_linkedin_url"
@@ -359,15 +355,13 @@ export default function CreateInternship() {
                 )}
               />
             </div>
-          </div>
+          </section>
 
           {/* Work Details */}
-          <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">
-              Work Details
-            </h2>
+          <section className="rounded-md border border-line bg-surface p-6 space-y-5">
+            <h2 className="text-overline text-maroon">Work Details</h2>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-5">
               <FormField
                 control={form.control}
                 name="work_mode"
@@ -461,7 +455,7 @@ export default function CreateInternship() {
               )}
             />
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-5">
               <FormField
                 control={form.control}
                 name="duration_weeks"
@@ -591,13 +585,11 @@ export default function CreateInternship() {
                 </FormItem>
               )}
             />
-          </div>
+          </section>
 
           {/* Skills Required */}
-          <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">
-              Skills Required
-            </h2>
+          <section className="rounded-md border border-line bg-surface p-6 space-y-5">
+            <h2 className="text-overline text-maroon">Skills Required</h2>
 
             <FormField
               control={form.control}
@@ -636,21 +628,19 @@ export default function CreateInternship() {
                 </FormItem>
               )}
             />
-          </div>
+          </section>
 
           {/* Compensation */}
-          <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">
-              Compensation
-            </h2>
+          <section className="rounded-md border border-line bg-surface p-6 space-y-5">
+            <h2 className="text-overline text-maroon">Compensation</h2>
 
             <FormField
               control={form.control}
               name="is_paid"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border border-border p-4">
+                <FormItem className="flex flex-row items-center justify-between rounded-md border border-line p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Paid Internship</FormLabel>
+                    <FormLabel className="text-body">Paid Internship</FormLabel>
                     <FormDescription>
                       Will this internship provide a stipend?
                     </FormDescription>
@@ -683,11 +673,11 @@ export default function CreateInternship() {
                 )}
               />
             )}
-          </div>
+          </section>
 
           {/* Application Requirements */}
-          <div className="rounded-lg border border-border bg-card p-6 space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">
+          <section className="rounded-md border border-line bg-surface p-6 space-y-5">
+            <h2 className="text-overline text-maroon">
               Application Requirements
             </h2>
 
@@ -695,9 +685,11 @@ export default function CreateInternship() {
               control={form.control}
               name="require_resume"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border border-border p-4">
+                <FormItem className="flex flex-row items-center justify-between rounded-md border border-line p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Require Resume</FormLabel>
+                    <FormLabel className="text-body">
+                      Require Resume
+                    </FormLabel>
                     <FormDescription>
                       Students must upload their resume
                     </FormDescription>
@@ -716,9 +708,9 @@ export default function CreateInternship() {
               control={form.control}
               name="require_cover_letter"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border border-border p-4">
+                <FormItem className="flex flex-row items-center justify-between rounded-md border border-line p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">
+                    <FormLabel className="text-body">
                       Require Cover Letter
                     </FormLabel>
                     <FormDescription>
@@ -734,31 +726,29 @@ export default function CreateInternship() {
                 </FormItem>
               )}
             />
-          </div>
+          </section>
+
+          {/* Status messages */}
+          {createInternship.isPending && (
+            <div className="rounded-md border border-line bg-surface-2 p-4 text-body text-ink-soft">
+              Creating your internship — please don't refresh the page.
+            </div>
+          )}
+
+          {createInternship.isError && (
+            <div className="rounded-md border border-destructive bg-destructive-soft p-4 text-body text-destructive whitespace-pre-line">
+              {extractApiErrors(createInternship.error)}
+            </div>
+          )}
 
           {/* Form Actions */}
-          <div className="flex gap-4 justify-end">
-            {/* Loading State */}
-            {createInternship.isPending && (
-              <div className="rounded-lg border border-border bg-yellow-50 text-yellow-800 p-4">
-                Creating your internship… try not to refresh the page.
-              </div>
-            )}
-
-            {/* Error State */}
-            {createInternship.isError && (
-              <div className="rounded-lg border border-border bg-red-50 text-red-700 p-4 whitespace-pre-line">
-                {extractApiErrors(createInternship.error)}
-              </div>
-            )}
+          <div className="flex gap-4 justify-end pt-2">
             <Link to="/alumnus/internships">
               <Button type="button" variant="outline">
                 Cancel
               </Button>
             </Link>
-            <Button type="submit" variant="gradient">
-              Create Internship
-            </Button>
+            <Button type="submit">Create Internship</Button>
           </div>
         </form>
       </Form>

@@ -1,26 +1,89 @@
-import { motion } from 'framer-motion'
 import { Link } from '@tanstack/react-router'
+<<<<<<< HEAD
+import { GraduationCap, Users, BookOpen } from 'lucide-react'
+import { LeftContainer } from './components/LeftContainer'
+=======
 import { Book, People, Teacher } from 'iconsax-reactjs'
 import { AuthLayout } from './components/AuthLayout'
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
 import { BackButton } from '@/components/BackButtons'
-import Logo from '@/components/logo'
 
 const roles = [
   {
-    label: 'Alumnus',
-    path: '/signup/alumnusBasic',
-    icon: <People size="20" />,
+    label: 'Student',
+    description: 'Currently enrolled at FUTA',
+    path: '/signup/studentBasic',
+    icon: <BookOpen size={18} />,
+    color: 'border-indigo text-indigo bg-indigo-soft',
   },
-  { label: 'Student', path: '/signup/studentBasic', icon: <Book size="20" /> },
+  {
+    label: 'Alumnus',
+    description: 'FUTA graduate or alumni',
+    path: '/signup/alumnusBasic',
+    icon: <GraduationCap size={18} />,
+    color: 'border-maroon text-maroon bg-maroon-soft',
+  },
   {
     label: 'Lecturer',
+    description: 'Faculty or staff member',
     path: '/signup/lecturerBasic',
-    icon: <Teacher size="20" />,
+    icon: <Users size={18} />,
+    color: 'border-gold text-gold bg-gold-soft',
   },
 ]
 
 const SignUp = () => {
   return (
+<<<<<<< HEAD
+    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+      <LeftContainer />
+
+      <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
+        <div className="w-full max-w-lg">
+          <div className="mb-8">
+            <BackButton />
+          </div>
+
+          <div className="mb-8">
+            <h1 className="font-display text-2xl sm:text-3xl font-semibold text-ink tracking-tight">
+              Join the Network
+            </h1>
+            <p className="text-ink-soft text-sm mt-2">
+              Select your role to get started
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {roles.map((role) => (
+              <Link key={role.path} to={role.path}>
+                <div className="flex items-center gap-4 p-4 border border-line bg-surface rounded-xs hover:border-line-strong transition-colors cursor-pointer group">
+                  <div
+                    className={`flex items-center justify-center w-9 h-9 rounded-full border ${role.color}`}
+                  >
+                    {role.icon}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm text-ink group-hover:text-indigo transition-colors">
+                      {role.label}
+                    </p>
+                    <p className="text-xs text-ink-soft">{role.description}</p>
+                  </div>
+                  <span className="text-ink-faint text-xs">&rarr;</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <p className="text-center text-sm text-ink-soft mt-8">
+            Already have an account?{' '}
+            <Link
+              to="/login"
+              className="text-indigo font-semibold hover:text-indigo-hover transition-colors"
+            >
+              Sign In
+            </Link>
+          </p>
+=======
     <AuthLayout>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -32,6 +95,7 @@ const SignUp = () => {
             <BackButton />
           </div>
           <Logo />
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
         </div>
 
         <div className="text-center mb-10">
@@ -67,32 +131,5 @@ const SignUp = () => {
     </AuthLayout>
   )
 }
-
-interface RoleCardProps {
-  label: string
-  path: string
-  icon: React.ReactNode
-}
-
-const RoleCard = ({ icon, label, path }: RoleCardProps) => (
-  <Link to={path}>
-    <motion.div
-      whileHover={{ y: -2 }}
-      whileTap={{ scale: 0.98 }}
-      className={`
-      cursor-pointer flex items-center gap-4 p-5 rounded-2xl border-2 transition-all duration-200 border-zinc-400  hover:border-primary/80 text-zinc-900 hover:text-primary-dark 
-    `}
-    >
-      <div
-        className={`p-2 rounded-lg bg-zinc-100 dark:bg-primary-20 hover:bg-primary hover:text-white`}
-      >
-        {icon}
-      </div>
-      <span className="font-semibold text-lg leading-tight hover:text-primary">
-        {label}
-      </span>
-    </motion.div>
-  </Link>
-)
 
 export default SignUp

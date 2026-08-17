@@ -9,7 +9,7 @@ import Footer from './component/Footer'
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-muted">
+    <div className="min-h-screen bg-background">
       <Header />
       <main>
         <Hero />

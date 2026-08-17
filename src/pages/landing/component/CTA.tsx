@@ -1,71 +1,67 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import studentsIllustration from '@/assets/landing/students-illustration.png'
-import logoChip from '@/assets/logos/FV_logo_whitebg.png'
+
+const stats = [
+  { value: '500+', label: 'Mentors' },
+  { value: '1K+', label: 'Students' },
+  { value: '95%', label: 'Success rate' },
+]
 
 const CTA = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-r from-[#7b2fbe] to-[#4338ca] py-16 lg:py-24 text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.15),_transparent_20%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.1),_transparent_25%)]" />
-      <div className="relative container mx-auto px-6 sm:px-12 lg:px-20">
+    <section className="py-16 lg:py-24 bg-surface border-t border-line">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20">
         <div className="grid gap-10 lg:grid-cols-2 items-center">
-          <div className="relative overflow-hidden rounded-[2rem] bg-white/10 p-4 shadow-2xl backdrop-blur-xl lg:p-6">
+          <div className="relative overflow-hidden border border-line bg-surface-2 aspect-[4/3] lg:aspect-auto lg:h-full">
             <img
               src={studentsIllustration}
               alt="Students learning together"
-              className="w-full h-full rounded-[1.5rem] object-cover"
+              className="w-full h-full object-cover"
             />
           </div>
 
-          <div className="space-y-6 relative z-10">
-            <div className="flex items-center gap-3">
-              <img src={logoChip} alt="FUTAVerse" className="h-14 w-auto" />
-              <span className="font-montserrat font-bold text-3xl tracking-tight bg-linear-to-r from-primary-light to-accent-light bg-clip-text text-transparent">
-                FUTAVerse
-              </span>
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-4 h-px bg-gold" />
+              <p className="font-mono text-xs uppercase tracking-widest text-ink-soft">
+                Join the Network
+              </p>
             </div>
 
-            <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
-              Your next opportunity{' '}
-              <span className="text-[#c4b5fd]">starts here.</span>
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-ink leading-tight">
+              Your next opportunity starts here.
             </h2>
-            <p className="max-w-xl text-base leading-8 text-white/85">
+            <p className="max-w-xl text-base text-ink-soft leading-relaxed">
               Match with experienced alumni, discover internships, and build
               real career momentum from day one.
             </p>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <Link to="/signup/studentBasic">
-                <Button
-                  variant="default"
-                  size="lg"
-                  className="bg-white text-[#5e0b80] hover:bg-white/90 text-base font-bold"
-                >
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link to="/signup/studentBasic" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto">
                   Sign Up as Student
                 </Button>
               </Link>
-              <Link to="/signup/alumnusBasic">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-white/40 text-white hover:border-white hover:text-[#5e0b80] text-base font-bold"
-                >
+              <Link to="/signup/alumnusBasic" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto">
                   Sign Up as Alumni
                 </Button>
               </Link>
             </div>
-            <div className="grid grid-cols-3 gap-4 text-center text-sm text-white/80">
-              <div className="rounded-3xl bg-white/10 px-4 py-4">
-                <p className="text-2xl font-semibold text-white">500+</p>
-                <p>Mentors</p>
-              </div>
-              <div className="rounded-3xl bg-white/10 px-4 py-4">
-                <p className="text-2xl font-semibold text-white">1K+</p>
-                <p>Students</p>
-              </div>
-              <div className="rounded-3xl bg-white/10 px-4 py-4">
-                <p className="text-2xl font-semibold text-white">95%</p>
-                <p>Success rate</p>
-              </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              {stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="border border-line bg-background px-4 py-4 text-center"
+                >
+                  <p className="font-mono text-xl font-medium text-ink tabular-nums">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs text-ink-soft mt-0.5">{stat.label}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>

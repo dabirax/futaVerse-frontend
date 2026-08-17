@@ -1,24 +1,15 @@
-import { useState } from 'react'
-import { Link, Outlet, useNavigate } from '@tanstack/react-router'
 import {
   BarChart3,
   Briefcase,
   Calendar,
-  LogOut,
-  Menu,
   MessageSquare,
   Newspaper,
   Rss,
   Settings,
   TicketCheck,
   Users,
-  X,
 } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { useMe } from '@/hooks/useMe'
-import logo from '@/assets/logos/FV_logo_backgroundless.png'
+import DashboardLayout from '@/components/layout/dashboard-layout'
 
 const sidebarItems = [
   { icon: Rss, label: 'Feed', path: '/alumnus/feed' },
@@ -34,136 +25,5 @@ const sidebarItems = [
 ]
 
 export default function AlumnusLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const navigate = useNavigate()
-  const { data: me } = useMe()
-
-  const profile = me?.profile
-  const displayName = profile
-    ? [profile.firstname, profile.lastname].filter(Boolean).join(' ') ||
-      'Alumnus'
-    : 'Alumnus'
-  const initials =
-    profile?.firstname || profile?.lastname
-      ? `${profile.firstname.charAt(0)}${profile.lastname.charAt(0)}`.toUpperCase()
-      : 'AL'
-  const avatarSrc =
-    profile?.profile_img_url ??
-    sessionStorage.getItem('profile_img') ??
-    undefined
-
-  const handleSignOut = () => {
-    // Implement logout logic here
-    navigate({ to: '/' })
-  }
-
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-card border-b z-50 flex items-center justify-between px-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
-          {sidebarOpen ? <X /> : <Menu />}
-        </Button>
-        <div className="flex items-center">
-          <img src={logo} alt="FUTAVerse" className="h-9 w-auto" />
-        </div>
-        <div className="w-10" />
-      </header>
-
-      {/* Overlay for mobile */}
-      {sidebarOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-card border-r transition-transform duration-300 z-50 flex flex-col
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
-      >
-        {/* Branding */}
-        <div className="flex items-center gap-2 px-4 h-16 border-b shrink-0">
-          <img src={logo} alt="FUTAVerse" className="h-10 w-auto" />
-          <span className="font-montserrat font-bold text-2xl tracking-tight bg-linear-to-r from-primary-dark to-accent bg-clip-text text-transparent">
-            FUTAVerse
-          </span>
-        </div>
-
-        {/* Profile Section */}
-        <div className="p-3 border-b">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={avatarSrc} alt="Profile" />
-              <AvatarFallback>{initials}</AvatarFallback>
-            </Avatar>
-            <div>
-              <h3 className="font-semibold text-sm text-foreground">
-                {displayName}
-              </h3>
-              <p className="text-xs text-muted-foreground">Alumnus</p>
-            </div>
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-3">
-          <ul className="space-y-0.5 px-2">
-            {sidebarItems.map((item) => (
-              <li key={item.path}>
-                <Link
-                  to={item.path}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150 text-sm"
-                  activeProps={{
-                    className:
-                      'bg-primary text-primary-foreground font-semibold',
-                  }}
-                  inactiveProps={{
-                    className:
-                      'text-muted-foreground hover:bg-muted hover:text-foreground font-medium',
-                  }}
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <item.icon
-                    className="h-4.5 w-4.5 shrink-0"
-                    style={{ width: '1.125rem', height: '1.125rem' }}
-                  />
-                  <span>{item.label}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <Separator />
-
-        {/* Sign Out */}
-        <div className="p-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10"
-            onClick={handleSignOut}
-          >
-            <LogOut className="h-4 w-4" />
-            <span className="font-medium">Sign Out</span>
-          </Button>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="lg:ml-64 min-h-screen pt-16 lg:pt-0">
-        <div className="container mx-auto p-6">
-          <Outlet />
-        </div>
-      </main>
-    </div>
-  )
+  return <DashboardLayout role="alumnus" sidebarItems={sidebarItems} />
 }

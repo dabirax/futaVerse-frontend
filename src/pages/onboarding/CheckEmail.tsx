@@ -3,12 +3,10 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { BackButton } from '../../components/BackButtons'
 import { AuthLayout } from './components/AuthLayout'
 import { useForgotPasswordStore } from './hooks/useForgotPasswordStore'
-import Logo from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -23,7 +21,6 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp'
 import { api } from '@/lib/api'
-import { containerVariants, itemVariants } from '@/animationVariants'
 
 const otpSchema = z.object({
   otp: z.string().length(6, 'OTP must be 6 digits'),
@@ -118,6 +115,118 @@ const CheckEmail = () => {
   }
 
   return (
+<<<<<<< HEAD
+    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+      <LeftContainer />
+      <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
+        <div className="w-full max-w-md animate-in fade-in duration-500">
+          <div className="mb-8">
+            <BackButton />
+          </div>
+
+          <div className="mb-8 text-center">
+            <h1 className="font-display text-2xl font-semibold text-ink tracking-tight">
+              Enter OTP
+            </h1>
+            <p className="text-ink-soft text-sm mt-1.5">
+              We have sent an email with the OTP to{' '}
+              <span className="font-semibold text-ink">
+                {email ? maskEmail(email) : 'your email'}
+              </span>
+            </p>
+          </div>
+
+          <Form {...form}>
+            <form
+              className="space-y-6"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <div className="flex justify-center">
+                <FormField
+                  control={form.control}
+                  name="otp"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-center">
+                      <FormControl>
+                        <InputOTP
+                          maxLength={6}
+                          value={field.value}
+                          onChange={(value) => field.onChange(value)}
+                        >
+                          <InputOTPGroup className="gap-2">
+                            {[0, 1, 2, 3, 4, 5].map((i) => (
+                              <InputOTPSlot
+                                key={i}
+                                index={i}
+                                className="w-11 h-13 text-lg rounded-xs border border-line bg-surface shadow-xs transition-colors focus:border-indigo focus:shadow-focus font-mono font-bold"
+                              />
+                            ))}
+                          </InputOTPGroup>
+                        </InputOTP>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <p className="text-sm text-center text-ink-soft leading-relaxed">
+                Didn't receive the email?{' '}
+                <br className="sm:hidden" />
+                Check your spam or promotions folder, or{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setResendStatus(null)
+                    resendMutation.mutate()
+                  }}
+                  disabled={resendMutation.isPending}
+                  className="text-indigo font-semibold hover:underline disabled:opacity-60"
+                >
+                  {resendMutation.isPending ? 'Sending...' : 'Resend OTP'}
+                </button>
+              </p>
+
+              {resendStatus && (
+                <div className="rounded-xs bg-green-soft border border-green/20 px-4 py-3 text-sm text-center font-medium text-green-on-soft">
+                  {resendStatus}
+                </div>
+              )}
+
+              {serverError && (
+                <div className="rounded-xs bg-destructive-soft border border-destructive/20 px-4 py-3 text-sm text-center font-medium text-destructive-on-soft">
+                  {serverError}
+                </div>
+              )}
+
+              <div className="space-y-4 pt-4">
+                <Button
+                  type="submit"
+                  disabled={verifyOtpMutation.isPending}
+                  className="w-full h-10"
+                >
+                  {verifyOtpMutation.isPending ? (
+                    <div className="flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin" />
+                      Verifying...
+                    </div>
+                  ) : (
+                    'Submit OTP'
+                  )}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.navigate({ to: '/login' })}
+                  className="w-full h-10"
+                >
+                  Back to Login
+                </Button>
+              </div>
+            </form>
+          </Form>
+=======
     <AuthLayout>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -129,6 +238,7 @@ const CheckEmail = () => {
             <BackButton />
           </div>
           <Logo />
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
         </div>
 
         <div className="text-center mb-10">

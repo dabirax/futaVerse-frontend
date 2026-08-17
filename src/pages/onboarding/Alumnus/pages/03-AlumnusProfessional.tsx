@@ -1,11 +1,15 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { motion } from 'framer-motion'
 import { useRouter } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { AlertCircle, MoveLeft, WifiOff } from 'lucide-react'
+import { AlertCircle, WifiOff } from 'lucide-react'
 import { BackButton } from '../../../../components/BackButtons'
+<<<<<<< HEAD
+import { LeftContainer } from '../../components/LeftContainer'
+import { SignupStepIndicator } from '../../components/SignupStepIndicator'
+=======
 import { AuthLayout } from '../../components/AuthLayout'
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
 import {
   useAlumnusStoreData,
   useHasHydrated,
@@ -15,7 +19,6 @@ import { useSignupOTPStore } from '../../hooks/useSignupOTPStore'
 import type { AlumnusProfessionalFormData } from '../lib/alumnusSchema'
 import type { z } from 'zod'
 import { Button } from '@/components/ui/button'
-import Logo from '@/components/logo'
 import {
   Form,
   FormControl,
@@ -33,7 +36,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { api } from '@/lib/api'
-import { containerVariants, itemVariants } from '@/animationVariants'
 import { uploadProfileImage } from '@/services/uploads'
 
 const industries = [
@@ -68,7 +70,6 @@ const AlumnusProfessional = () => {
     typeof alumnusProfessionalSchema
   >
 
-  // Form in bnnnitialization
   const _s = useAlumnusStoreData.getState()
 
   const form = useForm<
@@ -97,7 +98,6 @@ const AlumnusProfessional = () => {
 
   const router = useRouter()
 
-  // Get Stored Data from Zustand
   const {
     firstname,
     lastname,
@@ -121,7 +121,6 @@ const AlumnusProfessional = () => {
   const setSignupEmail = useSignupOTPStore((s) => s.setEmail)
   const setUserType = useSignupOTPStore((s) => s.setUserType)
 
-  // Handle Submit
   const onSubmit = async (data: AlumnusProfessionalFormData) => {
     setServerError(null)
     setIsLoading(true)
@@ -232,7 +231,6 @@ const AlumnusProfessional = () => {
     }
   }
 
-  // Not allowing users to skip steps (or pages) during the onboarding
   const hasHydrated = useHasHydrated()
 
   useEffect(() => {
@@ -276,6 +274,260 @@ const AlumnusProfessional = () => {
   ])
 
   return (
+<<<<<<< HEAD
+    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+      <LeftContainer />
+      <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
+        <div className="w-full max-w-lg">
+          <div className="mb-8">
+            <BackButton />
+          </div>
+
+          <SignupStepIndicator
+            steps={[
+              { label: 'Personal' },
+              { label: 'School' },
+              { label: 'Professional' },
+            ]}
+            currentStep={2}
+            role="alumnus"
+          />
+
+          <div className="mb-8 text-center">
+            <h1 className="font-display text-2xl font-semibold text-ink tracking-tight">
+              Professional Information
+            </h1>
+            <p className="text-ink-soft text-sm mt-1.5">
+              Tell us about your career and social presence
+            </p>
+          </div>
+
+          <Form {...form}>
+            <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <FormField
+                  control={form.control}
+                  name="current_job_title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        Current Job Title{' '}
+                        <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Software Engineer"
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-maroon focus-visible:ring-focus focus-visible:ring-[3px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="current_company"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        Current Company{' '}
+                        <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Google"
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-maroon focus-visible:ring-focus focus-visible:ring-[3px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="previous_comps"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      Previous Companies
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Microsoft, Meta..."
+                        className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-maroon focus-visible:ring-focus focus-visible:ring-[3px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <FormField
+                  control={form.control}
+                  name="years_of_exp"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        Years of Experience
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-maroon focus-visible:ring-focus focus-visible:ring-[3px]"
+                          value={Number(field.value) || ''}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value ? Number(e.target.value) : '',
+                            )
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="industry"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        Industry Sector{' '}
+                        <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="h-10 rounded-xs bg-surface border border-line text-ink">
+                            <SelectValue placeholder="Select industry" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="rounded-xs border border-line bg-surface">
+                          {industries.map((item) => (
+                            <SelectItem key={item} value={item}>
+                              {item}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      Personal Description
+                    </FormLabel>
+                    <FormControl>
+                      <textarea
+                        placeholder="Describe yourself"
+                        className="w-full h-20 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint p-3 text-sm focus-visible:outline-none focus-visible:border-maroon focus-visible:ring-focus focus-visible:ring-[3px] transition-colors"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <FormField
+                  control={form.control}
+                  name="linkedin_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        LinkedIn
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="https://linkedin.com/in/..."
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-maroon focus-visible:ring-focus focus-visible:ring-[3px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="github_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        GitHub
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="https://github.com/..."
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-maroon focus-visible:ring-focus focus-visible:ring-[3px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="text-ink-soft hover:text-ink"
+                  onClick={() => router.history.back()}
+                >
+                  Back
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-maroon text-white rounded-sm px-8 h-10 font-medium hover:bg-maroon-hover transition-colors"
+                >
+                  {isLoading ? 'Submitting...' : 'Complete Profile'}
+                </Button>
+              </div>
+
+              {serverError && (
+                <div className="rounded-xs bg-destructive-soft border border-destructive px-4 py-3 flex gap-3 mt-4">
+                  <div className="shrink-0 mt-0.5 text-destructive">
+                    {serverError.isNetwork ? (
+                      <WifiOff size={16} />
+                    ) : (
+                      <AlertCircle size={16} />
+                    )}
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium text-destructive">
+                      {serverError.message}
+                    </p>
+                    {serverError.hint && (
+                      <p className="text-xs text-destructive/70">
+                        {serverError.hint}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </form>
+          </Form>
+=======
     <AuthLayout>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -287,6 +539,7 @@ const AlumnusProfessional = () => {
             <BackButton />
           </div>
           <Logo />
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
         </div>
 
         <div className="text-center mb-10">

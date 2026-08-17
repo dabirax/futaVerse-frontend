@@ -1,4 +1,4 @@
-import { CardSkeleton4 } from '@/components/CardSkeletons'
+import { CardSkeleton5 } from '@/components/CardSkeletons'
 import InternshipCard2 from '@/components/user/internships/InternshipCard2'
 import {
   useAcceptInternshipOffer,
@@ -12,19 +12,23 @@ export default function OffersPage() {
   const { mutateAsync: rejectOffer } = useRejectInternshipOffer()
 
   if (isLoading) {
-    return <CardSkeleton4 variant="r-sm" />
+    return <CardSkeleton5 variant="r-sm" />
   }
 
   if (isError) {
-    return <p className="text-sm text-destructive">Failed to load offers</p>
+    return (
+      <p className="text-body text-destructive">Failed to load offers</p>
+    )
   }
 
   if (!data?.results?.length) {
-    return <p className="text-sm text-muted-foreground">No offers yet</p>
+    return (
+      <p className="text-body text-ink-soft py-12 text-center">No offers yet</p>
+    )
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {data.results.map((offer: any) => (
         <InternshipCard2
           key={offer.id}

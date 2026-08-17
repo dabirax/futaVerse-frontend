@@ -2,7 +2,6 @@ import { Link, useRouter } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { motion } from 'framer-motion'
 import { useMutation } from '@tanstack/react-query'
 import { AlertCircle, Eye, EyeOff, WifiOff } from 'lucide-react'
 import { useState } from 'react'
@@ -10,7 +9,6 @@ import axios from 'axios'
 import { BackButton } from '../../components/BackButtons'
 import { AuthLayout } from './components/AuthLayout'
 import { useAuth } from '@/hooks/auth-context'
-import Logo from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -23,7 +21,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { api } from '@/lib/api'
-import { containerVariants, itemVariants } from '@/animationVariants'
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -105,6 +102,164 @@ const LoginPage = () => {
   }
 
   return (
+<<<<<<< HEAD
+    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+      <LeftContainer />
+      <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
+        <div className="w-full max-w-md animate-in fade-in duration-500">
+          <div className="mb-8">
+            <BackButton />
+          </div>
+
+          <div className="mb-8">
+            <h1 className="font-display text-2xl font-semibold text-ink tracking-tight">
+              Sign In
+            </h1>
+            <p className="text-ink-soft text-sm mt-1.5">
+              Welcome back to the Futaverse network
+            </p>
+          </div>
+
+          <Form {...form}>
+            <form
+              className="space-y-4"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink-soft font-medium">
+                      Email
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="example@example.com"
+                        disabled={loginMutation.isPending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink-soft font-medium">
+                      Password
+                    </FormLabel>
+                    <div className="relative">
+                      <FormControl>
+                        <Input
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="********"
+                          className="pr-12"
+                          disabled={loginMutation.isPending}
+                          {...field}
+                        />
+                      </FormControl>
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-faint hover:text-ink transition-colors"
+                      >
+                        {showPassword ? (
+                          <EyeOff size={16} />
+                        ) : (
+                          <Eye size={16} />
+                        )}
+                      </button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="text-right">
+                <Link
+                  to="/forgot-password"
+                  className="text-xs text-indigo hover:underline font-medium"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              {serverError && (
+                <div className="rounded-xs bg-destructive-soft border border-destructive/20 px-4 py-3 flex gap-3">
+                  <div className="shrink-0 mt-0.5 text-destructive">
+                    {serverError.isNetwork ? (
+                      <WifiOff size={16} />
+                    ) : (
+                      <AlertCircle size={16} />
+                    )}
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium text-destructive-on-soft">
+                      {serverError.message}
+                    </p>
+                    {serverError.hint && (
+                      <p className="text-xs text-ink-soft">
+                        {serverError.hint}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                disabled={loginMutation.isPending}
+                className="w-full h-10"
+              >
+                {loginMutation.isPending ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin" />
+                    Signing in...
+                  </span>
+                ) : (
+                  'Login'
+                )}
+              </Button>
+
+              {/*<div className="relative py-2">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-3 text-ink-faint font-medium">
+                    Or continue with
+                  </span>
+                </div>
+              </div>*/}
+
+              {/*<Button
+                type="button"
+                variant="outline"
+                disabled
+                className="w-full h-10 gap-3"
+              >
+                <GoogleLogo />
+                Google (coming soon)
+              </Button>*/}
+
+              <p className="text-sm text-center text-ink-soft">
+                Are you new here?{' '}
+                <Link
+                  to="/signup"
+                  className="text-indigo font-semibold hover:underline"
+                >
+                  Sign up
+                </Link>
+              </p>
+            </form>
+          </Form>
+=======
     <AuthLayout>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -116,6 +271,7 @@ const LoginPage = () => {
             <BackButton />
           </div>
           <Logo showWordmark={false} />
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
         </div>
 
         <div className="text-center mb-6">

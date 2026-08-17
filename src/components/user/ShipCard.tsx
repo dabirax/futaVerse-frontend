@@ -1,10 +1,9 @@
 import { useRouter } from '@tanstack/react-router'
-import { ArrowRight, MapPin } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 
-interface InternshipCardProps {
+interface ShipCardProps {
   sqid: string
   title: string
   description: string
@@ -25,80 +24,72 @@ export default function ShipCard({
   sqid,
   title,
   description,
-  logo,
   work_mode,
   location,
   remaining_slots,
   available_slots,
-  category,
   company,
   alumnusName,
   ship,
   role,
   children,
-}: InternshipCardProps) {
+}: ShipCardProps) {
   const router = useRouter()
 
   return (
     <div
-      className="bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow cursor-pointer group p-4"
+      className="bg-surface rounded-md border border-line shadow-xs hover:shadow-sm hover:border-line-strong transition-all cursor-pointer group"
       onClick={() => router.navigate({ to: `/${role}/${ship}s/${sqid}` })}
     >
-      <div className="flex gap-3">
-        <Avatar className="h-12 w-12 rounded-lg shrink-0">
-          <AvatarImage src={logo} />
-          <AvatarFallback className="rounded-lg bg-primary/10 text-primary font-semibold text-sm">
-            {title.substring(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+      <div className="p-5">
+        {/* Kicker */}
+        <p className="text-overline text-maroon mb-2">
+          {ship === 'internship' ? 'Internship' : 'Mentorship'}
+        </p>
 
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="font-semibold text-foreground text-sm leading-tight group-hover:text-primary transition-colors line-clamp-1">
-              {title}
-            </h3>
-            <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-          </div>
+        {/* Title */}
+        <h3 className="font-display text-ink text-[1.1875rem] leading-tight mb-1.5 group-hover:text-indigo transition-colors">
+          {title}
+        </h3>
 
-          {role === 'alumnus' ? (
-            <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
-              {description}
-            </p>
-          ) : (
-            <p className="text-xs text-muted-foreground mt-1">
-              {company ?? '—'} · Posted by {alumnusName}
-            </p>
+        {/* Description or company line */}
+        {role === 'alumnus' ? (
+          <p className="text-body-sm text-ink-soft line-clamp-2 mb-3">
+            {description}
+          </p>
+        ) : (
+          <p className="text-body-sm text-ink-soft mb-3">
+            {company ?? '—'} · Posted by {alumnusName}
+          </p>
+        )}
+
+        {/* Metadata row */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+          {work_mode && (
+            <Badge variant="outline" className="text-[0.6875rem]">
+              {work_mode}
+            </Badge>
           )}
-
-          <div className="flex flex-wrap gap-1.5 mt-2.5">
-            {work_mode && (
-              <Badge variant="secondary" className="text-xs font-normal">
-                {work_mode}
-              </Badge>
-            )}
-            {location && (
-              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                <MapPin className="h-3 w-3" />
-                {location}
-              </span>
-            )}
-            {category && !location && (
-              <Badge variant="outline" className="text-xs font-normal">
-                {category}
-              </Badge>
-            )}
-            {remaining_slots !== undefined && available_slots !== undefined && (
-              <span
-                className={`text-xs font-medium ${remaining_slots > 0 ? 'text-green-600' : 'text-muted-foreground'}`}
-              >
-                {remaining_slots}/{available_slots} slots
-              </span>
-            )}
-          </div>
+          {location && (
+            <span className="inline-flex items-center gap-1 text-meta text-ink-soft">
+              <MapPin className="h-3 w-3" />
+              {location}
+            </span>
+          )}
+          {remaining_slots !== undefined && available_slots !== undefined && (
+            <span
+              className={`text-meta font-medium ${remaining_slots > 0 ? 'text-green' : 'text-ink-faint'}`}
+            >
+              {remaining_slots}/{available_slots} slots
+            </span>
+          )}
         </div>
       </div>
 
-      {children && <div className="mt-3 pt-3 border-t">{children}</div>}
+      {/* Share buttons or children */}
+      {children && (
+        <div className="px-5 py-3 border-t border-line">{children}</div>
+      )}
     </div>
   )
 }

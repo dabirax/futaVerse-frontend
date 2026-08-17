@@ -18,21 +18,86 @@ import { Moon, Sun } from 'lucide-react'
 // ─── Color Swatch Data ───
 
 const lightColors = [
-  { name: 'Primary', var: '--primary', hex: '#4A3F35', role: 'Warm charcoal — actions, headings' },
-  { name: 'Primary Light', var: '--primary-light', hex: '#6B5C4E', role: 'Hover state' },
-  { name: 'Secondary', var: '--secondary', hex: '#2D5A3D', role: 'Forest green — success' },
-  { name: 'Secondary Light', var: '--secondary-light', hex: '#4A7D5A', role: 'Green hover' },
-  { name: 'Accent', var: '--accent', hex: '#6B5C6E', role: 'Muted mauve — interactive' },
-  { name: 'Accent Light', var: '--accent-light', hex: '#8B7C8E', role: 'Mauve hover' },
-  { name: 'Gold', var: '--gold', hex: '#A07828', role: 'Achievement, highlights' },
-  { name: 'Gold Light', var: '--gold-light', hex: '#C09848', role: 'Gold hover' },
-  { name: 'Background', var: '--background', hex: '#FAF8F5', role: 'Page background' },
-  { name: 'Foreground', var: '--foreground', hex: '#2B2420', role: 'Primary text' },
+  {
+    name: 'Primary',
+    var: '--primary',
+    hex: '#4A3F35',
+    role: 'Warm charcoal — actions, headings',
+  },
+  {
+    name: 'Primary Light',
+    var: '--primary-light',
+    hex: '#6B5C4E',
+    role: 'Hover state',
+  },
+  {
+    name: 'Secondary',
+    var: '--secondary',
+    hex: '#2D5A3D',
+    role: 'Forest green — success',
+  },
+  {
+    name: 'Secondary Light',
+    var: '--secondary-light',
+    hex: '#4A7D5A',
+    role: 'Green hover',
+  },
+  {
+    name: 'Accent',
+    var: '--accent',
+    hex: '#6B5C6E',
+    role: 'Muted mauve — interactive',
+  },
+  {
+    name: 'Accent Light',
+    var: '--accent-light',
+    hex: '#8B7C8E',
+    role: 'Mauve hover',
+  },
+  {
+    name: 'Gold',
+    var: '--gold',
+    hex: '#A07828',
+    role: 'Achievement, highlights',
+  },
+  {
+    name: 'Gold Light',
+    var: '--gold-light',
+    hex: '#C09848',
+    role: 'Gold hover',
+  },
+  {
+    name: 'Background',
+    var: '--background',
+    hex: '#FAF8F5',
+    role: 'Page background',
+  },
+  {
+    name: 'Foreground',
+    var: '--foreground',
+    hex: '#2B2420',
+    role: 'Primary text',
+  },
   { name: 'Card', var: '--card', hex: '#FFFFFF', role: 'Card background' },
   { name: 'Muted', var: '--muted', hex: '#E8E2D8', role: 'Subtle fills' },
-  { name: 'Muted FG', var: '--muted-foreground', hex: '#8A7E74', role: 'Secondary text' },
-  { name: 'Border', var: '--border', hex: '#DDD6CC', role: 'Borders, dividers' },
-  { name: 'Destructive', var: '--destructive', hex: '#CC3333', role: 'Errors, warnings' },
+  {
+    name: 'Muted FG',
+    var: '--muted-foreground',
+    hex: '#8A7E74',
+    role: 'Secondary text',
+  },
+  {
+    name: 'Border',
+    var: '--border',
+    hex: '#DDD6CC',
+    role: 'Borders, dividers',
+  },
+  {
+    name: 'Destructive',
+    var: '--destructive',
+    hex: '#CC3333',
+    role: 'Errors, warnings',
+  },
   { name: 'Ring', var: '--ring', hex: '#6B5C6E', role: 'Focus rings' },
 ]
 
@@ -49,13 +114,15 @@ const typeSamples = [
   {
     label: 'Display LG',
     spec: 'Crimson Pro 600 · 1.75rem',
-    className: 'font-display font-semibold text-2xl leading-tight tracking-tight text-foreground',
+    className:
+      'font-display font-semibold text-2xl leading-tight tracking-tight text-foreground',
     text: 'Mentorship Programs',
   },
   {
     label: 'Display MD',
     spec: 'Crimson Pro 600 · 1.3rem',
-    className: 'font-display font-semibold text-[1.3rem] leading-snug text-foreground',
+    className:
+      'font-display font-semibold text-[1.3rem] leading-snug text-foreground',
     text: 'Software Engineering Career Path',
   },
   {
@@ -110,20 +177,22 @@ export default function Showcase() {
         </span>
         <div className="flex items-center gap-8">
           <ul className="hidden md:flex gap-7 list-none">
-            {['Feed', 'Mentorship', 'Internships', 'Events', 'Profile'].map((item) => (
-              <li key={item}>
-                <a
-                  href="#"
-                  className={`text-[0.85rem] font-medium text-muted-foreground no-underline transition-colors hover:text-foreground ${
-                    item === 'Feed'
-                      ? 'text-foreground underline decoration-accent decoration-[1.5px] underline-offset-4'
-                      : ''
-                  }`}
-                >
-                  {item}
-                </a>
-              </li>
-            ))}
+            {['Feed', 'Mentorship', 'Internships', 'Events', 'Profile'].map(
+              (item) => (
+                <li key={item}>
+                  <a
+                    href="#"
+                    className={`text-[0.85rem] font-medium text-muted-foreground no-underline transition-colors hover:text-foreground ${
+                      item === 'Feed'
+                        ? 'text-foreground underline decoration-accent decoration-[1.5px] underline-offset-4'
+                        : ''
+                    }`}
+                  >
+                    {item}
+                  </a>
+                </li>
+              ),
+            )}
           </ul>
           <Button variant="outline" size="sm" onClick={toggleDark}>
             {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
@@ -140,8 +209,8 @@ export default function Showcase() {
           Professional <span className="text-accent">Grounded</span>
         </h1>
         <p className="text-[1.05rem] text-muted-foreground max-w-xl mx-auto mb-8 leading-relaxed">
-          Warm but structured. Career-focused but community-driven. The FUTAVerse design system
-          token set.
+          Warm but structured. Career-focused but community-driven. The
+          FUTAVerse design system token set.
         </p>
         <div className="flex justify-center gap-6 mt-10 pt-8 border-t border-border-light">
           {[
@@ -174,14 +243,22 @@ export default function Showcase() {
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {lightColors.map((c) => (
-            <div key={c.var} className="rounded-lg border border-border overflow-hidden bg-card">
-              <div className="h-16" style={{ backgroundColor: `var(${c.var})` }} />
+            <div
+              key={c.var}
+              className="rounded-lg border border-border overflow-hidden bg-card"
+            >
+              <div
+                className="h-16"
+                style={{ backgroundColor: `var(${c.var})` }}
+              />
               <div className="p-2.5">
                 <div className="font-semibold text-[0.8rem]">{c.name}</div>
                 <div className="font-mono text-[0.68rem] text-muted-foreground mt-0.5">
                   {c.hex}
                 </div>
-                <div className="text-[0.68rem] text-muted-foreground mt-1">{c.role}</div>
+                <div className="text-[0.68rem] text-muted-foreground mt-1">
+                  {c.role}
+                </div>
               </div>
             </div>
           ))}
@@ -297,7 +374,9 @@ export default function Showcase() {
                 <Badge variant="accent" className="rounded text-[0.62rem]">
                   Mentorship
                 </Badge>
-                <span className="font-mono text-[0.68rem] text-muted-foreground">2h ago</span>
+                <span className="font-mono text-[0.68rem] text-muted-foreground">
+                  2h ago
+                </span>
               </div>
               <CardTitle className="font-display font-semibold text-[1.2rem] tracking-tight leading-snug">
                 <span className="underline decoration-accent-light decoration-[1.5px] underline-offset-[3px] cursor-pointer transition-colors hover:decoration-accent">
@@ -320,17 +399,20 @@ export default function Showcase() {
                 </div>
               </div>
               <p className="text-[0.875rem] text-muted-foreground leading-snug">
-                12-week mentorship covering system design, technical interviews, and career growth.
+                12-week mentorship covering system design, technical interviews,
+                and career growth.
               </p>
               <div className="flex flex-wrap gap-1.5">
-                {['Software Engineering', 'Career Growth', 'System Design'].map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-[0.68rem] font-medium px-2 py-0.5 rounded-[3px] border border-border text-muted-foreground"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                {['Software Engineering', 'Career Growth', 'System Design'].map(
+                  (tag) => (
+                    <span
+                      key={tag}
+                      className="text-[0.68rem] font-medium px-2 py-0.5 rounded-[3px] border border-border text-muted-foreground"
+                    >
+                      {tag}
+                    </span>
+                  ),
+                )}
               </div>
               <div className="flex flex-wrap gap-3 py-2.5 border-t border-b border-border-light text-[0.78rem] text-muted-foreground">
                 <span>12 weeks</span>
@@ -341,8 +423,12 @@ export default function Showcase() {
               </div>
               <div>
                 <div className="flex justify-between mb-1">
-                  <span className="text-[0.75rem] text-muted-foreground">Capacity</span>
-                  <span className="font-mono text-[0.7rem] text-accent">67%</span>
+                  <span className="text-[0.75rem] text-muted-foreground">
+                    Capacity
+                  </span>
+                  <span className="font-mono text-[0.7rem] text-accent">
+                    67%
+                  </span>
                 </div>
                 <Progress value={67} className="h-1" />
               </div>
@@ -350,7 +436,10 @@ export default function Showcase() {
             <CardFooter className="flex items-center justify-between pt-3">
               <div className="flex -space-x-1.5">
                 {['TO', 'CN', 'FK'].map((initials, i) => (
-                  <Avatar key={i} className="size-6 border-2 border-card rounded-md">
+                  <Avatar
+                    key={i}
+                    className="size-6 border-2 border-card rounded-md"
+                  >
                     <AvatarFallback
                       className={`text-[0.5rem] font-semibold rounded-md ${
                         i === 0
@@ -376,7 +465,9 @@ export default function Showcase() {
                 <Badge variant="secondary" className="rounded text-[0.62rem]">
                   Internship
                 </Badge>
-                <span className="font-mono text-[0.68rem] text-muted-foreground">5h ago</span>
+                <span className="font-mono text-[0.68rem] text-muted-foreground">
+                  5h ago
+                </span>
               </div>
               <CardTitle className="font-display font-semibold text-[1.2rem] tracking-tight leading-snug">
                 <span className="underline decoration-accent-light decoration-[1.5px] underline-offset-[3px] cursor-pointer transition-colors hover:decoration-accent">
@@ -399,7 +490,8 @@ export default function Showcase() {
                 </div>
               </div>
               <p className="text-[0.875rem] text-muted-foreground leading-snug">
-                3-month internship working on payment infrastructure. React, TypeScript, and Go.
+                3-month internship working on payment infrastructure. React,
+                TypeScript, and Go.
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {['Frontend', 'React', 'TypeScript'].map((tag) => (
@@ -415,12 +507,15 @@ export default function Showcase() {
                 <span>Lagos, Nigeria</span>
                 <span>Remote</span>
                 <span>
-                  <strong className="text-foreground">&#x20A6;150,000</strong>/mo
+                  <strong className="text-foreground">&#x20A6;150,000</strong>
+                  /mo
                 </span>
               </div>
             </CardContent>
             <CardFooter className="flex items-center justify-between pt-3">
-              <span className="text-[0.8rem] text-muted-foreground">14 applicants</span>
+              <span className="text-[0.8rem] text-muted-foreground">
+                14 applicants
+              </span>
               <Button size="sm" variant="secondary">
                 Apply Now
               </Button>
@@ -434,7 +529,9 @@ export default function Showcase() {
                 <Badge className="rounded text-[0.62rem] bg-gold text-gold-light border-gold hover:bg-gold">
                   Event
                 </Badge>
-                <span className="font-mono text-[0.68rem] text-muted-foreground">1d ago</span>
+                <span className="font-mono text-[0.68rem] text-muted-foreground">
+                  1d ago
+                </span>
               </div>
               <CardTitle className="font-display font-semibold text-[1.2rem] tracking-tight leading-snug">
                 <span className="underline decoration-accent-light decoration-[1.5px] underline-offset-[3px] cursor-pointer transition-colors hover:decoration-accent">
@@ -476,8 +573,13 @@ export default function Showcase() {
               </div>
             </CardContent>
             <CardFooter className="flex items-center justify-between pt-3">
-              <span className="font-mono text-[0.75rem] text-gold font-medium">Free Entry</span>
-              <Button size="sm" className="bg-gold text-foreground hover:bg-gold-light">
+              <span className="font-mono text-[0.75rem] text-gold font-medium">
+                Free Entry
+              </span>
+              <Button
+                size="sm"
+                className="bg-gold text-foreground hover:bg-gold-light"
+              >
                 Register
               </Button>
             </CardFooter>

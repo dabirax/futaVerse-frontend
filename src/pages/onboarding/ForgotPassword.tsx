@@ -3,13 +3,11 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { AlertCircle, WifiOff } from 'lucide-react'
 import { BackButton } from '../../components/BackButtons'
 import { AuthLayout } from './components/AuthLayout'
 import { useForgotPasswordStore } from './hooks/useForgotPasswordStore'
-import Logo from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -21,7 +19,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { api } from '@/lib/api'
-import { containerVariants, itemVariants } from '@/animationVariants'
 
 const forgotPasswordSchema = z.object({
   email: z.string().email(),
@@ -97,6 +94,101 @@ const ForgotPassword = () => {
   }
 
   return (
+<<<<<<< HEAD
+    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+      <LeftContainer />
+      <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
+        <div className="w-full max-w-md animate-in fade-in duration-500">
+          <div className="mb-8">
+            <BackButton />
+          </div>
+
+          <div className="mb-8">
+            <h1 className="font-display text-2xl font-semibold text-ink tracking-tight">
+              Forgot Password
+            </h1>
+            <p className="text-ink-soft text-sm mt-1.5 leading-relaxed">
+              Enter the email you used to create your account so we can send
+              you instructions on how to reset your password.
+            </p>
+          </div>
+
+          <Form {...form}>
+            <form
+              className="space-y-6"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink-soft font-medium">
+                      Email Address
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="example@example.com"
+                        disabled={forgotPasswordMutation.isPending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {serverError && (
+                <div className="rounded-xs bg-destructive-soft border border-destructive/20 px-4 py-3 flex gap-3">
+                  <div className="shrink-0 mt-0.5 text-destructive">
+                    {serverError.isNetwork ? (
+                      <WifiOff size={16} />
+                    ) : (
+                      <AlertCircle size={16} />
+                    )}
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium text-destructive-on-soft">
+                      {serverError.message}
+                    </p>
+                    {serverError.hint && (
+                      <p className="text-xs text-ink-soft">
+                        {serverError.hint}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-4 pt-4">
+                <Button
+                  type="submit"
+                  disabled={forgotPasswordMutation.isPending}
+                  className="w-full h-10"
+                >
+                  {forgotPasswordMutation.isPending ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin" />
+                      Sending...
+                    </div>
+                  ) : (
+                    'Send Reset Link'
+                  )}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => navigate({ to: '/login' })}
+                  className="w-full h-10"
+                >
+                  Back to Login
+                </Button>
+              </div>
+            </form>
+          </Form>
+=======
     <AuthLayout>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -108,6 +200,7 @@ const ForgotPassword = () => {
             <BackButton />
           </div>
           <Logo />
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
         </div>
 
         <div className="text-center mb-10">
