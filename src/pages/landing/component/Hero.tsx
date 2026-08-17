@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
-// import futaLogo from '@/assets/landing/futa_logo.png'
 
 const heroCards = [
   {
@@ -8,90 +7,102 @@ const heroCards = [
     name: 'Tunde Kelani',
     role: 'Software Engineer · Lagos',
     badge: 'Mentor',
-    badgeClass: 'bg-[#ede9fe] text-[#7b2fbe]',
+    badgeClass: 'border-indigo text-indigo bg-indigo-soft',
+    ringColor: 'border-indigo',
   },
   {
     initials: 'AM',
     name: 'Amaka Musa',
     role: 'CS Year 3 · Applied to internship',
     badge: 'Accepted',
-    badgeClass: 'bg-[#d1fae5] text-[#065f46]',
+    badgeClass: 'border-green text-green bg-green-soft',
+    ringColor: 'border-green',
   },
   {
     initials: 'EO',
     name: 'Emeka Obi',
     role: 'FinTech Lead · Hosting event',
     badge: 'Fri 4pm',
-    badgeClass: 'bg-[#fef3c7] text-[#92400e]',
+    badgeClass: 'border-maroon text-maroon bg-maroon-soft',
+    ringColor: 'border-maroon',
   },
 ]
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden bg-[#f7f5ff] pt-28 pb-16">
-      <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-[#ede9fe]/80 to-transparent" />
-      <div className="container mx-auto px-6 sm:px-12 lg:px-20">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+    <section className="relative overflow-hidden bg-background pt-16 sm:pt-20 pb-12 sm:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+        <div className="grid gap-8 sm:gap-10 lg:grid-cols-2 lg:items-center">
           <div className="space-y-6">
-            <h1 className="text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl">
-              Where alumni <span className="text-[#7b2fbe]">shape careers</span>{' '}
-              that last.
+            <p className="font-mono text-xs uppercase tracking-widest text-ink-soft">
+              Federal University of Technology, Akure
+            </p>
+            <h1 className="font-display-hero text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-ink leading-[1.08]">
+              Where alumni{' '}
+              <span className="text-indigo">shape careers</span> that last.
             </h1>
-            <p className="max-w-xl text-lg leading-8 text-slate-600">
+            <p className="max-w-xl text-base text-ink-soft leading-relaxed">
               Mentorship, internships, job openings, and events — all in one
               place, built for the FUTA community.
             </p>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link to="/signup/studentBasic">
-                <Button variant="gradient" size="lg">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link to="/signup/studentBasic" className="w-full sm:w-auto">
+                <Button variant="default" size="lg" className="w-full sm:w-auto">
                   Join as a student
                 </Button>
               </Link>
-              <Link to="/signup/alumnusBasic">
-                <Button variant="outline" size="lg">
+              <Link to="/signup/alumnusBasic" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto">
                   Join as alumni
                 </Button>
               </Link>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 pt-6">
+            <div className="flex flex-wrap gap-6 sm:gap-8 pt-4 sm:pt-6">
               <div>
-                <p className="text-3xl font-bold text-[#7b2fbe]">500+</p>
-                <p className="text-sm text-slate-500">Alumni mentors</p>
+                <p className="font-mono text-xl sm:text-2xl font-medium text-ink tabular-nums">
+                  500+
+                </p>
+                <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">Alumni mentors</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-[#16a34a]">1,000+</p>
-                <p className="text-sm text-slate-500">Students</p>
+                <p className="font-mono text-xl sm:text-2xl font-medium text-ink tabular-nums">
+                  1,000+
+                </p>
+                <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">Students</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-[#c2410c]">50+</p>
-                <p className="text-sm text-slate-500">Events yearly</p>
+                <p className="font-mono text-xl sm:text-2xl font-medium text-ink tabular-nums">
+                  50+
+                </p>
+                <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">Events yearly</p>
               </div>
             </div>
           </div>
 
-          <div className="space-y-4">
-            {/* <img
-              src={futaLogo}
-              alt="Federal University of Technology Akure"
-              className="mx-auto max-w-[200px] rounded-xl"
-            /> */}
+          <div className="space-y-2 sm:space-y-3">
             {heroCards.map((card, index) => (
               <div
                 key={index}
-                className="rounded-3xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-200/40"
+                className="border border-line bg-surface p-3 sm:p-5 shadow-xs"
               >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ede9fe] text-sm font-bold text-[#7b2fbe]">
-                    {card.initials}
+                <div className="flex items-center gap-2.5 sm:gap-3">
+                  <div
+                    className={`flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full border-2 ${card.ringColor} bg-surface shadow-seal`}
+                  >
+                    <span className="font-display text-[10px] sm:text-xs font-semibold text-ink">
+                      {card.initials}
+                    </span>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-semibold text-slate-900">{card.name}</p>
-                    <p className="text-sm text-slate-500">{card.role}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-xs sm:text-sm text-ink">{card.name}</p>
+                    <p className="text-[11px] sm:text-xs text-ink-soft truncate">
+                      {card.role}
+                    </p>
                   </div>
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${card.badgeClass}`}
+                    className={`shrink-0 rounded-xs px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider border ${card.badgeClass}`}
                   >
                     {card.badge}
                   </span>

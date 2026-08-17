@@ -1,27 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import {
-  ArrowRight,
-  Calendar,
-  ChevronRight,
-  GraduationCap,
-  MapPin,
-  Search,
-  Trophy,
-  Users,
-  Video,
-  Zap,
-} from 'lucide-react'
+import { Calendar, MapPin, Search, Video } from 'lucide-react'
 import { format } from 'date-fns'
 import type { FeedItemData } from '@/types/feed'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useFeed } from '@/hooks/useFeed'
 import { useMe } from '@/hooks/useMe'
 import InternshipFeedCard from '@/components/user/feed/InternshipFeedCard'
+import MentorshipFeedCard from '@/components/user/feed/MentorshipFeedCard'
 import { FeedCardSkeleton } from '@/components/CardSkeletons'
 
 type FeedFilter = 'all' | 'opportunities' | 'mentorship' | 'events' | 'posts'
@@ -60,192 +48,128 @@ const categoryLabels: Record<string, string> = {
   conference: 'Conference',
 }
 
-function MentorshipFeedCard({
-  item,
-  sqid,
-}: {
-  item: FeedItemData
-  sqid: string
-}) {
-  const router = useRouter()
-  const navigate = router.navigate
-
-  return (
-    <Card
-      className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-primary"
-      onClick={() => navigate({ to: `/student/mentorships/${sqid}` })}
-    >
-      <CardContent className="p-5">
-        <div className="flex items-start gap-4">
-          <Avatar className="h-12 w-12 rounded-lg shrink-0">
-            <AvatarFallback className="rounded-lg bg-primary/10 text-primary text-sm font-semibold">
-              <GraduationCap className="h-5 w-5" />
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="flex-1 min-w-0 space-y-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge className="bg-primary/10 text-primary border-0 text-xs">
-                Mentorship
-              </Badge>
-              {item.category && (
-                <Badge variant="outline" className="text-xs">
-                  {item.category}
-                </Badge>
-              )}
-              {item.work_mode && (
-                <Badge variant="secondary" className="text-xs">
-                  {item.work_mode}
-                </Badge>
-              )}
-            </div>
-
-            <h3 className="font-semibold text-foreground line-clamp-1">
-              {item.title}
-            </h3>
-
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {item.alumni
-                ? `Hosted by ${item.alumni}`
-                : 'A new mentorship opportunity'}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">
-              {item.start_date && (
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {format(new Date(item.start_date), 'MMM d, yyyy')}
-                </span>
-              )}
-              {item.remaining_slots !== undefined && (
-                <span className="flex items-center gap-1">
-                  <Users className="h-3.5 w-3.5" />
-                  {item.remaining_slots} of {item.available_slots} slots
-                </span>
-              )}
-            </div>
-          </div>
-
-          <ArrowRight className="h-5 w-5 text-muted-foreground shrink-0 mt-1" />
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
+// ----------- Inline Event Card -----------
 
 function EventFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
   const router = useRouter()
-  const navigate = router.navigate
 
   const formattedDate = item.date
     ? format(new Date(item.date), 'MMM d, yyyy')
     : ''
 
   return (
-    <Card
-      className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-accent"
-      onClick={() => navigate({ to: `/student/events/${sqid}` })}
+    <div
+      className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
+      onClick={() => router.navigate({ to: `/student/events/${sqid}` })}
     >
-      <CardContent className="p-5">
-        <div className="flex items-start gap-4">
-          <Avatar className="h-12 w-12 rounded-lg shrink-0">
-            <AvatarFallback className="rounded-lg bg-accent/10 text-accent text-sm font-semibold">
-              <Calendar className="h-5 w-5" />
+      {/* Category kicker */}
+      <div className="mb-4">
+        <span className="text-overline text-ink-faint">Event</span>
+        <div className="mt-1.5 h-px bg-green w-12" />
+      </div>
+
+      {/* Title */}
+      <h3 className="font-display text-[1.1875rem] text-ink leading-snug mb-1.5">
+        {item.title}
+      </h3>
+
+      {/* Description */}
+      <p className="text-sm text-ink-soft line-clamp-2 mb-3">
+        {item.alumni ? `Hosted by ${item.alumni}` : 'A new event.'}
+      </p>
+
+      {/* Metadata row */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-meta text-ink-faint mb-4">
+        {item.category && (
+          <span>{categoryLabels[item.category] || item.category}</span>
+        )}
+        {formattedDate && (
+          <span className="flex items-center gap-1">
+            <Calendar className="h-3 w-3" />
+            {formattedDate}
+          </span>
+        )}
+        {item.mode && (
+          <span className="flex items-center gap-1">
+            {item.mode === 'virtual' || item.mode === 'hybrid' ? (
+              <Video className="h-3 w-3" />
+            ) : (
+              <MapPin className="h-3 w-3" />
+            )}
+            <span className="capitalize">{item.mode}</span>
+          </span>
+        )}
+      </div>
+
+      {/* Footer: poster identity + action */}
+      <div className="flex items-center justify-between pt-4 border-t border-line">
+        <div className="flex items-center gap-2.5">
+          <Avatar className="h-7 w-7">
+            <AvatarFallback className="bg-green-soft text-green-on-soft text-[10px] font-semibold rounded-full">
+              {item.alumni
+                ? item.alumni
+                    .split(' ')
+                    .map((w) => w[0])
+                    .join('')
+                    .slice(0, 2)
+                    .toUpperCase()
+                : <Calendar className="h-3 w-3" />}
             </AvatarFallback>
           </Avatar>
-
-          <div className="flex-1 min-w-0 space-y-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge className="bg-accent/10 text-accent border-0 text-xs">
-                Event
-              </Badge>
-              {item.category && (
-                <Badge variant="secondary" className="text-xs">
-                  {categoryLabels[item.category] || item.category}
-                </Badge>
-              )}
-            </div>
-
-            <h3 className="font-semibold text-foreground line-clamp-1">
-              {item.title}
-            </h3>
-
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {item.alumni ? `Hosted by ${item.alumni}` : 'A new event.'}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">
-              {formattedDate && (
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {formattedDate}
-                </span>
-              )}
-              {item.mode && (
-                <span className="flex items-center gap-1.5">
-                  {item.mode === 'virtual' || item.mode === 'hybrid' ? (
-                    <Video className="h-3.5 w-3.5" />
-                  ) : (
-                    <MapPin className="h-3.5 w-3.5" />
-                  )}
-                  <span className="capitalize">{item.mode}</span>
-                </span>
-              )}
-            </div>
-          </div>
-
-          <ArrowRight className="h-5 w-5 text-muted-foreground shrink-0 mt-1" />
+          <span className="text-caption text-ink-soft">
+            {item.alumni || 'Unknown'}
+          </span>
         </div>
-      </CardContent>
-    </Card>
+        <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          View →
+        </span>
+      </div>
+    </div>
   )
 }
 
 // ----------- Right Sidebar -----------
 
 const quickActions = [
-  { label: 'Update Profile', icon: Zap },
-  { label: 'Explore Resources', icon: Trophy },
-  { label: 'Find a Mentor', icon: GraduationCap },
-  { label: 'Register for Event', icon: Calendar },
+  { label: 'Update Profile', path: '/student/settings' },
+  { label: 'Find a Mentor', path: '/student/mentorships' },
+  { label: 'Browse Events', path: '/student/events' },
+  { label: 'View Tickets', path: '/student/tickets' },
 ]
 
 function RightSidebar() {
+  const router = useRouter()
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-4">
       {/* Quick Actions */}
-      <div className="bg-card rounded-xl border shadow-sm p-4">
-        <h3 className="font-semibold text-sm text-foreground mb-3">
+      <div className="bg-surface rounded-md border border-line shadow-xs p-5">
+        <h3 className="font-display text-[1.1875rem] text-ink mb-4">
           Quick Actions
         </h3>
         <div className="space-y-1">
-          {quickActions.map((action, idx) => {
-            const Icon = action.icon
-            return (
-              <button
-                key={idx}
-                className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors group text-left"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Icon className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-sm font-medium text-foreground">
-                    {action.label}
-                  </span>
-                </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
-            )
-          })}
+          {quickActions.map((action) => (
+            <button
+              key={action.label}
+              onClick={() => router.navigate({ to: action.path })}
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xs hover:bg-surface-2 transition-colors duration-200 text-left"
+            >
+              <span className="text-sm font-medium text-ink">
+                {action.label}
+              </span>
+              <span className="text-caption text-ink-faint">→</span>
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Suggested Mentors (Mockup) */}
-      <div className="bg-card rounded-xl border shadow-sm p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-sm text-foreground">Top Mentors</h3>
-          <button className="text-xs text-primary font-medium hover:underline">
+      {/* Top Mentors */}
+      <div className="bg-surface rounded-md border border-line shadow-xs p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-display text-[1.1875rem] text-ink">
+            Top Mentors
+          </h3>
+          <button className="text-[11px] font-semibold text-indigo hover:underline shrink-0 whitespace-nowrap">
             See all
           </button>
         </div>
@@ -265,26 +189,31 @@ function RightSidebar() {
             },
           ].map((mentor) => (
             <div key={mentor.id} className="flex items-center gap-2.5">
-              <Avatar className="h-9 w-9 shrink-0">
-                <AvatarFallback className="bg-purple-100 text-purple-700 text-xs font-semibold">
-                  {mentor.name.slice(0, 2).toUpperCase()}
+              <Avatar className="h-8 w-8 shrink-0">
+                <AvatarFallback className="bg-indigo-soft text-indigo-on-soft text-[10px] font-semibold rounded-full">
+                  {mentor.name
+                    .split(' ')
+                    .map((w) => w[0])
+                    .join('')
+                    .slice(0, 2)
+                    .toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-foreground leading-tight truncate">
+                <p className="text-xs font-semibold text-ink leading-tight">
                   {mentor.name}
                 </p>
-                <p className="text-xs text-muted-foreground truncate">
+                <p className="text-caption text-ink-soft truncate">
                   {mentor.role}
                 </p>
-                <p className="text-xs text-muted-foreground truncate">
+                <p className="text-caption text-ink-faint truncate">
                   {mentor.company}
                 </p>
               </div>
               <Button
                 variant="outline"
                 size="sm"
-                className="shrink-0 h-7 text-xs px-3"
+                className="shrink-0 h-7 text-xs px-3 rounded-xs"
               >
                 View
               </Button>
@@ -295,6 +224,8 @@ function RightSidebar() {
     </div>
   )
 }
+
+// ----------- Main Page -----------
 
 export default function StudentFeed() {
   const [search, setSearch] = useState('')
@@ -348,40 +279,42 @@ export default function StudentFeed() {
 
     return items
   }, [feedItems, activeTab, search])
+
   return (
     <div className="flex flex-col xl:flex-row gap-6 items-start">
-      <div className="flex-1 min-w-0 space-y-6">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-foreground">
-              {getGreeting()}, {firstName ?? 'there'} 👋
+      <div className="flex-1 min-w-0 space-y-5">
+        {/* Page Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="font-display text-[1.875rem] text-ink leading-tight">
+              {getGreeting()}, {firstName ?? 'there'}
             </h1>
-            <p className="text-sm text-muted-foreground">
-              Discover mentorships, internships, and events across the FUTA
-              community.
+            <p className="text-sm text-ink-soft mt-1">
+              Recent from the FUTA network.
             </p>
           </div>
 
-          <div className="relative w-full max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="relative w-full sm:w-64 shrink-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-faint" />
             <Input
               placeholder="Search opportunities..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 w-full h-11"
+              className="pl-10 w-full"
             />
           </div>
         </div>
 
+        {/* Filter Chips */}
         <div className="flex flex-wrap items-center gap-2">
           {filters.map((f) => (
             <button
               key={f.value}
               onClick={() => setActiveTab(f.value)}
-              className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-xs text-sm font-medium transition-colors duration-200 ${
                 activeTab === f.value
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted text-muted-foreground hover:text-foreground'
+                  ? 'bg-indigo text-white'
+                  : 'bg-surface border border-line text-ink-soft hover:border-line-strong hover:text-ink'
               }`}
             >
               {f.label}
@@ -389,12 +322,13 @@ export default function StudentFeed() {
           ))}
         </div>
 
-        <div className="space-y-3 pt-2">
+        {/* Feed Cards */}
+        <div className="space-y-3">
           {isLoading ? (
             <FeedCardSkeleton />
           ) : filteredItems.length === 0 ? (
-            <div className="bg-card rounded-xl border shadow-sm p-12 text-center">
-              <p className="text-sm text-muted-foreground">No results found</p>
+            <div className="bg-surface rounded-md border border-line p-12 text-center">
+              <p className="text-sm text-ink-soft">No results found</p>
             </div>
           ) : (
             filteredItems.map((item) => {
@@ -429,7 +363,7 @@ export default function StudentFeed() {
           {hasNextPage && (
             <div
               ref={sentinelRef}
-              className="py-4 text-center text-sm text-muted-foreground"
+              className="py-4 text-center text-sm text-ink-faint"
             >
               {isFetchingNextPage ? 'Loading more…' : ''}
             </div>
@@ -437,7 +371,7 @@ export default function StudentFeed() {
         </div>
       </div>
 
-      <div className="hidden xl:block xl:w-72 xl:shrink-0 xl:sticky xl:top-6">
+      <div className="hidden xl:block xl:w-80 xl:shrink-0 xl:sticky xl:top-6">
         <RightSidebar />
       </div>
     </div>

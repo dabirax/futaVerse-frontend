@@ -2,9 +2,7 @@ import { useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { Edit, Plus } from 'lucide-react'
 import StudentCard from '../../../../components/user/internships/StudentCard'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
@@ -40,31 +38,49 @@ const mockInterns = [
 
 export default function InternshipDetail() {
   const router = useRouter()
-
   const { sqid } = alumnusInternshipDetailRoute.useParams()
   const { data, isLoading, isError } = useInternship(sqid)
 
   const [activeTab, setActiveTab] = useState('details')
   const [isActive, setIsActive] = useState(data?.is_active)
 
+  const detailTabs = [
+    { value: 'details', label: 'Details' },
+    { value: 'offers', label: 'Offers' },
+    { value: 'applications', label: 'Applications' },
+    { value: 'interns', label: 'Interns' },
+  ]
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
         <BackButton2 />
-        <h1 className="text-2xl font-semibold">{data?.title}</h1>
+        <h1 className="font-display text-xl text-ink">{data?.title}</h1>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="details">Details</TabsTrigger>
-          <TabsTrigger value="offers">Offers</TabsTrigger>
-          <TabsTrigger value="applications">Applications</TabsTrigger>
-          <TabsTrigger value="interns">Interns</TabsTrigger>
-        </TabsList>
+      {/* Underline tabs */}
+      <div className="border-b border-line">
+        <div className="flex gap-0 overflow-x-auto">
+          {detailTabs.map((tab) => (
+            <button
+              key={tab.value}
+              onClick={() => setActiveTab(tab.value)}
+              className={`whitespace-nowrap px-4 py-2.5 text-body font-medium transition-colors border-b-2 -mb-px ${
+                activeTab === tab.value
+                  ? 'border-indigo text-indigo'
+                  : 'border-transparent text-ink-soft hover:text-ink hover:border-line-strong'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
-        {/* DETAILS TAB */}
-        <TabsContent value="details" className="space-y-4">
+      {/* DETAILS TAB */}
+      {activeTab === 'details' && (
+        <div className="space-y-4">
           <div className="flex justify-end">
             <Button
               onClick={() =>
@@ -75,175 +91,186 @@ export default function InternshipDetail() {
               Edit Internship
             </Button>
           </div>
+
           {isLoading && <CardSkeleton2 />}
           {isError && (
-            <p className="text-center font-bold text-red-600 text-2xl">
+            <div className="rounded-md border border-destructive bg-destructive-soft p-4 text-destructive text-body">
               Error loading internship details.
-            </p>
+            </div>
           )}
 
-          {isLoading || isError ? null : (
+          {!isLoading && !isError && data && (
             <div className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 {/* Basic Information */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Basic Information</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
+                <section className="rounded-md border border-line bg-surface p-6">
+                  <h2 className="text-overline text-maroon mb-3">
+                    Basic Information
+                  </h2>
+                  <div className="space-y-3">
                     <div>
-                      <Label className="text-muted-foreground">Title</Label>
-                      <p className="font-medium">{data?.title}</p>
+                      <p className="text-caption text-ink-faint">Title</p>
+                      <p className="text-body font-medium text-ink">
+                        {data.title}
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground">
-                        Description
-                      </Label>
-                      <p className="text-sm">{data?.description}</p>
+                      <p className="text-caption text-ink-faint">Description</p>
+                      <p className="text-body-sm text-ink-soft">
+                        {data.description}
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground">Industry</Label>
-                      <p className="font-medium">{data?.industry}</p>
+                      <p className="text-caption text-ink-faint">Industry</p>
+                      <p className="text-body font-medium text-ink">
+                        {data.industry}
+                      </p>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </section>
 
                 {/* Work Details */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Work Details</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
+                <section className="rounded-md border border-line bg-surface p-6">
+                  <h2 className="text-overline text-maroon mb-3">
+                    Work Details
+                  </h2>
+                  <div className="space-y-3">
                     <div>
-                      <Label className="text-muted-foreground">Work Mode</Label>
-                      <p className="font-medium">{data?.work_mode}</p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">
-                        Engagement Type
-                      </Label>
-                      <p className="font-medium">{data?.engagement_type}</p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">Location</Label>
-                      <p className="font-medium">{data?.location}</p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">Duration</Label>
-                      <p className="font-medium">
-                        {data?.duration_weeks} weeks
+                      <p className="text-caption text-ink-faint">Work Mode</p>
+                      <p className="text-body font-medium text-ink">
+                        {data.work_mode}
                       </p>
                     </div>
-                  </CardContent>
-                </Card>
+                    <div>
+                      <p className="text-caption text-ink-faint">
+                        Engagement Type
+                      </p>
+                      <p className="text-body font-medium text-ink">
+                        {data.engagement_type}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-caption text-ink-faint">Location</p>
+                      <p className="text-body font-medium text-ink">
+                        {data.location}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-caption text-ink-faint">Duration</p>
+                      <p className="text-body font-medium text-ink">
+                        {data.duration_weeks} weeks
+                      </p>
+                    </div>
+                  </div>
+                </section>
 
                 {/* Timeline */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Timeline</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
+                <section className="rounded-md border border-line bg-surface p-6">
+                  <h2 className="text-overline text-maroon mb-3">Timeline</h2>
+                  <div className="space-y-3">
                     <div>
-                      <Label className="text-muted-foreground">
-                        Start Date
-                      </Label>
-                      <p className="font-medium">
-                        {new Date(data?.start_date || '').toLocaleDateString()}
+                      <p className="text-caption text-ink-faint">Start Date</p>
+                      <p className="text-body font-medium text-ink">
+                        {new Date(data.start_date || '').toLocaleDateString()}
                       </p>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground">End Date</Label>
-                      <p className="font-medium">
-                        {new Date(data?.end_date || '').toLocaleDateString()}
+                      <p className="text-caption text-ink-faint">End Date</p>
+                      <p className="text-body font-medium text-ink">
+                        {new Date(data.end_date || '').toLocaleDateString()}
                       </p>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </section>
 
                 {/* Compensation & Slots */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Compensation & Availability</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
+                <section className="rounded-md border border-line bg-surface p-6">
+                  <h2 className="text-overline text-maroon mb-3">
+                    Compensation & Availability
+                  </h2>
+                  <div className="space-y-3">
                     <div>
-                      <Label className="text-muted-foreground">Is Paid</Label>
-                      <p className="font-medium">
-                        {data?.is_paid ? 'Yes' : 'No'}
+                      <p className="text-caption text-ink-faint">Is Paid</p>
+                      <p className="text-body font-medium text-ink">
+                        {data.is_paid ? 'Yes' : 'No'}
                       </p>
                     </div>
-                    {data?.is_paid && (
+                    {data.is_paid && (
                       <div>
-                        <Label className="text-muted-foreground">Stipend</Label>
-                        <p className="font-medium">
-                          ₦{parseFloat(data?.stipend || '0').toLocaleString()}
+                        <p className="text-caption text-ink-faint">Stipend</p>
+                        <p className="text-body font-medium text-ink">
+                          ₦
+                          {parseFloat(data.stipend || '0').toLocaleString()}
                         </p>
                       </div>
                     )}
                     <div>
-                      <Label className="text-muted-foreground">
+                      <p className="text-caption text-ink-faint">
                         Available Slots
-                      </Label>
-                      <p className="font-medium">{data?.available_slots}</p>
+                      </p>
+                      <p className="text-body font-medium text-ink">
+                        {data.available_slots}
+                      </p>
                     </div>
-                  </CardContent>
-                </Card>
-
-                {/* Skills & Requirements */}
-                <Card className="md:col-span-2">
-                  <CardHeader>
-                    <CardTitle>Skills & Requirements</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label className="text-muted-foreground">
-                        Required Skills
-                      </Label>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {data?.skills_required.map(
-                          (skill: string, index: number) => (
-                            <Badge key={index} variant="accent">
-                              {skill}
-                            </Badge>
-                          ),
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex gap-6">
-                      <div className="flex items-center gap-2">
-                        <Label className="text-muted-foreground">
-                          Resume Required:
-                        </Label>
-                        <Badge
-                          variant={data?.require_resume ? 'default' : 'outline'}
-                        >
-                          {data?.require_resume ? 'Yes' : 'No'}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Label className="text-muted-foreground">
-                          Cover Letter Required:
-                        </Label>
-                        <Badge
-                          variant={
-                            data?.require_cover_letter ? 'default' : 'outline'
-                          }
-                        >
-                          {data?.require_cover_letter ? 'Yes' : 'No'}
-                        </Badge>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </section>
               </div>
-              {/* Active/Inactive Toggle */}
-              <Card>
-                <CardContent className="p-4 flex items-center justify-between">
+
+              {/* Skills & Requirements */}
+              <section className="rounded-md border border-line bg-surface p-6">
+                <h2 className="text-overline text-maroon mb-3">
+                  Skills & Requirements
+                </h2>
+                <div className="space-y-4">
                   <div>
-                    <Label className="text-base font-semibold">
+                    <p className="text-caption text-ink-faint mb-2">
+                      Required Skills
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {data.skills_required.map(
+                        (skill: string, index: number) => (
+                          <Badge key={index} variant="outline">
+                            {skill}
+                          </Badge>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-6">
+                    <div className="flex items-center gap-2">
+                      <p className="text-caption text-ink-faint">
+                        Resume Required:
+                      </p>
+                      <Badge
+                        variant={data.require_resume ? 'default' : 'outline'}
+                      >
+                        {data.require_resume ? 'Yes' : 'No'}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-caption text-ink-faint">
+                        Cover Letter Required:
+                      </p>
+                      <Badge
+                        variant={
+                          data.require_cover_letter ? 'default' : 'outline'
+                        }
+                      >
+                        {data.require_cover_letter ? 'Yes' : 'No'}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Active/Inactive Toggle */}
+              <section className="rounded-md border border-line bg-surface p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-body font-semibold text-ink">
                       Internship Status
                     </Label>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-body-sm text-ink-soft">
                       {isActive
                         ? 'This internship is currently active and accepting applications'
                         : 'This internship is currently inactive'}
@@ -251,16 +278,20 @@ export default function InternshipDetail() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Switch checked={isActive} onCheckedChange={setIsActive} />
-                    <Label>{isActive ? 'Active' : 'Inactive'}</Label>
+                    <Label className="text-body-sm">
+                      {isActive ? 'Active' : 'Inactive'}
+                    </Label>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </section>
             </div>
           )}
-        </TabsContent>
+        </div>
+      )}
 
-        {/* OFFERS TAB */}
-        <TabsContent value="offers" className="space-y-4">
+      {/* OFFERS TAB */}
+      {activeTab === 'offers' && (
+        <div className="space-y-4">
           <div className="flex justify-end">
             <Button>
               <Plus className="h-4 w-4" />
@@ -275,58 +306,58 @@ export default function InternshipDetail() {
                   key={index}
                   {...offer}
                   variant="offer"
-                  onWithdraw={() => console.log('Withdraw offer')}
+                  onWithdraw={() => {}}
                 />
               ))
             ) : (
-              <div className="text-center py-12 text-muted-foreground">
+              <div className="text-center py-12 text-ink-soft text-body">
                 No offers sent for this internship yet.
               </div>
             )}
           </div>
-        </TabsContent>
+        </div>
+      )}
 
-        {/* APPLICATIONS TAB */}
-        <TabsContent value="applications" className="space-y-4">
-          <div className="space-y-3">
-            {mockApplications.length > 0 ? (
-              mockApplications.map((application, index) => (
-                <StudentCard
-                  key={index}
-                  {...application}
-                  variant="applicant"
-                  onAccept={() => console.log('Accept application')}
-                  onWithdraw={() => console.log('Reject application')}
-                />
-              ))
-            ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                No applications received for this internship yet.
-              </div>
-            )}
-          </div>
-        </TabsContent>
+      {/* APPLICATIONS TAB */}
+      {activeTab === 'applications' && (
+        <div className="space-y-3">
+          {mockApplications.length > 0 ? (
+            mockApplications.map((application, index) => (
+              <StudentCard
+                key={index}
+                {...application}
+                variant="applicant"
+                onAccept={() => {}}
+                onReject={() => {}}
+              />
+            ))
+          ) : (
+            <div className="text-center py-12 text-ink-soft text-body">
+              No applications received for this internship yet.
+            </div>
+          )}
+        </div>
+      )}
 
-        {/* INTERNS TAB */}
-        <TabsContent value="interns" className="space-y-4">
-          <div className="space-y-3">
-            {mockInterns.length > 0 ? (
-              mockInterns.map((intern, index) => (
-                <StudentCard
-                  key={index}
-                  {...intern}
-                  variant="message"
-                  onMessage={() => console.log('Message intern')}
-                />
-              ))
-            ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                No active interns for this internship yet.
-              </div>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
+      {/* INTERNS TAB */}
+      {activeTab === 'interns' && (
+        <div className="space-y-3">
+          {mockInterns.length > 0 ? (
+            mockInterns.map((intern, index) => (
+              <StudentCard
+                key={index}
+                {...intern}
+                variant="message"
+                onMessage={() => {}}
+              />
+            ))
+          ) : (
+            <div className="text-center py-12 text-ink-soft text-body">
+              No active interns for this internship yet.
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

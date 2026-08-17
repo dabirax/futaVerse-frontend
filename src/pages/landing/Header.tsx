@@ -1,77 +1,55 @@
 import { Link } from '@tanstack/react-router'
-import { motion } from 'framer-motion'
 import { Button } from '../../components/ui/button'
 import { Sidebar } from '../onboarding/components/sidebar'
+import { ThemeToggle } from '@/components/theme-toggle'
 import Logo from '@/components/logo'
-import futaLogo from '@/assets/landing/futa_logo.png'
 
 const Header = () => {
   return (
-    <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-sm border-border z-50">
-      <motion.div
-        initial={{ y: -250 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="flex items-center justify-between max-w-(--breakpoint-xl) mx-auto px-4 sm:px-6 lg:px-8 h-16 bg-background shadow-md">
-          <div className="flex items-center space-x-2">
-            <img
-              src={futaLogo}
-              alt="Federal University of Technology Akure"
-              className="mx-auto max-w-10 rounded-xl"
-            />
-            <Logo />
-          </div>
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
-            <a
-              href="#about"
-              className="text-foreground hover:text-primary transition-colors font-medium"
-            >
-              About Us
-            </a>
-            <a
-              href="#how-it-works"
-              className="text-foreground hover:text-primary transition-colors font-medium"
-            >
-              How It Works
-            </a>
-            <a
-              href="#features"
-              className="text-foreground hover:text-primary transition-colors font-medium"
-            >
-              Features
-            </a>
-            <a
-              href="#roles"
-              className="text-foreground hover:text-primary transition-colors font-medium"
-            >
-              Roles
-            </a>
-          </div>
+    <nav className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-line z-50">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between">
+        <Logo />
 
-          <div className="flex items-center gap-3">
-            <Link to="/login">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.9 }}
-                className="w-full"
-              >
-                <Button className="bg-[#5E0B80]">Login</Button>
-              </motion.div>
-            </Link>
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center space-x-8">
+          <a
+            href="#about"
+            className="text-sm font-medium text-ink-soft hover:text-ink transition-colors"
+          >
+            About
+          </a>
+          <a
+            href="#how-it-works"
+            className="text-sm font-medium text-ink-soft hover:text-ink transition-colors"
+          >
+            How It Works
+          </a>
+          <a
+            href="#features"
+            className="text-sm font-medium text-ink-soft hover:text-ink transition-colors"
+          >
+            Features
+          </a>
+          <a
+            href="#roles"
+            className="text-sm font-medium text-ink-soft hover:text-ink transition-colors"
+          >
+            Roles
+          </a>
+        </div>
 
-            {/* <Button size="icon" variant="outline">
-              <SunIcon />
-            </Button> */}
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link to="/login">
+            <Button size="sm">Login</Button>
+          </Link>
 
-            {/* Mobile Menu */}
-            <div className="md:hidden">
-              <Sidebar />
-            </div>
+          {/* Mobile Menu */}
+          <div className="md:hidden">
+            <Sidebar />
           </div>
         </div>
-      </motion.div>
+      </div>
     </nav>
   )
 }

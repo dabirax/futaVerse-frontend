@@ -1,50 +1,40 @@
 import { useRouter } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
-import { motion } from 'framer-motion'
 
 export function BackButton() {
   const router = useRouter()
   return (
-    <motion.div
-      whileHover={{ scale: 1.2 }}
-      whileTap={{ scale: 0.85 }}
-      className="w-full cursor-pointer p-1.5 bg-primary-dark rounded-full"
+    <button
+      type="button"
+      className="flex items-center justify-center w-8 h-8 rounded-full bg-surface-2 border border-line text-ink hover:bg-line transition-colors cursor-pointer"
       onClick={() => {
         if (window.history.length > 1) {
           router.history.back()
         } else {
-          router.navigate({
-            to: '/',
-          })
+          router.navigate({ to: '/' })
         }
       }}
     >
-      <ArrowLeft className="bg-primary-dark text-white" strokeWidth={2.5} />
-    </motion.div>
+      <ArrowLeft size={16} strokeWidth={2} />
+    </button>
   )
 }
 
 export function BackButton2() {
   const router = useRouter()
   return (
-    <motion.div
-      whileHover={{ scale: 1.2 }}
-      whileTap={{ scale: 0.85 }}
-      className=" cursor-pointer p-1.5 bg-primary hover:bg-primary-dark  rounded-full"
+    <button
+      type="button"
+      className="flex items-center justify-center w-8 h-8 rounded-full bg-surface-2 border border-line text-ink hover:bg-line transition-colors cursor-pointer"
       onClick={() => {
         if (window.history.length > 1) {
           router.history.back()
         } else {
-          router.navigate({
-            to: '/',
-          })
+          router.navigate({ to: '/' })
         }
       }}
     >
-      <ArrowLeft
-        className="bg-primary hover:bg-primary-dark text-white"
-        strokeWidth={2.5}
-      />
-    </motion.div>
+      <ArrowLeft size={16} strokeWidth={2} />
+    </button>
   )
 }

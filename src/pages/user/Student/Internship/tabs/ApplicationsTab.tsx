@@ -16,16 +16,22 @@ export default function StudentApplicationsTab() {
 
   if (isError) {
     return (
-      <p className="text-sm text-destructive">Failed to load applications</p>
+      <p className="text-body text-destructive">
+        Failed to load applications
+      </p>
     )
   }
 
   if (!data?.results?.length) {
-    return <p className="text-sm text-muted-foreground">No applications yet</p>
+    return (
+      <p className="text-body text-ink-soft py-12 text-center">
+        No applications yet
+      </p>
+    )
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {data.results.map((application: any, index: number) => (
         <InternshipCard2
           key={index}

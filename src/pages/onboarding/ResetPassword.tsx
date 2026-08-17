@@ -3,13 +3,11 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
 import { AlertCircle, Eye, EyeOff, WifiOff } from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
 import { BackButton } from '../../components/BackButtons'
 import { LeftContainer } from './components/LeftContainer'
 import { useForgotPasswordStore } from './hooks/useForgotPasswordStore'
-import Logo from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -21,7 +19,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { api } from '@/lib/api'
-import { containerVariants, itemVariants } from '@/animationVariants'
 
 const resetPasswordSchema = z
   .object({
@@ -125,168 +122,147 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 h-screen mlg:h-auto bg-[#fafafa] relative overflow-hidden">
-      <div className="w-full h-full grid lg:grid-cols-2 z-10">
-        <LeftContainer />
+    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+      <LeftContainer />
+      <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
+        <div className="w-full max-w-md animate-in fade-in duration-500">
+          <div className="mb-8">
+            <BackButton />
+          </div>
 
-        <div className="flex flex-col items-center justify-center py-8 px-4 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-xl bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-8 md:p-12"
-          >
-            <div className="flex items-center justify-between w-full mb-8">
-              <div className="transition-transform hover:-translate-x-1">
-                <BackButton />
-              </div>
-              <Logo />
-            </div>
+          <div className="mb-8">
+            <h1 className="font-display text-2xl font-semibold text-ink tracking-tight">
+              Reset Password
+            </h1>
+            <p className="text-ink-soft text-sm mt-1.5">
+              Choose a new, secure password for your account
+            </p>
+          </div>
 
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold tracking-tight text-primary-dark">
-                Reset Password
-              </h2>
-              <p className="text-slate-500 mt-2 text-sm">
-                Choose a new, secure password for your account
-              </p>
-            </div>
-
-            <Form {...form}>
-              <motion.form
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-6"
-                onSubmit={form.handleSubmit(onSubmit)}
-              >
-                <motion.div variants={itemVariants}>
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-600 font-medium">
-                          New Password
-                        </FormLabel>
-                        <div className="relative">
-                          <FormControl>
-                            <Input
-                              type={showPassword ? 'text' : 'password'}
-                              placeholder="********"
-                              className="pr-12"
-                              disabled={resetPasswordMutation.isPending}
-                              {...field}
-                            />
-                          </FormControl>
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword((p) => !p)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
-                          >
-                            {showPassword ? (
-                              <EyeOff size={18} />
-                            ) : (
-                              <Eye size={18} />
-                            )}
-                          </button>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </motion.div>
-
-                <motion.div variants={itemVariants}>
-                  <FormField
-                    control={form.control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-600 font-medium">
-                          Confirm New Password
-                        </FormLabel>
-                        <div className="relative">
-                          <FormControl>
-                            <Input
-                              type={showConfirmPassword ? 'text' : 'password'}
-                              placeholder="********"
-                              className="pr-12"
-                              disabled={resetPasswordMutation.isPending}
-                              {...field}
-                            />
-                          </FormControl>
-                          <button
-                            type="button"
-                            onClick={() => setShowConfirmPassword((p) => !p)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
-                          >
-                            {showConfirmPassword ? (
-                              <EyeOff size={18} />
-                            ) : (
-                              <Eye size={18} />
-                            )}
-                          </button>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </motion.div>
-
-                {serverError && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 flex gap-3"
-                  >
-                    <div className="shrink-0 mt-0.5 text-red-500">
-                      {serverError.isNetwork ? (
-                        <WifiOff size={16} />
-                      ) : (
-                        <AlertCircle size={16} />
-                      )}
+          <Form {...form}>
+            <form
+              className="space-y-6"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      New Password
+                    </FormLabel>
+                    <div className="relative">
+                      <FormControl>
+                        <Input
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="********"
+                          className="pr-10"
+                          disabled={resetPasswordMutation.isPending}
+                          {...field}
+                        />
+                      </FormControl>
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((p) => !p)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-faint hover:text-ink transition-colors"
+                      >
+                        {showPassword ? (
+                          <EyeOff size={16} />
+                        ) : (
+                          <Eye size={16} />
+                        )}
+                      </button>
                     </div>
-                    <div className="space-y-0.5">
-                      <p className="text-sm font-medium text-red-700">
-                        {serverError.message}
-                      </p>
-                      {serverError.hint && (
-                        <p className="text-xs text-red-500">
-                          {serverError.hint}
-                        </p>
-                      )}
-                    </div>
-                  </motion.div>
+                    <FormMessage />
+                  </FormItem>
                 )}
+              />
 
-                <motion.div variants={itemVariants} className="space-y-4 pt-4">
-                  <Button
-                    type="submit"
-                    disabled={resetPasswordMutation.isPending}
-                    className="w-full bg-primary text-white h-12 rounded-xl shadow-lg shadow-purple-100 transition-all hover:scale-[1.02] active:scale-95 duration-300 font-semibold"
-                  >
-                    {resetPasswordMutation.isPending ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin" />
-                        Resetting...
-                      </div>
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      Confirm New Password
+                    </FormLabel>
+                    <div className="relative">
+                      <FormControl>
+                        <Input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          placeholder="********"
+                          className="pr-10"
+                          disabled={resetPasswordMutation.isPending}
+                          {...field}
+                        />
+                      </FormControl>
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword((p) => !p)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-faint hover:text-ink transition-colors"
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff size={16} />
+                        ) : (
+                          <Eye size={16} />
+                        )}
+                      </button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {serverError && (
+                <div className="rounded-xs bg-destructive-soft border border-destructive/20 px-4 py-3 flex gap-3">
+                  <div className="shrink-0 mt-0.5 text-destructive">
+                    {serverError.isNetwork ? (
+                      <WifiOff size={16} />
                     ) : (
-                      'Reset Password'
+                      <AlertCircle size={16} />
                     )}
-                  </Button>
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium text-destructive-on-soft">
+                      {serverError.message}
+                    </p>
+                    {serverError.hint && (
+                      <p className="text-xs text-ink-soft">
+                        {serverError.hint}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
 
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => navigate({ to: '/login' })}
-                    className="w-full h-12 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 transition-all"
-                  >
-                    Back to Login
-                  </Button>
-                </motion.div>
-              </motion.form>
-            </Form>
-          </motion.div>
+              <div className="space-y-4 pt-4">
+                <Button
+                  type="submit"
+                  disabled={resetPasswordMutation.isPending}
+                  className="w-full h-10"
+                >
+                  {resetPasswordMutation.isPending ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin" />
+                      Resetting...
+                    </div>
+                  ) : (
+                    'Reset Password'
+                  )}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => navigate({ to: '/login' })}
+                  className="w-full h-10"
+                >
+                  Back to Login
+                </Button>
+              </div>
+            </form>
+          </Form>
         </div>
       </div>
     </div>

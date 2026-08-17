@@ -2,9 +2,9 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { motion } from 'framer-motion'
 import { useRouter } from '@tanstack/react-router'
 import { LeftContainer } from '../../components/LeftContainer'
+import { SignupStepIndicator } from '../../components/SignupStepIndicator'
 import { BackButton } from '../../../../components/BackButtons'
 import {
   useHasHydrated,
@@ -13,7 +13,6 @@ import {
 import { studentSchoolSchema } from '../lib/studentSchema'
 import type { z } from 'zod'
 import { Button } from '@/components/ui/button'
-import Logo from '@/components/logo'
 import {
   Form,
   FormControl,
@@ -30,7 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { containerVariants, itemVariants } from '@/animationVariants'
 
 const StudentSchool = () => {
   // Type definitions for form input and output based on the schema
@@ -115,243 +113,230 @@ const StudentSchool = () => {
   ])
 
   return (
-    <div className="flex flex-col mlg:flex-row w-full max-w-screen mlg:min-h-145 min-h-screen mlg:h-auto">
-      <div className="w-full h-full grid lg:grid-cols-2 z-10">
-        <LeftContainer />
+    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+      <LeftContainer />
+      <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
+        <div className="w-full max-w-lg">
+          <div className="mb-8">
+            <BackButton />
+          </div>
 
-        <div className="flex flex-col items-center justify-center py-8 px-4 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-2xl bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-8 md:p-12"
-          >
-            <div className="flex items-center justify-between w-full mb-8">
-              <div className="transition-transform hover:-translate-x-1">
-                <BackButton />
+          <SignupStepIndicator
+            steps={[{ label: 'Personal' }, { label: 'School' }, { label: 'Professional' }]}
+            currentStep={1}
+            role="student"
+          />
+
+          <div className="mb-8 text-center">
+            <h1 className="font-display text-2xl font-semibold text-ink tracking-tight">
+              School Information
+            </h1>
+            <p className="text-ink-soft text-sm mt-1.5">
+              Provide your current academic details at FUTA
+            </p>
+          </div>
+
+          <Form {...form}>
+            <form
+              className="space-y-5"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <FormField
+                control={form.control}
+                name="matric_no"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      Matriculation Number{' '}
+                      <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="ABC/01/2345"
+                        className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="department"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      Department <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your department"
+                        className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="faculty"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      Faculty <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your faculty"
+                        className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="expected_grad_year"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      Expected Graduation Year{' '}
+                      <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Enter your expected graduation year"
+                        className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                        value={Number(field.value) || ''}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : '',
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="level"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        Level <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <Select
+                        onValueChange={(value) =>
+                          field.onChange(parseInt(value))
+                        }
+                        defaultValue={
+                          field.value ? String(field.value) : undefined
+                        }
+                      >
+                        <FormControl>
+                          <SelectTrigger className="h-10 rounded-xs bg-surface border border-line text-ink">
+                            <SelectValue placeholder="Select Level" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="rounded-xs border border-line bg-surface">
+                          <SelectItem value="100">100 Level</SelectItem>
+                          <SelectItem value="200">200 Level</SelectItem>
+                          <SelectItem value="300">300 Level</SelectItem>
+                          <SelectItem value="400">400 Level</SelectItem>
+                          <SelectItem value="500">500 Level</SelectItem>
+                          <SelectItem value="600">600 Level</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="cgpa"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-ink font-medium text-sm">
+                        CGPA <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          max="5"
+                          placeholder="e.g. 4.32"
+                          className="h-10 rounded-xs bg-surface border border-line text-ink placeholder:text-ink-faint focus-visible:border-indigo focus-visible:ring-focus focus-visible:ring-[3px]"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseFloat(e.target.value))
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <Logo />
-            </div>
 
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold tracking-tight text-primary-dark">
-                School Information
-              </h2>
-              <p className="text-slate-500 mt-2 text-sm">
-                Provide your current academic details at FUTA
-              </p>
-            </div>
+              <FormField
+                control={form.control}
+                name="certificate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-ink font-medium text-sm">
+                      Certificate (Optional)
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*,application/pdf"
+                        className="h-10 rounded-xs bg-surface border border-line text-ink file:mr-3 file:py-1 file:px-3 file:rounded-xs file:border-0 file:text-xs file:font-medium file:bg-indigo-soft file:text-indigo hover:file:bg-indigo/10 cursor-pointer"
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.files ? e.target.files[0] : null,
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <Form {...form}>
-              <motion.form
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-6"
-                onSubmit={form.handleSubmit(onSubmit)}
-              >
-                <motion.div variants={itemVariants}>
-                  <FormField
-                    control={form.control}
-                    name="matric_no"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-600 font-medium">
-                          Matriculation Number{' '}
-                          <span className="text-red-500">*</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="ABC/01/2345" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </motion.div>
-
-                <motion.div variants={itemVariants}>
-                  <FormField
-                    control={form.control}
-                    name="department"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-600 font-medium">
-                          Department <span className="text-red-500">*</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your department"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </motion.div>
-
-                <motion.div variants={itemVariants}>
-                  <FormField
-                    control={form.control}
-                    name="faculty"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-600 font-medium">
-                          Faculty <span className="text-red-500">*</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter your faculty" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </motion.div>
-
-                <motion.div variants={itemVariants}>
-                  <FormField
-                    control={form.control}
-                    name="expected_grad_year"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-600 font-medium">
-                          Expected Graduation Year{' '}
-                          <span className="text-red-500">*</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="Enter your expected graduation year"
-                            value={Number(field.value) || ''}
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.value ? Number(e.target.value) : '',
-                              )
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </motion.div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <motion.div variants={itemVariants}>
-                    <FormField
-                      control={form.control}
-                      name="level"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-600 font-medium">
-                            Level <span className="text-red-500">*</span>
-                          </FormLabel>
-                          <Select
-                            onValueChange={(value) =>
-                              field.onChange(parseInt(value))
-                            }
-                            defaultValue={
-                              field.value ? String(field.value) : undefined
-                            }
-                          >
-                            <FormControl>
-                              <SelectTrigger className="h-12 rounded-xl bg-white/50 border-slate-200">
-                                <SelectValue placeholder="Select Level" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="rounded-xl">
-                              <SelectItem value="100">100 Level</SelectItem>
-                              <SelectItem value="200">200 Level</SelectItem>
-                              <SelectItem value="300">300 Level</SelectItem>
-                              <SelectItem value="400">400 Level</SelectItem>
-                              <SelectItem value="500">500 Level</SelectItem>
-                              <SelectItem value="600">600 Level</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </motion.div>
-
-                  <motion.div variants={itemVariants}>
-                    <FormField
-                      control={form.control}
-                      name="cgpa"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-600 font-medium">
-                            CGPA <span className="text-red-500">*</span>
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              step="0.01"
-                              min="0"
-                              max="5"
-                              placeholder="e.g. 4.32"
-                              {...field}
-                              onChange={(e) =>
-                                field.onChange(parseFloat(e.target.value))
-                              }
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </motion.div>
-                </div>
-
-                <motion.div variants={itemVariants}>
-                  <FormField
-                    control={form.control}
-                    name="certificate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-600 font-medium">
-                          Certificate (Optional)
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type="file"
-                            accept="image/*,application/pdf"
-                            className="h-12 rounded-xl bg-white/50 border-slate-200 file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 hover:file:bg-primary/20 cursor-pointer flex items-center file:mt-1"
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.files ? e.target.files[0] : null,
-                              )
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </motion.div>
-
-                <motion.div
-                  variants={itemVariants}
-                  className="flex justify-between items-center pt-4"
+              <div className="flex items-center justify-between pt-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="text-ink-soft hover:text-ink"
+                  onClick={() => router.history.back()}
                 >
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="text-slate-500 hover:text-primary transition-colors"
-                    onClick={() => router.history.back()}
-                  >
-                    Back
-                  </Button>
+                  Back
+                </Button>
 
-                  <Button
-                    type="submit"
-                    className="bg-primary text-white px-10 h-12 rounded-xl shadow-lg shadow-purple-200 transition-all hover:scale-105 duration-500"
-                  >
-                    Next Step
-                  </Button>
-                </motion.div>
-              </motion.form>
-            </Form>
-          </motion.div>
+                <Button
+                  type="submit"
+                  className="bg-indigo text-white rounded-sm px-8 h-10 font-medium hover:bg-indigo-hover transition-colors"
+                >
+                  Next Step
+                </Button>
+              </div>
+            </form>
+          </Form>
         </div>
       </div>
     </div>

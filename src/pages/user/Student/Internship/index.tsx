@@ -2,43 +2,48 @@ import { useState } from 'react'
 import MyInternshipsTab from './tabs/MyInternshipsTab'
 import OffersTab from './tabs/OffersTab'
 import ApplicationsTab from './tabs/ApplicationsTab'
-// import InternsTab from "./tabs/InternsTab";
 import ReportsTab from './tabs/ReportsTab'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-export default function AlumnusInternship() {
+const tabs = [
+  { value: 'my-internships', label: 'My Internships' },
+  { value: 'offers', label: 'Offers' },
+  { value: 'applications', label: 'Applications' },
+  { value: 'reports', label: 'Reports' },
+]
+
+export default function StudentInternship() {
   const [activeTab, setActiveTab] = useState('my-internships')
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-foreground">Internships</h1>
+      <h1 className="font-display text-xl text-ink">Internships</h1>
+
+      {/* Underline-style tabs */}
+      <div className="border-b border-line">
+        <div className="flex gap-0 overflow-x-auto">
+          {tabs.map((tab) => (
+            <button
+              key={tab.value}
+              onClick={() => setActiveTab(tab.value)}
+              className={`whitespace-nowrap px-4 py-2.5 text-body font-medium transition-colors border-b-2 -mb-px ${
+                activeTab === tab.value
+                  ? 'border-indigo text-indigo'
+                  : 'border-transparent text-ink-soft hover:text-ink hover:border-line-strong'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4 mb-5">
-          <TabsTrigger value="my-internships">My Internships</TabsTrigger>
-          <TabsTrigger value="offers">Offers</TabsTrigger>
-          <TabsTrigger value="applications">Applications</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="my-internships">
-          <MyInternshipsTab />
-        </TabsContent>
-
-        <TabsContent value="offers">
-          <OffersTab />
-        </TabsContent>
-
-        <TabsContent value="applications">
-          <ApplicationsTab />
-        </TabsContent>
-
-        <TabsContent value="reports">
-          <ReportsTab />
-        </TabsContent>
-      </Tabs>
+      {/* Tab content */}
+      <div>
+        {activeTab === 'my-internships' && <MyInternshipsTab />}
+        {activeTab === 'offers' && <OffersTab />}
+        {activeTab === 'applications' && <ApplicationsTab />}
+        {activeTab === 'reports' && <ReportsTab />}
+      </div>
     </div>
   )
 }

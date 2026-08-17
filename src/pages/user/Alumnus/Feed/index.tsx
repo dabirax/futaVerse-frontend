@@ -3,18 +3,14 @@ import { useRouter } from '@tanstack/react-router'
 import {
   Briefcase,
   Calendar,
-  ChevronRight,
   MapPin,
   Search,
-  Trophy,
   Users,
   Video,
-  Zap,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import type { FeedItemData } from '@/types/feed'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useFeed } from '@/hooks/useFeed'
@@ -66,48 +62,67 @@ function InternshipCard({
 
   return (
     <div
-      className="bg-card rounded-xl border shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
+      className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
       onClick={() => router.navigate({ to: `/alumnus/internships/${sqid}` })}
     >
-      <div className="flex items-center justify-between mb-3">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide bg-green-100 text-green-700">
-          New Internship
-        </span>
-        <span className="text-xs text-muted-foreground">
-          {timeAgo(created_at)}
-        </span>
+      {/* Category kicker */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <span className="text-overline text-ink-faint">Internship</span>
+          <div className="mt-1.5 h-px bg-maroon w-12" />
+        </div>
+        <span className="text-meta text-ink-faint">{timeAgo(created_at)}</span>
       </div>
 
-      <div className="flex items-start gap-3">
-        <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center shrink-0">
-          <Briefcase className="h-5 w-5 text-primary-foreground" />
+      {/* Title */}
+      <h3 className="font-display text-[1.1875rem] text-ink leading-snug mb-1.5">
+        {item.title}
+      </h3>
+
+      {/* Description */}
+      <p className="text-sm text-ink-soft mb-3">
+        {item.company || 'Unknown Company'}
+      </p>
+
+      {/* Metadata row */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-meta text-ink-faint mb-4">
+        <span>
+          {item.work_mode || 'Flexible'} • {item.engagement_type || 'Role'}
+        </span>
+        {item.is_paid && item.stipend && (
+          <span className="text-maroon">
+            Stipend: ₦{parseFloat(item.stipend).toLocaleString()}/mo
+          </span>
+        )}
+        {item.remaining_slots !== undefined && item.remaining_slots > 0 && (
+          <span className="text-green">
+            {item.remaining_slots} of {item.available_slots} slots open
+          </span>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="flex items-center justify-between pt-4 border-t border-line">
+        <div className="flex items-center gap-2.5">
+          <Avatar className="h-7 w-7">
+            <AvatarFallback className="bg-maroon-soft text-maroon-on-soft text-[10px] font-semibold rounded-full">
+              {item.alumni
+                ? item.alumni
+                    .split(' ')
+                    .map((w) => w[0])
+                    .join('')
+                    .slice(0, 2)
+                    .toUpperCase()
+                : <Briefcase className="h-3 w-3" />}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-caption text-ink-soft">
+            {item.alumni || 'Unknown'}
+          </span>
         </div>
-
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <h3 className="font-semibold text-foreground text-sm leading-tight">
-                {item.title}
-              </h3>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {item.company || 'Unknown Company'}
-              </p>
-            </div>
-          </div>
-
-          <p className="text-xs text-muted-foreground mt-2">
-            {item.work_mode || 'Flexible'} • {item.engagement_type || 'Role'}
-            {item.is_paid &&
-              item.stipend &&
-              ` • Stipend: ₦${parseFloat(item.stipend).toLocaleString()} / month`}
-          </p>
-
-          {item.remaining_slots !== undefined && item.remaining_slots > 0 && (
-            <p className="text-xs text-green-600 font-medium mt-1.5">
-              {item.remaining_slots} of {item.available_slots} slots remaining
-            </p>
-          )}
-        </div>
+        <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          View →
+        </span>
       </div>
     </div>
   )
@@ -126,62 +141,70 @@ function MentorshipCard({
 
   return (
     <div
-      className="bg-card rounded-xl border shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
+      className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
       onClick={() => router.navigate({ to: `/alumnus/mentorships/${sqid}` })}
     >
-      <div className="flex items-center justify-between mb-3">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide bg-purple-100 text-purple-700">
-          Mentorship
-        </span>
-        <span className="text-xs text-muted-foreground">
-          {timeAgo(created_at)}
-        </span>
+      {/* Category kicker */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <span className="text-overline text-ink-faint">Mentorship</span>
+          <div className="mt-1.5 h-px bg-gold w-12" />
+        </div>
+        <span className="text-meta text-ink-faint">{timeAgo(created_at)}</span>
       </div>
 
-      <div className="flex items-start gap-3">
-        <div className="h-10 w-10 rounded-lg bg-purple-600 flex items-center justify-center shrink-0">
-          <Users className="h-5 w-5 text-white" />
+      {/* Title */}
+      <h3 className="font-display text-[1.1875rem] text-ink leading-snug mb-1.5">
+        {item.title}
+      </h3>
+
+      {/* Description */}
+      <p className="text-sm text-ink-soft line-clamp-2 mb-3">
+        {item.alumni
+          ? `Hosted by ${item.alumni}`
+          : 'A new mentorship opportunity.'}
+      </p>
+
+      {/* Metadata row */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-meta text-ink-faint mb-4">
+        {item.category && <span>{item.category}</span>}
+        {item.work_mode && <span>{item.work_mode}</span>}
+        {item.start_date && (
+          <span className="flex items-center gap-1">
+            <Calendar className="h-3 w-3" />
+            {format(new Date(item.start_date), 'MMM d, yyyy')}
+          </span>
+        )}
+        {item.remaining_slots !== undefined && (
+          <span className="flex items-center gap-1">
+            <Users className="h-3 w-3" />
+            {item.remaining_slots} slots available
+          </span>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="flex items-center justify-between pt-4 border-t border-line">
+        <div className="flex items-center gap-2.5">
+          <Avatar className="h-7 w-7">
+            <AvatarFallback className="bg-gold-soft text-gold-on-soft text-[10px] font-semibold rounded-full">
+              {item.alumni
+                ? item.alumni
+                    .split(' ')
+                    .map((w) => w[0])
+                    .join('')
+                    .slice(0, 2)
+                    .toUpperCase()
+                : <Users className="h-3 w-3" />}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-caption text-ink-soft">
+            {item.alumni || 'Unknown'}
+          </span>
         </div>
-
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <h3 className="font-semibold text-foreground text-sm leading-tight">
-                {item.title}
-              </h3>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {item.category}
-              </p>
-            </div>
-            {item.work_mode && (
-              <Badge variant="secondary" className="text-xs shrink-0">
-                {item.work_mode}
-              </Badge>
-            )}
-          </div>
-
-          {/* Fallback for missing description */}
-          <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
-            {item.alumni
-              ? `Hosted by ${item.alumni}`
-              : 'A new mentorship opportunity.'}
-          </p>
-
-          <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-            {item.start_date && (
-              <span className="flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5" />
-                {format(new Date(item.start_date), 'MMM d, yyyy')}
-              </span>
-            )}
-            {item.remaining_slots !== undefined && (
-              <span className="flex items-center gap-1">
-                <Users className="h-3.5 w-3.5" />
-                {item.remaining_slots} slots available
-              </span>
-            )}
-          </div>
-        </div>
+        <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          View →
+        </span>
       </div>
     </div>
   )
@@ -202,54 +225,67 @@ function EventCard({
     : ''
 
   return (
-    <div className="bg-card rounded-xl border shadow-sm p-4">
-      <div className="flex items-center justify-between mb-3">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide bg-blue-100 text-blue-700">
-          Upcoming Event
-        </span>
-        <span className="text-xs text-muted-foreground">
-          {timeAgo(created_at)}
-        </span>
+    <div
+      className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
+      onClick={() => router.navigate({ to: `/alumnus/events/${sqid}` })}
+    >
+      {/* Category kicker */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <span className="text-overline text-ink-faint">Event</span>
+          <div className="mt-1.5 h-px bg-green w-12" />
+        </div>
+        <span className="text-meta text-ink-faint">{timeAgo(created_at)}</span>
       </div>
 
-      <div className="flex items-start gap-3">
-        <div className="h-16 w-24 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shrink-0">
-          <Calendar className="h-7 w-7 text-white opacity-80" />
-        </div>
+      {/* Title */}
+      <h3 className="font-display text-[1.1875rem] text-ink leading-snug mb-1.5">
+        {item.title}
+      </h3>
 
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-foreground text-sm leading-tight line-clamp-2">
-            {item.title}
-          </h3>
-          <div className="mt-2 space-y-1">
-            {formattedDate && (
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Calendar className="h-3.5 w-3.5 shrink-0" />
-                <span>{formattedDate}</span>
-              </div>
-            )}
-            {item.mode === 'virtual' || item.mode === 'hybrid' ? (
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Video className="h-3.5 w-3.5 shrink-0" />
-                <span>Virtual</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <MapPin className="h-3.5 w-3.5 shrink-0" />
-                <span className="capitalize">{item.mode || 'Physical'}</span>
-              </div>
-            )}
-          </div>
-        </div>
+      {/* Metadata row */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-meta text-ink-faint mb-4">
+        {formattedDate && (
+          <span className="flex items-center gap-1">
+            <Calendar className="h-3 w-3" />
+            {formattedDate}
+          </span>
+        )}
+        {item.mode === 'virtual' || item.mode === 'hybrid' ? (
+          <span className="flex items-center gap-1">
+            <Video className="h-3 w-3" />
+            <span>Virtual</span>
+          </span>
+        ) : (
+          <span className="flex items-center gap-1">
+            <MapPin className="h-3 w-3" />
+            <span className="capitalize">{item.mode || 'Physical'}</span>
+          </span>
+        )}
+      </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          className="shrink-0 text-xs h-8"
-          onClick={() => router.navigate({ to: `/alumnus/events/${sqid}` })}
-        >
-          View Details
-        </Button>
+      {/* Footer */}
+      <div className="flex items-center justify-between pt-4 border-t border-line">
+        <div className="flex items-center gap-2.5">
+          <Avatar className="h-7 w-7">
+            <AvatarFallback className="bg-green-soft text-green-on-soft text-[10px] font-semibold rounded-full">
+              {item.alumni
+                ? item.alumni
+                    .split(' ')
+                    .map((w) => w[0])
+                    .join('')
+                    .slice(0, 2)
+                    .toUpperCase()
+                : <Calendar className="h-3 w-3" />}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-caption text-ink-soft">
+            {item.alumni || 'Unknown'}
+          </span>
+        </div>
+        <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          View →
+        </span>
       </div>
     </div>
   )
@@ -285,54 +321,54 @@ const mockAlumniSuggestions = [
 ]
 
 const quickActions = [
-  { label: 'Post an Update', icon: Zap },
-  { label: 'Share an Achievement', icon: Trophy },
-  { label: 'Create an Opportunity', icon: Briefcase },
-  { label: 'Sponsor an Event', icon: Calendar },
+  { label: 'Post an Update', path: '/alumnus/posts' },
+  { label: 'Create an Opportunity', path: '/alumnus/internships/create' },
+  { label: 'Host an Event', path: '/alumnus/events/create' },
+  { label: 'Start a Mentorship', path: '/alumnus/mentorships/create' },
 ]
 
 function RightSidebar() {
+  const router = useRouter()
   const { data: mentorships } = useMentorships()
   const availableMentors = (mentorships?.results ?? [])
     .filter((m: any) => m.remaining_slots > 0)
     .slice(0, 2)
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-4">
       {/* Alumni You Might Know */}
-      <div className="bg-card rounded-xl border shadow-sm p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-sm text-foreground">
+      <div className="bg-surface rounded-md border border-line shadow-xs p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-display text-[1.1875rem] text-ink">
             Alumni You Might Know
           </h3>
-          <button className="text-xs text-primary font-medium hover:underline">
+          <button className="text-[11px] font-semibold text-indigo hover:underline shrink-0 whitespace-nowrap">
             See all
           </button>
         </div>
-
         <div className="space-y-3">
           {mockAlumniSuggestions.map((alumni) => (
             <div key={alumni.id} className="flex items-center gap-2.5">
-              <Avatar className="h-9 w-9 shrink-0">
-                <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+              <Avatar className="h-8 w-8 shrink-0">
+                <AvatarFallback className="bg-maroon-soft text-maroon-on-soft text-[10px] font-semibold rounded-full">
                   {alumni.initials}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-foreground leading-tight truncate">
+                <p className="text-xs font-semibold text-ink leading-tight">
                   {alumni.name}
                 </p>
-                <p className="text-xs text-muted-foreground truncate">
+                <p className="text-caption text-ink-soft truncate">
                   {alumni.role} at {alumni.company}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-caption text-ink-faint">
                   FUTA • {alumni.gradYear}
                 </p>
               </div>
               <Button
                 variant="outline"
                 size="sm"
-                className="shrink-0 h-7 text-xs px-3"
+                className="shrink-0 h-7 text-xs px-3 rounded-xs"
               >
                 Connect
               </Button>
@@ -343,39 +379,41 @@ function RightSidebar() {
 
       {/* Mentor Availability */}
       {availableMentors.length > 0 && (
-        <div className="bg-card rounded-xl border shadow-sm p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-sm text-foreground">
+        <div className="bg-surface rounded-md border border-line shadow-xs p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-display text-[1.1875rem] text-ink">
               Mentor Availability
             </h3>
-            <button className="text-xs text-primary font-medium hover:underline">
+            <button className="text-[11px] font-semibold text-indigo hover:underline shrink-0 whitespace-nowrap">
               See all
             </button>
           </div>
-
           <div className="space-y-3">
             {availableMentors.map((mentor: any) => (
               <div key={mentor.sqid} className="flex items-center gap-2.5">
-                <Avatar className="h-9 w-9 shrink-0">
-                  <AvatarFallback className="bg-purple-100 text-purple-700 text-xs font-semibold">
+                <Avatar className="h-8 w-8 shrink-0">
+                  <AvatarFallback className="bg-gold-soft text-gold-on-soft text-[10px] font-semibold rounded-full">
                     {mentor.title.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-foreground leading-tight truncate">
+                  <p className="text-xs font-semibold text-ink leading-tight">
                     {mentor.title}
                   </p>
-                  <p className="text-xs text-muted-foreground truncate">
+                  <p className="text-caption text-ink-soft truncate">
                     {mentor.category}
                   </p>
                   <p
-                    className={`text-xs font-medium ${mentor.remaining_slots > 1 ? 'text-green-600' : 'text-amber-600'}`}
+                    className={`text-caption font-medium ${mentor.remaining_slots > 1 ? 'text-green' : 'text-gold'}`}
                   >
                     {mentor.remaining_slots} slot
                     {mentor.remaining_slots !== 1 ? 's' : ''} available
                   </p>
                 </div>
-                <Button size="sm" className="shrink-0 h-7 text-xs px-3">
+                <Button
+                  size="sm"
+                  className="shrink-0 h-7 text-xs px-3 rounded-xs"
+                >
                   Book Slot
                 </Button>
               </div>
@@ -385,44 +423,50 @@ function RightSidebar() {
       )}
 
       {/* Quick Actions */}
-      <div className="bg-card rounded-xl border shadow-sm p-4">
-        <h3 className="font-semibold text-sm text-foreground mb-2">
+      <div className="bg-surface rounded-md border border-line shadow-xs p-5">
+        <h3 className="font-display text-[1.1875rem] text-ink mb-4">
           Quick Actions
         </h3>
-        <div className="space-y-0.5">
+        <div className="space-y-1">
           {quickActions.map((action) => (
             <button
               key={action.label}
-              className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-muted transition-colors text-left"
+              onClick={() => router.navigate({ to: action.path })}
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xs hover:bg-surface-2 transition-colors duration-200 text-left"
             >
-              <action.icon className="h-4 w-4 text-muted-foreground shrink-0" />
-              <span className="flex-1 text-xs font-medium text-foreground">
+              <span className="text-sm font-medium text-ink">
                 {action.label}
               </span>
-              <ChevronRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <span className="text-caption text-ink-faint">→</span>
             </button>
           ))}
         </div>
       </div>
 
       {/* Your Stats */}
-      <div className="bg-card rounded-xl border shadow-sm p-4">
-        <h3 className="font-semibold text-sm text-foreground mb-3">
+      <div className="bg-surface rounded-md border border-line shadow-xs p-5">
+        <h3 className="font-display text-[1.1875rem] text-ink mb-4">
           Your Stats
         </h3>
-        <div className="grid grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
-            <p className="text-xs text-muted-foreground">Profile views</p>
-            <p className="text-2xl font-bold text-foreground">248</p>
+            <p className="text-caption text-ink-soft">Profile views</p>
+            <p className="font-mono text-2xl font-semibold text-ink tabular-nums">
+              248
+            </p>
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">Connections</p>
-            <p className="text-2xl font-bold text-foreground">356</p>
+            <p className="text-caption text-ink-soft">Connections</p>
+            <p className="font-mono text-2xl font-semibold text-ink tabular-nums">
+              356
+            </p>
           </div>
         </div>
         <div>
-          <p className="text-xs text-muted-foreground">Opportunities posted</p>
-          <p className="text-2xl font-bold text-foreground">12</p>
+          <p className="text-caption text-ink-soft">Opportunities posted</p>
+          <p className="font-mono text-2xl font-semibold text-ink tabular-nums">
+            12
+          </p>
         </div>
       </div>
     </div>
@@ -497,39 +541,39 @@ export default function AlumnusFeed() {
   return (
     <div className="flex flex-col xl:flex-row gap-6 items-start">
       {/* Main Feed */}
-      <div className="flex-1 min-w-0 space-y-4">
-        {/* Greeting */}
-        <div className="flex items-end justify-between gap-4">
+      <div className="flex-1 min-w-0 space-y-5">
+        {/* Page Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">
-              {getGreeting()}, {firstName ?? 'there'} 👋
+            <h1 className="font-display text-[1.875rem] text-ink leading-tight">
+              {getGreeting()}, {firstName ?? 'there'}
             </h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Discover mentorships, internships, and events in your network.
+            <p className="text-sm text-ink-soft mt-1">
+              Recent from the FUTA network.
             </p>
           </div>
 
-          <div className="relative shrink-0">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="relative w-full sm:w-64 shrink-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-faint" />
             <Input
               placeholder="Search opportunities..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 w-64 h-9"
+              className="pl-10 w-full"
             />
           </div>
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex items-center gap-2">
+        {/* Filter Chips */}
+        <div className="flex flex-wrap items-center gap-2">
           {filters.map((f) => (
             <button
               key={f.value}
               onClick={() => setActiveFilter(f.value)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-xs text-sm font-medium transition-colors duration-200 ${
                 activeFilter === f.value
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted text-muted-foreground hover:text-foreground'
+                  ? 'bg-indigo text-white'
+                  : 'bg-surface border border-line text-ink-soft hover:border-line-strong hover:text-ink'
               }`}
             >
               {f.label}
@@ -542,8 +586,8 @@ export default function AlumnusFeed() {
           {isLoading ? (
             <FeedCardSkeleton />
           ) : filteredItems.length === 0 ? (
-            <div className="bg-card rounded-xl border shadow-sm p-12 text-center">
-              <p className="text-sm text-muted-foreground">No results found</p>
+            <div className="bg-surface rounded-md border border-line p-12 text-center">
+              <p className="text-sm text-ink-soft">No results found</p>
             </div>
           ) : (
             filteredItems.map((item) => {
@@ -581,7 +625,7 @@ export default function AlumnusFeed() {
           {hasNextPage && (
             <div
               ref={sentinelRef}
-              className="py-4 text-center text-sm text-muted-foreground"
+              className="py-4 text-center text-sm text-ink-faint"
             >
               {isFetchingNextPage ? 'Loading more…' : ''}
             </div>
@@ -590,7 +634,7 @@ export default function AlumnusFeed() {
       </div>
 
       {/* Right Sidebar — xl+ only */}
-      <div className="hidden xl:block xl:w-72 xl:shrink-0 xl:sticky xl:top-6">
+      <div className="hidden xl:block xl:w-80 xl:shrink-0 xl:sticky xl:top-6">
         <RightSidebar />
       </div>
     </div>

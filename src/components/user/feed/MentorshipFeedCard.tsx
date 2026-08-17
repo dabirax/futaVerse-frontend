@@ -1,9 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
-import { ArrowRight, Calendar, GraduationCap, Users } from 'lucide-react'
+import { Calendar, GraduationCap, Users } from 'lucide-react'
 import { format } from 'date-fns'
 import type { FeedItemData } from '@/types/feed'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export default function MentorshipFeedCard({
@@ -14,64 +12,71 @@ export default function MentorshipFeedCard({
   sqid: string
 }) {
   const router = useRouter()
-  const navigate = router.navigate
 
   return (
-    <Card
-      className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-l-4 border-l-primary"
-      onClick={() => navigate({ to: `/student/mentorships/${sqid}` })}
+    <div
+      className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
+      onClick={() => router.navigate({ to: `/student/mentorships/${sqid}` })}
     >
-      <CardContent className="p-5">
-        <div className="flex items-start gap-4">
-          <Avatar className="h-12 w-12 rounded-lg shrink-0">
-            <AvatarFallback className="rounded-lg bg-primary/10 text-primary text-sm font-semibold">
-              <GraduationCap className="h-5 w-5" />
+      {/* Category kicker */}
+      <div className="mb-4">
+        <span className="text-overline text-ink-faint">Mentorship</span>
+        <div className="mt-1.5 h-px bg-gold w-12" />
+      </div>
+
+      {/* Title */}
+      <h3 className="font-display text-[1.1875rem] text-ink leading-snug mb-1.5">
+        {item.title}
+      </h3>
+
+      {/* Description */}
+      <p className="text-sm text-ink-soft line-clamp-2 mb-3">
+        {item.alumni
+          ? `Hosted by ${item.alumni}`
+          : 'A new mentorship opportunity.'}
+      </p>
+
+      {/* Metadata row */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-meta text-ink-faint mb-4">
+        {item.category && <span>{item.category}</span>}
+        {item.work_mode && <span>{item.work_mode}</span>}
+        {item.start_date && (
+          <span className="flex items-center gap-1">
+            <Calendar className="h-3 w-3" />
+            {format(new Date(item.start_date), 'MMM d, yyyy')}
+          </span>
+        )}
+        {item.remaining_slots !== undefined && (
+          <span className="flex items-center gap-1">
+            <Users className="h-3 w-3" />
+            {item.remaining_slots} of {item.available_slots} slots
+          </span>
+        )}
+      </div>
+
+      {/* Footer: poster identity + action */}
+      <div className="flex items-center justify-between pt-4 border-t border-line">
+        <div className="flex items-center gap-2.5">
+          <Avatar className="h-7 w-7">
+            <AvatarFallback className="bg-gold-soft text-gold-on-soft text-[10px] font-semibold rounded-full">
+              {item.alumni
+                ? item.alumni
+                    .split(' ')
+                    .map((w) => w[0])
+                    .join('')
+                    .slice(0, 2)
+                    .toUpperCase()
+                : <GraduationCap className="h-3 w-3" />}
             </AvatarFallback>
           </Avatar>
-
-          <div className="flex-1 min-w-0 space-y-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge className="bg-primary/10 text-primary border-0 text-xs">
-                Mentorship
-              </Badge>
-              <Badge variant="outline" className="text-xs">
-                {item.category}
-              </Badge>
-              {item.work_mode && (
-                <Badge variant="secondary" className="text-xs">
-                  {item.work_mode}
-                </Badge>
-              )}
-            </div>
-
-            <h3 className="font-semibold text-foreground line-clamp-1">
-              {item.title}
-            </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {item.alumni
-                ? `Hosted by ${item.alumni}`
-                : 'A new mentorship opportunity.'}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">
-              {item.start_date && (
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {format(new Date(item.start_date), 'MMM d, yyyy')}
-                </span>
-              )}
-              {item.remaining_slots !== undefined && (
-                <span className="flex items-center gap-1">
-                  <Users className="h-3.5 w-3.5" />
-                  {item.remaining_slots} of {item.available_slots} slots
-                </span>
-              )}
-            </div>
-          </div>
-
-          <ArrowRight className="h-5 w-5 text-muted-foreground shrink-0 mt-1" />
+          <span className="text-caption text-ink-soft">
+            {item.alumni || 'Unknown'}
+          </span>
         </div>
-      </CardContent>
-    </Card>
+        <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          View →
+        </span>
+      </div>
+    </div>
   )
 }
