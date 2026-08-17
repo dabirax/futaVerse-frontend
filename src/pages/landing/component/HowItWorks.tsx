@@ -12,7 +12,7 @@ const HowItWorks = () => {
     {
       icon: UserCheck,
       number: '02',
-      title: 'Get Matched for Mentorship/Internships',
+      title: 'Get Matched for Mentorship or Internships',
       description:
         'Our smart matching connects you with the perfect mentorship or internship opportunity.',
     },
