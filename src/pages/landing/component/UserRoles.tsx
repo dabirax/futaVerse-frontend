@@ -58,7 +58,7 @@ const roles = [
 const UserRoles = () => {
   return (
     <section className="py-10 lg:py-16 bg-[#f8f5ff]" id="roles">
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="container mx-auto px-6 sm:px-12 lg:px-20">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7b2fbe]">
             User roles

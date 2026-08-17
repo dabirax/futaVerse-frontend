@@ -7,7 +7,7 @@ const CTA = () => {
   return (
     <section className="relative overflow-hidden bg-gradient-to-r from-[#7b2fbe] to-[#4338ca] py-16 lg:py-24 text-white">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.15),_transparent_20%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.1),_transparent_25%)]" />
-      <div className="relative container mx-auto px-4 lg:px-8">
+      <div className="relative container mx-auto px-6 sm:px-12 lg:px-20">
         <div className="grid gap-10 lg:grid-cols-2 items-center">
           <div className="relative overflow-hidden rounded-[2rem] bg-white/10 p-4 shadow-2xl backdrop-blur-xl lg:p-6">
             <img
@@ -24,9 +24,7 @@ const CTA = () => {
                 FUTAVerse
               </span>
             </div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-white/90">
-              Your next opportunity starts here.
-            </div>
+            
             <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
               Your next opportunity{' '}
               <span className="text-[#c4b5fd]">starts here.</span>

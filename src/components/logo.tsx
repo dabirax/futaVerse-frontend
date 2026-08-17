@@ -16,7 +16,7 @@ export default function Logo({
       <Link to="/" className="flex items-center gap-2">
         <img src={logo} alt="FUTAVerse" className="h-12 w-auto" />
         {showWordmark && (
-          <span className="font-montserrat font-bold text-3xl tracking-tight bg-linear-to-r from-primary-dark to-accent bg-clip-text text-transparent">
+          <span className="hidden sm:inline font-montserrat font-bold text-3xl tracking-tight bg-linear-to-r from-primary-dark to-accent bg-clip-text text-transparent">
             FUTAVerse
           </span>
         )}

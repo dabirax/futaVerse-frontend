@@ -29,7 +29,7 @@ const Hero = () => {
   return (
     <section className="relative overflow-hidden bg-[#f7f5ff] pt-28 pb-16">
       <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-[#ede9fe]/80 to-transparent" />
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="container mx-auto px-6 sm:px-12 lg:px-20">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <div className="space-y-6">
             <h1 className="text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl">
