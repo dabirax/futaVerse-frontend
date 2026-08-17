@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query'
 import { AlertCircle, Eye, EyeOff, WifiOff } from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
 import { BackButton } from '../../components/BackButtons'
-import { LeftContainer } from './components/LeftContainer'
+import { AuthLayout } from './components/AuthLayout'
 import { useForgotPasswordStore } from './hooks/useForgotPasswordStore'
 import { Button } from '@/components/ui/button'
 import {
@@ -122,6 +122,7 @@ const ResetPassword = () => {
   }
 
   return (
+<<<<<<< HEAD
     <div className="flex flex-col lg:flex-row w-full min-h-screen">
       <LeftContainer />
       <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
@@ -263,9 +264,165 @@ const ResetPassword = () => {
               </div>
             </form>
           </Form>
+=======
+    <AuthLayout>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-xl bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-8 md:p-12"
+      >
+        <div className="flex items-center justify-between w-full mb-8">
+          <div className="transition-transform hover:-translate-x-1">
+            <BackButton />
+          </div>
+          <Logo />
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
         </div>
-      </div>
-    </div>
+
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold tracking-tight text-primary-dark">
+            Reset Password
+          </h2>
+          <p className="text-slate-500 mt-2 text-sm">
+            Choose a new, secure password for your account
+          </p>
+        </div>
+
+        <Form {...form}>
+          <motion.form
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-6"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
+            <motion.div variants={itemVariants}>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-slate-600 font-medium">
+                      New Password
+                    </FormLabel>
+                    <div className="relative">
+                      <FormControl>
+                        <Input
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="********"
+                          className="pr-12"
+                          disabled={resetPasswordMutation.isPending}
+                          {...field}
+                        />
+                      </FormControl>
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((p) => !p)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
+                      >
+                        {showPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </motion.div>
+
+            <motion.div variants={itemVariants}>
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-slate-600 font-medium">
+                      Confirm New Password
+                    </FormLabel>
+                    <div className="relative">
+                      <FormControl>
+                        <Input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          placeholder="********"
+                          className="pr-12"
+                          disabled={resetPasswordMutation.isPending}
+                          {...field}
+                        />
+                      </FormControl>
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword((p) => !p)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </motion.div>
+
+            {serverError && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 flex gap-3"
+              >
+                <div className="shrink-0 mt-0.5 text-red-500">
+                  {serverError.isNetwork ? (
+                    <WifiOff size={16} />
+                  ) : (
+                    <AlertCircle size={16} />
+                  )}
+                </div>
+                <div className="space-y-0.5">
+                  <p className="text-sm font-medium text-red-700">
+                    {serverError.message}
+                  </p>
+                  {serverError.hint && (
+                    <p className="text-xs text-red-500">{serverError.hint}</p>
+                  )}
+                </div>
+              </motion.div>
+            )}
+
+            <motion.div variants={itemVariants} className="space-y-4 pt-4">
+              <Button
+                type="submit"
+                disabled={resetPasswordMutation.isPending}
+                className="w-full bg-primary text-white h-12 rounded-xl shadow-lg shadow-purple-100 transition-all hover:scale-[1.02] active:scale-95 duration-300 font-semibold"
+              >
+                {resetPasswordMutation.isPending ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin" />
+                    Resetting...
+                  </div>
+                ) : (
+                  'Reset Password'
+                )}
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate({ to: '/login' })}
+                className="w-full h-12 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 transition-all"
+              >
+                Back to Login
+              </Button>
+            </motion.div>
+          </motion.form>
+        </Form>
+      </motion.div>
+    </AuthLayout>
   )
 }
 

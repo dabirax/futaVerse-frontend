@@ -3,8 +3,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { AlertCircle, WifiOff } from 'lucide-react'
+<<<<<<< HEAD
 import { LeftContainer } from '../../components/LeftContainer'
 import { SignupStepIndicator } from '../../components/SignupStepIndicator'
+=======
+import { AuthLayout } from '../../components/AuthLayout'
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
 import { BackButton } from '../../../../components/BackButtons'
 import { useSignupOTPStore } from '../../hooks/useSignupOTPStore'
 import {
@@ -246,6 +250,7 @@ const StudentProfessional = () => {
   ])
 
   return (
+<<<<<<< HEAD
     <div className="flex flex-col lg:flex-row w-full min-h-screen">
       <LeftContainer />
       <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
@@ -489,9 +494,244 @@ const StudentProfessional = () => {
               )}
             </form>
           </Form>
+=======
+    <AuthLayout>
+      <div className="w-full max-w-2xl bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-8 md:p-12">
+        <div className="flex items-center justify-between w-full mb-8">
+          <div className="transition-transform hover:-translate-x-1">
+            <BackButton />
+          </div>
+          <Logo />
+>>>>>>> 76ecc3b88df676a5c0eb95fbea198d527233cd52
         </div>
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold tracking-tight text-primary-dark">
+            Professional Information
+          </h2>
+          <p className="text-slate-500 mt-2 text-sm">
+            Tell us about your skills and social presence
+          </p>
+        </div>
+
+        <Form {...form}>
+          <form
+            className="w-full space-y-5 mt-5"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
+            <FormField
+              control={form.control}
+              name="skills"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Skills</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Enter your skills"
+                      className="w-full"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Personal Description</FormLabel>
+                  <FormControl>
+                    <textarea
+                      placeholder="Describe yourself"
+                      className="w-full h-20 border border-gray-300 rounded-md p-2"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className=" grid grid-cols-2 gap-4 ">
+              <FormField
+                control={form.control}
+                name="linkedin_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>LinkedIn </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="LinkedIn profile URL"
+                        className="w-full"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="x_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>X </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="X profile URL"
+                        className="w-full"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className=" grid grid-cols-2 gap-4 ">
+              <FormField
+                control={form.control}
+                name="instagram_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Instagram URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="Instagram profile URL"
+                        className="w-full"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="facebook_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Facebook URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="Facebook profile URL"
+                        className="w-full"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className=" grid grid-cols-2 gap-4 ">
+              <FormField
+                control={form.control}
+                name="github_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>GitHub URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="GitHub profile URL"
+                        className="w-full"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="website_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Website URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="Your website URL"
+                        className="w-full"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex justify-between py-4">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.9 }}
+                style={{ transformOrigin: 'left center' }}
+              >
+                <Button
+                  className="bg-primary flex ml-auto"
+                  onClick={() => {
+                    router.history.back()
+                  }}
+                >
+                  Back
+                </Button>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.9 }}
+                style={{ transformOrigin: 'right center' }}
+              >
+                <Button
+                  type="submit"
+                  className="bg-primary flex ml-auto"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Submitting...' : 'Submit'}
+                </Button>
+              </motion.div>
+            </div>
+            {serverError && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 flex gap-3"
+              >
+                <div className="shrink-0 mt-0.5 text-red-500">
+                  {serverError.isNetwork ? (
+                    <WifiOff size={16} />
+                  ) : (
+                    <AlertCircle size={16} />
+                  )}
+                </div>
+                <div className="space-y-0.5">
+                  <p className="text-sm font-medium text-red-700">
+                    {serverError.message}
+                  </p>
+                  {serverError.hint && (
+                    <p className="text-xs text-red-500">{serverError.hint}</p>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </form>
+        </Form>
       </div>
-    </div>
+    </AuthLayout>
   )
 }
 
