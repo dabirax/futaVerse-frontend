@@ -39,7 +39,7 @@ const mockInterns = [
 export default function InternshipDetail() {
   const router = useRouter()
   const { sqid } = alumnusInternshipDetailRoute.useParams()
-  const { data, isLoading, isError } = useInternship(sqid)
+  const { data, isLoading, isError, error } = useInternship(sqid)
 
   const [activeTab, setActiveTab] = useState('details')
   const [isActive, setIsActive] = useState(data?.is_active)
@@ -94,9 +94,9 @@ export default function InternshipDetail() {
 
           {isLoading && <CardSkeleton2 />}
           {isError && (
-            <div className="rounded-md border border-destructive bg-destructive-soft p-4 text-destructive text-body">
-              Error loading internship details.
-            </div>
+            <p className="text-body-sm text-ink-soft">
+              {error?.message ?? 'Something went wrong.'}
+            </p>
           )}
 
           {!isLoading && !isError && data && (

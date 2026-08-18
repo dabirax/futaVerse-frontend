@@ -4,7 +4,7 @@ import Logo from '@/components/logo'
 
 export function BackButtonWithLogo() {
   return (
-    <div className="flex items-center gap-3 lg:hidden">
+    <div className="flex items-center justify-between lg:hidden">
       <BackButton />
       <Logo showWordmark={false} />
     </div>

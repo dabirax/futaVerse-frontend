@@ -17,7 +17,7 @@ import { BackButton2 } from '@/components/BackButtons'
 
 export default function MentorshipDetails() {
   const { sqid } = studentMentorshipDetailRoute.useParams()
-  const { data: mentorship, isLoading, isError } = useMentorship(sqid)
+  const { data: mentorship, isLoading, isError, error } = useMentorship(sqid)
   const {
     data: engagementsData,
     isLoading: engagementsLoading,
@@ -68,21 +68,9 @@ export default function MentorshipDetails() {
         <div className="flex items-center gap-4">
           <BackButton2 />
         </div>
-        <Card>
-          <CardContent className="py-12 text-center">
-            <p className="text-lg font-semibold text-foreground">
-              This mentorship isn't available right now.
-            </p>
-            <p className="text-sm text-muted-foreground mt-2">
-              It may have been removed or you don't have access yet.
-            </p>
-            <Link to="/student/mentorships">
-              <Button variant="outline" className="mt-4">
-                Back to Mentorships
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+        <p className="text-body-sm text-ink-soft">
+          {error?.message ?? 'Something went wrong.'}
+        </p>
       </div>
     )
   }

@@ -127,7 +127,10 @@ const ResetPassword = () => {
       <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
         <div className="w-full max-w-md animate-in fade-in duration-500">
           <div className="mb-8">
-            <BackButton />
+            <BackButtonWithLogo />
+            <div className="hidden lg:block">
+              <BackButton />
+            </div>
           </div>
 
           <div className="mb-8">

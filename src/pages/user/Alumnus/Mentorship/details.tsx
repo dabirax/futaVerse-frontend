@@ -41,7 +41,7 @@ export default function MentorshipDetail() {
   const router = useRouter()
 
   const { sqid } = alumnusMentorshipDetailRoute.useParams()
-  const { data, isLoading, isError } = useMentorship(sqid)
+  const { data, isLoading, isError, error } = useMentorship(sqid)
 
   const [activeTab, setActiveTab] = useState('details')
   const [isActive, setIsActive] = useState(data?.is_active)
@@ -77,8 +77,8 @@ export default function MentorshipDetail() {
           </div>
           {isLoading && <CardSkeleton2 />}
           {isError && (
-            <p className="text-center font-bold text-red-600 text-2xl">
-              Error loading mentorship details.
+            <p className="text-body-sm text-ink-soft">
+              {error?.message ?? 'Something went wrong.'}
             </p>
           )}
 

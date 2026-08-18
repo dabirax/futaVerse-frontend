@@ -32,7 +32,7 @@ import { BackButton2 } from '@/components/BackButtons'
 
 export default function InternshipDetail() {
   const { sqid } = studentInternshipDetailsRoute.useParams()
-  const { data: info, isLoading, isError } = useInternship(sqid)
+  const { data: info, isLoading, isError, error } = useInternship(sqid)
   const {
     data: engagementsData,
     isLoading: engagementsLoading,
@@ -89,17 +89,9 @@ export default function InternshipDetail() {
         <div className="flex items-center gap-4">
           <BackButton2 />
         </div>
-        <div className="rounded-md border border-line bg-surface p-8 text-center">
-          <p className="font-display text-ink text-lg mb-1">
-            This internship isn't available right now.
-          </p>
-          <p className="text-body-sm text-ink-soft mb-4">
-            It may have been removed or you don't have access yet.
-          </p>
-          <Link to="/student/internships">
-            <Button variant="outline">Back to Internships</Button>
-          </Link>
-        </div>
+        <p className="text-body-sm text-ink-soft">
+          {error?.message ?? 'Something went wrong.'}
+        </p>
       </div>
     )
   }

@@ -5,7 +5,10 @@ import { Eye, EyeOff } from 'lucide-react'
 import { Country, State } from 'country-state-city'
 import { useRouter } from '@tanstack/react-router'
 import { LeftContainer } from '../../components/LeftContainer'
-import { BackButton } from '../../../../components/BackButtons'
+import {
+  BackButton,
+  BackButtonWithLogo,
+} from '../../../../components/BackButtons'
 import { SignupStepIndicator } from '../../components/SignupStepIndicator'
 import { useAlumnusStoreData } from '../hooks/useAlumnusStoreData'
 import { alumnusBasicSchema } from '../lib/alumnusSchema'
@@ -80,7 +83,10 @@ const AlumnusBasic = () => {
       <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
         <div className="w-full max-w-lg">
           <div className="mb-8">
-            <BackButton />
+            <BackButtonWithLogo />
+            <div className="hidden lg:block">
+              <BackButton />
+            </div>
           </div>
 
           <SignupStepIndicator
