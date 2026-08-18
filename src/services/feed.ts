@@ -1,20 +1,10 @@
 import { mockEvents } from '@/data/mockEvents'
+import { fetchWithAuth } from '@/lib/api'
 
 export interface CursorPaginatedResponse<T> {
   next: string | null
   previous: string | null
   results: Array<T>
-}
-
-const getHeaders = (): Record<string, string> => {
-  const token = sessionStorage.getItem('access_token')
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  }
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`
-  }
-  return headers
 }
 
 const getBaseUrl = () => import.meta.env.VITE_API_URL || ''
@@ -50,14 +40,9 @@ export const FeedService = {
       }
     }
 
-    // Cursor pagination: after the first page, fetch the backend's absolute
-    // `next` URL verbatim (it carries the pre-encoded cursor param).
     const url = nextUrl ?? `${baseUrl}/api/feed`
 
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: getHeaders(),
-    })
+    const response = await fetchWithAuth(url, { method: 'GET' })
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))

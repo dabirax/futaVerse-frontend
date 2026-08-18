@@ -164,7 +164,9 @@ export default function InternshipDetail() {
                 <MapPin className="h-4 w-4 text-ink-faint mt-0.5 shrink-0" />
                 <div>
                   <p className="text-caption text-ink-faint">Location</p>
-                  <p className="text-body font-medium text-ink">{info.location}</p>
+                  <p className="text-body font-medium text-ink">
+                    {info.location}
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -233,7 +235,9 @@ export default function InternshipDetail() {
           </h2>
           <div className="space-y-4">
             <div>
-              <p className="text-caption text-ink-faint mb-2">Required Skills</p>
+              <p className="text-caption text-ink-faint mb-2">
+                Required Skills
+              </p>
               <div className="flex flex-wrap gap-2">
                 {info.skills_required.map((skill: string, index: number) => (
                   <Badge key={index} variant="outline">
@@ -261,7 +265,9 @@ export default function InternshipDetail() {
       {/* Application form */}
       {!isEngaged && hasSlots && (
         <section className="rounded-md border border-line bg-surface p-6 space-y-4">
-          <h2 className="text-overline text-maroon">Apply for this internship</h2>
+          <h2 className="text-overline text-maroon">
+            Apply for this internship
+          </h2>
 
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-body">

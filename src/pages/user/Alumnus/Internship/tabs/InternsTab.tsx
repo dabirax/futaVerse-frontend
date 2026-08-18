@@ -10,9 +10,7 @@ export default function InternsTab() {
   }
 
   if (isError) {
-    return (
-      <p className="text-body text-destructive">Failed to load interns</p>
-    )
+    return <p className="text-body text-destructive">Failed to load interns</p>
   }
 
   if (!data?.results?.length) {

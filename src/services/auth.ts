@@ -1,14 +1,8 @@
 import type { MeResponse, User } from '@/types/user'
-
-const authHeaders = (): Record<string, string> => {
-  const token = sessionStorage.getItem('access_token')
-  return token ? { Authorization: `Bearer ${token}` } : {}
-}
+import { fetchWithAuth } from '@/lib/api'
 
 export async function getMe(): Promise<User> {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
-    headers: authHeaders(),
-  })
+  const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/auth/me`)
 
   if (!res.ok) {
     const error = await res.json().catch(() => null)

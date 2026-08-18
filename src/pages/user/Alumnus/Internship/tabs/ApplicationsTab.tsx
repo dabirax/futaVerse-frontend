@@ -17,9 +17,7 @@ export default function ApplicationsTab() {
 
   if (isError) {
     return (
-      <p className="text-body text-destructive">
-        Failed to load applications
-      </p>
+      <p className="text-body text-destructive">Failed to load applications</p>
     )
   }
 

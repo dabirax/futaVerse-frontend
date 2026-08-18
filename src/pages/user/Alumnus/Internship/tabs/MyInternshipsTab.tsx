@@ -29,9 +29,7 @@ export default function MyInternshipsTab() {
           No internships created yet.
         </p>
         <Button
-          onClick={() =>
-            router.navigate({ to: '/alumnus/internships/create' })
-          }
+          onClick={() => router.navigate({ to: '/alumnus/internships/create' })}
         >
           <Plus className="h-4 w-4" />
           Create Your First Internship

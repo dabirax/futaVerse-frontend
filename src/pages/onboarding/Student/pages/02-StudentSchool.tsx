@@ -122,7 +122,11 @@ const StudentSchool = () => {
           </div>
 
           <SignupStepIndicator
-            steps={[{ label: 'Personal' }, { label: 'School' }, { label: 'Professional' }]}
+            steps={[
+              { label: 'Personal' },
+              { label: 'School' },
+              { label: 'Professional' },
+            ]}
             currentStep={1}
             role="student"
           />
@@ -137,10 +141,7 @@ const StudentSchool = () => {
           </div>
 
           <Form {...form}>
-            <form
-              className="space-y-5"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+            <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="matric_no"

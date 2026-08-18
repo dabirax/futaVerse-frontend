@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { apiLogout } from '@/lib/auth-utils'
 
 const baseURL = `${import.meta.env.VITE_API_URL}`
 
@@ -8,7 +9,6 @@ export const api = axios.create({
   withCredentials: true,
 })
 
-//  attach access token
 api.interceptors.request.use((config) => {
   const token = sessionStorage.getItem('access_token')
   if (token) config.headers.Authorization = `Bearer ${token}`
@@ -18,12 +18,6 @@ api.interceptors.request.use((config) => {
 let isRefreshing = false
 let refreshQueue: Array<(token: string) => void> = []
 
-const redirectToLogin = () => {
-  sessionStorage.clear()
-  window.location.href = '/login'
-}
-
-//  silently refresh the access token on 401, then replay the request
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
@@ -36,7 +30,7 @@ api.interceptors.response.use(
 
     const refreshToken = sessionStorage.getItem('refresh_token')
     if (!refreshToken) {
-      redirectToLogin()
+      apiLogout()
       return Promise.reject(error)
     }
 
@@ -71,10 +65,95 @@ api.interceptors.response.use(
       return api(original)
     } catch (refreshError) {
       refreshQueue = []
-      redirectToLogin()
+      apiLogout()
       return Promise.reject(refreshError)
     } finally {
       isRefreshing = false
     }
   },
 )
+
+const BASE_URL = import.meta.env.VITE_API_URL || ''
+
+let isFetching = false
+let fetchQueue: Array<(token: string) => void> = []
+
+async function refreshAccessToken(): Promise<string> {
+  const refreshToken = sessionStorage.getItem('refresh_token')
+  if (!refreshToken) throw new Error('No refresh token')
+
+  const { data } = await axios.post(`${BASE_URL}/api/auth/refresh`, {
+    refresh: refreshToken,
+  })
+
+  const newAccess = data.access ?? data.access_token
+  const newRefresh = data.refresh ?? data.refresh_token
+
+  sessionStorage.setItem('access_token', newAccess)
+  if (newRefresh) sessionStorage.setItem('refresh_token', newRefresh)
+  api.defaults.headers.common['Authorization'] = `Bearer ${newAccess}`
+
+  return newAccess
+}
+
+export async function fetchWithAuth(
+  input: RequestInfo,
+  init?: RequestInit,
+): Promise<Response> {
+  const token = sessionStorage.getItem('access_token')
+  const headers = new Headers(init?.headers)
+  if (token) headers.set('Authorization', `Bearer ${token}`)
+  if (!headers.has('Content-Type') && !(init?.body instanceof FormData)) {
+    headers.set('Content-Type', 'application/json')
+  }
+
+  let response = await fetch(input, { ...init, headers })
+
+  if (response.status === 401) {
+    const refreshToken = sessionStorage.getItem('refresh_token')
+    if (!refreshToken) {
+      apiLogout()
+      throw new Error('Session expired')
+    }
+
+    if (isFetching) {
+      const newToken = await new Promise<string>((resolve) => {
+        fetchQueue.push(resolve)
+      })
+      const retryHeaders = new Headers(init?.headers)
+      retryHeaders.set('Authorization', `Bearer ${newToken}`)
+      if (
+        !retryHeaders.has('Content-Type') &&
+        !(init?.body instanceof FormData)
+      ) {
+        retryHeaders.set('Content-Type', 'application/json')
+      }
+      return fetch(input, { ...init, headers: retryHeaders })
+    }
+
+    isFetching = true
+    try {
+      const newToken = await refreshAccessToken()
+      fetchQueue.forEach((cb) => cb(newToken))
+      fetchQueue = []
+
+      const retryHeaders = new Headers(init?.headers)
+      retryHeaders.set('Authorization', `Bearer ${newToken}`)
+      if (
+        !retryHeaders.has('Content-Type') &&
+        !(init?.body instanceof FormData)
+      ) {
+        retryHeaders.set('Content-Type', 'application/json')
+      }
+      response = await fetch(input, { ...init, headers: retryHeaders })
+    } catch {
+      fetchQueue = []
+      apiLogout()
+      throw new Error('Session expired')
+    } finally {
+      isFetching = false
+    }
+  }
+
+  return response
+}

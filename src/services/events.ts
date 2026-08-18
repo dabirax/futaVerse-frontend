@@ -10,6 +10,7 @@ import {
   mockEvents,
   mockPurchasedTickets,
 } from '@/data/mockEvents'
+import { fetchWithAuth } from '@/lib/api'
 
 export interface PaginatedResponse<T> {
   count: number
@@ -43,21 +44,9 @@ export interface AddTicketPayload extends PaidTicketInput {
   event: string
 }
 
-/** Response from POST /api/events/register. Paid tickets return a Paystack hosted checkout URL. */
 export interface RegisterResponse {
   checkout_url?: string
   message?: string
-}
-
-const getHeaders = (): Record<string, string> => {
-  const token = sessionStorage.getItem('access_token')
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  }
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`
-  }
-  return headers
 }
 
 export class EventApiError extends Error {
@@ -79,7 +68,6 @@ const extractAuthUrl = (data: unknown): string | undefined => {
 const getBaseUrl = () => import.meta.env.VITE_API_URL || ''
 const mockTicketCache: Array<PurchasedTicket> = [...mockPurchasedTickets]
 
-/** Recursively flattens DRF field errors like `{tickets: [{price: ["msg"]}]}`. */
 const flattenFieldErrors = (value: unknown, prefix = ''): string => {
   if (typeof value === 'string') return prefix ? `${prefix}: ${value}` : value
   if (Array.isArray(value)) {
@@ -99,7 +87,6 @@ const flattenFieldErrors = (value: unknown, prefix = ''): string => {
   return ''
 }
 
-/** Backend errors use DRF `{"detail": ...}`, `{"message": ...}` or `{"error": ...}`. */
 const extractErrorMessage = (data: unknown, fallback: string): string => {
   if (!data || typeof data !== 'object') return fallback
   const obj = data as Record<string, unknown>
@@ -141,12 +128,9 @@ export const EventsService = {
     if (params?.page) queryParams.append('page', params.page.toString())
     if (params?.size) queryParams.append('size', params.size.toString())
 
-    const response = await fetch(
+    const response = await fetchWithAuth(
       `${baseUrl}/api/events/list?${queryParams.toString()}`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      },
+      { method: 'GET' },
     )
 
     if (!response.ok) {
@@ -158,9 +142,8 @@ export const EventsService = {
 
   create: async (payload: CreateEventPayload): Promise<Event> => {
     const baseUrl = getBaseUrl()
-    const response = await fetch(`${baseUrl}/api/events/`, {
+    const response = await fetchWithAuth(`${baseUrl}/api/events/`, {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(payload),
     })
 
@@ -184,9 +167,8 @@ export const EventsService = {
       return fallback
     }
 
-    const response = await fetch(`${baseUrl}/api/events/${sqid}`, {
+    const response = await fetchWithAuth(`${baseUrl}/api/events/${sqid}`, {
       method: 'GET',
-      headers: getHeaders(),
     })
 
     if (!response.ok) {
@@ -198,11 +180,13 @@ export const EventsService = {
 
   update: async (sqid: string, payload: UpdateEventPayload): Promise<Event> => {
     const baseUrl = getBaseUrl()
-    const response = await fetch(`${baseUrl}/api/events/update/${sqid}`, {
-      method: 'PATCH',
-      headers: getHeaders(),
-      body: JSON.stringify(payload),
-    })
+    const response = await fetchWithAuth(
+      `${baseUrl}/api/events/update/${sqid}`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify(payload),
+      },
+    )
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
@@ -219,11 +203,13 @@ export const EventsService = {
     payload: UpdateEventModePayload,
   ): Promise<Event> => {
     const baseUrl = getBaseUrl()
-    const response = await fetch(`${baseUrl}/api/events/update/${sqid}/mode`, {
-      method: 'PATCH',
-      headers: getHeaders(),
-      body: JSON.stringify(payload),
-    })
+    const response = await fetchWithAuth(
+      `${baseUrl}/api/events/update/${sqid}/mode`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify(payload),
+      },
+    )
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
@@ -237,9 +223,8 @@ export const EventsService = {
 
   addTicket: async (payload: AddTicketPayload): Promise<void> => {
     const baseUrl = getBaseUrl()
-    const response = await fetch(`${baseUrl}/api/events/ticket`, {
+    const response = await fetchWithAuth(`${baseUrl}/api/events/ticket`, {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(payload),
     })
 
@@ -279,9 +264,8 @@ export const EventsService = {
       return { message: 'ok' }
     }
 
-    const response = await fetch(`${baseUrl}/api/events/register`, {
+    const response = await fetchWithAuth(`${baseUrl}/api/events/register`, {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(payload),
     })
 
@@ -312,12 +296,9 @@ export const EventsService = {
     if (params?.page) queryParams.append('page', params.page.toString())
     if (params?.size) queryParams.append('size', params.size.toString())
 
-    const response = await fetch(
+    const response = await fetchWithAuth(
       `${baseUrl}/api/events/tickets?${queryParams.toString()}`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      },
+      { method: 'GET' },
     )
 
     if (!response.ok) {

@@ -140,10 +140,7 @@ const ResetPassword = () => {
           </div>
 
           <Form {...form}>
-            <form
-              className="space-y-6"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+            <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="password"

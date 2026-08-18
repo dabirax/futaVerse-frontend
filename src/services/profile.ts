@@ -1,13 +1,5 @@
 import type { AlumnusProfile, StudentProfile } from '@/types/user'
-
-const authHeaders = (): Record<string, string> => {
-  const token = sessionStorage.getItem('access_token')
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  }
-  if (token) headers['Authorization'] = `Bearer ${token}`
-  return headers
-}
+import { fetchWithAuth } from '@/lib/api'
 
 const BASE = () => import.meta.env.VITE_API_URL
 
@@ -69,9 +61,8 @@ type AlumnusUpdatePayload = Partial<
 >
 
 async function patchProfile<T>(payload: T): Promise<void> {
-  const res = await fetch(`${BASE()}/api/auth/me`, {
+  const res = await fetchWithAuth(`${BASE()}/api/auth/me`, {
     method: 'PATCH',
-    headers: authHeaders(),
     body: JSON.stringify(payload),
   })
 

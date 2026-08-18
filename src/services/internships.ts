@@ -1,4 +1,4 @@
-import { api } from '@/lib/api'
+import { api, fetchWithAuth } from '@/lib/api'
 
 export const InternshipService = {
   getAll: async () => {
@@ -60,15 +60,10 @@ export const InternshipApplicationsService = {
     resume: string
     cover_letter?: string
   }) => {
-    const token = sessionStorage.getItem('access_token')
-    const res = await fetch(
+    const res = await fetchWithAuth(
       `${import.meta.env.VITE_API_URL}/api/internships/application`,
       {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
         body: JSON.stringify(payload),
       },
     )

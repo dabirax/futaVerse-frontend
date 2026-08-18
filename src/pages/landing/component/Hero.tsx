@@ -38,8 +38,8 @@ const Hero = () => {
               Federal University of Technology, Akure
             </p>
             <h1 className="font-display-hero text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-ink leading-[1.08]">
-              Where alumni{' '}
-              <span className="text-indigo">shape careers</span> that last.
+              Where alumni <span className="text-indigo">shape careers</span>{' '}
+              that last.
             </h1>
             <p className="max-w-xl text-base text-ink-soft leading-relaxed">
               Mentorship, internships, job openings, and events — all in one
@@ -48,12 +48,20 @@ const Hero = () => {
 
             <div className="flex flex-col sm:flex-row gap-3">
               <Link to="/signup/studentBasic" className="w-full sm:w-auto">
-                <Button variant="default" size="lg" className="w-full sm:w-auto">
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                >
                   Join as a student
                 </Button>
               </Link>
               <Link to="/signup/alumnusBasic" className="w-full sm:w-auto">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                >
                   Join as alumni
                 </Button>
               </Link>
@@ -64,19 +72,25 @@ const Hero = () => {
                 <p className="font-mono text-xl sm:text-2xl font-medium text-ink tabular-nums">
                   500+
                 </p>
-                <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">Alumni mentors</p>
+                <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">
+                  Alumni mentors
+                </p>
               </div>
               <div>
                 <p className="font-mono text-xl sm:text-2xl font-medium text-ink tabular-nums">
                   1,000+
                 </p>
-                <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">Students</p>
+                <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">
+                  Students
+                </p>
               </div>
               <div>
                 <p className="font-mono text-xl sm:text-2xl font-medium text-ink tabular-nums">
                   50+
                 </p>
-                <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">Events yearly</p>
+                <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">
+                  Events yearly
+                </p>
               </div>
             </div>
           </div>
@@ -96,7 +110,9 @@ const Hero = () => {
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-xs sm:text-sm text-ink">{card.name}</p>
+                    <p className="font-semibold text-xs sm:text-sm text-ink">
+                      {card.name}
+                    </p>
                     <p className="text-[11px] sm:text-xs text-ink-soft truncate">
                       {card.role}
                     </p>

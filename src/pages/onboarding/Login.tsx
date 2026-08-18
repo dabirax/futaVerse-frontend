@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { AlertCircle, Eye, EyeOff, WifiOff } from 'lucide-react'
 import { useState } from 'react'
-import axios from 'axios'
 import { BackButton } from '../../components/BackButtons'
 import { LeftContainer } from './components/LeftContainer'
 import { useAuth } from '@/hooks/auth-context'
@@ -52,7 +51,6 @@ const LoginPage = () => {
     },
     onSuccess: (data) => {
       const { access_token, role, refresh_token, user_sqid } = data.data
-      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
       login(access_token, role, refresh_token, user_sqid)
       if (role === 'alumni') router.navigate({ to: '/alumnus/feed' })
       if (role === 'student') router.navigate({ to: '/student/feed' })
@@ -119,10 +117,7 @@ const LoginPage = () => {
           </div>
 
           <Form {...form}>
-            <form
-              className="space-y-4"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+            <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="email"

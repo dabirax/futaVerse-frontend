@@ -40,6 +40,7 @@ Nigerian university students at FUTA face a gap between academic life and career
 ## What Users Can Do
 
 ### Students
+
 - Browse and apply to mentorship programs
 - Browse and apply to internships (with resume/cover letter)
 - Register for events (free or paid tickets)
@@ -49,6 +50,7 @@ Nigerian university students at FUTA face a gap between academic life and career
 - Edit their full profile
 
 ### Alumni
+
 - Create, edit, and manage mentorship programs (title, description, category, work mode, focus areas, duration, slots)
 - Create, edit, and manage internship postings (company, engagement type, location, skills, stipend, level requirements)
 - Create and manage events (workshop, seminar, networking, career fair, webinar, conference) with virtual/physical/hybrid support
@@ -70,6 +72,7 @@ Nigerian university students at FUTA face a gap between academic life and career
 ## Current State
 
 ### Fully Built
+
 - Landing page (hero, about, how-it-works, features, roles, CTA, footer)
 - Multi-step signup for students and alumni with OTP verification
 - Login, forgot/reset password flows
@@ -84,6 +87,7 @@ Nigerian university students at FUTA face a gap between academic life and career
 - Mock data fallback for demo mode (events, banks, tickets)
 
 ### Stubbed or Placeholder
+
 - **Messages/Chat** — Route exists, page is a placeholder div. Advertised on landing page but not built.
 - **Calendar** — Route exists, no meaningful implementation.
 - **Analytics** — Route exists, no meaningful implementation.
@@ -95,6 +99,7 @@ Nigerian university students at FUTA face a gap between academic life and career
 - **Reports tab** in mentorship — Shows "No reports yet."
 
 ### Branding
+
 - **Name**: FUTAVerse
 - **Colors**: Purple-based (#5E0B80, #7b2fbe) with gradient accents
 - **Font**: Montserrat

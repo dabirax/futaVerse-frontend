@@ -36,68 +36,69 @@
   .display{font-family:'Fraunces', serif;}
   .mono{font-family:'IBM Plex Mono', monospace; letter-spacing:.02em;}
 
-  .app{display:grid; grid-template-columns:248px 1fr; min-height:100vh;}
-  .sidebar{
-    border-right:1px solid var(--line); padding:28px 22px; background:var(--surface);
-  }
-  .brand{display:flex; align-items:center; gap:10px; margin-bottom:36px;}
-  .brand-mark{width:34px; height:34px; border-radius:50%; border:1.5px solid var(--gold);
-    display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:600; color:var(--gold); font-size:14px;}
-  .brand-name{font-family:'Fraunces', serif; font-weight:600; font-size:18px; letter-spacing:.01em;}
-  .brand-name span{color:var(--gold);}
+.app{display:grid; grid-template-columns:248px 1fr; min-height:100vh;}
+.sidebar{
+border-right:1px solid var(--line); padding:28px 22px; background:var(--surface);
+}
+.brand{display:flex; align-items:center; gap:10px; margin-bottom:36px;}
+.brand-mark{width:34px; height:34px; border-radius:50%; border:1.5px solid var(--gold);
+display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:600; color:var(--gold); font-size:14px;}
+.brand-name{font-family:'Fraunces', serif; font-weight:600; font-size:18px; letter-spacing:.01em;}
+.brand-name span{color:var(--gold);}
 
-  nav a{
-    display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:3px;
-    color:var(--ink-soft); text-decoration:none; font-size:14px; margin-bottom:2px;
-  }
-  nav a.active{ background:var(--indigo-soft); color:var(--indigo); font-weight:600; }
-  nav a .dot{width:5px; height:5px; border-radius:50%; background:currentColor; opacity:.5;}
+nav a{
+display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:3px;
+color:var(--ink-soft); text-decoration:none; font-size:14px; margin-bottom:2px;
+}
+nav a.active{ background:var(--indigo-soft); color:var(--indigo); font-weight:600; }
+nav a .dot{width:5px; height:5px; border-radius:50%; background:currentColor; opacity:.5;}
 
-  .seal-card{margin-top:40px; padding:16px; border:1px solid var(--line); border-radius:4px; background:var(--surface-2);}
-  .seal-card .label{font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-soft); margin-bottom:8px;}
-  .id-badge{display:flex; align-items:center; gap:10px;}
-  .id-ring{width:38px; height:38px; border-radius:50%; border:2px solid var(--indigo); display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:600; color:var(--indigo); font-size:13px; flex-shrink:0;}
-  .id-text .mono{font-size:11.5px; color:var(--ink);}
-  .id-text .role{font-size:10.5px; color:var(--ink-soft); margin-top:2px;}
+.seal-card{margin-top:40px; padding:16px; border:1px solid var(--line); border-radius:4px; background:var(--surface-2);}
+.seal-card .label{font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-soft); margin-bottom:8px;}
+.id-badge{display:flex; align-items:center; gap:10px;}
+.id-ring{width:38px; height:38px; border-radius:50%; border:2px solid var(--indigo); display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:600; color:var(--indigo); font-size:13px; flex-shrink:0;}
+.id-text .mono{font-size:11.5px; color:var(--ink);}
+.id-text .role{font-size:10.5px; color:var(--ink-soft); margin-top:2px;}
 
-  main{padding:36px 48px 80px;}
-  header.top{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:28px; border-bottom:1px solid var(--line); padding-bottom:20px;}
-  header.top h1{font-family:'Fraunces', serif; font-weight:500; font-size:30px;}
-  header.top p{color:var(--ink-soft); font-size:14px; margin-top:6px;}
-  .toggle{border:1px solid var(--line); background:var(--surface); color:var(--ink); padding:8px 14px; border-radius:3px; font-size:12.5px; cursor:pointer; font-family:'IBM Plex Sans';}
+main{padding:36px 48px 80px;}
+header.top{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:28px; border-bottom:1px solid var(--line); padding-bottom:20px;}
+header.top h1{font-family:'Fraunces', serif; font-weight:500; font-size:30px;}
+header.top p{color:var(--ink-soft); font-size:14px; margin-top:6px;}
+.toggle{border:1px solid var(--line); background:var(--surface); color:var(--ink); padding:8px 14px; border-radius:3px; font-size:12.5px; cursor:pointer; font-family:'IBM Plex Sans';}
 
-  .filters{display:flex; gap:8px; margin-bottom:28px;}
-  .chip{padding:8px 16px; border-radius:3px; border:1px solid var(--line); font-size:13px; color:var(--ink-soft); cursor:pointer; background:var(--surface);}
-  .chip.active{background:var(--indigo); border-color:var(--indigo); color:#fff;}
+.filters{display:flex; gap:8px; margin-bottom:28px;}
+.chip{padding:8px 16px; border-radius:3px; border:1px solid var(--line); font-size:13px; color:var(--ink-soft); cursor:pointer; background:var(--surface);}
+.chip.active{background:var(--indigo); border-color:var(--indigo); color:#fff;}
 
-  .grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
-  .card{
-    background:var(--surface); border:1px solid var(--line); border-radius:4px;
-    padding:22px; box-shadow:var(--shadow); position:relative;
-  }
-  .card .kicker{font-size:10.5px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-soft); margin-bottom:10px; display:flex; align-items:center; gap:8px;}
-  .kicker .rule{width:16px; height:1px; background:var(--gold);}
-  .card h3{font-family:'Fraunces', serif; font-weight:500; font-size:19px; margin-bottom:8px; line-height:1.3;}
-  .card p.desc{font-size:13.5px; color:var(--ink-soft); line-height:1.55; margin-bottom:16px;}
-  .meta-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
-  .meta{font-size:11.5px; color:var(--ink-soft); display:flex; gap:5px; align-items:center;}
-  .meta b{color:var(--ink); font-weight:600;}
-  .card-foot{display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--line);}
-  .poster{display:flex; align-items:center; gap:8px;}
-  .poster .id-ring{width:28px; height:28px; font-size:10px;}
-  .poster-name{font-size:12.5px; font-weight:600;}
-  .poster-role{font-size:10.5px; color:var(--ink-soft);}
-  .btn{background:var(--indigo); color:#fff; border:none; padding:9px 16px; border-radius:3px; font-size:12.5px; font-weight:600; cursor:pointer;}
-  .badge-role{position:absolute; top:22px; right:22px; font-size:9.5px; text-transform:uppercase; letter-spacing:.1em; padding:4px 8px; border-radius:2px;}
-  .badge-role.gold{background:var(--gold-soft); color:var(--gold); border:1px solid var(--gold);}
-  .badge-role.maroon{background:var(--maroon-soft); color:var(--maroon); border:1px solid var(--maroon);}
-  .badge-role.green{background:var(--gold-soft); color:var(--green); border:1px solid var(--green);}
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+.card{
+background:var(--surface); border:1px solid var(--line); border-radius:4px;
+padding:22px; box-shadow:var(--shadow); position:relative;
+}
+.card .kicker{font-size:10.5px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-soft); margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+.kicker .rule{width:16px; height:1px; background:var(--gold);}
+.card h3{font-family:'Fraunces', serif; font-weight:500; font-size:19px; margin-bottom:8px; line-height:1.3;}
+.card p.desc{font-size:13.5px; color:var(--ink-soft); line-height:1.55; margin-bottom:16px;}
+.meta-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
+.meta{font-size:11.5px; color:var(--ink-soft); display:flex; gap:5px; align-items:center;}
+.meta b{color:var(--ink); font-weight:600;}
+.card-foot{display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--line);}
+.poster{display:flex; align-items:center; gap:8px;}
+.poster .id-ring{width:28px; height:28px; font-size:10px;}
+.poster-name{font-size:12.5px; font-weight:600;}
+.poster-role{font-size:10.5px; color:var(--ink-soft);}
+.btn{background:var(--indigo); color:#fff; border:none; padding:9px 16px; border-radius:3px; font-size:12.5px; font-weight:600; cursor:pointer;}
+.badge-role{position:absolute; top:22px; right:22px; font-size:9.5px; text-transform:uppercase; letter-spacing:.1em; padding:4px 8px; border-radius:2px;}
+.badge-role.gold{background:var(--gold-soft); color:var(--gold); border:1px solid var(--gold);}
+.badge-role.maroon{background:var(--maroon-soft); color:var(--maroon); border:1px solid var(--maroon);}
+.badge-role.green{background:var(--gold-soft); color:var(--green); border:1px solid var(--green);}
 
-  .post-card{grid-column:1 / -1; display:flex; gap:16px; align-items:center; background:var(--indigo-soft); border:1px solid var(--indigo); border-radius:4px; padding:18px 22px;}
-  .post-card .id-ring{width:44px; height:44px; font-size:15px; background:var(--surface);}
-  .post-card .txt b{font-family:'Fraunces',serif;}
-  .post-card .txt p{font-size:13px; color:var(--ink-soft); margin-top:3px;}
+.post-card{grid-column:1 / -1; display:flex; gap:16px; align-items:center; background:var(--indigo-soft); border:1px solid var(--indigo); border-radius:4px; padding:18px 22px;}
+.post-card .id-ring{width:44px; height:44px; font-size:15px; background:var(--surface);}
+.post-card .txt b{font-family:'Fraunces',serif;}
+.post-card .txt p{font-size:13px; color:var(--ink-soft); margin-top:3px;}
 </style>
+
 </head>
 <body>
 <div class="app">
@@ -239,6 +240,7 @@
         </div>
       </div>
     </div>
+
   </main>
 </div>
 </body>

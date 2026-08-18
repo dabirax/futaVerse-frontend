@@ -106,14 +106,16 @@ function EventFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
         <div className="flex items-center gap-2.5">
           <Avatar className="h-7 w-7">
             <AvatarFallback className="bg-green-soft text-green-on-soft text-[10px] font-semibold rounded-full">
-              {item.alumni
-                ? item.alumni
-                    .split(' ')
-                    .map((w) => w[0])
-                    .join('')
-                    .slice(0, 2)
-                    .toUpperCase()
-                : <Calendar className="h-3 w-3" />}
+              {item.alumni ? (
+                item.alumni
+                  .split(' ')
+                  .map((w) => w[0])
+                  .join('')
+                  .slice(0, 2)
+                  .toUpperCase()
+              ) : (
+                <Calendar className="h-3 w-3" />
+              )}
             </AvatarFallback>
           </Avatar>
           <span className="text-caption text-ink-soft">

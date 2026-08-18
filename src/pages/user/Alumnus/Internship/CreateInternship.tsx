@@ -206,9 +206,7 @@ export default function CreateInternship() {
     <div className="space-y-6 pb-8">
       <div className="flex items-center gap-4">
         <BackButton2 />
-        <h1 className="font-display text-xl text-ink">
-          Create New Internship
-        </h1>
+        <h1 className="font-display text-xl text-ink">Create New Internship</h1>
       </div>
 
       <Form {...form}>
@@ -687,9 +685,7 @@ export default function CreateInternship() {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-md border border-line p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-body">
-                      Require Resume
-                    </FormLabel>
+                    <FormLabel className="text-body">Require Resume</FormLabel>
                     <FormDescription>
                       Students must upload their resume
                     </FormDescription>

@@ -12,8 +12,7 @@ const features = [
   {
     icon: Check,
     title: 'Mentorship',
-    description:
-      'Connect with alumni matched to your field and career goals.',
+    description: 'Connect with alumni matched to your field and career goals.',
     ringColor: 'border-indigo',
     iconColor: 'text-indigo',
     iconBg: 'bg-indigo-soft',
@@ -29,8 +28,7 @@ const features = [
   {
     icon: Calendar,
     title: 'Events and tickets',
-    description:
-      'Career talks, workshops, and networking — free or ticketed.',
+    description: 'Career talks, workshops, and networking — free or ticketed.',
     ringColor: 'border-gold',
     iconColor: 'text-gold',
     iconBg: 'bg-gold-soft',
@@ -65,7 +63,10 @@ const features = [
 
 const Features = () => {
   return (
-    <section id="features" className="py-16 lg:py-24 bg-background border-t border-line">
+    <section
+      id="features"
+      className="py-16 lg:py-24 bg-background border-t border-line"
+    >
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20">
         <div className="max-w-3xl mb-16">
           <div className="flex items-center gap-3 mb-4">
@@ -78,7 +79,8 @@ const Features = () => {
             Everything you need to build connections
           </h2>
           <p className="mt-4 text-base text-ink-soft leading-relaxed max-w-2xl">
-            Advance your career with verified mentorship, opportunities, and events.
+            Advance your career with verified mentorship, opportunities, and
+            events.
           </p>
         </div>
 
@@ -91,7 +93,9 @@ const Features = () => {
                 className="group border border-line bg-surface hover:border-line-strong transition-colors"
               >
                 <CardContent className="p-6">
-                  <div className={`mb-4 flex h-10 w-10 items-center justify-center rounded-full border ${feature.ringColor} ${feature.iconBg}`}>
+                  <div
+                    className={`mb-4 flex h-10 w-10 items-center justify-center rounded-full border ${feature.ringColor} ${feature.iconBg}`}
+                  >
                     <Icon className={`h-4 w-4 ${feature.iconColor}`} />
                   </div>
                   <h3 className="font-display text-base font-semibold text-ink mb-1.5">

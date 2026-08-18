@@ -42,7 +42,10 @@ export function SignupStepIndicator({
         const isLast = index === steps.length - 1
 
         return (
-          <div key={step.label} className="flex items-center flex-1 last:flex-none">
+          <div
+            key={step.label}
+            className="flex items-center flex-1 last:flex-none"
+          >
             <div className="flex flex-col items-center gap-1.5">
               <div
                 className={`

@@ -1,3 +1,5 @@
+import { fetchWithAuth } from '@/lib/api'
+
 export interface Resume {
   sqid: string
   resume: string
@@ -12,15 +14,9 @@ export interface ResumeListResponse {
   results: Array<Resume>
 }
 
-const authHeaders = (): Record<string, string> => {
-  const token = sessionStorage.getItem('access_token')
-  return token ? { Authorization: `Bearer ${token}` } : {}
-}
-
 export async function listResumes(): Promise<ResumeListResponse> {
-  const res = await fetch(
+  const res = await fetchWithAuth(
     `${import.meta.env.VITE_API_URL}/api/students/resumes`,
-    { headers: authHeaders() },
   )
 
   if (!res.ok) {
@@ -38,11 +34,10 @@ export async function uploadResume(file: File): Promise<Resume> {
   formData.append('resume', file)
   formData.append('filename', file.name)
 
-  const res = await fetch(
+  const res = await fetchWithAuth(
     `${import.meta.env.VITE_API_URL}/api/students/resumes/upload`,
     {
       method: 'POST',
-      headers: authHeaders(),
       body: formData,
     },
   )
@@ -60,12 +55,9 @@ export async function uploadResume(file: File): Promise<Resume> {
 }
 
 export async function deleteResume(sqid: string): Promise<void> {
-  const res = await fetch(
+  const res = await fetchWithAuth(
     `${import.meta.env.VITE_API_URL}/api/students/resumes/${sqid}`,
-    {
-      method: 'DELETE',
-      headers: authHeaders(),
-    },
+    { method: 'DELETE' },
   )
 
   if (!res.ok) {

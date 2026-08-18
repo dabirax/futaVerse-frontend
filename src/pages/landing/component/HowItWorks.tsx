@@ -45,7 +45,10 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="py-16 lg:py-24 bg-surface-2 border-t border-line">
+    <section
+      id="how-it-works"
+      className="py-16 lg:py-24 bg-surface-2 border-t border-line"
+    >
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20">
         <div className="max-w-3xl mb-16">
           <div className="flex items-center gap-3 mb-4">
@@ -58,7 +61,8 @@ const HowItWorks = () => {
             Getting started is simple
           </h2>
           <p className="mt-4 text-base text-ink-soft leading-relaxed max-w-2xl">
-            Follow these four steps to begin your mentorship journey with FUTA alumni.
+            Follow these four steps to begin your mentorship journey with FUTA
+            alumni.
           </p>
         </div>
 
@@ -77,7 +81,9 @@ const HowItWorks = () => {
                     {step.number}
                   </div>
 
-                  <div className={`w-10 h-10 rounded-full border ${step.ringColor} ${step.iconBg} flex items-center justify-center mb-4 relative z-20`}>
+                  <div
+                    className={`w-10 h-10 rounded-full border ${step.ringColor} ${step.iconBg} flex items-center justify-center mb-4 relative z-20`}
+                  >
                     <Icon className={`w-4 h-4 ${step.iconColor}`} />
                   </div>
 

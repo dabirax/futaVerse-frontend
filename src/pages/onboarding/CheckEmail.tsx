@@ -136,10 +136,7 @@ const CheckEmail = () => {
           </div>
 
           <Form {...form}>
-            <form
-              className="space-y-6"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+            <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex justify-center">
                 <FormField
                   control={form.control}
@@ -170,8 +167,7 @@ const CheckEmail = () => {
               </div>
 
               <p className="text-sm text-center text-ink-soft leading-relaxed">
-                Didn't receive the email?{' '}
-                <br className="sm:hidden" />
+                Didn't receive the email? <br className="sm:hidden" />
                 Check your spam or promotions folder, or{' '}
                 <button
                   type="button"

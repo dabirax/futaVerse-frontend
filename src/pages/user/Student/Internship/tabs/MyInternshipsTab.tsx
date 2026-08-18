@@ -58,9 +58,7 @@ export default function MyInternshipsTab() {
               sharedStart={sharedStartIds.has(engagementSqid)}
               sharedCompletion={sharedCompletionIds.has(engagementSqid)}
               onSharedStart={() =>
-                setSharedStartIds((prev) =>
-                  new Set(prev).add(engagementSqid),
-                )
+                setSharedStartIds((prev) => new Set(prev).add(engagementSqid))
               }
               onSharedCompletion={() =>
                 setSharedCompletionIds((prev) =>

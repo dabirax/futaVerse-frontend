@@ -61,7 +61,10 @@ const roles = [
 
 const UserRoles = () => {
   return (
-    <section className="py-16 lg:py-24 bg-surface border-t border-line" id="roles">
+    <section
+      className="py-16 lg:py-24 bg-surface border-t border-line"
+      id="roles"
+    >
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20">
         <div className="max-w-3xl mb-16">
           <div className="flex items-center gap-3 mb-4">

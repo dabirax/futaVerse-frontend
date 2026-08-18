@@ -30,9 +30,7 @@ export default function AlumnusInternship() {
           </p>
         </div>
         <Button
-          onClick={() =>
-            router.navigate({ to: '/alumnus/internships/create' })
-          }
+          onClick={() => router.navigate({ to: '/alumnus/internships/create' })}
           className="shrink-0"
         >
           <Plus className="h-4 w-4" />

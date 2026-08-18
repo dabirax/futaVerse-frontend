@@ -44,7 +44,11 @@ const CTA = () => {
                 </Button>
               </Link>
               <Link to="/signup/alumnusBasic" className="w-full sm:w-auto">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                >
                   Sign Up as Alumni
                 </Button>
               </Link>

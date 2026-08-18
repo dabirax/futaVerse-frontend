@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { SESSION_UPDATED_EVENT } from '@/hooks/useMe'
+import { apiLogout } from '@/lib/auth-utils'
 
 export type AuthContextType = {
   isLoggedIn: boolean
@@ -65,13 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const logout = () => {
-    sessionStorage.clear()
-    setToken(null)
-    setRefreshToken(null)
-    setRole(null)
-    setUserSqid(null)
-    setIsLoggedIn(false)
-    window.location.href = '/login'
+    apiLogout()
   }
 
   return (

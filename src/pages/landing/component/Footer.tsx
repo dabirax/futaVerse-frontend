@@ -139,9 +139,7 @@ const Footer = () => {
               <li className="text-sm text-ink-soft">
                 Federal University of Technology, Akure
               </li>
-              <li className="text-sm text-ink-soft">
-                Ondo State, Nigeria
-              </li>
+              <li className="text-sm text-ink-soft">Ondo State, Nigeria</li>
             </ul>
           </div>
         </div>
@@ -149,8 +147,8 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-6 border-t border-line flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-ink-faint text-center md:text-left">
-            &copy; {new Date().getFullYear()} FUTAVerse. All rights reserved. Powered
-            by FUTA Alumni Network.
+            &copy; {new Date().getFullYear()} FUTAVerse. All rights reserved.
+            Powered by FUTA Alumni Network.
           </p>
           <div className="flex gap-5 text-xs">
             <a

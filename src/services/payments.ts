@@ -1,4 +1,5 @@
 import { mockBanks } from '@/data/mockBanks'
+import { fetchWithAuth } from '@/lib/api'
 
 export interface Bank {
   name: string
@@ -11,20 +12,8 @@ export interface ResolveAccountInput {
   bank_name: string
 }
 
-const getHeaders = (): Record<string, string> => {
-  const token = sessionStorage.getItem('access_token')
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  }
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`
-  }
-  return headers
-}
-
 const getBaseUrl = () => import.meta.env.VITE_API_URL || ''
 
-/** Payments endpoints use `{"message": ...}` or `{"error": ...}` on failure. */
 const extractErrorMessage = (data: unknown, fallback: string): string => {
   if (!data || typeof data !== 'object') return fallback
   const obj = data as Record<string, unknown>
@@ -40,9 +29,8 @@ export const PaymentsService = {
     const baseUrl = getBaseUrl()
     if (!baseUrl) return mockBanks
 
-    const response = await fetch(`${baseUrl}/api/payments/banks`, {
+    const response = await fetchWithAuth(`${baseUrl}/api/payments/banks`, {
       method: 'GET',
-      headers: getHeaders(),
     })
 
     if (!response.ok) {
@@ -61,9 +49,8 @@ export const PaymentsService = {
       return { account_name: `MOCK ${input.account_number}` }
     }
 
-    const response = await fetch(`${baseUrl}/api/payments/resolve`, {
+    const response = await fetchWithAuth(`${baseUrl}/api/payments/resolve`, {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(input),
     })
 
@@ -85,11 +72,13 @@ export const PaymentsService = {
       return { message: 'ok' }
     }
 
-    const response = await fetch(`${baseUrl}/api/payments/link-account`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(input),
-    })
+    const response = await fetchWithAuth(
+      `${baseUrl}/api/payments/link-account`,
+      {
+        method: 'POST',
+        body: JSON.stringify(input),
+      },
+    )
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))

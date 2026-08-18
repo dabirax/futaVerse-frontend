@@ -199,8 +199,7 @@ export default function InternshipDetail() {
                       <div>
                         <p className="text-caption text-ink-faint">Stipend</p>
                         <p className="text-body font-medium text-ink">
-                          ₦
-                          {parseFloat(data.stipend || '0').toLocaleString()}
+                          ₦{parseFloat(data.stipend || '0').toLocaleString()}
                         </p>
                       </div>
                     )}

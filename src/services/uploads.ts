@@ -1,3 +1,5 @@
+import { fetchWithAuth } from '@/lib/api'
+
 export interface UploadedImage {
   sqid: string
   image: string
@@ -8,12 +10,13 @@ export async function uploadProfileImage(file: File): Promise<UploadedImage> {
   const formData = new FormData()
   formData.append('image', file)
 
-  const token = sessionStorage.getItem('access_token')
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/profile-img`, {
-    method: 'POST',
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body: formData,
-  })
+  const res = await fetchWithAuth(
+    `${import.meta.env.VITE_API_URL}/api/profile-img`,
+    {
+      method: 'POST',
+      body: formData,
+    },
+  )
 
   if (!res.ok) {
     const error = await res.json().catch(() => null)

@@ -107,16 +107,13 @@ const ForgotPassword = () => {
               Forgot Password
             </h1>
             <p className="text-ink-soft text-sm mt-1.5 leading-relaxed">
-              Enter the email you used to create your account so we can send
-              you instructions on how to reset your password.
+              Enter the email you used to create your account so we can send you
+              instructions on how to reset your password.
             </p>
           </div>
 
           <Form {...form}>
-            <form
-              className="space-y-6"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+            <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="email"

@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Link, Outlet, useNavigate } from '@tanstack/react-router'
+import { Link, Outlet } from '@tanstack/react-router'
 import type { LucideIcon } from 'lucide-react'
 import { LogOut, Menu, X } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { useAuth } from '@/hooks/auth-context'
 import { useMe } from '@/hooks/useMe'
 import Logo from '@/components/logo'
 
@@ -40,7 +41,7 @@ export default function DashboardLayout({
   sidebarItems,
 }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const navigate = useNavigate()
+  const { logout } = useAuth()
   const { data: me } = useMe()
 
   const profile = me?.profile
@@ -58,7 +59,7 @@ export default function DashboardLayout({
     undefined
 
   const handleSignOut = () => {
-    navigate({ to: '/' })
+    logout()
   }
 
   return (
@@ -70,7 +71,11 @@ export default function DashboardLayout({
           size="icon"
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
-          {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {sidebarOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
         </Button>
         <Logo showWordmark={false} />
         <ThemeToggle />
@@ -129,8 +134,7 @@ export default function DashboardLayout({
                     className: 'bg-indigo-soft text-indigo font-semibold',
                   }}
                   inactiveProps={{
-                    className:
-                      'text-ink-soft hover:bg-surface-alt',
+                    className: 'text-ink-soft hover:bg-surface-alt',
                   }}
                   onClick={() => setSidebarOpen(false)}
                 >

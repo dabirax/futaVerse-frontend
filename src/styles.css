@@ -20,7 +20,8 @@ body {
 
 code {
   font-family:
-    'IBM Plex Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    'IBM Plex Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -29,44 +30,44 @@ code {
 
 :root {
   /* ── Neutrals ── */
-  --color-bg: #F6F5F2;                 /* Stone white, page background */
-  --color-surface: #FFFFFF;            /* Card, popover, modal background */
-  --color-surface-2: #EFEDE7;          /* Sidebar panels, recessed surfaces */
-  --color-ink: #1C1B29;                /* Primary text — near-black indigo ink */
-  --color-ink-soft: #5B5868;           /* Secondary text, descriptions */
-  --color-ink-faint: #8B879A;          /* Placeholder / disabled only */
-  --color-line: #DEDAD0;               /* Default borders, dividers */
-  --color-line-strong: #C7C1B2;        /* Emphasized dividers, input borders on hover */
+  --color-bg: #f6f5f2; /* Stone white, page background */
+  --color-surface: #ffffff; /* Card, popover, modal background */
+  --color-surface-2: #efede7; /* Sidebar panels, recessed surfaces */
+  --color-ink: #1c1b29; /* Primary text — near-black indigo ink */
+  --color-ink-soft: #5b5868; /* Secondary text, descriptions */
+  --color-ink-faint: #8b879a; /* Placeholder / disabled only */
+  --color-line: #dedad0; /* Default borders, dividers */
+  --color-line-strong: #c7c1b2; /* Emphasized dividers, input borders on hover */
 
   /* ── Indigo — primary / student ── */
-  --color-indigo: #2E2560;
-  --color-indigo-hover: #241C4D;
-  --color-indigo-soft: #EDEAF7;
-  --color-indigo-on-soft: #2E2560;
+  --color-indigo: #2e2560;
+  --color-indigo-hover: #241c4d;
+  --color-indigo-soft: #edeaf7;
+  --color-indigo-on-soft: #2e2560;
 
   /* ── Maroon — secondary / alumnus ── */
-  --color-maroon: #7A1F2B;
+  --color-maroon: #7a1f2b;
   --color-maroon-hover: #631823;
-  --color-maroon-soft: #F7E9EA;
-  --color-maroon-on-soft: #7A1F2B;
+  --color-maroon-soft: #f7e9ea;
+  --color-maroon-on-soft: #7a1f2b;
 
   /* ── Gold — verification / achievement / mentorship ── */
-  --color-gold: #B8862E;
-  --color-gold-hover: #9A6E22;
-  --color-gold-soft: #F7EFDD;
-  --color-gold-on-soft: #8B5F00;
+  --color-gold: #b8862e;
+  --color-gold-hover: #9a6e22;
+  --color-gold-soft: #f7efdd;
+  --color-gold-on-soft: #8b5f00;
 
   /* ── Green — confirmation / events ── */
-  --color-green: #2F6B4F;
-  --color-green-hover: #24543E;
-  --color-green-soft: #E7F1EA;
-  --color-green-on-soft: #2F6B4F;
+  --color-green: #2f6b4f;
+  --color-green-hover: #24543e;
+  --color-green-soft: #e7f1ea;
+  --color-green-on-soft: #2f6b4f;
 
   /* ── Destructive — errors only ── */
-  --color-destructive: #B3261E;
+  --color-destructive: #b3261e;
   --color-destructive-hover: #950003;
-  --color-destructive-soft: #FBEAE8;
-  --color-destructive-on-soft: #B3261E;
+  --color-destructive-soft: #fbeae8;
+  --color-destructive-on-soft: #b3261e;
 
   /* ── Radius ── */
   --radius-none: 0px;
@@ -79,7 +80,8 @@ code {
   --shadow-xs: 0 1px 2px rgba(28, 27, 41, 0.06);
   --shadow-sm: 0 8px 24px rgba(28, 27, 41, 0.05);
   --shadow-focus: 0 0 0 3px rgba(46, 37, 96, 0.35);
-  --shadow-seal: inset 0 1px 1px rgba(255, 255, 255, 0.6), 0 1px 3px rgba(28, 27, 41, 0.18);
+  --shadow-seal:
+    inset 0 1px 1px rgba(255, 255, 255, 0.6), 0 1px 3px rgba(28, 27, 41, 0.18);
 
   /* ── Animation ── */
   --duration-fast: 150ms;
@@ -89,56 +91,56 @@ code {
   --ease-seal: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ── Sidebar ── */
-  --sidebar-background: #EFEDE7;
-  --sidebar-foreground: #1C1B29;
-  --sidebar-primary: #2E2560;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #EDEAF7;
-  --sidebar-accent-foreground: #2E2560;
-  --sidebar-border: #DEDAD0;
-  --sidebar-ring: #2E2560;
+  --sidebar-background: #efede7;
+  --sidebar-foreground: #1c1b29;
+  --sidebar-primary: #2e2560;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #edeaf7;
+  --sidebar-accent-foreground: #2e2560;
+  --sidebar-border: #dedad0;
+  --sidebar-ring: #2e2560;
 }
 
 .dark {
   /* ── Neutrals ── */
-  --color-bg: #14131C;                 /* Deep ink navy */
-  --color-surface: #1E1C2A;            /* Card background */
-  --color-surface-2: #242235;          /* Recessed surfaces */
-  --color-ink: #EDEAE3;                /* Primary text */
-  --color-ink-soft: #A9A5BA;           /* Secondary text */
-  --color-ink-faint: #726D89;          /* Placeholder / disabled */
-  --color-line: #312E42;               /* Borders */
-  --color-line-strong: #443F5C;        /* Emphasized dividers */
+  --color-bg: #14131c; /* Deep ink navy */
+  --color-surface: #1e1c2a; /* Card background */
+  --color-surface-2: #242235; /* Recessed surfaces */
+  --color-ink: #edeae3; /* Primary text */
+  --color-ink-soft: #a9a5ba; /* Secondary text */
+  --color-ink-faint: #726d89; /* Placeholder / disabled */
+  --color-line: #312e42; /* Borders */
+  --color-line-strong: #443f5c; /* Emphasized dividers */
 
   /* ── Indigo ── */
-  --color-indigo: #8676DE;
-  --color-indigo-hover: #9C8EE8;
-  --color-indigo-soft: #2A2648;
-  --color-indigo-on-soft: #9283EC;
+  --color-indigo: #8676de;
+  --color-indigo-hover: #9c8ee8;
+  --color-indigo-soft: #2a2648;
+  --color-indigo-on-soft: #9283ec;
 
   /* ── Maroon ── */
-  --color-maroon: #C0616D;
-  --color-maroon-hover: #CD7883;
-  --color-maroon-soft: #3A2024;
-  --color-maroon-on-soft: #D2717C;
+  --color-maroon: #c0616d;
+  --color-maroon-hover: #cd7883;
+  --color-maroon-soft: #3a2024;
+  --color-maroon-on-soft: #d2717c;
 
   /* ── Gold ── */
-  --color-gold: #D9A845;
-  --color-gold-hover: #E4BC6D;
-  --color-gold-soft: #3A3121;
-  --color-gold-on-soft: #D9A845;
+  --color-gold: #d9a845;
+  --color-gold-hover: #e4bc6d;
+  --color-gold-soft: #3a3121;
+  --color-gold-on-soft: #d9a845;
 
   /* ── Green ── */
-  --color-green: #5FA987;
-  --color-green-hover: #7BC29F;
-  --color-green-soft: #1E3A2C;
-  --color-green-on-soft: #63AD8B;
+  --color-green: #5fa987;
+  --color-green-hover: #7bc29f;
+  --color-green-soft: #1e3a2c;
+  --color-green-on-soft: #63ad8b;
 
   /* ── Destructive ── */
-  --color-destructive: #E0655D;
-  --color-destructive-hover: #F67970;
-  --color-destructive-soft: #3A211F;
-  --color-destructive-on-soft: #E56A61;
+  --color-destructive: #e0655d;
+  --color-destructive-hover: #f67970;
+  --color-destructive-soft: #3a211f;
+  --color-destructive-on-soft: #e56a61;
 
   /* ── Radius (same as light) ── */
   --radius-none: 0px;
@@ -148,10 +150,11 @@ code {
   --radius-full: 9999px;
 
   /* ── Shadows (darker for dark mode) ── */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-sm: 0 8px 30px rgba(0, 0, 0, 0.35);
-  --shadow-focus: 0 0 0 3px rgba(134, 118, 222, 0.40);
-  --shadow-seal: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-focus: 0 0 0 3px rgba(134, 118, 222, 0.4);
+  --shadow-seal:
+    inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 1px 3px rgba(0, 0, 0, 0.4);
 
   /* ── Animation (same as light) ── */
   --duration-fast: 150ms;
@@ -161,14 +164,14 @@ code {
   --ease-seal: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ── Sidebar ── */
-  --sidebar-background: #14131C;
-  --sidebar-foreground: #EDEAE3;
-  --sidebar-primary: #8676DE;
-  --sidebar-primary-foreground: #14131C;
-  --sidebar-accent: #2A2648;
-  --sidebar-accent-foreground: #EDEAE3;
-  --sidebar-border: #312E42;
-  --sidebar-ring: #8676DE;
+  --sidebar-background: #14131c;
+  --sidebar-foreground: #edeae3;
+  --sidebar-primary: #8676de;
+  --sidebar-primary-foreground: #14131c;
+  --sidebar-accent: #2a2648;
+  --sidebar-accent-foreground: #edeae3;
+  --sidebar-border: #312e42;
+  --sidebar-ring: #8676de;
 }
 
 @theme inline {
@@ -189,10 +192,10 @@ code {
 
   /* ── Brand Colors ── */
   --color-primary: var(--color-indigo);
-  --color-primary-foreground: #FFFFFF;
+  --color-primary-foreground: #ffffff;
 
   --color-secondary: var(--color-maroon);
-  --color-secondary-foreground: #FFFFFF;
+  --color-secondary-foreground: #ffffff;
 
   --color-accent: var(--color-gold);
   --color-accent-foreground: var(--color-ink);
@@ -201,7 +204,7 @@ code {
   --color-muted-foreground: var(--color-ink-soft);
 
   --color-destructive: var(--color-destructive);
-  --color-destructive-foreground: #FFFFFF;
+  --color-destructive-foreground: #ffffff;
 
   --color-border: var(--color-line);
   --color-input: var(--color-line);
@@ -296,11 +299,17 @@ code {
 
 /* ── Fraunces Display Settings ── */
 .font-display {
-  font-variation-settings: "opsz" 48, "SOFT" 0, "WONK" 0;
+  font-variation-settings:
+    'opsz' 48,
+    'SOFT' 0,
+    'WONK' 0;
 }
 
 .font-display-hero {
-  font-variation-settings: "opsz" 72, "SOFT" 0, "WONK" 0;
+  font-variation-settings:
+    'opsz' 72,
+    'SOFT' 0,
+    'WONK' 0;
 }
 
 /* ── Design System Type Utilities ── */
@@ -326,7 +335,11 @@ code {
 .theme-transitioning *,
 .theme-transitioning *::before,
 .theme-transitioning *::after {
-  transition: background-color 300ms ease-out, color 300ms ease-out, border-color 300ms ease-out, box-shadow 300ms ease-out !important;
+  transition:
+    background-color 300ms ease-out,
+    color 300ms ease-out,
+    border-color 300ms ease-out,
+    box-shadow 300ms ease-out !important;
 }
 
 /* ── Dark Mode: native browser chrome ── */

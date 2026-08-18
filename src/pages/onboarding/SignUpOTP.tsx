@@ -102,10 +102,7 @@ const SignUpOTP = () => {
           </div>
 
           <Form {...form}>
-            <form
-              className="space-y-6"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+            <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col items-center justify-center">
                 <FormField
                   control={form.control}

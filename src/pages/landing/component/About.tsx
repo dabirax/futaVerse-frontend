@@ -16,8 +16,7 @@ const features = [
   {
     icon: Briefcase,
     title: 'Internships',
-    description:
-      'Access exclusive internship and NYSC placement opportunities',
+    description: 'Access exclusive internship and NYSC placement opportunities',
   },
   {
     icon: Calendar,

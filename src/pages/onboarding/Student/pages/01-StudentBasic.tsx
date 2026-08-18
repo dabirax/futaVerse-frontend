@@ -85,7 +85,11 @@ const StudentBasic = () => {
           </div>
 
           <SignupStepIndicator
-            steps={[{ label: 'Personal' }, { label: 'School' }, { label: 'Professional' }]}
+            steps={[
+              { label: 'Personal' },
+              { label: 'School' },
+              { label: 'Professional' },
+            ]}
             currentStep={0}
             role="student"
           />

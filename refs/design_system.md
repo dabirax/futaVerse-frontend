@@ -1,4 +1,5 @@
 # FUTAVerse Design System
+
 ### Direction: The Convocation Line
 
 > A verified, university-anchored network, designed like the credential it actually is. Every visual decision below serves one idea: **trust is earned and shown, not decorated.**
@@ -40,6 +41,7 @@ Three ideas carry the whole system:
 ### 2.1 Self-critique against generic patterns
 
 The stone-white background sits in the same neighborhood as the clichéd warm-cream-serif-terracotta combination currently over-represented in AI-generated design. Three deliberate choices pull it out of that bucket:
+
 - The accent family is indigo/oxblood/brass — there is no terracotta or warm clay anywhere in the palette.
 - The layout logic is document-and-seal, not magazine-and-hero. Nothing here reads as an editorial blog template.
 - The signature element (§10.5) is functional — it encodes real verification state — not a decorative flourish sitting on top of an otherwise-generic card grid.
@@ -52,13 +54,13 @@ The risk to keep watching for during implementation: if the seal motif gets dilu
 
 ### 3.1 What each color means (read this before the tables)
 
-| Color | Concept | Governs |
-|---|---|---|
-| **Indigo** | The institution itself | Primary actions, links, active navigation, default verification ring (students) |
-| **Oxblood (Maroon)** | Earned / graduated status | Alumnus-attributed content, alumnus verification ring, secondary actions |
-| **Brass (Gold)** | The wax seal — verified, achieved | The verification badge, high-trust conversion actions (Apply, Get ticket), the Mentorship category (the platform's centerpiece engagement type) |
-| **Forest Green** | Ratified / confirmed | Success states, completed engagements, Events category, positive availability ("slots open") |
-| **Destructive Red** | Error / irreversible action only | Deletions, failed states, form errors — deliberately a different hue from oxblood so "alumnus" and "error" are never visually confused |
+| Color                | Concept                           | Governs                                                                                                                                         |
+| -------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Indigo**           | The institution itself            | Primary actions, links, active navigation, default verification ring (students)                                                                 |
+| **Oxblood (Maroon)** | Earned / graduated status         | Alumnus-attributed content, alumnus verification ring, secondary actions                                                                        |
+| **Brass (Gold)**     | The wax seal — verified, achieved | The verification badge, high-trust conversion actions (Apply, Get ticket), the Mentorship category (the platform's centerpiece engagement type) |
+| **Forest Green**     | Ratified / confirmed              | Success states, completed engagements, Events category, positive availability ("slots open")                                                    |
+| **Destructive Red**  | Error / irreversible action only  | Deletions, failed states, form errors — deliberately a different hue from oxblood so "alumnus" and "error" are never visually confused          |
 
 **Rule:** gold is reserved for verification and the mentorship category only. It must never be used as a generic "featured" or "premium" flag elsewhere — that's exactly the dilution that neutralizes what a wax seal means.
 
@@ -66,65 +68,65 @@ The risk to keep watching for during implementation: if the seal motif gets dilu
 
 All values below are computed in OKLCH first, then converted to sRGB hex — not eyeballed. Every text-on-tint pairing listed in §3.4 has been contrast-checked against WCAG 2.1.
 
-| Token | OKLCH | Hex | Role |
-|---|---|---|---|
-| `--color-bg` | `oklch(0.97 0.004 91.4)` | `#F6F5F2` | Page background — stone white, cooler than a warm cream |
-| `--color-surface` | `oklch(1.00 0.000 0.0)` | `#FFFFFF` | Card, popover, modal background |
-| `--color-surface-2` | `oklch(0.95 0.008 91.5)` | `#EFEDE7` | Sidebar panels, recessed/alternate surfaces |
-| `--color-ink` | `oklch(0.23 0.027 287.4)` | `#1C1B29` | Primary text — near-black indigo ink |
-| `--color-ink-soft` | `oklch(0.47 0.026 294.0)` | `#5B5868` | Secondary text, descriptions |
-| `--color-ink-faint` | `oklch(0.63 0.028 295.2)` | `#8B879A` | Placeholder / disabled text only — see §3.4 note |
-| `--color-line` | `oklch(0.89 0.014 88.7)` | `#DEDAD0` | Default borders, dividers |
-| `--color-line-strong` | `oklch(0.81 0.022 88.7)` | `#C7C1B2` | Emphasized dividers, input borders on hover |
-| `--color-indigo` | `oklch(0.31 0.101 285.9)` | `#2E2560` | Primary — CTAs, links, active nav, student ring |
-| `--color-indigo-hover` | `oklch(0.27 0.087 286.4)` | `#241C4D` | Primary pressed/hover |
-| `--color-indigo-soft` | `oklch(0.94 0.018 296.6)` | `#EDEAF7` | Primary tint background (badges, selected states) |
-| `--color-maroon` | `oklch(0.39 0.125 17.9)` | `#7A1F2B` | Secondary — alumnus identity, internship category |
-| `--color-maroon-hover` | `oklch(0.34 0.107 16.8)` | `#631823` | Secondary pressed/hover |
-| `--color-maroon-soft` | `oklch(0.95 0.015 12.4)` | `#F7E9EA` | Secondary tint background |
-| `--color-gold` | `oklch(0.65 0.118 77.6)` | `#B8862E` | Verification, achievement, mentorship category |
-| `--color-gold-hover` | `oklch(0.57 0.105 76.7)` | `#9A6E22` | Gold pressed/hover (on gold surfaces) |
-| `--color-gold-soft` | `oklch(0.95 0.025 86.9)` | `#F7EFDD` | Gold tint background |
-| `--color-gold-on-soft` | `oklch(0.52 0.118 77.6)` | `#8B5F00` | **Text-safe gold** — use for any text sitting on `gold-soft` (see §3.4) |
-| `--color-green` | `oklch(0.48 0.078 161.1)` | `#2F6B4F` | Confirmation — events, completed states |
-| `--color-green-hover` | `oklch(0.41 0.065 161.6)` | `#24543E` | Green pressed/hover |
-| `--color-green-soft` | `oklch(0.95 0.014 155.6)` | `#E7F1EA` | Green tint background |
-| `--color-destructive` | `oklch(0.50 0.178 28.7)` | `#B3261E` | Errors, destructive actions |
-| `--color-destructive-hover` | `oklch(0.42 0.178 28.7)` | `#950003` | Destructive pressed/hover |
-| `--color-destructive-soft` | `oklch(0.95 0.019 25.6)` | `#FBEAE8` | Destructive tint background |
+| Token                       | OKLCH                     | Hex       | Role                                                                    |
+| --------------------------- | ------------------------- | --------- | ----------------------------------------------------------------------- |
+| `--color-bg`                | `oklch(0.97 0.004 91.4)`  | `#F6F5F2` | Page background — stone white, cooler than a warm cream                 |
+| `--color-surface`           | `oklch(1.00 0.000 0.0)`   | `#FFFFFF` | Card, popover, modal background                                         |
+| `--color-surface-2`         | `oklch(0.95 0.008 91.5)`  | `#EFEDE7` | Sidebar panels, recessed/alternate surfaces                             |
+| `--color-ink`               | `oklch(0.23 0.027 287.4)` | `#1C1B29` | Primary text — near-black indigo ink                                    |
+| `--color-ink-soft`          | `oklch(0.47 0.026 294.0)` | `#5B5868` | Secondary text, descriptions                                            |
+| `--color-ink-faint`         | `oklch(0.63 0.028 295.2)` | `#8B879A` | Placeholder / disabled text only — see §3.4 note                        |
+| `--color-line`              | `oklch(0.89 0.014 88.7)`  | `#DEDAD0` | Default borders, dividers                                               |
+| `--color-line-strong`       | `oklch(0.81 0.022 88.7)`  | `#C7C1B2` | Emphasized dividers, input borders on hover                             |
+| `--color-indigo`            | `oklch(0.31 0.101 285.9)` | `#2E2560` | Primary — CTAs, links, active nav, student ring                         |
+| `--color-indigo-hover`      | `oklch(0.27 0.087 286.4)` | `#241C4D` | Primary pressed/hover                                                   |
+| `--color-indigo-soft`       | `oklch(0.94 0.018 296.6)` | `#EDEAF7` | Primary tint background (badges, selected states)                       |
+| `--color-maroon`            | `oklch(0.39 0.125 17.9)`  | `#7A1F2B` | Secondary — alumnus identity, internship category                       |
+| `--color-maroon-hover`      | `oklch(0.34 0.107 16.8)`  | `#631823` | Secondary pressed/hover                                                 |
+| `--color-maroon-soft`       | `oklch(0.95 0.015 12.4)`  | `#F7E9EA` | Secondary tint background                                               |
+| `--color-gold`              | `oklch(0.65 0.118 77.6)`  | `#B8862E` | Verification, achievement, mentorship category                          |
+| `--color-gold-hover`        | `oklch(0.57 0.105 76.7)`  | `#9A6E22` | Gold pressed/hover (on gold surfaces)                                   |
+| `--color-gold-soft`         | `oklch(0.95 0.025 86.9)`  | `#F7EFDD` | Gold tint background                                                    |
+| `--color-gold-on-soft`      | `oklch(0.52 0.118 77.6)`  | `#8B5F00` | **Text-safe gold** — use for any text sitting on `gold-soft` (see §3.4) |
+| `--color-green`             | `oklch(0.48 0.078 161.1)` | `#2F6B4F` | Confirmation — events, completed states                                 |
+| `--color-green-hover`       | `oklch(0.41 0.065 161.6)` | `#24543E` | Green pressed/hover                                                     |
+| `--color-green-soft`        | `oklch(0.95 0.014 155.6)` | `#E7F1EA` | Green tint background                                                   |
+| `--color-destructive`       | `oklch(0.50 0.178 28.7)`  | `#B3261E` | Errors, destructive actions                                             |
+| `--color-destructive-hover` | `oklch(0.42 0.178 28.7)`  | `#950003` | Destructive pressed/hover                                               |
+| `--color-destructive-soft`  | `oklch(0.95 0.019 25.6)`  | `#FBEAE8` | Destructive tint background                                             |
 
 ### 3.3 Dark mode tokens
 
-| Token | OKLCH | Hex | Role |
-|---|---|---|---|
-| `--color-bg` | `oklch(0.19 0.018 289.7)` | `#14131C` | Page background — deep ink navy |
-| `--color-surface` | `oklch(0.24 0.027 290.7)` | `#1E1C2A` | Card, popover, modal background |
-| `--color-surface-2` | `oklch(0.26 0.035 288.6)` | `#242235` | Sidebar panels, recessed surfaces |
-| `--color-ink` | `oklch(0.94 0.010 87.5)` | `#EDEAE3` | Primary text |
-| `--color-ink-soft` | `oklch(0.73 0.030 294.4)` | `#A9A5BA` | Secondary text |
-| `--color-ink-faint` | `oklch(0.55 0.043 293.1)` | `#726D89` | Placeholder / disabled text only |
-| `--color-line` | `oklch(0.31 0.036 291.1)` | `#312E42` | Default borders |
-| `--color-line-strong` | `oklch(0.39 0.049 291.8)` | `#443F5C` | Emphasized dividers, hover borders |
-| `--color-indigo` | `oklch(0.63 0.152 288.3)` | `#8676DE` | Primary |
-| `--color-indigo-hover` | `oklch(0.70 0.130 289.7)` | `#9C8EE8` | Primary hover (lighter, dark-bg convention) |
-| `--color-indigo-soft` | `oklch(0.29 0.061 287.4)` | `#2A2648` | Primary tint background |
-| `--color-indigo-on-soft` | `oklch(0.67 0.152 288.1)` | `#9283EC` | **Text-safe indigo** on `indigo-soft` |
-| `--color-maroon` | `oklch(0.61 0.122 13.5)` | `#C0616D` | Secondary |
-| `--color-maroon-hover` | `oklch(0.67 0.107 12.0)` | `#CD7883` | Secondary hover |
-| `--color-maroon-soft` | `oklch(0.28 0.041 10.1)` | `#3A2024` | Secondary tint background |
-| `--color-maroon-on-soft` | `oklch(0.66 0.122 13.8)` | `#D2717C` | **Text-safe maroon** on `maroon-soft` |
-| `--color-gold` | `oklch(0.76 0.128 82.0)` | `#D9A845` | Verification, achievement, mentorship |
-| `--color-gold-hover` | `oklch(0.81 0.108 83.2)` | `#E4BC6D` | Gold hover |
-| `--color-gold-soft` | `oklch(0.32 0.030 81.6)` | `#3A3121` | Gold tint background |
-| `--color-gold-on-soft` | `oklch(0.76 0.128 82.0)` | `#D9A845` | Same as base — already passes AA here |
-| `--color-green` | `oklch(0.68 0.091 162.8)` | `#5FA987` | Confirmation |
-| `--color-green-hover` | `oklch(0.76 0.088 161.9)` | `#7BC29F` | Green hover |
-| `--color-green-soft` | `oklch(0.32 0.043 160.9)` | `#1E3A2C` | Green tint background |
-| `--color-green-on-soft` | `oklch(0.69 0.091 162.9)` | `#63AD8B` | **Text-safe green** on `green-soft` |
-| `--color-destructive` | `oklch(0.66 0.155 26.0)` | `#E0655D` | Errors |
-| `--color-destructive-hover` | `oklch(0.72 0.155 26.0)` | `#F67970` | Destructive hover |
-| `--color-destructive-soft` | `oklch(0.28 0.039 24.8)` | `#3A211F` | Destructive tint background |
-| `--color-destructive-on-soft` | `oklch(0.67 0.155 26.3)` | `#E56A61` | **Text-safe destructive** on `destructive-soft` |
+| Token                         | OKLCH                     | Hex       | Role                                            |
+| ----------------------------- | ------------------------- | --------- | ----------------------------------------------- |
+| `--color-bg`                  | `oklch(0.19 0.018 289.7)` | `#14131C` | Page background — deep ink navy                 |
+| `--color-surface`             | `oklch(0.24 0.027 290.7)` | `#1E1C2A` | Card, popover, modal background                 |
+| `--color-surface-2`           | `oklch(0.26 0.035 288.6)` | `#242235` | Sidebar panels, recessed surfaces               |
+| `--color-ink`                 | `oklch(0.94 0.010 87.5)`  | `#EDEAE3` | Primary text                                    |
+| `--color-ink-soft`            | `oklch(0.73 0.030 294.4)` | `#A9A5BA` | Secondary text                                  |
+| `--color-ink-faint`           | `oklch(0.55 0.043 293.1)` | `#726D89` | Placeholder / disabled text only                |
+| `--color-line`                | `oklch(0.31 0.036 291.1)` | `#312E42` | Default borders                                 |
+| `--color-line-strong`         | `oklch(0.39 0.049 291.8)` | `#443F5C` | Emphasized dividers, hover borders              |
+| `--color-indigo`              | `oklch(0.63 0.152 288.3)` | `#8676DE` | Primary                                         |
+| `--color-indigo-hover`        | `oklch(0.70 0.130 289.7)` | `#9C8EE8` | Primary hover (lighter, dark-bg convention)     |
+| `--color-indigo-soft`         | `oklch(0.29 0.061 287.4)` | `#2A2648` | Primary tint background                         |
+| `--color-indigo-on-soft`      | `oklch(0.67 0.152 288.1)` | `#9283EC` | **Text-safe indigo** on `indigo-soft`           |
+| `--color-maroon`              | `oklch(0.61 0.122 13.5)`  | `#C0616D` | Secondary                                       |
+| `--color-maroon-hover`        | `oklch(0.67 0.107 12.0)`  | `#CD7883` | Secondary hover                                 |
+| `--color-maroon-soft`         | `oklch(0.28 0.041 10.1)`  | `#3A2024` | Secondary tint background                       |
+| `--color-maroon-on-soft`      | `oklch(0.66 0.122 13.8)`  | `#D2717C` | **Text-safe maroon** on `maroon-soft`           |
+| `--color-gold`                | `oklch(0.76 0.128 82.0)`  | `#D9A845` | Verification, achievement, mentorship           |
+| `--color-gold-hover`          | `oklch(0.81 0.108 83.2)`  | `#E4BC6D` | Gold hover                                      |
+| `--color-gold-soft`           | `oklch(0.32 0.030 81.6)`  | `#3A3121` | Gold tint background                            |
+| `--color-gold-on-soft`        | `oklch(0.76 0.128 82.0)`  | `#D9A845` | Same as base — already passes AA here           |
+| `--color-green`               | `oklch(0.68 0.091 162.8)` | `#5FA987` | Confirmation                                    |
+| `--color-green-hover`         | `oklch(0.76 0.088 161.9)` | `#7BC29F` | Green hover                                     |
+| `--color-green-soft`          | `oklch(0.32 0.043 160.9)` | `#1E3A2C` | Green tint background                           |
+| `--color-green-on-soft`       | `oklch(0.69 0.091 162.9)` | `#63AD8B` | **Text-safe green** on `green-soft`             |
+| `--color-destructive`         | `oklch(0.66 0.155 26.0)`  | `#E0655D` | Errors                                          |
+| `--color-destructive-hover`   | `oklch(0.72 0.155 26.0)`  | `#F67970` | Destructive hover                               |
+| `--color-destructive-soft`    | `oklch(0.28 0.039 24.8)`  | `#3A211F` | Destructive tint background                     |
+| `--color-destructive-on-soft` | `oklch(0.67 0.155 26.3)`  | `#E56A61` | **Text-safe destructive** on `destructive-soft` |
 
 ### 3.4 Contrast audit (why the `-on-soft` tokens exist)
 
@@ -141,18 +143,18 @@ I ran every text-on-tint pairing through WCAG 2.1 before finalizing anything. Tw
 
 I haven't verified shadcn is actually installed in your repo — your previous agent's doc referenced shadcn component variants, so I'm carrying that assumption forward, flagged. If it is, map the concept tokens above onto shadcn's expected slots like this:
 
-| shadcn slot | Maps to |
-|---|---|
-| `--background` / `--foreground` | `bg` / `ink` |
-| `--card` / `--card-foreground` | `surface` / `ink` |
-| `--popover` / `--popover-foreground` | `surface` / `ink` |
-| `--primary` / `--primary-foreground` | `indigo` / `surface` (white text) |
-| `--secondary` / `--secondary-foreground` | `maroon` / `surface` — **note:** unlike a typical shadcn secondary (a neutral low-emphasis button), this secondary is reserved for alumnus-attributed UI specifically. For a generic low-emphasis button, use the `outline` or `ghost` variant instead, not `secondary`. |
-| `--muted` / `--muted-foreground` | `surface-2` / `ink-soft` |
-| `--accent` / `--accent-foreground` | `gold` / `gold-on-soft` |
-| `--destructive` / `--destructive-foreground` | `destructive` / `surface` |
-| `--border` / `--input` | `line` |
-| `--ring` | `indigo` |
+| shadcn slot                                  | Maps to                                                                                                                                                                                                                                                                  |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--background` / `--foreground`              | `bg` / `ink`                                                                                                                                                                                                                                                             |
+| `--card` / `--card-foreground`               | `surface` / `ink`                                                                                                                                                                                                                                                        |
+| `--popover` / `--popover-foreground`         | `surface` / `ink`                                                                                                                                                                                                                                                        |
+| `--primary` / `--primary-foreground`         | `indigo` / `surface` (white text)                                                                                                                                                                                                                                        |
+| `--secondary` / `--secondary-foreground`     | `maroon` / `surface` — **note:** unlike a typical shadcn secondary (a neutral low-emphasis button), this secondary is reserved for alumnus-attributed UI specifically. For a generic low-emphasis button, use the `outline` or `ghost` variant instead, not `secondary`. |
+| `--muted` / `--muted-foreground`             | `surface-2` / `ink-soft`                                                                                                                                                                                                                                                 |
+| `--accent` / `--accent-foreground`           | `gold` / `gold-on-soft`                                                                                                                                                                                                                                                  |
+| `--destructive` / `--destructive-foreground` | `destructive` / `surface`                                                                                                                                                                                                                                                |
+| `--border` / `--input`                       | `line`                                                                                                                                                                                                                                                                   |
+| `--ring`                                     | `indigo`                                                                                                                                                                                                                                                                 |
 
 `green` has no natural shadcn slot — expose it as a standalone `--success` / `--success-foreground` extension alongside the base set, which shadcn's token system supports natively.
 
@@ -170,30 +172,39 @@ This is a deliberate departure from the earlier draft's Crimson Pro + DM Sans pa
 
 ### 4.2 Fraunces variable axis settings — this matters
 
-Fraunces ships four variable axes: `wght`, `opsz` (optical size), `SOFT`, and `WONK`. `WONK` introduces intentionally eccentric, quirky letterforms — appropriate for a playful editorial brand, wrong for this one. **Set `SOFT: 0` and `WONK: 0` everywhere, no exceptions.** The type stays sharp and formal; the *only* soft, rounded form in the entire interface is the seal (§10.5). That contrast — disciplined type against one soft circular signature — is intentional and should not be blurred by letting the type get soft too.
+Fraunces ships four variable axes: `wght`, `opsz` (optical size), `SOFT`, and `WONK`. `WONK` introduces intentionally eccentric, quirky letterforms — appropriate for a playful editorial brand, wrong for this one. **Set `SOFT: 0` and `WONK: 0` everywhere, no exceptions.** The type stays sharp and formal; the _only_ soft, rounded form in the entire interface is the seal (§10.5). That contrast — disciplined type against one soft circular signature — is intentional and should not be blurred by letting the type get soft too.
 
 ```css
 /* Display headings */
-font-variation-settings: "opsz" 72, "SOFT" 0, "WONK" 0; /* display-2xl */
-font-variation-settings: "opsz" 48, "SOFT" 0, "WONK" 0; /* display-xl / display-lg */
-font-variation-settings: "opsz" 24, "SOFT" 0, "WONK" 0; /* display-md (card titles) */
+font-variation-settings:
+  'opsz' 72,
+  'SOFT' 0,
+  'WONK' 0; /* display-2xl */
+font-variation-settings:
+  'opsz' 48,
+  'SOFT' 0,
+  'WONK' 0; /* display-xl / display-lg */
+font-variation-settings:
+  'opsz' 24,
+  'SOFT' 0,
+  'WONK' 0; /* display-md (card titles) */
 ```
 
 ### 4.3 Type scale
 
-| Token | Size | Font / Weight | Line height | Letter spacing | Fraunces `opsz` | Usage |
-|---|---|---|---|---|---|---|
-| `display-2xl` | `clamp(2.25rem, 4vw, 3rem)` | Fraunces 600 | 1.08 | −0.01em | 72 | Landing hero only |
-| `display-xl` | `1.875rem` (30px) | Fraunces 500 | 1.15 | −0.005em | 48 | Dashboard page headers |
-| `display-lg` | `1.5rem` (24px) | Fraunces 500 | 1.2 | 0 | 36 | Section headers |
-| `display-md` | `1.1875rem` (19px) | Fraunces 500 | 1.3 | 0 | 24 | Card titles |
-| `body-lg` | `0.9375rem` (15px) | Plex Sans 400 | 1.6 | 0 | — | Long-form descriptions |
-| `body` | `0.875rem` (14px) | Plex Sans 400 | 1.55 | 0 | — | Default UI text |
-| `body-sm` | `0.8125rem` (13px) | Plex Sans 400 | 1.5 | 0 | — | Secondary descriptions |
-| `label` | `0.8125rem` (13px) | Plex Sans 600 | 1.4 | 0 | — | Form labels, poster names |
-| `caption` | `0.75rem` (12px) | Plex Sans 400 | 1.45 | 0 | — | Roles, secondary metadata |
-| `meta` | `0.6875rem` (11px) | Plex Mono 400/500 | 1.4 | +0.02em | — | Matric IDs, timestamps, counts |
-| `overline` | `0.6875rem` (11px) | Plex Sans 600, uppercase | 1.4 | +0.1em | — | Category kickers, badges |
+| Token         | Size                        | Font / Weight            | Line height | Letter spacing | Fraunces `opsz` | Usage                          |
+| ------------- | --------------------------- | ------------------------ | ----------- | -------------- | --------------- | ------------------------------ |
+| `display-2xl` | `clamp(2.25rem, 4vw, 3rem)` | Fraunces 600             | 1.08        | −0.01em        | 72              | Landing hero only              |
+| `display-xl`  | `1.875rem` (30px)           | Fraunces 500             | 1.15        | −0.005em       | 48              | Dashboard page headers         |
+| `display-lg`  | `1.5rem` (24px)             | Fraunces 500             | 1.2         | 0              | 36              | Section headers                |
+| `display-md`  | `1.1875rem` (19px)          | Fraunces 500             | 1.3         | 0              | 24              | Card titles                    |
+| `body-lg`     | `0.9375rem` (15px)          | Plex Sans 400            | 1.6         | 0              | —               | Long-form descriptions         |
+| `body`        | `0.875rem` (14px)           | Plex Sans 400            | 1.55        | 0              | —               | Default UI text                |
+| `body-sm`     | `0.8125rem` (13px)          | Plex Sans 400            | 1.5         | 0              | —               | Secondary descriptions         |
+| `label`       | `0.8125rem` (13px)          | Plex Sans 600            | 1.4         | 0              | —               | Form labels, poster names      |
+| `caption`     | `0.75rem` (12px)            | Plex Sans 400            | 1.45        | 0              | —               | Roles, secondary metadata      |
+| `meta`        | `0.6875rem` (11px)          | Plex Mono 400/500        | 1.4         | +0.02em        | —               | Matric IDs, timestamps, counts |
+| `overline`    | `0.6875rem` (11px)          | Plex Sans 600, uppercase | 1.4         | +0.1em         | —               | Category kickers, badges       |
 
 **Numerals:** any figure a user needs to compare or scan precisely — matric numbers, ₦ amounts, slot counts, dates — uses Plex Mono with `font-variant-numeric: tabular-nums`. This is not a stylistic flourish; it's why the mono face exists in this system at all — a matric ID is a record, and records should look like records.
 
@@ -205,18 +216,18 @@ font-variation-settings: "opsz" 24, "SOFT" 0, "WONK" 0; /* display-md (card titl
 
 4px base unit. Every spacing value is a multiple of 4.
 
-| Token | Value | Usage |
-|---|---|---|
-| `--space-1` | 4px | Icon-to-label gaps, tight internal padding |
-| `--space-2` | 8px | Tag/chip padding, small gaps |
-| `--space-3` | 12px | Form field gaps, meta-row gaps |
-| `--space-4` | 16px | Compact card padding, list item gaps |
-| `--space-5` | 20px | Standard section gaps |
-| `--space-6` | 24px | Standard card padding, sidebar item padding |
-| `--space-8` | 32px | Compact section padding |
-| `--space-10` | 40px | Sidebar horizontal padding |
-| `--space-12` | 48px | Standard section padding |
-| `--space-16` | 64px | Spacious section padding, hero padding |
+| Token        | Value | Usage                                       |
+| ------------ | ----- | ------------------------------------------- |
+| `--space-1`  | 4px   | Icon-to-label gaps, tight internal padding  |
+| `--space-2`  | 8px   | Tag/chip padding, small gaps                |
+| `--space-3`  | 12px  | Form field gaps, meta-row gaps              |
+| `--space-4`  | 16px  | Compact card padding, list item gaps        |
+| `--space-5`  | 20px  | Standard section gaps                       |
+| `--space-6`  | 24px  | Standard card padding, sidebar item padding |
+| `--space-8`  | 32px  | Compact section padding                     |
+| `--space-10` | 40px  | Sidebar horizontal padding                  |
+| `--space-12` | 48px  | Standard section padding                    |
+| `--space-16` | 64px  | Spacious section padding, hero padding      |
 
 ### 5.2 Layout patterns
 
@@ -231,12 +242,12 @@ font-variation-settings: "opsz" 24, "SOFT" 0, "WONK" 0; /* display-md (card titl
 
 This is the one rule everything else in the component layer defers to: **rectangles stay close to zero radius; circles are reserved for identity.** A card, input, or button is a record — it should look printed, not squeezed. An avatar, ring, or badge is a person — it earns the soft form.
 
-| Token | Value | Usage |
-|---|---|---|
-| `--radius-none` | 0px | Table cells, full-bleed containers, dividers |
-| `--radius-xs` | 2px | Inputs, tags, chips, small controls |
-| `--radius-sm` | 3px | Buttons |
-| `--radius-md` | 4px | Cards, modals, dropdowns — **this is the ceiling for every rectangular surface in the system** |
+| Token           | Value  | Usage                                                                                                                                |
+| --------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `--radius-none` | 0px    | Table cells, full-bleed containers, dividers                                                                                         |
+| `--radius-xs`   | 2px    | Inputs, tags, chips, small controls                                                                                                  |
+| `--radius-sm`   | 3px    | Buttons                                                                                                                              |
+| `--radius-md`   | 4px    | Cards, modals, dropdowns — **this is the ceiling for every rectangular surface in the system**                                       |
 | `--radius-full` | 9999px | **Reserved exclusively** for the seal, avatars, profile photos, and status dots. Never apply to a card, button, input, or container. |
 
 If a future component needs more than 4px on a rectangle to "feel right," that's a signal to redesign the component, not to add a `--radius-lg` token.
@@ -247,12 +258,12 @@ If a future component needs more than 4px on a rectangle to "feel right," that's
 
 Shadows are neutral (ink-tinted), never colored, and used sparingly — a document doesn't cast a coloured shadow.
 
-| Token | Light | Dark | Usage |
-|---|---|---|---|
-| `--shadow-xs` | `0 1px 2px oklch(0.23 0.027 287.4 / 0.06)` | `0 1px 2px oklch(0 0 0 / 0.30)` | Resting card |
-| `--shadow-sm` | `0 8px 24px oklch(0.23 0.027 287.4 / 0.05)` | `0 8px 30px oklch(0 0 0 / 0.35)` | Card on hover, popovers |
-| `--shadow-focus` | `0 0 0 3px oklch(0.31 0.101 285.9 / 0.35)` | `0 0 0 3px oklch(0.63 0.152 288.3 / 0.40)` | Visible keyboard focus — required on every interactive element, no exceptions |
-| `--shadow-seal` | `inset 0 1px 1px oklch(1 0 0 / 0.6), 0 1px 3px oklch(0.23 0.027 287.4 / 0.18)` | `inset 0 1px 1px oklch(1 0 0 / 0.08), 0 1px 3px oklch(0 0 0 / 0.4)` | The verification ring only — a subtle emboss, like a stamp pressed into paper |
+| Token            | Light                                                                          | Dark                                                                | Usage                                                                         |
+| ---------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `--shadow-xs`    | `0 1px 2px oklch(0.23 0.027 287.4 / 0.06)`                                     | `0 1px 2px oklch(0 0 0 / 0.30)`                                     | Resting card                                                                  |
+| `--shadow-sm`    | `0 8px 24px oklch(0.23 0.027 287.4 / 0.05)`                                    | `0 8px 30px oklch(0 0 0 / 0.35)`                                    | Card on hover, popovers                                                       |
+| `--shadow-focus` | `0 0 0 3px oklch(0.31 0.101 285.9 / 0.35)`                                     | `0 0 0 3px oklch(0.63 0.152 288.3 / 0.40)`                          | Visible keyboard focus — required on every interactive element, no exceptions |
+| `--shadow-seal`  | `inset 0 1px 1px oklch(1 0 0 / 0.6), 0 1px 3px oklch(0.23 0.027 287.4 / 0.18)` | `inset 0 1px 1px oklch(1 0 0 / 0.08), 0 1px 3px oklch(0 0 0 / 0.4)` | The verification ring only — a subtle emboss, like a stamp pressed into paper |
 
 ---
 
@@ -260,12 +271,12 @@ Shadows are neutral (ink-tinted), never colored, and used sparingly — a docume
 
 The pacing should feel like a ceremony, not a consumer app: deliberate, settled, never bouncy or springy.
 
-| Property | Duration | Easing | Usage |
-|---|---|---|---|
-| Color / background / border | 200ms | `ease-out` | Hover, focus, active states |
-| Box shadow | 180ms | `ease-out` | Button and card hover lift |
-| Opacity (fade in/out) | 220ms | `ease-out` | Modal, toast, dropdown entry |
-| **Seal confirmation** (see below) | 320ms | `cubic-bezier(0.16, 1, 0.3, 1)` | The one orchestrated motion moment in the system |
+| Property                          | Duration | Easing                          | Usage                                            |
+| --------------------------------- | -------- | ------------------------------- | ------------------------------------------------ |
+| Color / background / border       | 200ms    | `ease-out`                      | Hover, focus, active states                      |
+| Box shadow                        | 180ms    | `ease-out`                      | Button and card hover lift                       |
+| Opacity (fade in/out)             | 220ms    | `ease-out`                      | Modal, toast, dropdown entry                     |
+| **Seal confirmation** (see below) | 320ms    | `cubic-bezier(0.16, 1, 0.3, 1)` | The one orchestrated motion moment in the system |
 
 **The one deliberate motion moment**: when a profile becomes verified, or an application/offer is accepted, the seal briefly scales from 92% to 100% with a fade-in, using the settling `cubic-bezier(0.16, 1, 0.3, 1)` curve — a stamp coming down, not a bounce. This animation is reserved for genuine verification/confirmation events only. It does not run on page load, on hover, or on routine list updates. `prefers-reduced-motion` disables it entirely (swap to an instant opacity change).
 
@@ -275,7 +286,7 @@ No spring physics anywhere. No stagger animations on feed lists. No scale-on-hov
 
 ## 9. Iconography
 
-Thin architectural line icons, `1.5px` stroke, no fills, no rounded-blob icon sets — icons should read like technical drawing marks on a document, consistent with the sharp-rectangle rule in §6. **Phosphor Icons (Light weight)** or **Lucide** both fit; avoid anything with a playful/rounded default stroke (e.g. Heroicons' solid set, Feather's rounded caps at large sizes). *This is a recommendation, not a verified constraint — confirm against whatever icon set is already installed before introducing a second one.*
+Thin architectural line icons, `1.5px` stroke, no fills, no rounded-blob icon sets — icons should read like technical drawing marks on a document, consistent with the sharp-rectangle rule in §6. **Phosphor Icons (Light weight)** or **Lucide** both fit; avoid anything with a playful/rounded default stroke (e.g. Heroicons' solid set, Feather's rounded caps at large sizes). _This is a recommendation, not a verified constraint — confirm against whatever icon set is already installed before introducing a second one._
 
 ---
 
@@ -283,15 +294,15 @@ Thin architectural line icons, `1.5px` stroke, no fills, no rounded-blob icon se
 
 ### 10.1 Buttons
 
-| Variant | Background | Text | Border | Hover |
-|---|---|---|---|---|
-| `default` (primary) | `indigo` | `surface` (white) | none | `indigo-hover` |
-| `secondary` | `maroon` | `surface` (white) | none | `maroon-hover` — alumnus-attributed actions only, see §3.5 |
-| `gold` | `gold` | **`ink`, never white** | none | `gold-hover` |
-| `outline` | transparent | `ink` | `line-strong` | border → `indigo`, bg → `indigo-soft` |
-| `ghost` | transparent | `ink-soft` | none | bg → `surface-2` |
-| `destructive` | `destructive` | `surface` (white) | none | `destructive-hover` |
-| `link` | transparent | `indigo` | none | underline, offset 3px |
+| Variant             | Background    | Text                   | Border        | Hover                                                      |
+| ------------------- | ------------- | ---------------------- | ------------- | ---------------------------------------------------------- |
+| `default` (primary) | `indigo`      | `surface` (white)      | none          | `indigo-hover`                                             |
+| `secondary`         | `maroon`      | `surface` (white)      | none          | `maroon-hover` — alumnus-attributed actions only, see §3.5 |
+| `gold`              | `gold`        | **`ink`, never white** | none          | `gold-hover`                                               |
+| `outline`           | transparent   | `ink`                  | `line-strong` | border → `indigo`, bg → `indigo-soft`                      |
+| `ghost`             | transparent   | `ink-soft`             | none          | bg → `surface-2`                                           |
+| `destructive`       | `destructive` | `surface` (white)      | none          | `destructive-hover`                                        |
+| `link`              | transparent   | `indigo`               | none          | underline, offset 3px                                      |
 
 **Why gold buttons use ink text, not white:** white-on-gold measures 3.24:1 — AA-large only, which fails for normal button label sizes. Ink-on-gold measures 5.24:1. This is a hard rule, not a preference, and it's the reason the gold button variant looks different from the others (dark text on a light-mid-tone fill) — don't "fix" it to match the white-text pattern of the other variants.
 
@@ -330,20 +341,24 @@ This is the one element the entire direction is built to be remembered by. It is
 | Profile page | 56–64px | 2.5px |
 
 **Ring color = role, always**:
+
 - Indigo ring → student
 - Maroon ring → alumnus
 - Gold ring, solid → verified organisation/admin account (e.g. FUTA Alumni Association)
 
 **Ring state (independent of role color)**:
+
 - Solid ring = verified (default, since this platform gates entry on verification)
 - Dashed ring, `ink-faint` = unverified / pending — this state should be rare and visually unmistakable, since an unverified account is the one thing this platform exists to prevent
 - Gold ring, animated per §8, on the moment verification completes
 
 **Do:**
+
 - Use it for every real person or verified organisation shown anywhere in the product.
 - Keep the ring-color-means-role rule absolute — never reassign indigo/maroon for a one-off visual reason.
 
 **Don't:**
+
 - Never use the ring styling on a purely decorative or placeholder avatar (e.g. a generic "invite a friend" empty-state graphic).
 - Never stack a second circular signature element (a badge-on-badge, a corner flourish) on top of it — it stays the only circle doing symbolic work.
 
@@ -375,7 +390,7 @@ Brief, since copy deserves its own pass, but the register should already be set 
 <!-- Filled in as each screen is actually migrated and reviewed — intentionally empty here. -->
 
 | Screen | Route | Status | Notes |
-|---|---|---|---|
+| ------ | ----- | ------ | ----- |
 
 ---
 
@@ -384,7 +399,7 @@ Brief, since copy deserves its own pass, but the register should already be set 
 <!-- Filled in once your agent audits which components are actually installed and how — intentionally empty here. -->
 
 | Component | Installed | Custom Variants | Notes |
-|---|---|---|---|
+| --------- | --------- | --------------- | ----- |
 
 ---
 
@@ -404,44 +419,44 @@ I'm flagging these explicitly rather than building further on top of them silent
 ```css
 :root {
   /* Neutrals */
-  --color-bg: #F6F5F2;
-  --color-surface: #FFFFFF;
-  --color-surface-2: #EFEDE7;
-  --color-ink: #1C1B29;
-  --color-ink-soft: #5B5868;
-  --color-ink-faint: #8B879A;
-  --color-line: #DEDAD0;
-  --color-line-strong: #C7C1B2;
+  --color-bg: #f6f5f2;
+  --color-surface: #ffffff;
+  --color-surface-2: #efede7;
+  --color-ink: #1c1b29;
+  --color-ink-soft: #5b5868;
+  --color-ink-faint: #8b879a;
+  --color-line: #dedad0;
+  --color-line-strong: #c7c1b2;
 
   /* Indigo — primary / student */
-  --color-indigo: #2E2560;
-  --color-indigo-hover: #241C4D;
-  --color-indigo-soft: #EDEAF7;
-  --color-indigo-on-soft: #2E2560;
+  --color-indigo: #2e2560;
+  --color-indigo-hover: #241c4d;
+  --color-indigo-soft: #edeaf7;
+  --color-indigo-on-soft: #2e2560;
 
   /* Maroon — secondary / alumnus */
-  --color-maroon: #7A1F2B;
+  --color-maroon: #7a1f2b;
   --color-maroon-hover: #631823;
-  --color-maroon-soft: #F7E9EA;
-  --color-maroon-on-soft: #7A1F2B;
+  --color-maroon-soft: #f7e9ea;
+  --color-maroon-on-soft: #7a1f2b;
 
   /* Gold — verification / achievement */
-  --color-gold: #B8862E;
-  --color-gold-hover: #9A6E22;
-  --color-gold-soft: #F7EFDD;
-  --color-gold-on-soft: #8B5F00;
+  --color-gold: #b8862e;
+  --color-gold-hover: #9a6e22;
+  --color-gold-soft: #f7efdd;
+  --color-gold-on-soft: #8b5f00;
 
   /* Green — confirmation */
-  --color-green: #2F6B4F;
-  --color-green-hover: #24543E;
-  --color-green-soft: #E7F1EA;
-  --color-green-on-soft: #2F6B4F;
+  --color-green: #2f6b4f;
+  --color-green-hover: #24543e;
+  --color-green-soft: #e7f1ea;
+  --color-green-on-soft: #2f6b4f;
 
   /* Destructive */
-  --color-destructive: #B3261E;
+  --color-destructive: #b3261e;
   --color-destructive-hover: #950003;
-  --color-destructive-soft: #FBEAE8;
-  --color-destructive-on-soft: #B3261E;
+  --color-destructive-soft: #fbeae8;
+  --color-destructive-on-soft: #b3261e;
 
   /* Radius */
   --radius-none: 0px;
@@ -454,47 +469,49 @@ I'm flagging these explicitly rather than building further on top of them silent
   --shadow-xs: 0 1px 2px oklch(0.23 0.027 287.4 / 0.06);
   --shadow-sm: 0 8px 24px oklch(0.23 0.027 287.4 / 0.05);
   --shadow-focus: 0 0 0 3px oklch(0.31 0.101 285.9 / 0.35);
-  --shadow-seal: inset 0 1px 1px oklch(1 0 0 / 0.6), 0 1px 3px oklch(0.23 0.027 287.4 / 0.18);
+  --shadow-seal:
+    inset 0 1px 1px oklch(1 0 0 / 0.6), 0 1px 3px oklch(0.23 0.027 287.4 / 0.18);
 }
 
 .dark {
-  --color-bg: #14131C;
-  --color-surface: #1E1C2A;
+  --color-bg: #14131c;
+  --color-surface: #1e1c2a;
   --color-surface-2: #242235;
-  --color-ink: #EDEAE3;
-  --color-ink-soft: #A9A5BA;
-  --color-ink-faint: #726D89;
-  --color-line: #312E42;
-  --color-line-strong: #443F5C;
+  --color-ink: #edeae3;
+  --color-ink-soft: #a9a5ba;
+  --color-ink-faint: #726d89;
+  --color-line: #312e42;
+  --color-line-strong: #443f5c;
 
-  --color-indigo: #8676DE;
-  --color-indigo-hover: #9C8EE8;
-  --color-indigo-soft: #2A2648;
-  --color-indigo-on-soft: #9283EC;
+  --color-indigo: #8676de;
+  --color-indigo-hover: #9c8ee8;
+  --color-indigo-soft: #2a2648;
+  --color-indigo-on-soft: #9283ec;
 
-  --color-maroon: #C0616D;
-  --color-maroon-hover: #CD7883;
-  --color-maroon-soft: #3A2024;
-  --color-maroon-on-soft: #D2717C;
+  --color-maroon: #c0616d;
+  --color-maroon-hover: #cd7883;
+  --color-maroon-soft: #3a2024;
+  --color-maroon-on-soft: #d2717c;
 
-  --color-gold: #D9A845;
-  --color-gold-hover: #E4BC6D;
-  --color-gold-soft: #3A3121;
-  --color-gold-on-soft: #D9A845;
+  --color-gold: #d9a845;
+  --color-gold-hover: #e4bc6d;
+  --color-gold-soft: #3a3121;
+  --color-gold-on-soft: #d9a845;
 
-  --color-green: #5FA987;
-  --color-green-hover: #7BC29F;
-  --color-green-soft: #1E3A2C;
-  --color-green-on-soft: #63AD8B;
+  --color-green: #5fa987;
+  --color-green-hover: #7bc29f;
+  --color-green-soft: #1e3a2c;
+  --color-green-on-soft: #63ad8b;
 
-  --color-destructive: #E0655D;
-  --color-destructive-hover: #F67970;
-  --color-destructive-soft: #3A211F;
-  --color-destructive-on-soft: #E56A61;
+  --color-destructive: #e0655d;
+  --color-destructive-hover: #f67970;
+  --color-destructive-soft: #3a211f;
+  --color-destructive-on-soft: #e56a61;
 
-  --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.30);
+  --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.3);
   --shadow-sm: 0 8px 30px oklch(0 0 0 / 0.35);
-  --shadow-focus: 0 0 0 3px oklch(0.63 0.152 288.3 / 0.40);
-  --shadow-seal: inset 0 1px 1px oklch(1 0 0 / 0.08), 0 1px 3px oklch(0 0 0 / 0.4);
+  --shadow-focus: 0 0 0 3px oklch(0.63 0.152 288.3 / 0.4);
+  --shadow-seal:
+    inset 0 1px 1px oklch(1 0 0 / 0.08), 0 1px 3px oklch(0 0 0 / 0.4);
 }
 ```

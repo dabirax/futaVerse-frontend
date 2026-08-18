@@ -1,13 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import {
-  Briefcase,
-  Calendar,
-  MapPin,
-  Search,
-  Users,
-  Video,
-} from 'lucide-react'
+import { Briefcase, Calendar, MapPin, Search, Users, Video } from 'lucide-react'
 import { format } from 'date-fns'
 import type { FeedItemData } from '@/types/feed'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -106,14 +99,16 @@ function InternshipCard({
         <div className="flex items-center gap-2.5">
           <Avatar className="h-7 w-7">
             <AvatarFallback className="bg-maroon-soft text-maroon-on-soft text-[10px] font-semibold rounded-full">
-              {item.alumni
-                ? item.alumni
-                    .split(' ')
-                    .map((w) => w[0])
-                    .join('')
-                    .slice(0, 2)
-                    .toUpperCase()
-                : <Briefcase className="h-3 w-3" />}
+              {item.alumni ? (
+                item.alumni
+                  .split(' ')
+                  .map((w) => w[0])
+                  .join('')
+                  .slice(0, 2)
+                  .toUpperCase()
+              ) : (
+                <Briefcase className="h-3 w-3" />
+              )}
             </AvatarFallback>
           </Avatar>
           <span className="text-caption text-ink-soft">
@@ -188,14 +183,16 @@ function MentorshipCard({
         <div className="flex items-center gap-2.5">
           <Avatar className="h-7 w-7">
             <AvatarFallback className="bg-gold-soft text-gold-on-soft text-[10px] font-semibold rounded-full">
-              {item.alumni
-                ? item.alumni
-                    .split(' ')
-                    .map((w) => w[0])
-                    .join('')
-                    .slice(0, 2)
-                    .toUpperCase()
-                : <Users className="h-3 w-3" />}
+              {item.alumni ? (
+                item.alumni
+                  .split(' ')
+                  .map((w) => w[0])
+                  .join('')
+                  .slice(0, 2)
+                  .toUpperCase()
+              ) : (
+                <Users className="h-3 w-3" />
+              )}
             </AvatarFallback>
           </Avatar>
           <span className="text-caption text-ink-soft">
@@ -269,14 +266,16 @@ function EventCard({
         <div className="flex items-center gap-2.5">
           <Avatar className="h-7 w-7">
             <AvatarFallback className="bg-green-soft text-green-on-soft text-[10px] font-semibold rounded-full">
-              {item.alumni
-                ? item.alumni
-                    .split(' ')
-                    .map((w) => w[0])
-                    .join('')
-                    .slice(0, 2)
-                    .toUpperCase()
-                : <Calendar className="h-3 w-3" />}
+              {item.alumni ? (
+                item.alumni
+                  .split(' ')
+                  .map((w) => w[0])
+                  .join('')
+                  .slice(0, 2)
+                  .toUpperCase()
+              ) : (
+                <Calendar className="h-3 w-3" />
+              )}
             </AvatarFallback>
           </Avatar>
           <span className="text-caption text-ink-soft">

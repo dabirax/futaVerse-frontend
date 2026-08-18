@@ -16,9 +16,7 @@ export default function OffersTab() {
   }
 
   if (isError) {
-    return (
-      <p className="text-body text-destructive">Failed to load offers</p>
-    )
+    return <p className="text-body text-destructive">Failed to load offers</p>
   }
 
   if (!data?.results?.length) {
