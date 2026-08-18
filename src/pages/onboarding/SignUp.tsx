@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
-import { GraduationCap, Users, BookOpen } from 'lucide-react'
+import { BookOpen, GraduationCap, Users } from 'lucide-react'
 import { LeftContainer } from './components/LeftContainer'
-import { BackButton } from '@/components/BackButtons'
+import { BackButton, BackButtonWithLogo } from '@/components/BackButtons'
 
 const roles = [
   {
@@ -35,7 +35,10 @@ const SignUp = () => {
       <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
         <div className="w-full max-w-lg">
           <div className="mb-8">
-            <BackButton />
+            <BackButtonWithLogo />
+            <div className="hidden lg:block">
+              <BackButton />
+            </div>
           </div>
 
           <div className="mb-8">

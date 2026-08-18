@@ -5,7 +5,7 @@ interface Step {
 }
 
 interface SignupStepIndicatorProps {
-  steps: Step[]
+  steps: Array<Step>
   currentStep: number
   role: 'student' | 'alumnus'
 }

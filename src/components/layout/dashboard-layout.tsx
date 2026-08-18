@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, Outlet } from '@tanstack/react-router'
-import type { LucideIcon } from 'lucide-react'
 import { LogOut, Menu, X } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme-toggle'

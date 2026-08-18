@@ -9,7 +9,6 @@ const Header = () => {
     <nav className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-line z-50">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between">
         <div className="flex ">
-         
           <Logo />
         </div>
 

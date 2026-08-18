@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import futaLogo from '@/assets/landing/futa_logo_bgless.png'
+import fvLogo from '@/assets/logos/FV_logo_backgroundless.png'
 
 const heroCards = [
   {
@@ -71,15 +72,15 @@ const Hero = () => {
             <div className="flex flex-wrap gap-6 sm:gap-8 pt-4 sm:pt-6">
               <div>
                 <p className="font-mono text-xl sm:text-2xl font-medium text-ink tabular-nums">
-                  500+
+                  100k+
                 </p>
                 <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">
-                  Alumni mentors
+                  Alumni
                 </p>
               </div>
               <div>
                 <p className="font-mono text-xl sm:text-2xl font-medium text-ink tabular-nums">
-                  1,000+
+                  30k+
                 </p>
                 <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">
                   Students
@@ -87,7 +88,7 @@ const Hero = () => {
               </div>
               <div>
                 <p className="font-mono text-xl sm:text-2xl font-medium text-ink tabular-nums">
-                  50+
+                  200+
                 </p>
                 <p className="text-[11px] sm:text-xs text-ink-soft mt-0.5">
                   Events yearly
@@ -97,11 +98,21 @@ const Hero = () => {
           </div>
 
           <div className="space-y-2 sm:space-y-3">
-            <img
-              src={futaLogo}
-              alt="Federal University of Technology Akure"
-              className="mx-auto max-w-[180px]"
-            />
+            <div className="flex items-center justify-center gap-3 sm:gap-6">
+              <img
+                src={futaLogo}
+                alt="FUTA"
+                className="max-w-[80px] sm:max-w-[140px] p-1 sm:p-2"
+              />
+              <span className="text-gold font-display text-3xl sm:text-6xl font-bold">
+                ×
+              </span>
+              <img
+                src={fvLogo}
+                alt="FUTAVerse"
+                className="max-w-[60px] sm:max-w-[144px]"
+              />
+            </div>
             {heroCards.map((card, index) => (
               <div
                 key={index}

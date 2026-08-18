@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { BackButton } from '../../components/BackButtons'
+import { BackButton, BackButtonWithLogo } from '../../components/BackButtons'
 import { LeftContainer } from './components/LeftContainer'
 import { useForgotPasswordStore } from './hooks/useForgotPasswordStore'
 import { Button } from '@/components/ui/button'
@@ -120,7 +120,10 @@ const CheckEmail = () => {
       <div className="flex-1 flex flex-col items-center justify-center py-10 px-4 sm:px-6 bg-background">
         <div className="w-full max-w-md animate-in fade-in duration-500">
           <div className="mb-8">
-            <BackButton />
+            <BackButtonWithLogo />
+            <div className="hidden lg:block">
+              <BackButton />
+            </div>
           </div>
 
           <div className="mb-8 text-center">

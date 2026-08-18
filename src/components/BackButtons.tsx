@@ -1,5 +1,15 @@
 import { useRouter } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
+import Logo from '@/components/logo'
+
+export function BackButtonWithLogo() {
+  return (
+    <div className="flex items-center gap-3 lg:hidden">
+      <BackButton />
+      <Logo showWordmark={false} />
+    </div>
+  )
+}
 
 export function BackButton() {
   const router = useRouter()
