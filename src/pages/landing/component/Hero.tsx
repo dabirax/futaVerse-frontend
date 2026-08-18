@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
+import futaLogo from '@/assets/landing/futa_logo_bgless.png'
 
 const heroCards = [
   {
@@ -96,6 +97,11 @@ const Hero = () => {
           </div>
 
           <div className="space-y-2 sm:space-y-3">
+            <img
+              src={futaLogo}
+              alt="Federal University of Technology Akure"
+              className="mx-auto max-w-[180px]"
+            />
             {heroCards.map((card, index) => (
               <div
                 key={index}
