@@ -50,7 +50,7 @@ const categoryLabels: Record<string, string> = {
 
 // ----------- Inline Event Card -----------
 
-function EventFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
+function EventFeedCard({ item }: { item: FeedItemData }) {
   const router = useRouter()
 
   const formattedDate = item.date
@@ -60,7 +60,7 @@ function EventFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
   return (
     <div
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
-      onClick={() => router.navigate({ to: `/student/events/${sqid}` })}
+      onClick={() => router.navigate({ to: `/student/events/${item.sqid}` })}
     >
       {/* Category kicker */}
       <div className="mb-4">
@@ -75,7 +75,7 @@ function EventFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
 
       {/* Description */}
       <p className="text-sm text-ink-soft line-clamp-2 mb-3">
-        {item.alumni ? `Hosted by ${item.alumni}` : 'A new event.'}
+        {item.alumni ? `Hosted by ${item.alumni.full_name}` : 'A new event.'}
       </p>
 
       {/* Metadata row */}
@@ -107,7 +107,7 @@ function EventFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
           <Avatar className="h-7 w-7">
             <AvatarFallback className="bg-green-soft text-green-on-soft text-[10px] font-semibold rounded-full">
               {item.alumni ? (
-                item.alumni
+                item.alumni.full_name
                   .split(' ')
                   .map((w) => w[0])
                   .join('')
@@ -119,7 +119,7 @@ function EventFeedCard({ item, sqid }: { item: FeedItemData; sqid: string }) {
             </AvatarFallback>
           </Avatar>
           <span className="text-caption text-ink-soft">
-            {item.alumni || 'Unknown'}
+            {item.alumni?.full_name || 'Unknown'}
           </span>
         </div>
         <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -335,30 +335,12 @@ export default function StudentFeed() {
           ) : (
             filteredItems.map((item) => {
               if (item.event_type.includes('internship')) {
-                return (
-                  <InternshipFeedCard
-                    key={item.sqid}
-                    item={item.data}
-                    sqid={item.sqid}
-                  />
-                )
+                return <InternshipFeedCard key={item.sqid} item={item.data} />
               }
               if (item.event_type.includes('mentorship')) {
-                return (
-                  <MentorshipFeedCard
-                    key={item.sqid}
-                    item={item.data}
-                    sqid={item.sqid}
-                  />
-                )
+                return <MentorshipFeedCard key={item.sqid} item={item.data} />
               }
-              return (
-                <EventFeedCard
-                  key={item.sqid}
-                  item={item.data}
-                  sqid={item.sqid}
-                />
-              )
+              return <EventFeedCard key={item.sqid} item={item.data} />
             })
           )}
 

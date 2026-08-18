@@ -37,8 +37,13 @@ export interface FeedMentorship {
 }
 
 export interface FeedItemData {
+  sqid: string
+  type: string
   title: string
-  alumni?: string
+  alumni?: {
+    sqid: string
+    full_name: string
+  }
   category?: string
   created_at?: string
   start_date?: string
@@ -48,7 +53,6 @@ export interface FeedItemData {
   stipend?: string
   work_mode?: string
   engagement_type?: string
-  type?: string
   company?: string
   date?: string
   mode?: string

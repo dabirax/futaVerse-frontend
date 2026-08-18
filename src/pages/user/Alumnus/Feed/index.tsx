@@ -44,11 +44,9 @@ function getGreeting(): string {
 
 function InternshipCard({
   item,
-  sqid,
   created_at,
 }: {
   item: FeedItemData
-  sqid: string
   created_at: string
 }) {
   const router = useRouter()
@@ -56,7 +54,9 @@ function InternshipCard({
   return (
     <div
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
-      onClick={() => router.navigate({ to: `/alumnus/internships/${sqid}` })}
+      onClick={() =>
+        router.navigate({ to: `/alumnus/internships/${item.sqid}` })
+      }
     >
       {/* Category kicker */}
       <div className="flex items-center justify-between mb-4">
@@ -100,7 +100,7 @@ function InternshipCard({
           <Avatar className="h-7 w-7">
             <AvatarFallback className="bg-maroon-soft text-maroon-on-soft text-[10px] font-semibold rounded-full">
               {item.alumni ? (
-                item.alumni
+                item.alumni.full_name
                   .split(' ')
                   .map((w) => w[0])
                   .join('')
@@ -112,7 +112,7 @@ function InternshipCard({
             </AvatarFallback>
           </Avatar>
           <span className="text-caption text-ink-soft">
-            {item.alumni || 'Unknown'}
+            {item.alumni?.full_name || 'Unknown'}
           </span>
         </div>
         <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -125,11 +125,9 @@ function InternshipCard({
 
 function MentorshipCard({
   item,
-  sqid,
   created_at,
 }: {
   item: FeedItemData
-  sqid: string
   created_at: string
 }) {
   const router = useRouter()
@@ -137,7 +135,9 @@ function MentorshipCard({
   return (
     <div
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
-      onClick={() => router.navigate({ to: `/alumnus/mentorships/${sqid}` })}
+      onClick={() =>
+        router.navigate({ to: `/alumnus/mentorships/${item.sqid}` })
+      }
     >
       {/* Category kicker */}
       <div className="flex items-center justify-between mb-4">
@@ -156,7 +156,7 @@ function MentorshipCard({
       {/* Description */}
       <p className="text-sm text-ink-soft line-clamp-2 mb-3">
         {item.alumni
-          ? `Hosted by ${item.alumni}`
+          ? `Hosted by ${item.alumni.full_name}`
           : 'A new mentorship opportunity.'}
       </p>
 
@@ -184,7 +184,7 @@ function MentorshipCard({
           <Avatar className="h-7 w-7">
             <AvatarFallback className="bg-gold-soft text-gold-on-soft text-[10px] font-semibold rounded-full">
               {item.alumni ? (
-                item.alumni
+                item.alumni.full_name
                   .split(' ')
                   .map((w) => w[0])
                   .join('')
@@ -196,7 +196,7 @@ function MentorshipCard({
             </AvatarFallback>
           </Avatar>
           <span className="text-caption text-ink-soft">
-            {item.alumni || 'Unknown'}
+            {item.alumni?.full_name || 'Unknown'}
           </span>
         </div>
         <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -209,11 +209,9 @@ function MentorshipCard({
 
 function EventCard({
   item,
-  sqid,
   created_at,
 }: {
   item: FeedItemData
-  sqid: string
   created_at: string
 }) {
   const router = useRouter()
@@ -224,7 +222,7 @@ function EventCard({
   return (
     <div
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
-      onClick={() => router.navigate({ to: `/alumnus/events/${sqid}` })}
+      onClick={() => router.navigate({ to: `/alumnus/events/${item.sqid}` })}
     >
       {/* Category kicker */}
       <div className="flex items-center justify-between mb-4">
@@ -267,7 +265,7 @@ function EventCard({
           <Avatar className="h-7 w-7">
             <AvatarFallback className="bg-green-soft text-green-on-soft text-[10px] font-semibold rounded-full">
               {item.alumni ? (
-                item.alumni
+                item.alumni.full_name
                   .split(' ')
                   .map((w) => w[0])
                   .join('')
@@ -279,7 +277,7 @@ function EventCard({
             </AvatarFallback>
           </Avatar>
           <span className="text-caption text-ink-soft">
-            {item.alumni || 'Unknown'}
+            {item.alumni?.full_name || 'Unknown'}
           </span>
         </div>
         <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -595,7 +593,6 @@ export default function AlumnusFeed() {
                   <InternshipCard
                     key={item.sqid}
                     item={item.data}
-                    sqid={item.sqid}
                     created_at={item.created_at}
                   />
                 )
@@ -604,7 +601,6 @@ export default function AlumnusFeed() {
                   <MentorshipCard
                     key={item.sqid}
                     item={item.data}
-                    sqid={item.sqid}
                     created_at={item.created_at}
                   />
                 )
@@ -613,7 +609,6 @@ export default function AlumnusFeed() {
                   <EventCard
                     key={item.sqid}
                     item={item.data}
-                    sqid={item.sqid}
                     created_at={item.created_at}
                   />
                 )

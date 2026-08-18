@@ -3,19 +3,15 @@ import { Briefcase, DollarSign } from 'lucide-react'
 import type { FeedItemData } from '@/types/feed'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
-export default function InternshipFeedCard({
-  item,
-  sqid,
-}: {
-  item: FeedItemData
-  sqid: string
-}) {
+export default function InternshipFeedCard({ item }: { item: FeedItemData }) {
   const router = useRouter()
 
   return (
     <div
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
-      onClick={() => router.navigate({ to: `/student/internships/${sqid}` })}
+      onClick={() =>
+        router.navigate({ to: `/student/internships/${item.sqid}` })
+      }
     >
       {/* Category kicker */}
       <div className="mb-4">
@@ -31,7 +27,7 @@ export default function InternshipFeedCard({
       {/* Description */}
       <p className="text-sm text-ink-soft line-clamp-2 mb-3">
         {item.alumni
-          ? `Posted by ${item.alumni}`
+          ? `Posted by ${item.alumni.full_name}`
           : 'A new internship opportunity'}
       </p>
 
@@ -53,7 +49,7 @@ export default function InternshipFeedCard({
           <Avatar className="h-7 w-7">
             <AvatarFallback className="bg-maroon-soft text-maroon-on-soft text-[10px] font-semibold rounded-full">
               {item.alumni ? (
-                item.alumni
+                item.alumni.full_name
                   .split(' ')
                   .map((w) => w[0])
                   .join('')
@@ -65,7 +61,7 @@ export default function InternshipFeedCard({
             </AvatarFallback>
           </Avatar>
           <span className="text-caption text-ink-soft">
-            {item.alumni || 'Unknown'}
+            {item.alumni?.full_name || 'Unknown'}
           </span>
         </div>
         <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
