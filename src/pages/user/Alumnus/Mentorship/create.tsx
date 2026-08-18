@@ -450,7 +450,7 @@ export default function CreateMentorship() {
             </Button>
             <Button
               type="submit"
-              variant="gradient"
+              variant="default"
               disabled={createMentorship.isPending}
             >
               Create Mentorship

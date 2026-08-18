@@ -43,7 +43,7 @@ export function LeftContainer() {
       </div>
 
       <p className="relative z-10 text-white/30 text-xs font-mono uppercase tracking-widest">
-        FUTAVerse &mdash; Convocation
+        FUTAVerse   
       </p>
     </div>
   )

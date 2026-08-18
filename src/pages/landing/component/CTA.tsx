@@ -13,11 +13,11 @@ const CTA = () => {
     <section className="py-16 lg:py-24 bg-surface border-t border-line">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20">
         <div className="grid gap-10 lg:grid-cols-2 items-center">
-          <div className="relative overflow-hidden border border-line bg-surface-2 aspect-[4/3] lg:aspect-auto lg:h-full">
+          <div className="relative overflow-hidden  bg-surface-2 aspect-[4/3] lg:aspect-auto lg:h-full">
             <img
               src={studentsIllustration}
               alt="Students learning together"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-2xl"
             />
           </div>
 
