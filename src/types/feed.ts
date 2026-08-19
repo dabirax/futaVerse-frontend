@@ -39,6 +39,7 @@ export interface FeedMentorship {
 export interface FeedItemData {
   sqid: string
   type: string
+  action: string
   title: string
   alumni?: {
     sqid: string

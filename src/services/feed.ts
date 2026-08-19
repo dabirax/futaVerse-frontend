@@ -9,6 +9,8 @@ export interface CursorPaginatedResponse<T> {
 
 const getBaseUrl = () => import.meta.env.VITE_API_URL || ''
 
+const getAction = (eventType: string) => eventType.split('_')[1]
+
 const buildMockFeedItems = (): Array<any> =>
   mockEvents.map((event) => ({
     sqid: event.sqid,
@@ -16,6 +18,7 @@ const buildMockFeedItems = (): Array<any> =>
     data: {
       sqid: event.sqid,
       type: 'event',
+      action: getAction('event_created'),
       title: event.title,
       category: event.category,
       date: event.date,
