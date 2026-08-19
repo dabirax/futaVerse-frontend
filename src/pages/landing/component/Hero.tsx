@@ -44,7 +44,7 @@ const Hero = () => {
               that last.
             </h1>
             <p className="max-w-xl text-base text-ink-soft leading-relaxed">
-              Mentorship, internships, job openings, and events — all in one
+              Mentorship, internships, job openings, and events, all in one
               place, built for the FUTA community.
             </p>
 

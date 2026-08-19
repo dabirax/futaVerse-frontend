@@ -56,7 +56,7 @@ const About = () => {
           </h2>
           <p className="mt-4 text-base text-ink-soft leading-relaxed max-w-2xl">
             FUTAVerse bridges the gap between FUTA alumni and students through
-            mentorship, internships, job shadowing, and events — empowering
+            mentorship, internships, job shadowing, and events, empowering
             mentees through meaningful digital engagement.
           </p>
         </div>
