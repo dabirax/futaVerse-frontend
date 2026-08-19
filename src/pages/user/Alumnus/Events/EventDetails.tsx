@@ -23,6 +23,7 @@ import { alumnusEventDetailRoute } from '@/routes/user-alumnus'
 import EventTicketsManager from '@/components/user/events/EventTicketsManager'
 import { BackButton2 } from '@/components/BackButtons'
 import { EventDetailSkeleton } from '@/components/CardSkeletons'
+import { useAuth } from '@/hooks/auth-context'
 
 const categoryLabels: Record<string, string> = {
   workshop: 'Workshop',
@@ -42,7 +43,10 @@ const platformLabels: Record<string, string> = {
 export default function EventDetail() {
   const { id } = alumnusEventDetailRoute.useParams()
   const router = useRouter()
+  const { userSqid } = useAuth()
   const { data: event, isLoading, isError, error } = useEvent(id)
+
+  const isCreator = userSqid === String(event?.creator)
 
   if (isLoading) {
     return (
@@ -117,14 +121,16 @@ export default function EventDetail() {
             </h1>
           </div>
         </div>
-        <Button
-          onClick={() =>
-            router.navigate({ to: `/alumnus/events/${event.sqid}/edit` })
-          }
-        >
-          <Edit className="h-4 w-4 mr-2" />
-          Edit Event
-        </Button>
+        {isCreator && (
+          <Button
+            onClick={() =>
+              router.navigate({ to: `/alumnus/events/${event.sqid}/edit` })
+            }
+          >
+            <Edit className="h-4 w-4 mr-2" />
+            Edit Event
+          </Button>
+        )}
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -143,11 +149,13 @@ export default function EventDetail() {
           </Card>
 
           {/* Tickets management (inline) */}
-          <EventTicketsManager
-            eventSqid={event.sqid}
-            showEventSelector={false}
-            hideHeader
-          />
+          {isCreator && (
+            <EventTicketsManager
+              eventSqid={event.sqid}
+              showEventSelector={false}
+              hideHeader
+            />
+          )}
 
           {/* Virtual Meeting */}
           {event.virtual_meeting && (
@@ -241,58 +249,66 @@ export default function EventDetail() {
           </Card>
 
           {/* Stats */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Registration Stats</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Total Tickets</span>
-                <span className="font-medium">{totalTickets}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Tickets Sold</span>
-                <span className="font-medium">{soldTickets}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Available</span>
-                <span className="font-medium">
-                  {totalTickets - soldTickets}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
+          {isCreator && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Registration Stats</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Total Tickets</span>
+                  <span className="font-medium">{totalTickets}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Tickets Sold</span>
+                  <span className="font-medium">{soldTickets}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Available</span>
+                  <span className="font-medium">
+                    {totalTickets - soldTickets}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Settings</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Sponsorship</span>
+          {isCreator && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Settings</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">Sponsorship</span>
+                  </div>
+                  <Badge
+                    variant={
+                      event.allow_sponsorship ? 'default' : 'secondary'
+                    }
+                  >
+                    {event.allow_sponsorship ? 'Enabled' : 'Disabled'}
+                  </Badge>
                 </div>
-                <Badge
-                  variant={event.allow_sponsorship ? 'default' : 'secondary'}
-                >
-                  {event.allow_sponsorship ? 'Enabled' : 'Disabled'}
-                </Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Heart className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Donations</span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Heart className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">Donations</span>
+                  </div>
+                  <Badge
+                    variant={
+                      event.allow_donations ? 'default' : 'secondary'
+                    }
+                  >
+                    {event.allow_donations ? 'Enabled' : 'Disabled'}
+                  </Badge>
                 </div>
-                <Badge
-                  variant={event.allow_donations ? 'default' : 'secondary'}
-                >
-                  {event.allow_donations ? 'Enabled' : 'Disabled'}
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>
