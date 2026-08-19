@@ -1,9 +1,9 @@
 import { useRouter } from '@tanstack/react-router'
 import { Calendar, MapPin, Video } from 'lucide-react'
 import { format } from 'date-fns'
+import { getActionLabel } from './registry'
 import type { FeedItemData } from '@/types/feed'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { getActionLabel } from './registry'
 
 const categoryLabels: Record<string, string> = {
   workshop: 'Workshop',
@@ -27,8 +27,8 @@ export default function EventFeedCard({ item }: { item: FeedItemData }) {
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
       onClick={() =>
         router.navigate({
-          to: '/feed/details/$sqid/$type',
-          params: { sqid: item.sqid, type: item.type },
+          to: '/student/events/$sqid',
+          params: { sqid: item.sqid },
         })
       }
     >

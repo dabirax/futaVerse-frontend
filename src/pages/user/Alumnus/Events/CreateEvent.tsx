@@ -596,7 +596,10 @@ export default function CreateEvent() {
                 <CardContent className="pt-6 space-y-3">
                   {createEvent.isError && (
                     <div className="text-sm rounded-lg border border-red-200 bg-red-50 p-3 text-red-800 dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-300">
-                      {getErrorMessage(createEvent.error, 'Failed to create event.')}
+                      {getErrorMessage(
+                        createEvent.error,
+                        'Failed to create event.',
+                      )}
                     </div>
                   )}
                   <Button

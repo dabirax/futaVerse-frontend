@@ -429,7 +429,10 @@ export default function CreateMentorship() {
             {/* Error State */}
             {createMentorship.isError && (
               <div className="rounded-lg border border-border bg-red-50 text-red-700 p-4">
-                {getErrorMessage(createMentorship.error, 'Failed to create mentorship.')}
+                {getErrorMessage(
+                  createMentorship.error,
+                  'Failed to create mentorship.',
+                )}
               </div>
             )}
 

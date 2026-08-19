@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { showSessionExpiredToast } from '@/lib/session-expiry'
+import { handleSessionExpiry } from '@/lib/session-expiry'
 
 const baseURL = `${import.meta.env.VITE_API_URL}`
 
@@ -30,7 +30,7 @@ api.interceptors.response.use(
 
     const refreshToken = sessionStorage.getItem('refresh_token')
     if (!refreshToken) {
-      showSessionExpiredToast()
+      handleSessionExpiry()
       return Promise.reject(error)
     }
 
@@ -65,7 +65,7 @@ api.interceptors.response.use(
       return api(original)
     } catch (refreshError) {
       refreshQueue = []
-      showSessionExpiredToast()
+      handleSessionExpiry()
       return Promise.reject(refreshError)
     } finally {
       isRefreshing = false
@@ -112,7 +112,7 @@ export async function fetchWithAuth(
   if (response.status === 401) {
     const refreshToken = sessionStorage.getItem('refresh_token')
     if (!refreshToken) {
-      showSessionExpiredToast()
+      handleSessionExpiry()
       throw new Error('Session expired')
     }
 
@@ -148,7 +148,7 @@ export async function fetchWithAuth(
       response = await fetch(input, { ...init, headers: retryHeaders })
     } catch {
       fetchQueue = []
-      showSessionExpiredToast()
+      handleSessionExpiry()
       throw new Error('Session expired')
     } finally {
       isFetching = false

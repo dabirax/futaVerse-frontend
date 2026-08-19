@@ -1,8 +1,7 @@
-import { useRouter } from '@tanstack/react-router'
 import { UserCheck } from 'lucide-react'
+import { getActionLabel } from './registry'
 import type { FeedItemData } from '@/types/feed'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { getActionLabel } from './registry'
 
 interface EngagementFeedCardProps {
   item: FeedItemData
@@ -22,22 +21,13 @@ const colorClasses = {
 type ColorKey = keyof typeof colorClasses
 
 export default function EngagementFeedCard({ item }: EngagementFeedCardProps) {
-  const router = useRouter()
   const actionLabel = getActionLabel(item.action, item)
   const colorKey: ColorKey =
     item.type === 'internship_engagement' ? 'maroon' : 'gold'
   const colorClass = colorClasses[colorKey]
 
   return (
-    <div
-      className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
-      onClick={() =>
-        router.navigate({
-          to: '/feed/details/$sqid/$type',
-          params: { sqid: item.sqid, type: item.type },
-        })
-      }
-    >
+    <div className="bg-surface rounded-md border border-line shadow-xs p-6">
       <div className="mb-4">
         <span className="text-overline text-ink-faint">{actionLabel}</span>
         <div className={`mt-1.5 h-px ${colorClass.bar} w-12`} />
@@ -73,9 +63,6 @@ export default function EngagementFeedCard({ item }: EngagementFeedCardProps) {
             {item.alumni?.full_name || 'Unknown'}
           </span>
         </div>
-        <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          View →
-        </span>
       </div>
     </div>
   )

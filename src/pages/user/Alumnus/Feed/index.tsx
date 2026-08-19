@@ -58,8 +58,8 @@ function InternshipCard({
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
       onClick={() =>
         router.navigate({
-          to: '/feed/details/$sqid/$type',
-          params: { sqid: item.sqid, type: item.type },
+          to: '/alumnus/internships/$sqid',
+          params: { sqid: item.sqid },
         })
       }
     >
@@ -138,8 +138,8 @@ function MentorshipCard({
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
       onClick={() =>
         router.navigate({
-          to: '/feed/details/$sqid/$type',
-          params: { sqid: item.sqid, type: item.type },
+          to: '/alumnus/mentorships/$sqid',
+          params: { sqid: item.sqid },
         })
       }
     >
@@ -224,8 +224,8 @@ function EventCard({
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
       onClick={() =>
         router.navigate({
-          to: '/feed/details/$sqid/$type',
-          params: { sqid: item.sqid, type: item.type },
+          to: '/alumnus/events/$id',
+          params: { id: item.sqid },
         })
       }
     >
@@ -296,7 +296,6 @@ function EngagementCard({
   item: FeedItemData
   created_at: string
 }) {
-  const router = useRouter()
   const actionLabel = getActionLabel(item.action, item)
   const color = item.type === 'internship_engagement' ? 'maroon' : 'gold'
   const colorClass =
@@ -305,15 +304,7 @@ function EngagementCard({
       : { bar: 'bg-gold', avatar: 'bg-gold-soft text-gold-on-soft' }
 
   return (
-    <div
-      className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
-      onClick={() =>
-        router.navigate({
-          to: '/feed/details/$sqid/$type',
-          params: { sqid: item.sqid, type: item.type },
-        })
-      }
-    >
+    <div className="bg-surface rounded-md border border-line shadow-xs p-6">
       <div className="flex items-center justify-between mb-4">
         <div>
           <span className="text-overline text-ink-faint">{actionLabel}</span>
@@ -352,9 +343,6 @@ function EngagementCard({
             {item.alumni?.full_name || 'Unknown'}
           </span>
         </div>
-        <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          View →
-        </span>
       </div>
     </div>
   )

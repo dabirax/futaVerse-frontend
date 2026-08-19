@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   Building2,
   Calendar,
@@ -27,9 +27,11 @@ import {
   useInternshipEngagements,
 } from '@/hooks/useInternships'
 import { useResumes } from '@/hooks/useResumes'
+import { useToast } from '@/hooks/use-toast'
 import { getErrorMessage } from '@/lib/utils'
 import { CardSkeleton2 } from '@/components/CardSkeletons'
 import { BackButton2 } from '@/components/BackButtons'
+import ScrollToApply from '@/components/ScrollToApply'
 
 export default function InternshipDetail() {
   const { sqid } = studentInternshipDetailsRoute.useParams()
@@ -41,10 +43,12 @@ export default function InternshipDetail() {
   } = useInternshipEngagements()
   const createApplication = useCreateInternshipApplication()
   const { data: resumesData, isLoading: resumesLoading } = useResumes()
+  const { toast } = useToast()
 
   const [resumeSqid, setResumeSqid] = useState('')
   const [coverLetter, setCoverLetter] = useState('')
   const [applyError, setApplyError] = useState<string | null>(null)
+  const applyRef = useRef<HTMLButtonElement>(null)
 
   const resumes = resumesData?.results ?? []
 
@@ -63,6 +67,12 @@ export default function InternshipDetail() {
         cover_letter: coverLetter || undefined,
       },
       {
+        onSuccess: () => {
+          toast({
+            title: 'Application submitted',
+            description: 'The alumnus will review it shortly.',
+          })
+        },
         onError: (err: any) => {
           setApplyError(
             getErrorMessage(err, 'Something went wrong. Please try again.'),
@@ -257,92 +267,91 @@ export default function InternshipDetail() {
 
       {/* Application form */}
       {!isEngaged && hasSlots && (
-        <section className="rounded-md border border-line bg-surface p-6 space-y-4">
-          <h2 className="text-overline text-maroon">
-            Apply for this internship
-          </h2>
+        <>
+          <section
+            className="rounded-md border border-line bg-surface p-6 space-y-4"
+          >
+            <h2 className="text-overline text-maroon">
+              Apply for this internship
+            </h2>
 
-          <div className="space-y-2">
-            <Label className="flex items-center gap-2 text-body">
-              <FileText className="h-4 w-4 text-ink-faint" />
-              Resume <span className="text-destructive">*</span>
-            </Label>
-            {resumesLoading ? (
-              <p className="text-body-sm text-ink-soft">
-                Loading your resumes...
-              </p>
-            ) : resumes.length === 0 ? (
-              <p className="text-body-sm text-ink-soft">
-                You haven't uploaded any resumes yet.{' '}
-                <Link
-                  to="/student/settings"
-                  className="text-indigo underline underline-offset-2"
-                >
-                  Upload one in Settings
-                </Link>{' '}
-                to apply.
-              </p>
-            ) : (
-              <Select
-                value={resumeSqid}
-                onValueChange={(value) => {
-                  setResumeSqid(value)
-                  setApplyError(null)
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a resume" />
-                </SelectTrigger>
-                <SelectContent>
-                  {resumes.map((resume) => (
-                    <SelectItem key={resume.sqid} value={resume.sqid}>
-                      {resume.filename}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
-
-          {info.require_cover_letter && (
             <div className="space-y-2">
-              <Label className="text-body">
-                Cover Letter <span className="text-destructive">*</span>
+              <Label className="flex items-center gap-2 text-body">
+                <FileText className="h-4 w-4 text-ink-faint" />
+                Resume <span className="text-destructive">*</span>
               </Label>
-              <Textarea
-                placeholder="Tell the alumnus why you're a great fit..."
-                value={coverLetter}
-                onChange={(e) => setCoverLetter(e.target.value)}
-                rows={5}
-              />
+              {resumesLoading ? (
+                <p className="text-body-sm text-ink-soft">
+                  Loading your resumes...
+                </p>
+              ) : resumes.length === 0 ? (
+                <p className="text-body-sm text-ink-soft">
+                  You haven't uploaded any resumes yet.{' '}
+                  <Link
+                    to="/student/settings#resume"
+                    className="text-indigo underline underline-offset-2"
+                  >
+                    Upload one in Settings
+                  </Link>{' '}
+                  to apply.
+                </p>
+              ) : (
+                <Select
+                  value={resumeSqid}
+                  onValueChange={(value) => {
+                    setResumeSqid(value)
+                    setApplyError(null)
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a resume" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {resumes.map((resume) => (
+                      <SelectItem key={resume.sqid} value={resume.sqid}>
+                        {resume.filename}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
-          )}
 
-          {applyError && (
-            <p className="text-body-sm text-destructive font-medium">
-              {applyError}
-            </p>
-          )}
+            {info.require_cover_letter && (
+              <div className="space-y-2">
+                <Label className="text-body">
+                  Cover Letter <span className="text-destructive">*</span>
+                </Label>
+                <Textarea
+                  placeholder="Tell the alumnus why you're a great fit..."
+                  value={coverLetter}
+                  onChange={(e) => setCoverLetter(e.target.value)}
+                  rows={5}
+                />
+              </div>
+            )}
 
-          <div className="flex flex-col gap-3">
-            <Button
-              className="w-full"
-              disabled={
-                createApplication.isPending ||
-                resumesLoading ||
-                resumes.length === 0
-              }
-              onClick={handleApply}
-            >
-              {createApplication.isPending ? 'Applying...' : 'Apply Now'}
-            </Button>
-            <p className="text-center text-body-sm text-ink-soft">
-              {createApplication.isSuccess
-                ? 'Application submitted! The alumnus will review it shortly.'
-                : 'Your application will be sent to the alumnus for review.'}
-            </p>
-          </div>
-        </section>
+            {applyError && (
+              <p className="text-body-sm text-destructive font-medium">
+                {applyError}
+              </p>
+            )}
+
+              <Button
+                ref={applyRef}
+                className="w-full"
+                disabled={
+                  createApplication.isPending ||
+                  resumesLoading ||
+                  resumes.length === 0
+                }
+                onClick={handleApply}
+              >
+                {createApplication.isPending ? 'Applying...' : 'Apply Now'}
+              </Button>
+          </section>
+          <ScrollToApply targetRef={applyRef} />
+        </>
       )}
 
       {/* No slots available */}

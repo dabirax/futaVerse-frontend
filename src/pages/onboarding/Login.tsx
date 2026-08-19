@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { AlertCircle, Eye, EyeOff, WifiOff } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BackButton, BackButtonWithLogo } from '../../components/BackButtons'
 import { LeftContainer } from './components/LeftContainer'
 import { useAuth } from '@/hooks/auth-context'
@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { api } from '@/lib/api'
+import { showSessionExpiredToast } from '@/lib/session-expiry'
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -43,6 +44,13 @@ const LoginPage = () => {
 
   const router = useRouter()
   const { login } = useAuth()
+
+  useEffect(() => {
+    if (sessionStorage.getItem('session_expired')) {
+      sessionStorage.removeItem('session_expired')
+      showSessionExpiredToast()
+    }
+  }, [])
 
   const loginMutation = useMutation({
     mutationFn: async (data: z.infer<typeof loginSchema>) => {

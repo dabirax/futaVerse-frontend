@@ -34,7 +34,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Badge } from '@/components/ui/badge'
-import { cn, getErrorMessage  } from '@/lib/utils'
+import { cn, getErrorMessage } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 import {
   useDeleteInternship,

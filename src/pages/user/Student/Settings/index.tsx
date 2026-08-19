@@ -103,6 +103,13 @@ const StudentSettings = () => {
     }
   }, [profile?.profile_img_url, selectedFile])
 
+  useEffect(() => {
+    const id = window.location.hash.slice(1)
+    if (!id) return
+    const el = document.getElementById(id)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [])
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null
     setSelectedFile(file)
@@ -135,31 +142,29 @@ const StudentSettings = () => {
   const uploadResume = useUploadResume()
   const deleteResume = useDeleteResume()
   const [selectedResume, setSelectedResume] = useState<File | null>(null)
-  const [resumeStatus, setResumeStatus] = useState<{
-    type: 'error' | 'success'
-    message: string
-  } | null>(null)
   const resumeInputRef = useRef<HTMLInputElement>(null)
   const resumes: Array<Resume> = profile?.resumes ?? []
 
   const handleResumeFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedResume(e.target.files?.[0] ?? null)
-    setResumeStatus(null)
   }
 
   const handleResumeUpload = () => {
     if (!selectedResume) return
-    setResumeStatus(null)
     uploadResume.mutate(selectedResume, {
       onSuccess: () => {
         setSelectedResume(null)
         if (resumeInputRef.current) resumeInputRef.current.value = ''
-        setResumeStatus({ type: 'success', message: 'Resume uploaded.' })
+        toast({
+          title: 'Resume uploaded',
+          description: 'Your resume has been uploaded successfully.',
+        })
       },
       onError: (err: any) => {
-        setResumeStatus({
-          type: 'error',
-          message: err?.message ?? 'Upload failed. Please try again.',
+        toast({
+          title: 'Upload failed',
+          description: err?.message ?? 'Please try again.',
+          variant: 'destructive',
         })
       },
     })
@@ -922,6 +927,7 @@ const StudentSettings = () => {
 
           <div className="flex items-center gap-3">
             <Button
+              id="resume"
               onClick={handleResumeUpload}
               disabled={!selectedResume || uploadResume.isPending}
               className="gap-2"
@@ -946,14 +952,6 @@ const StudentSettings = () => {
               </Button>
             )}
           </div>
-
-          {resumeStatus && (
-            <p
-              className={`text-sm font-medium ${resumeStatus.type === 'success' ? 'text-green-600' : 'text-red-500'}`}
-            >
-              {resumeStatus.message}
-            </p>
-          )}
         </CardContent>
       </Card>
     </div>

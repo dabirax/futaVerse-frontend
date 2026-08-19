@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Clock, MapPin, MessageSquare, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -13,8 +13,10 @@ import {
   useMentorshipEngagements,
 } from '@/hooks/useMentorships'
 import { CardSkeleton2 } from '@/components/CardSkeletons'
+import { useToast } from '@/hooks/use-toast'
 import { getErrorMessage } from '@/lib/utils'
 import { BackButton2 } from '@/components/BackButtons'
+import ScrollToApply from '@/components/ScrollToApply'
 
 export default function MentorshipDetails() {
   const { sqid } = studentMentorshipDetailRoute.useParams()
@@ -25,9 +27,11 @@ export default function MentorshipDetails() {
     isError: engagementsError,
   } = useMentorshipEngagements()
   const createApplication = useCreateMentorshipApplication()
+  const { toast } = useToast()
 
   const [coverLetter, setCoverLetter] = useState('')
   const [applyError, setApplyError] = useState<string | null>(null)
+  const applyRef = useRef<HTMLButtonElement>(null)
 
   const handleApply = () => {
     setApplyError(null)
@@ -40,6 +44,12 @@ export default function MentorshipDetails() {
     createApplication.mutate(
       { mentorship: sqid, cover_letter: coverLetter },
       {
+        onSuccess: () => {
+          toast({
+            title: 'Application submitted',
+            description: 'The alumnus will review it shortly.',
+          })
+        },
         onError: (err: any) => {
           setApplyError(
             getErrorMessage(err, 'Something went wrong. Please try again.'),
@@ -175,46 +185,43 @@ export default function MentorshipDetails() {
       </Card>
 
       {!isEngaged && hasSlots && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Apply for this mentorship</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>
-                Cover Letter <span className="text-red-500">*</span>
-              </Label>
-              <Textarea
-                placeholder="Tell the alumnus why you're interested..."
-                value={coverLetter}
-                onChange={(e) => {
-                  setCoverLetter(e.target.value)
-                  setApplyError(null)
-                }}
-                rows={5}
-              />
-            </div>
+        <>
+          <Card>
+            <CardHeader>
+              <CardTitle>Apply for this mentorship</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>
+                  Cover Letter <span className="text-red-500">*</span>
+                </Label>
+                <Textarea
+                  placeholder="Tell the alumnus why you're interested..."
+                  value={coverLetter}
+                  onChange={(e) => {
+                    setCoverLetter(e.target.value)
+                    setApplyError(null)
+                  }}
+                  rows={5}
+                />
+              </div>
 
-            {applyError && (
-              <p className="text-sm text-red-500 font-medium">{applyError}</p>
-            )}
+              {applyError && (
+                <p className="text-sm text-red-500 font-medium">{applyError}</p>
+              )}
 
-            <div className="flex flex-col gap-3">
               <Button
+                ref={applyRef}
                 className="w-full"
                 disabled={createApplication.isPending}
                 onClick={handleApply}
               >
                 {createApplication.isPending ? 'Applying...' : 'Apply Now'}
               </Button>
-              <p className="text-center text-sm text-muted-foreground">
-                {createApplication.isSuccess
-                  ? 'Application submitted! The alumnus will review it shortly.'
-                  : 'Your application will be sent to the alumnus for review.'}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+          <ScrollToApply targetRef={applyRef} />
+        </>
       )}
 
       {!isEngaged && !hasSlots && (
