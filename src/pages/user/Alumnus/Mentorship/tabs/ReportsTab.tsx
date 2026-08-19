@@ -1,9 +1,14 @@
+import { FileText } from 'lucide-react'
+
+import { UnderDevelopment } from '@/components/under-development'
+
 export default function ReportsTab() {
   return (
-    <div className="space-y-4">
-      <div className="text-center py-12 text-muted-foreground">
-        Reports feature coming soon.
-      </div>
-    </div>
+    <UnderDevelopment
+      variant="embedded"
+      title="Reports"
+      description="Mentorship session reports and outcomes will live here — coming soon."
+      icon={FileText}
+    />
   )
 }

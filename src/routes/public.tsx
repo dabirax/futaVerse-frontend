@@ -8,6 +8,7 @@ import AlumnusBasic from '@/pages/onboarding/Alumnus/pages/01-AlumnusBasic'
 import AlumnusProfessional from '@/pages/onboarding/Alumnus/pages/03-AlumnusProfessional'
 import AlumnusSchool from '@/pages/onboarding/Alumnus/pages/02-AlumnusSchool'
 import StudentBasic from '@/pages/onboarding/Student/pages/01-StudentBasic'
+import LecturerBasic from '@/pages/onboarding/Lecturer/LecturerBasic'
 
 import SignUpSuccess from '@/pages/onboarding/SignUpSuccess'
 import StudentSchool from '@/pages/onboarding/Student/pages/02-StudentSchool'
@@ -23,7 +24,6 @@ export const publicRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: 'public',
   component: () => <Outlet />,
-  notFoundComponent: () => <div>Page Not Found</div>,
 })
 
 export const landingRoute = createRoute({
@@ -83,7 +83,7 @@ export const studentProfessionalRoute = createRoute({
 export const lecturerBasicRoute = createRoute({
   getParentRoute: () => publicRoute,
   path: '/signup/lecturerBasic',
-  component: () => <div>Lecturer Basic</div>,
+  component: LecturerBasic,
 })
 
 export const signupOTPRoute = createRoute({

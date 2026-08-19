@@ -28,7 +28,6 @@ export const studentRoute = createRoute({
   id: 'student',
   component: StudentLayout,
   beforeLoad: requireRole(['student']),
-  notFoundComponent: () => <div>Page Not Found</div>,
 })
 
 /* Student Children */
@@ -64,14 +63,12 @@ export const studentMentorshipRoute = createRoute({
   getParentRoute: () => studentRoute,
   path: '/student/mentorships',
   component: StudentMentorship,
-  notFoundComponent: () => <div>Page Not Found</div>,
 })
 
 export const studentMentorshipDetailRoute = createRoute({
   getParentRoute: () => studentRoute,
   path: '/student/mentorships/$sqid',
   component: MentorshipDetails,
-  notFoundComponent: () => <div>Page Not Found</div>,
 })
 
 // Events Routes

@@ -268,9 +268,7 @@ export default function InternshipDetail() {
       {/* Application form */}
       {!isEngaged && hasSlots && (
         <>
-          <section
-            className="rounded-md border border-line bg-surface p-6 space-y-4"
-          >
+          <section className="rounded-md border border-line bg-surface p-6 space-y-4">
             <h2 className="text-overline text-maroon">
               Apply for this internship
             </h2>
@@ -337,18 +335,18 @@ export default function InternshipDetail() {
               </p>
             )}
 
-              <Button
-                ref={applyRef}
-                className="w-full"
-                disabled={
-                  createApplication.isPending ||
-                  resumesLoading ||
-                  resumes.length === 0
-                }
-                onClick={handleApply}
-              >
-                {createApplication.isPending ? 'Applying...' : 'Apply Now'}
-              </Button>
+            <Button
+              ref={applyRef}
+              className="w-full"
+              disabled={
+                createApplication.isPending ||
+                resumesLoading ||
+                resumes.length === 0
+              }
+              onClick={handleApply}
+            >
+              {createApplication.isPending ? 'Applying...' : 'Apply Now'}
+            </Button>
           </section>
           <ScrollToApply targetRef={applyRef} />
         </>

@@ -7,7 +7,7 @@ export default function ReportsTab() {
     <UnderDevelopment
       variant="embedded"
       title="Reports"
-      description="Submit and track your internship reports here — coming soon."
+      description="Submit and track your mentorship reports here — coming soon."
       icon={FileText}
     />
   )

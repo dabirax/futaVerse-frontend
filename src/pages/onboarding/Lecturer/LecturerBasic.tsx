@@ -1,8 +1,15 @@
+import { GraduationCap } from 'lucide-react'
+
+import { UnderDevelopment } from '@/components/under-development'
+
 const LecturerBasic = () => {
   return (
-    <div className="w-screen h-screen flex justify-center items-center text-5xl">
-      Work In Progress
-    </div>
+    <UnderDevelopment
+      variant="fullscreen"
+      title="Lecturer onboarding"
+      description="We're putting the finishing touches on lecturer accounts. Check back soon to join FUTAVerse as a lecturer."
+      icon={GraduationCap}
+    />
   )
 }
 

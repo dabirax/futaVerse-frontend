@@ -41,6 +41,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
+import { UnderDevelopment } from '@/components/under-development'
 import { paidTicketSchema } from '@/components/user/events/TicketsSection'
 import { useAddEventTicket, useEvent, useHostedEvents } from '@/hooks/useEvents'
 
@@ -458,9 +459,12 @@ export default function EventTicketsManager({
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-10 text-muted-foreground">
-                    Attendee list coming soon.
-                  </div>
+                  <UnderDevelopment
+                    variant="embedded"
+                    title="Attendee list"
+                    description="A list of everyone registered for this event will appear here — coming soon."
+                    icon={Users}
+                  />
                 </CardContent>
               </Card>
             </TabsContent>

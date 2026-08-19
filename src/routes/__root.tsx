@@ -1,5 +1,6 @@
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import type { AuthContextType } from '../hooks/auth-context'
+import { NotFound } from '@/components/not-found'
 import { Toaster } from '@/components/ui/toaster'
 
 // Root route with context
@@ -12,10 +13,5 @@ export const rootRoute = createRootRouteWithContext<{
       <Toaster />
     </>
   ),
-  notFoundComponent: () => (
-    <div className="w-full h-screen flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold">404 Not Found</h1>
-      <p className="text-gray-500 mt-2">This page wandered off.</p>
-    </div>
-  ),
+  notFoundComponent: NotFound,
 })

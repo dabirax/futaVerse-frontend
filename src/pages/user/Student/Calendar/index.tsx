@@ -1,5 +1,15 @@
+import { CalendarDays } from 'lucide-react'
+
+import { UnderDevelopment } from '@/components/under-development'
+
 const StudentCalendar = () => {
-  return <div>StudentCalendar</div>
+  return (
+    <UnderDevelopment
+      title="Calendar"
+      description="Events, deadlines, and mentorship sessions — all in one calendar. Coming soon."
+      icon={CalendarDays}
+    />
+  )
 }
 
 export default StudentCalendar

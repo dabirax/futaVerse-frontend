@@ -1,92 +1,49 @@
 import { useState } from 'react'
 import MyMentorshipsTab from './tabs/MyMentorshipsTab'
 import OffersTab from './tabs/OffersTab'
-import MyApplicationsTab from './tabs/ApplicationsTab'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  useMentorshipApplications,
-  useMentorshipEngagements,
-  useMentorshipOffers,
-} from '@/hooks/useMentorships'
-import { Card, CardContent } from '@/components/ui/card'
+import ApplicationsTab from './tabs/ApplicationsTab'
+import ReportsTab from './tabs/ReportsTab'
+
+const tabs = [
+  { value: 'my-mentorships', label: 'My Mentorships' },
+  { value: 'offers', label: 'Offers' },
+  { value: 'applications', label: 'Applications' },
+  { value: 'reports', label: 'Reports' },
+]
 
 export default function StudentMentorship() {
   const [activeTab, setActiveTab] = useState('my-mentorships')
-  const { isLoading: loadingMentorships } = useMentorshipEngagements()
-  const { isLoading: loadingOffers } = useMentorshipOffers()
-  const { isLoading: loadingMyApplications } = useMentorshipApplications()
-
-  const CardSkeleton = () => (
-    <Card>
-      <CardContent className="animate-pulse space-y-3">
-        <div className="h-4 rounded bg-muted/40 w-3/4" />
-        <div className="h-3 rounded bg-muted/30 w-full" />
-        <div className="h-3 rounded bg-muted/30 w-5/6" />
-        <div className="flex gap-2 pt-4">
-          <div className="h-8 rounded bg-muted/30 flex-1" />
-          <div className="h-8 rounded bg-muted/30 flex-1" />
-        </div>
-      </CardContent>
-    </Card>
-  )
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-foreground">Mentorships</h1>
+      <h1 className="font-display text-xl text-ink">Mentorships</h1>
+
+      {/* Underline-style tabs */}
+      <div className="border-b border-line">
+        <div className="flex gap-0 overflow-x-auto">
+          {tabs.map((tab) => (
+            <button
+              key={tab.value}
+              onClick={() => setActiveTab(tab.value)}
+              className={`whitespace-nowrap px-4 py-2.5 text-body font-medium transition-colors border-b-2 -mb-px ${
+                activeTab === tab.value
+                  ? 'border-indigo text-indigo'
+                  : 'border-transparent text-ink-soft hover:text-ink hover:border-line-strong'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="my-mentorships">My Mentorships</TabsTrigger>
-          <TabsTrigger value="offers">Offers</TabsTrigger>
-          <TabsTrigger value="applications">Applications</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-        </TabsList>
-
-        {/* AVAILABLE MENTORSHIPS TAB */}
-        <TabsContent value="my-mentorships" className="space-y-4">
-          {loadingMentorships ? (
-            <div className="grid gap-4 md:grid-cols-2">
-              <CardSkeleton />
-              <CardSkeleton />
-            </div>
-          ) : (
-            <MyMentorshipsTab />
-          )}
-        </TabsContent>
-
-        {/* OFFERS TAB */}
-        <TabsContent value="offers" className="space-y-4">
-          {loadingOffers ? (
-            <div className="space-y-3">
-              <CardSkeleton />
-              <CardSkeleton />
-            </div>
-          ) : (
-            <OffersTab />
-          )}
-        </TabsContent>
-
-        {/* MY APPLICATIONS TAB */}
-        <TabsContent value="applications" className="space-y-4">
-          {loadingMyApplications ? (
-            <div className="space-y-3">
-              <CardSkeleton />
-              <CardSkeleton />
-            </div>
-          ) : (
-            <MyApplicationsTab />
-          )}
-        </TabsContent>
-
-        {/* REPORTS TAB */}
-        <TabsContent value="reports" className="space-y-4">
-          <p className="text-center py-12 text-muted-foreground">
-            No reports yet
-          </p>
-        </TabsContent>
-      </Tabs>
+      {/* Tab content */}
+      <div>
+        {activeTab === 'my-mentorships' && <MyMentorshipsTab />}
+        {activeTab === 'offers' && <OffersTab />}
+        {activeTab === 'applications' && <ApplicationsTab />}
+        {activeTab === 'reports' && <ReportsTab />}
+      </div>
     </div>
   )
 }
