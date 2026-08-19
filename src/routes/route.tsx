@@ -61,6 +61,7 @@ import {
   studentTicketsRoute,
   studentUserPostsRoute,
 } from './user-student'
+import { feedDetailsRoute } from './feed-details'
 
 // Build full route tree
 export const routeTree = rootRoute.addChildren([
@@ -123,4 +124,5 @@ export const routeTree = rootRoute.addChildren([
     studentPostsRoute,
     studentUserPostsRoute,
   ]),
+  feedDetailsRoute,
 ])

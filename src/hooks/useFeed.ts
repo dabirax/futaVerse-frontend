@@ -4,6 +4,8 @@ import type { CursorPaginatedResponse } from '@/services/feed'
 import { FeedService } from '@/services/feed'
 import { mockEvents } from '@/data/mockEvents'
 
+const getAction = (eventType: string) => eventType.split('_')[1]
+
 const buildMockFeedItems = (): Array<FeedResponseItem> =>
   mockEvents.map((event) => ({
     sqid: event.sqid,
@@ -11,6 +13,7 @@ const buildMockFeedItems = (): Array<FeedResponseItem> =>
     data: {
       sqid: event.sqid,
       type: 'event',
+      action: getAction('event_created'),
       title: event.title,
       category: event.category,
       date: event.date,

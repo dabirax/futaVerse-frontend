@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { useFeed } from '@/hooks/useFeed'
 import { useMe } from '@/hooks/useMe'
 import { useMentorships } from '@/hooks/useMentorships'
+import { getActionLabel } from '@/components/user/feed/registry'
 import { FeedCardSkeleton } from '@/components/CardSkeletons'
 
 type FeedFilter = 'all' | 'opportunities' | 'mentorship' | 'events' | 'posts'
@@ -50,34 +51,34 @@ function InternshipCard({
   created_at: string
 }) {
   const router = useRouter()
+  const actionLabel = getActionLabel(item.action, item)
 
   return (
     <div
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
       onClick={() =>
-        router.navigate({ to: `/alumnus/internships/${item.sqid}` })
+        router.navigate({
+          to: '/feed/details/$sqid/$type',
+          params: { sqid: item.sqid, type: item.type },
+        })
       }
     >
-      {/* Category kicker */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <span className="text-overline text-ink-faint">Internship</span>
+          <span className="text-overline text-ink-faint">{actionLabel}</span>
           <div className="mt-1.5 h-px bg-maroon w-12" />
         </div>
         <span className="text-meta text-ink-faint">{timeAgo(created_at)}</span>
       </div>
 
-      {/* Title */}
       <h3 className="font-display text-[1.1875rem] text-ink leading-snug mb-1.5">
         {item.title}
       </h3>
 
-      {/* Description */}
       <p className="text-sm text-ink-soft mb-3">
         {item.company || 'Unknown Company'}
       </p>
 
-      {/* Metadata row */}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-meta text-ink-faint mb-4">
         <span>
           {item.work_mode || 'Flexible'} • {item.engagement_type || 'Role'}
@@ -94,7 +95,6 @@ function InternshipCard({
         )}
       </div>
 
-      {/* Footer */}
       <div className="flex items-center justify-between pt-4 border-t border-line">
         <div className="flex items-center gap-2.5">
           <Avatar className="h-7 w-7">
@@ -131,36 +131,36 @@ function MentorshipCard({
   created_at: string
 }) {
   const router = useRouter()
+  const actionLabel = getActionLabel(item.action, item)
 
   return (
     <div
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
       onClick={() =>
-        router.navigate({ to: `/alumnus/mentorships/${item.sqid}` })
+        router.navigate({
+          to: '/feed/details/$sqid/$type',
+          params: { sqid: item.sqid, type: item.type },
+        })
       }
     >
-      {/* Category kicker */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <span className="text-overline text-ink-faint">Mentorship</span>
+          <span className="text-overline text-ink-faint">{actionLabel}</span>
           <div className="mt-1.5 h-px bg-gold w-12" />
         </div>
         <span className="text-meta text-ink-faint">{timeAgo(created_at)}</span>
       </div>
 
-      {/* Title */}
       <h3 className="font-display text-[1.1875rem] text-ink leading-snug mb-1.5">
         {item.title}
       </h3>
 
-      {/* Description */}
       <p className="text-sm text-ink-soft line-clamp-2 mb-3">
         {item.alumni
           ? `Hosted by ${item.alumni.full_name}`
           : 'A new mentorship opportunity.'}
       </p>
 
-      {/* Metadata row */}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-meta text-ink-faint mb-4">
         {item.category && <span>{item.category}</span>}
         {item.work_mode && <span>{item.work_mode}</span>}
@@ -178,7 +178,6 @@ function MentorshipCard({
         )}
       </div>
 
-      {/* Footer */}
       <div className="flex items-center justify-between pt-4 border-t border-line">
         <div className="flex items-center gap-2.5">
           <Avatar className="h-7 w-7">
@@ -215,6 +214,7 @@ function EventCard({
   created_at: string
 }) {
   const router = useRouter()
+  const actionLabel = getActionLabel(item.action, item)
   const formattedDate = item.date
     ? format(new Date(item.date), 'EEE, d MMM yyyy')
     : ''
@@ -222,23 +222,25 @@ function EventCard({
   return (
     <div
       className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
-      onClick={() => router.navigate({ to: `/alumnus/events/${item.sqid}` })}
+      onClick={() =>
+        router.navigate({
+          to: '/feed/details/$sqid/$type',
+          params: { sqid: item.sqid, type: item.type },
+        })
+      }
     >
-      {/* Category kicker */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <span className="text-overline text-ink-faint">Event</span>
+          <span className="text-overline text-ink-faint">{actionLabel}</span>
           <div className="mt-1.5 h-px bg-green w-12" />
         </div>
         <span className="text-meta text-ink-faint">{timeAgo(created_at)}</span>
       </div>
 
-      {/* Title */}
       <h3 className="font-display text-[1.1875rem] text-ink leading-snug mb-1.5">
         {item.title}
       </h3>
 
-      {/* Metadata row */}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-meta text-ink-faint mb-4">
         {formattedDate && (
           <span className="flex items-center gap-1">
@@ -259,7 +261,6 @@ function EventCard({
         )}
       </div>
 
-      {/* Footer */}
       <div className="flex items-center justify-between pt-4 border-t border-line">
         <div className="flex items-center gap-2.5">
           <Avatar className="h-7 w-7">
@@ -273,6 +274,77 @@ function EventCard({
                   .toUpperCase()
               ) : (
                 <Calendar className="h-3 w-3" />
+              )}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-caption text-ink-soft">
+            {item.alumni?.full_name || 'Unknown'}
+          </span>
+        </div>
+        <span className="text-caption text-indigo font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          View →
+        </span>
+      </div>
+    </div>
+  )
+}
+
+function EngagementCard({
+  item,
+  created_at,
+}: {
+  item: FeedItemData
+  created_at: string
+}) {
+  const router = useRouter()
+  const actionLabel = getActionLabel(item.action, item)
+  const color = item.type === 'internship_engagement' ? 'maroon' : 'gold'
+  const colorClass =
+    color === 'maroon'
+      ? { bar: 'bg-maroon', avatar: 'bg-maroon-soft text-maroon-on-soft' }
+      : { bar: 'bg-gold', avatar: 'bg-gold-soft text-gold-on-soft' }
+
+  return (
+    <div
+      className="group bg-surface rounded-md border border-line shadow-xs p-6 cursor-pointer transition-[box-shadow,border-color] duration-200 ease-out hover:shadow-sm hover:border-line-strong"
+      onClick={() =>
+        router.navigate({
+          to: '/feed/details/$sqid/$type',
+          params: { sqid: item.sqid, type: item.type },
+        })
+      }
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <span className="text-overline text-ink-faint">{actionLabel}</span>
+          <div className={`mt-1.5 h-px ${colorClass.bar} w-12`} />
+        </div>
+        <span className="text-meta text-ink-faint">{timeAgo(created_at)}</span>
+      </div>
+
+      <h3 className="font-display text-[1.1875rem] text-ink leading-snug mb-1.5">
+        {item.title}
+      </h3>
+
+      {item.company && (
+        <p className="text-sm text-ink-soft mb-3">at {item.company}</p>
+      )}
+
+      <div className="flex items-center justify-between pt-4 border-t border-line">
+        <div className="flex items-center gap-2.5">
+          <Avatar className="h-7 w-7">
+            <AvatarFallback
+              className={`${colorClass.avatar} text-[10px] font-semibold rounded-full`}
+            >
+              {item.alumni ? (
+                item.alumni.full_name
+                  .split(' ')
+                  .map((w) => w[0])
+                  .join('')
+                  .slice(0, 2)
+                  .toUpperCase()
+              ) : (
+                <Users className="h-3 w-3" />
               )}
             </AvatarFallback>
           </Avatar>
@@ -588,7 +660,7 @@ export default function AlumnusFeed() {
             </div>
           ) : (
             filteredItems.map((item) => {
-              if (item.event_type.includes('internship'))
+              if (item.data.type === 'internship')
                 return (
                   <InternshipCard
                     key={item.sqid}
@@ -596,7 +668,7 @@ export default function AlumnusFeed() {
                     created_at={item.created_at}
                   />
                 )
-              if (item.event_type.includes('mentorship'))
+              if (item.data.type === 'mentorship')
                 return (
                   <MentorshipCard
                     key={item.sqid}
@@ -604,9 +676,20 @@ export default function AlumnusFeed() {
                     created_at={item.created_at}
                   />
                 )
-              if (item.event_type.includes('event'))
+              if (item.data.type === 'event')
                 return (
                   <EventCard
+                    key={item.sqid}
+                    item={item.data}
+                    created_at={item.created_at}
+                  />
+                )
+              if (
+                item.data.type === 'internship_engagement' ||
+                item.data.type === 'mentorship_engagement'
+              )
+                return (
+                  <EngagementCard
                     key={item.sqid}
                     item={item.data}
                     created_at={item.created_at}

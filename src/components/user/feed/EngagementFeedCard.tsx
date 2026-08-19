@@ -1,13 +1,32 @@
 import { useRouter } from '@tanstack/react-router'
-import { Calendar, GraduationCap, Users } from 'lucide-react'
-import { format } from 'date-fns'
+import { UserCheck } from 'lucide-react'
 import type { FeedItemData } from '@/types/feed'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { getActionLabel } from './registry'
 
-export default function MentorshipFeedCard({ item }: { item: FeedItemData }) {
+interface EngagementFeedCardProps {
+  item: FeedItemData
+}
+
+const colorClasses = {
+  maroon: {
+    bar: 'bg-maroon',
+    avatar: 'bg-maroon-soft text-maroon-on-soft',
+  },
+  gold: {
+    bar: 'bg-gold',
+    avatar: 'bg-gold-soft text-gold-on-soft',
+  },
+} as const
+
+type ColorKey = keyof typeof colorClasses
+
+export default function EngagementFeedCard({ item }: EngagementFeedCardProps) {
   const router = useRouter()
   const actionLabel = getActionLabel(item.action, item)
+  const colorKey: ColorKey =
+    item.type === 'internship_engagement' ? 'maroon' : 'gold'
+  const colorClass = colorClasses[colorKey]
 
   return (
     <div
@@ -21,40 +40,23 @@ export default function MentorshipFeedCard({ item }: { item: FeedItemData }) {
     >
       <div className="mb-4">
         <span className="text-overline text-ink-faint">{actionLabel}</span>
-        <div className="mt-1.5 h-px bg-gold w-12" />
+        <div className={`mt-1.5 h-px ${colorClass.bar} w-12`} />
       </div>
 
       <h3 className="font-display text-[1.1875rem] text-ink leading-snug mb-1.5">
         {item.title}
       </h3>
 
-      <p className="text-sm text-ink-soft line-clamp-2 mb-3">
-        {item.alumni
-          ? `Hosted by ${item.alumni.full_name}`
-          : 'A new mentorship opportunity.'}
-      </p>
-
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-meta text-ink-faint mb-4">
-        {item.category && <span>{item.category}</span>}
-        {item.work_mode && <span>{item.work_mode}</span>}
-        {item.start_date && (
-          <span className="flex items-center gap-1">
-            <Calendar className="h-3 w-3" />
-            {format(new Date(item.start_date), 'MMM d, yyyy')}
-          </span>
-        )}
-        {item.remaining_slots !== undefined && (
-          <span className="flex items-center gap-1">
-            <Users className="h-3 w-3" />
-            {item.remaining_slots} of {item.available_slots} slots
-          </span>
-        )}
-      </div>
+      {item.company && (
+        <p className="text-sm text-ink-soft mb-3">at {item.company}</p>
+      )}
 
       <div className="flex items-center justify-between pt-4 border-t border-line">
         <div className="flex items-center gap-2.5">
           <Avatar className="h-7 w-7">
-            <AvatarFallback className="bg-gold-soft text-gold-on-soft text-[10px] font-semibold rounded-full">
+            <AvatarFallback
+              className={`${colorClass.avatar} text-[10px] font-semibold rounded-full`}
+            >
               {item.alumni ? (
                 item.alumni.full_name
                   .split(' ')
@@ -63,7 +65,7 @@ export default function MentorshipFeedCard({ item }: { item: FeedItemData }) {
                   .slice(0, 2)
                   .toUpperCase()
               ) : (
-                <GraduationCap className="h-3 w-3" />
+                <UserCheck className="h-3 w-3" />
               )}
             </AvatarFallback>
           </Avatar>
