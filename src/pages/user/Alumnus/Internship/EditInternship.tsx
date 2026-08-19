@@ -34,7 +34,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
+import { cn, getErrorMessage  } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 import {
   useDeleteInternship,
@@ -86,7 +86,7 @@ export default function EditInternship() {
   const { toast } = useToast()
   const [skillInput, setSkillInput] = useState('')
 
-  const { data: currentData, isLoading, isError } = useInternship(sqid)
+  const { data: currentData, isLoading, isError, error } = useInternship(sqid)
 
   const {
     mutate,
@@ -245,7 +245,7 @@ export default function EditInternship() {
       onError: (err: any) => {
         toast({
           title: 'Error',
-          description: err?.response?.data?.message || 'Delete failed.',
+          description: getErrorMessage(err, 'Delete failed.'),
           variant: 'destructive',
         })
       },
@@ -270,7 +270,7 @@ export default function EditInternship() {
       )}
       {isError && (
         <div className="rounded-md border border-destructive bg-destructive-soft p-4 text-body text-destructive">
-          Error loading internship details.
+          {getErrorMessage(error, 'Error loading internship details.')}
         </div>
       )}
 

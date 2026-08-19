@@ -40,7 +40,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
+import { cn, getErrorMessage } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 import { useCreateEvent } from '@/hooks/useEvents'
 import TicketsSection from '@/components/user/events/TicketsSection'
@@ -93,13 +93,6 @@ export default function CreateEvent() {
     form.handleSubmit((data) => {
       onSubmit({ ...data, is_published: !isDraft })
     })()
-  }
-
-  const getErrorMessage = (error: unknown) => {
-    if (error instanceof Error) {
-      return error.message
-    }
-    return 'Unexpected error occurred.'
   }
 
   const form = useForm<FormData>({
@@ -202,7 +195,7 @@ export default function CreateEvent() {
         }
         toast({
           title: 'Error',
-          description: getErrorMessage(error),
+          description: getErrorMessage(error, 'Failed to create event.'),
           variant: 'destructive',
         })
       },
@@ -603,7 +596,7 @@ export default function CreateEvent() {
                 <CardContent className="pt-6 space-y-3">
                   {createEvent.isError && (
                     <div className="text-sm rounded-lg border border-red-200 bg-red-50 p-3 text-red-800 dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-300">
-                      {getErrorMessage(createEvent.error)}
+                      {getErrorMessage(createEvent.error, 'Failed to create event.')}
                     </div>
                   )}
                   <Button

@@ -32,7 +32,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
+import { cn, getErrorMessage  } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 import {
   useDeleteMentorship,
@@ -87,7 +87,7 @@ export default function EditMentorship() {
   const router = useRouter()
   const { toast } = useToast()
 
-  const { data: currentData, isLoading, isError } = useMentorship(sqid)
+  const { data: currentData, isLoading, isError, error } = useMentorship(sqid)
   const { data: choices } = useMentorshipChoices()
   const { mutate: updateMentorship, isPending: isUpdating } =
     useUpdateMentorship()
@@ -148,8 +148,7 @@ export default function EditMentorship() {
         onError: (err: any) => {
           toast({
             title: 'Error',
-            description:
-              err?.response?.data?.message || 'Failed to update mentorship.',
+            description: getErrorMessage(err, 'Failed to update mentorship.'),
             variant: 'destructive',
           })
         },
@@ -170,7 +169,7 @@ export default function EditMentorship() {
       onError: (err: any) => {
         toast({
           title: 'Error',
-          description: err?.response?.data?.message || 'Delete failed.',
+          description: getErrorMessage(err, 'Delete failed.'),
           variant: 'destructive',
         })
       },
@@ -197,7 +196,7 @@ export default function EditMentorship() {
       )}
       {isError && (
         <p className="text-center font-bold text-red-600 text-2xl">
-          Error loading mentorship details.
+          {getErrorMessage(error, 'Error loading mentorship details.')}
         </p>
       )}
 

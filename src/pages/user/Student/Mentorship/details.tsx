@@ -13,6 +13,7 @@ import {
   useMentorshipEngagements,
 } from '@/hooks/useMentorships'
 import { CardSkeleton2 } from '@/components/CardSkeletons'
+import { getErrorMessage } from '@/lib/utils'
 import { BackButton2 } from '@/components/BackButtons'
 
 export default function MentorshipDetails() {
@@ -41,9 +42,7 @@ export default function MentorshipDetails() {
       {
         onError: (err: any) => {
           setApplyError(
-            err?.response?.data?.detail ??
-              err?.message ??
-              'Something went wrong. Please try again.',
+            getErrorMessage(err, 'Something went wrong. Please try again.'),
           )
         },
       },
@@ -69,7 +68,7 @@ export default function MentorshipDetails() {
           <BackButton2 />
         </div>
         <p className="text-body-sm text-ink-soft">
-          {error?.message ?? 'Something went wrong.'}
+          {getErrorMessage(error, 'Something went wrong.')}
         </p>
       </div>
     )

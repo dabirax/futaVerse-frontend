@@ -10,6 +10,7 @@ import { Switch } from '@/components/ui/switch'
 import { alumnusMentorshipDetailRoute } from '@/routes/user-alumnus'
 import { useMentorship } from '@/hooks/useMentorships'
 import { CardSkeleton2 } from '@/components/CardSkeletons'
+import { getErrorMessage } from '@/lib/utils'
 import { BackButton2 } from '@/components/BackButtons'
 
 const mockOffers = [
@@ -78,7 +79,7 @@ export default function MentorshipDetail() {
           {isLoading && <CardSkeleton2 />}
           {isError && (
             <p className="text-body-sm text-ink-soft">
-              {error?.message ?? 'Something went wrong.'}
+              {getErrorMessage(error, 'Something went wrong.')}
             </p>
           )}
 

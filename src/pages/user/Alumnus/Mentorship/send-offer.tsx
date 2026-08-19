@@ -17,6 +17,7 @@ import {
   useMentorships,
 } from '@/hooks/useMentorships'
 import { useToast } from '@/hooks/use-toast'
+import { getErrorMessage } from '@/lib/utils'
 import { BackButton2 } from '@/components/BackButtons'
 
 interface StudentOption {
@@ -77,10 +78,7 @@ export default function SendMentorshipOffer() {
         onError: (err: any) => {
           toast({
             title: 'Error',
-            description:
-              err?.response?.data?.detail?.[0] ||
-              err?.response?.data?.detail ||
-              'Failed to send offer.',
+            description: getErrorMessage(err, 'Failed to send offer.'),
             variant: 'destructive',
           })
         },

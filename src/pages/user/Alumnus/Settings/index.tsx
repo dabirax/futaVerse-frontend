@@ -44,6 +44,7 @@ import {
 import PaystackBankLink from '@/components/user/events/PaystackBankLink'
 import { useMe } from '@/hooks/useMe'
 import { useToast } from '@/hooks/use-toast'
+import { getErrorMessage } from '@/lib/utils'
 import { uploadProfileImage } from '@/services/uploads'
 
 const alumnusBasicEditSchema = alumnusBasicRaw.omit({
@@ -239,7 +240,7 @@ const AlumnusSettings = () => {
     } catch (err: any) {
       toast({
         title: 'Error',
-        description: err?.message ?? 'Failed to save.',
+        description: getErrorMessage(err, 'Failed to save.'),
         variant: 'destructive',
       })
     } finally {
@@ -256,7 +257,7 @@ const AlumnusSettings = () => {
     } catch (err: any) {
       toast({
         title: 'Error',
-        description: err?.message ?? 'Failed to save.',
+        description: getErrorMessage(err, 'Failed to save.'),
         variant: 'destructive',
       })
     } finally {
@@ -276,7 +277,7 @@ const AlumnusSettings = () => {
     } catch (err: any) {
       toast({
         title: 'Error',
-        description: err?.message ?? 'Failed to save.',
+        description: getErrorMessage(err, 'Failed to save.'),
         variant: 'destructive',
       })
     } finally {

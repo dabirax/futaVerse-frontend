@@ -53,6 +53,7 @@ import ConfirmActionDialog from '@/components/user/ConfirmActionDialog'
 import { useDeleteResume, useUploadResume } from '@/hooks/useResumes'
 import { useMe } from '@/hooks/useMe'
 import { useToast } from '@/hooks/use-toast'
+import { getErrorMessage } from '@/lib/utils'
 import { uploadProfileImage } from '@/services/uploads'
 
 const studentBasicEditSchema = studentBasicRaw.omit({
@@ -259,7 +260,7 @@ const StudentSettings = () => {
     } catch (err: any) {
       toast({
         title: 'Error',
-        description: err?.message ?? 'Failed to save.',
+        description: getErrorMessage(err, 'Failed to save.'),
         variant: 'destructive',
       })
     } finally {
@@ -280,7 +281,7 @@ const StudentSettings = () => {
     } catch (err: any) {
       toast({
         title: 'Error',
-        description: err?.message ?? 'Failed to save.',
+        description: getErrorMessage(err, 'Failed to save.'),
         variant: 'destructive',
       })
     } finally {
@@ -308,7 +309,7 @@ const StudentSettings = () => {
     } catch (err: any) {
       toast({
         title: 'Error',
-        description: err?.message ?? 'Failed to save.',
+        description: getErrorMessage(err, 'Failed to save.'),
         variant: 'destructive',
       })
     } finally {

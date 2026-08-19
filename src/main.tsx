@@ -8,17 +8,22 @@ import {
 } from '@tanstack/react-query'
 import App from './App'
 import { toast } from '@/hooks/use-toast'
+import { getErrorMessage } from '@/lib/utils'
 
 const toastedErrorKeys = new Set<string>()
 
-const getErrorMessage = (err: any, fallback: string) =>
-  err?.response?.data?.detail?.[0] ||
-  err?.response?.data?.detail ||
-  err?.response?.data?.message ||
-  err?.message ||
-  fallback
-
 const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        const isNetworkError = error instanceof TypeError
+        if (isNetworkError) {
+          return failureCount < 3
+        }
+        return failureCount < 1
+      },
+    },
+  },
   queryCache: new QueryCache({
     onSuccess: (_data, query) => {
       toastedErrorKeys.delete(query.queryHash)

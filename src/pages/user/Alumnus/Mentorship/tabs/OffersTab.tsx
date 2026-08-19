@@ -8,6 +8,7 @@ import {
 import { CardSkeleton5 } from '@/components/CardSkeletons'
 import StudentCard from '@/components/user/internships/StudentCard'
 import { useToast } from '@/hooks/use-toast'
+import { getErrorMessage } from '@/lib/utils'
 
 export default function OffersSentTab() {
   const navigate = useRouter().navigate
@@ -15,12 +16,6 @@ export default function OffersSentTab() {
   const { mutateAsync: withdrawOffer } = useWithdrawMentorshipOffer()
   const { toast } = useToast()
 
-  const getErrorMessage = (err: any, fallback: string) =>
-    err?.response?.data?.detail?.[0] ||
-    err?.response?.data?.detail ||
-    err?.response?.data?.message ||
-    err?.message ||
-    fallback
   if (isLoading) {
     return <CardSkeleton5 variant="r-full" />
   }

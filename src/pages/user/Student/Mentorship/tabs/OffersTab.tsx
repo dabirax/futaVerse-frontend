@@ -6,6 +6,7 @@ import {
 } from '@/hooks/useMentorships'
 import InternshipCard2 from '@/components/user/internships/InternshipCard2'
 import { useToast } from '@/hooks/use-toast'
+import { getErrorMessage } from '@/lib/utils'
 
 export default function OffersTab() {
   const { data, isLoading, isError, refetch } = useMentorshipOffers()
@@ -13,13 +14,6 @@ export default function OffersTab() {
   const rejectOffer = useRejectMentorshipOffer()
   const { toast } = useToast()
   const offers = data?.results || []
-
-  const getErrorMessage = (err: any, fallback: string) =>
-    err?.response?.data?.detail?.[0] ||
-    err?.response?.data?.detail ||
-    err?.response?.data?.message ||
-    err?.message ||
-    fallback
 
   useEffect(() => {
     refetch()

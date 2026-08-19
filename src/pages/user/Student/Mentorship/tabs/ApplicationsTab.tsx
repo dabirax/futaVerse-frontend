@@ -5,6 +5,7 @@ import {
   useWithdrawMentorshipApplication,
 } from '@/hooks/useMentorships'
 import { useToast } from '@/hooks/use-toast'
+import { getErrorMessage } from '@/lib/utils'
 
 export default function MyApplicationsTab() {
   const { data, isLoading, isError, refetch } = useMentorshipApplications()
@@ -12,13 +13,6 @@ export default function MyApplicationsTab() {
     useWithdrawMentorshipApplication()
   const { toast } = useToast()
   const applications = data?.results || []
-
-  const getErrorMessage = (err: any, fallback: string) =>
-    err?.response?.data?.detail?.[0] ||
-    err?.response?.data?.detail ||
-    err?.response?.data?.message ||
-    err?.message ||
-    fallback
 
   useEffect(() => {
     refetch()

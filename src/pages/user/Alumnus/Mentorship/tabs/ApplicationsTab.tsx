@@ -6,19 +6,13 @@ import {
 import { CardSkeleton4 } from '@/components/CardSkeletons'
 import StudentCard from '@/components/user/internships/StudentCard'
 import { useToast } from '@/hooks/use-toast'
+import { getErrorMessage } from '@/lib/utils'
 
 export default function ApplicationsTab() {
   const { data, isLoading, isError } = useMentorshipApplications()
   const { mutateAsync: acceptApplication } = useAcceptMentorshipApplication()
   const { mutateAsync: rejectApplication } = useRejectMentorshipApplication()
   const { toast } = useToast()
-
-  const getErrorMessage = (err: any, fallback: string) =>
-    err?.response?.data?.detail?.[0] ||
-    err?.response?.data?.detail ||
-    err?.response?.data?.message ||
-    err?.message ||
-    fallback
 
   if (isLoading) {
     return <CardSkeleton4 variant="r-full" />

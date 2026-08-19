@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { useEvent } from '@/hooks/useEvents'
+import { getErrorMessage } from '@/lib/utils'
 
 import { alumnusEventDetailRoute } from '@/routes/user-alumnus'
 import EventTicketsManager from '@/components/user/events/EventTicketsManager'
@@ -56,7 +57,7 @@ export default function EventDetail() {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <h2 className="text-xl font-semibold text-foreground">
-          {error instanceof Error ? error.message : 'Event not found'}
+          {getErrorMessage(error, 'Event not found')}
         </h2>
         <Button
           variant="link"

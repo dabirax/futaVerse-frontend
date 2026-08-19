@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { alumnusInternshipDetailRoute } from '@/routes/user-alumnus'
 import { useInternship } from '@/hooks/useInternships'
 import { CardSkeleton2 } from '@/components/CardSkeletons'
+import { getErrorMessage } from '@/lib/utils'
 import { BackButton2 } from '@/components/BackButtons'
 
 const mockOffers = [
@@ -95,7 +96,7 @@ export default function InternshipDetail() {
           {isLoading && <CardSkeleton2 />}
           {isError && (
             <p className="text-body-sm text-ink-soft">
-              {error?.message ?? 'Something went wrong.'}
+              {getErrorMessage(error, 'Something went wrong.')}
             </p>
           )}
 

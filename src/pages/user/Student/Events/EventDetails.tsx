@@ -19,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useEvent, useRegisterEvent } from '@/hooks/useEvents'
+import { getErrorMessage } from '@/lib/utils'
 import { studentEventDetailRoute } from '@/routes/user-student'
 import { BackButton2 } from '@/components/BackButtons'
 import { EventDetailSkeleton } from '@/components/CardSkeletons'
@@ -209,7 +210,7 @@ export default function StudentEventDetails() {
           <Calendar className="h-8 w-8 text-muted-foreground" />
         </div>
         <h2 className="text-xl font-semibold text-foreground mb-2">
-          {error instanceof Error ? error.message : 'Event not found'}
+          {getErrorMessage(error, 'Event not found')}
         </h2>
         <p className="text-muted-foreground mb-6">
           The event you are looking for does not exist or has been removed.

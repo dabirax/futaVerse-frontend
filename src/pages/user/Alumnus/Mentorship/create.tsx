@@ -1,6 +1,5 @@
 import { useRouter } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
-import { AxiosError } from 'axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon, Check } from 'lucide-react'
 import { format } from 'date-fns'
@@ -30,7 +29,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { cn } from '@/lib/utils'
+import { cn, getErrorMessage } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 import {
   useCreateMentorship,
@@ -87,13 +86,6 @@ export default function CreateMentorship() {
       focus_areas: [],
     },
   })
-
-  const getErrorMessage = (error: unknown) => {
-    if (error instanceof AxiosError) {
-      return error.response?.data?.message || 'Request failed'
-    }
-    return 'Unexpected error occurred.'
-  }
 
   const onSubmit = (values: FormValues) => {
     const formatted = {
@@ -437,7 +429,7 @@ export default function CreateMentorship() {
             {/* Error State */}
             {createMentorship.isError && (
               <div className="rounded-lg border border-border bg-red-50 text-red-700 p-4">
-                {getErrorMessage(createMentorship.error)}
+                {getErrorMessage(createMentorship.error, 'Failed to create mentorship.')}
               </div>
             )}
 

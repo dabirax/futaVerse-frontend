@@ -40,7 +40,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
-import { cn } from '@/lib/utils'
+import { cn, getErrorMessage } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 import { EventApiError } from '@/services/events'
 import {
@@ -187,7 +187,7 @@ export default function EditEvent() {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <h2 className="text-xl font-semibold">
-          {error instanceof Error ? error.message : 'Event not found'}
+          {getErrorMessage(error, 'Event not found')}
         </h2>
         <Button
           variant="link"
@@ -653,10 +653,16 @@ export default function EditEvent() {
                     updateEventMode.isError ||
                     addTicket.isError) && (
                     <div className="text-sm rounded-lg border border-red-200 bg-red-50 p-3 text-red-800 dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-300">
-                      {updateEvent.error?.message ||
-                        updateEventMode.error?.message ||
-                        addTicket.error?.message ||
-                        'Failed to update event.'}
+                      {getErrorMessage(
+                        updateEvent.error,
+                        getErrorMessage(
+                          updateEventMode.error,
+                          getErrorMessage(
+                            addTicket.error,
+                            'Failed to update event.',
+                          ),
+                        ),
+                      )}
                     </div>
                   )}
                   <Button
